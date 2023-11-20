@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import {FeaturedComponent} from "./offerings/featured/featured.component";
 import {GalleryComponent} from "./offerings/gallery/gallery.component";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import {GalleryComponent} from "./offerings/gallery/gallery.component";
   imports: [
     BrowserModule,
     FeaturedComponent,
-    GalleryComponent
+    GalleryComponent,
+    FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

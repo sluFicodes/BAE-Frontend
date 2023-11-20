@@ -1,4 +1,10 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {
+  faCartShopping,
+  faHandHoldingBox,
+  faAddressCard,
+  faArrowRightFromBracket
+} from "@fortawesome/sharp-solid-svg-icons";
 
 @Component({
   selector: 'bae-header',
@@ -48,4 +54,9 @@ export class HeaderComponent implements AfterViewInit {
       }
     }
   }
+
+  protected readonly faCartShopping = faCartShopping;
+  protected readonly faHandHoldingBox = faHandHoldingBox;
+  protected readonly faAddressCard = faAddressCard;
+  protected readonly faArrowRightFromBracket = faArrowRightFromBracket;
 }

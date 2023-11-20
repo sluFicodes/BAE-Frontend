@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {BadgeComponent} from "../../commons/badge/badge.component";
+import {components} from "../../models/product-catalog";
+type Product = components["schemas"]["ProductOffering"];
+type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 
 @Component({
   selector: 'bae-off-card',
@@ -9,6 +12,28 @@ import {BadgeComponent} from "../../commons/badge/badge.component";
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })
-export class CardComponent {
+export class CardComponent implements OnInit {
 
+  @Input() productOff: Product | undefined;
+  category: string = 'none';
+  price: string = '';
+  images: AttachmentRefOrValue[]  = [];
+
+  ngOnInit() {
+    this.category = this.productOff?.category?.at(0)?.name ?? 'none';
+    this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.value + ' ' +
+      this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.unit ?? 'n/a';
+    this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'image') ?? [];
+  }
+
+  getProductImage() {
+    return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
+  }
+  getPrice() {
+    return {
+      price: this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.value + ' ' +
+        this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.unit ?? 'n/a',
+      priceType: this.productOff?.productOfferingPrice?.at(0)?.priceType
+    }
+  }
 }
