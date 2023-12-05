@@ -11,11 +11,16 @@
     </h2>
     <div [id]="'accordion-body-'+idx" class="hidden" [attr.aria-labelledby]="'accordion-heading-'+idx">
       <div class="p-2 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-        <ul class="grid w-full gap-2">
-          <li>
-            <bae-category-item [data]="category"></bae-category-item>
-          </li>
-        </ul>
+
+        @if (category.children) {
+          <ul class="grid w-full gap-2">
+            @for(child of category.children; track child.id) {
+              <li>
+                <bae-category-item [data]="child"></bae-category-item>
+              </li>
+            }
+          </ul>
+        }
       </div>
     </div>
 

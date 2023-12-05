@@ -4,6 +4,7 @@ import {faCircleCheck} from "@fortawesome/pro-solid-svg-icons";
 import {faCircle} from "@fortawesome/pro-regular-svg-icons";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Category} from "../../models/interfaces";
 
 @Component({
   selector: 'bae-category-item',
@@ -18,17 +19,8 @@ export class CategoryItemComponent implements OnInit {
   protected readonly faCircle = faCircle;
   checked: boolean = false;
   option: String | undefined;
-  @Input() data: {
-    "id"?: String,
-    "href"?: String,
-    "description"?: String,
-    "isRoot"?: Boolean,
-    "lastUpdate"?: String,
-    "lifecycleStatus"?: String,
-    "name": String,
-    "version"?: String,
-    "validFor"?: Object
-  } | undefined = {name: 'undefined'};
+  @Input() data: Category | undefined;
+
 
   ngOnInit() {
     this.option = this.data?.id;
