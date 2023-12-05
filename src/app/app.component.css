@@ -3,6 +3,6 @@
 .bae-content {
     width: 100%;
     min-height: calc(100vh - 50px) !important;
-    margin-top: 25px !important;
-    margin-bottom: 25px !important;
+    padding-top: 25px !important;
+    padding-bottom: 25px !important;
 }
