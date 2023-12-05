@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {BadgeComponent} from "../../commons/badge/badge.component";
+import {BadgeComponent} from "../badge/badge.component";
 import {components} from "../../models/product-catalog";
 type Product = components["schemas"]["ProductOffering"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];

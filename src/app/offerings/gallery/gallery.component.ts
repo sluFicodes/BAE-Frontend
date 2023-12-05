@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {CardComponent} from "../card/card.component";
+import {CardComponent} from "../../shared/card/card.component";
 import {components} from "../../models/product-catalog";
 type ProductOffering = components["schemas"]["ProductOffering"];
 
