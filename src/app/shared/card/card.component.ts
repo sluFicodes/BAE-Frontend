@@ -45,8 +45,19 @@ export class CardComponent implements OnInit {
   toggleToast(){
     this.toastVisibility=true;
     this.cdr.detectChanges();
-    document.getElementById("progress-bar")?.classList.toggle("w-[100%]");
-    console.log(document.getElementById("progress-bar"))
+    //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+    let element = document.getElementById("progress-bar")
+    if (element != null) {
+      console.log(document.getElementById("progress-bar"))
+      element.style.width = '0%'
+      element.offsetWidth
+      element.style.width = '100%'
+      setTimeout(() => {   
+        this.toastVisibility=false      
+      }, 3500);
+
+    }
+    
     this.cdr.detectChanges();
   }
 }
