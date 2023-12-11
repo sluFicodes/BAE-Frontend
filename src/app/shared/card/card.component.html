@@ -34,8 +34,129 @@
           <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice().price}}</span>
           <span class="text-xs dark:text-primary-50">{{getPrice().priceType}}</span>
         </div>
-        <a href="#" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add to cart</a>
+        <button data-modal-target="details-modal" data-modal-toggle="details-modal" type="button" class="flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          <svg class="w-[18px] h-[18px] text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
+            <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+              <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+              <path d="M10 13c4.97 0 9-2.686 9-6s-4.03-6-9-6-9 2.686-9 6 4.03 6 9 6Z"/>
+            </g>
+          </svg>
+          View details
+        </button>
+        <a id="add-to-cart" (click)="toggleToast()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add to cart</a>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Main modal -->
+<div id="details-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative w-full max-w-7xl max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom">
+          <!-- Modal header 
+          <div class="p-4 md:p-5 border-b rounded-t dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom bg-opacity-25" style="background-image: url(assets/logos/dome-logo-element-colour.png)">              
+              <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                {{productOff?.name}}
+              </h3>
+              @if (productOff?.category) {
+                <bae-badge category="{{ category }}"></bae-badge>
+              }
+          </div> -->
+          <!-- Modal header -->
+          <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
+            <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="details-modal">
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+                <span class="sr-only">Close modal</span>
+            </button>
+        </div>
+          <!-- Modal body -->
+          <div class="p-4 md:p-5 grid grid-cols-2 gap-4">
+            <div class="flex items-center justify-center w-full box-decoration-clone bg-white rounded-lg dark:bg-secondary-50 dark:border-gray-700 border-secondary-50" >
+              <img class="rounded-t-lg w-fit h-[200px]" src="{{getProductImage()}}" alt="product image"/>
+            </div>
+            <div>
+              <div class="flex place-content-center flex-col">
+                <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{productOff?.name}}</h5>
+              </div>
+              <hr class="h-px mt-2 mb-2 bg-gray-200 border-0 dark:bg-gray-700">
+              <div class="flex place-content-center flex-col">
+                <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice().price}}</span>
+                <span class="text-xs dark:text-primary-50">{{getPrice().priceType}}</span>
+              </div>              
+              <button type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                </svg>
+                Add to cart
+              </button>
+
+              <div class="inline-flex justify-center items-center dark:text-secondary-50 mt-2">
+                <svg class="mr-2 w-[18px] h-[18px] dark:text-secondary-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 18">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.583 5.445h.01M8.86 16.71l-6.573-6.63a.993.993 0 0 1 0-1.4l7.329-7.394A.98.98 0 0 1 10.31 1l5.734.007A1.968 1.968 0 0 1 18 2.983v5.5a.994.994 0 0 1-.316.727l-7.439 7.5a.975.975 0 0 1-1.385.001Z"/>
+                </svg>
+                Categories: 
+                @if (productOff?.category) {
+                  <bae-badge class="ml-2" category="{{ category }}"></bae-badge>
+                }
+              </div>
+              <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">Product details:</h5>
+              <div class="min-h-19 h-19 line-clamp-3 dark:text-secondary-50">{{productOff?.description}}</div>
+              <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">Compliance profile:</h5>
+              <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
+                <li>EU Cloud Security: Not achieved yet</li>
+                <li>EU Cloud Rulebook: Not achieved yet</li>
+                <li>ISO 27001: Not achieved yet</li>
+                <li>ISO 27017: Not achieved yet</li>
+                <li>ISO 17025: Not achieved yet</li>
+              </ul>
+              <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">Extra information:</h5>
+              <div class="grid grid-cols-2 gap-4">
+                <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
+                  <li>Versión de la oferta: 0.1</li>
+                  <li>Nombre del producto: nombre</li>
+                  <li>Marca: ENG</li>
+                </ul>
+                <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
+                  <li>Última actualización: Wednesday, November 15th 2023, 6:58 pm</li>
+                  <li>Versión del producto: 0.1</li>
+                  <li>Número de identificación: XX</li>
+                </ul>
+              </div>
+              <button type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                View details
+                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+                </button>
+            </div>            
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- ADD TO CART TOAST -->
+<div id="toast-add-cart"  *ngIf="toastVisibility" class="flex grid grid-flow-row mr-2 items-center w-auto max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 fixed top-1/2 right-0 z-50 justify-center" role="alert">
+  <div class="flex items-center justify-center">
+    <svg class="w-[18px] h-[18px] text-gray-800 dark:text-white mr-2 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0h8m-8 0-1-4m9 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-9-4h10l2-7H3m2 7L3 4m0 0-.792-3H1"/>
+    </svg>
+    <div class="text-sm font-normal">
+        Added to the cart.
+    </div>
+    <div class="flex items-center ms-auto space-x-2 rtl:space-x-reverse">
+        <a class="text-sm font-medium text-blue-600 p-1.5 hover:bg-blue-100 rounded-lg dark:text-blue-500 dark:hover:bg-gray-700" href="#">Undo</a>
+        <button type="button" (click)="toastVisibility=false" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-add-cart" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="w-full mt-2 rounded-full h-2.5 dark:bg-gray-700">
+    <div id="progress-bar" class="flex-initial bg-green-600 h-2.5 rounded-full dark:bg-green-500 w-0"></div>
   </div>
 </div>

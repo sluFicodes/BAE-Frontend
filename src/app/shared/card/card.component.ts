@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectorRef} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {BadgeComponent} from "../badge/badge.component";
 import {components} from "../../models/product-catalog";
@@ -18,8 +18,13 @@ export class CardComponent implements OnInit {
   category: string = 'none';
   price: string = '';
   images: AttachmentRefOrValue[]  = [];
+  toastVisibility: boolean = false;
+  test:any;
+
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.test = document.getElementById("progress-bar")
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.value + ' ' +
       this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.unit ?? 'n/a';
@@ -35,5 +40,13 @@ export class CardComponent implements OnInit {
         this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.unit ?? 'n/a',
       priceType: this.productOff?.productOfferingPrice?.at(0)?.priceType
     }
+  }
+
+  toggleToast(){
+    this.toastVisibility=true;
+    this.cdr.detectChanges();
+    document.getElementById("progress-bar")?.classList.toggle("w-[100%]");
+    console.log(document.getElementById("progress-bar"))
+    this.cdr.detectChanges();
   }
 }

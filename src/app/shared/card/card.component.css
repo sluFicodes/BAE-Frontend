@@ -1,0 +1,4 @@
+#to-from-max-width {
+    width: 0; /* Set the initial width */
+    transition: width 5s, opacity 5s;
+}

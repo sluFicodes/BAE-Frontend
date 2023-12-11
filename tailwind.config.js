@@ -20,6 +20,9 @@ module.exports = {
           100: '#14274a',
         },
       },
+      transitionProperty: {
+        width: "width"
+      }
     }
   },
   plugins: [
