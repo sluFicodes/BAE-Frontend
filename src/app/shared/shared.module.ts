@@ -7,13 +7,15 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 const imports: any[] = [
   CommonModule,
   HttpClientModule,
   FormsModule,
   ReactiveFormsModule,
-  FontAwesomeModule
+  FontAwesomeModule,
+  TranslateModule,
 ];
 
 const declarations: any[] = [
@@ -26,6 +28,6 @@ const declarations: any[] = [
   imports: [...imports],
   exports: [...imports, ...declarations],
   declarations: [...declarations],
-  providers:[DatePipe]
+  providers:[DatePipe, TranslateService]
 })
 export class SharedModule { }
