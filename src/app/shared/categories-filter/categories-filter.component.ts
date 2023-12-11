@@ -6,6 +6,7 @@ import { faCircleCheck } from "@fortawesome/pro-solid-svg-icons";
 import {FormsModule} from "@angular/forms";
 import {CategoryItemComponent} from "../category-item/category-item.component";
 import {Category} from "../../models/interfaces";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'bae-categories-filter',
@@ -20,6 +21,8 @@ export class CategoriesFilterComponent {
   classListLast  = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   classList      = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   categories: Category[] = [];
+  selected: Category[] = [];
+  dismissSubject: Subject<any> = new Subject();
 
   constructor() {
     this.categories = [
@@ -182,7 +185,20 @@ export class CategoriesFilterComponent {
       }
     ];
   }
-  getId(id: String) {
-    return id.split(':').pop()?.replace(/-/g, "");
+
+  notifyDismiss(cat: Category) {
+    this.dismissSubject.next(cat);
+    this.removeCategory(cat);
+  }
+
+  addCategory(cat: Category) {
+    this.selected.push(cat);
+  }
+
+  removeCategory(cat: Category) {
+    const index = this.selected.indexOf(cat, 0);
+    if(index > -1) {
+      this.selected.splice(index,1);
+    }
   }
 }

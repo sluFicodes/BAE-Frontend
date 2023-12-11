@@ -1,29 +1,47 @@
+<div id="chips" class="flex w-full p-2">
+@for(category of selected; track category.id; let idx = $index) {
+  <span [id]="'badge-dismiss-'+idx" class="inline-flex justify-between items-center px-2 py-1 me-2 text-sm font-medium text-indigo-800 bg-indigo-100 rounded dark:bg-indigo-900 dark:text-indigo-300">
+    {{category?.name}}
+    <button type="button" (click)="notifyDismiss(category)" class="inline-flex items-center p-1 ms-2 text-sm text-indigo-400 bg-transparent rounded-sm hover:bg-indigo-200 hover:text-indigo-900 dark:hover:bg-indigo-800 dark:hover:text-indigo-300" [attr.data-dismiss-target]="'#badge-dismiss-'+idx" aria-label="Remove">
+    <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+    </svg>
+    <span class="sr-only">Remove badge</span>
+    </button>
+  </span>
+}
+</div>
 <div id="accordion-collapse" data-accordion="open" class="w-1/5">
 @for(category of categories; track category.id; let idx = $index) {
 
     <h2 [id]="'accordion-heading-'+idx">
-      <button type="button" [ngClass]="$first ? classListFirst : $last ? classListLast : classList" [attr.data-accordion-target]="'#accordion-body-'+idx" aria-expanded="false" [attr.aria-controls]="'accordion-body-'+idx">
-        <span>{{ category?.name }}</span>
-        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
-        </svg>
-      </button>
+      @if (category.children) {
+        <button type="button" [ngClass]="$first ? classListFirst : $last ? classListLast : classList" [attr.data-accordion-target]="'#accordion-body-'+idx" aria-expanded="false" [attr.aria-controls]="'accordion-body-'+idx">
+          <span class="text-left">{{ category?.name }}</span>
+          <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+          </svg>
+        </button>
+      } @else {
+        <bae-category-item [data]="category" [dismissSubject]="dismissSubject" [isParent]="true" [isFirst]="$first" [isLast]="$last" (checkedEvent)="addCategory($event)" (uncheckedEvent)="removeCategory($event)"></bae-category-item>
+      }
     </h2>
+  @if (category.children) {
     <div [id]="'accordion-body-'+idx" class="hidden" [attr.aria-labelledby]="'accordion-heading-'+idx">
       <div class="p-2 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
 
-        @if (category.children) {
+
           <ul class="grid w-full gap-2">
             @for(child of category.children; track child.id) {
               <li>
-                <bae-category-item [data]="child"></bae-category-item>
+                <bae-category-item [data]="child" [dismissSubject]="dismissSubject"  (checkedEvent)="addCategory($event)" (uncheckedEvent)="removeCategory($event)"></bae-category-item>
               </li>
             }
           </ul>
-        }
+
       </div>
     </div>
-
+  }
 } @empty {
 
 }

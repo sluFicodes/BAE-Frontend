@@ -1,7 +1,7 @@
-<input [(ngModel)]="checked" type="checkbox" [id]="option" value="" class="hidden peer">
-<label [for]="option" class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-primary-50 hover:text-gray-600 dark:peer-checked:bg-primary-50 dark:peer-checked:text-secondary-100 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-primary-50">
+<input [(ngModel)]="checked" type="checkbox" [id]="option" value="" class="hidden peer" #optioninput>
+<label [for]="option" [ngClass]="labelClass" (click)="onClick(optioninput.checked)">
   <div class="flex w-full justify-between items-center">
-    <div class="w-full text-lg font-semibold">{{ data?.name }}</div>
+    <div class="w-full text-base text-left font-semibold">{{ data?.name }}</div>
     <fa-icon [icon]="checked ? faCircleCheck : faCircle" class="mr-2 text-2xl"></fa-icon>
   </div>
 </label>
