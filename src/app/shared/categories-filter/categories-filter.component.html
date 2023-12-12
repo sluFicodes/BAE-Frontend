@@ -1,8 +1,8 @@
-<div id="chips" class="flex w-full p-2">
+<div id="chips" class="flex justify-center w-full min-h-[46px] p-2">
 @for(category of selected; track category.id; let idx = $index) {
-  <span [id]="'badge-dismiss-'+idx" class="inline-flex justify-between items-center px-2 py-1 me-2 text-sm font-medium text-indigo-800 bg-indigo-100 rounded dark:bg-indigo-900 dark:text-indigo-300">
+  <span [id]="'badge-dismiss-'+idx" class="inline-flex justify-between items-center px-2 py-1 me-2 text-sm font-medium text-primary-100 border border-1 border-primary-100 bg-secondary-50 rounded dark:bg-secondary-100 dark:text-secondary-50">
     {{category?.name}}
-    <button type="button" (click)="notifyDismiss(category)" class="inline-flex items-center p-1 ms-2 text-sm text-indigo-400 bg-transparent rounded-sm hover:bg-indigo-200 hover:text-indigo-900 dark:hover:bg-indigo-800 dark:hover:text-indigo-300" [attr.data-dismiss-target]="'#badge-dismiss-'+idx" aria-label="Remove">
+    <button type="button" (click)="notifyDismiss(category)" class="inline-flex items-center p-1 ms-2 text-sm text-primary-100 dark:text-secondary-50 bg-transparent rounded-sm hover:bg-primary-100 hover:text-secondary-50 dark:hover:bg-primary-50 dark:hover:text-primary-100" [attr.data-dismiss-target]="'#badge-dismiss-'+idx" aria-label="Remove">
     <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
     </svg>
@@ -11,6 +11,7 @@
   </span>
 }
 </div>
+<h2 class="text-2xl dark:text-secondary-50 p-2">Categories</h2>
 <div id="accordion-collapse" data-accordion="open" class="w-1/5">
 @for(category of categories; track category.id; let idx = $index) {
 
