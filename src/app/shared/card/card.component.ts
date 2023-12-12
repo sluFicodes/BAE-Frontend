@@ -7,8 +7,6 @@ type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 
 @Component({
   selector: 'bae-off-card',
-  standalone: true,
-  imports: [CommonModule, BadgeComponent, NgOptimizedImage],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })

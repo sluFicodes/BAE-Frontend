@@ -6,8 +6,6 @@ type ProductOffering = components["schemas"]["ProductOffering"];
 
 @Component({
   selector: 'bae-off-gallery',
-  standalone: true,
-  imports: [CommonModule, CardComponent],
   templateUrl: './gallery.component.html',
   styleUrl: './gallery.component.css'
 })

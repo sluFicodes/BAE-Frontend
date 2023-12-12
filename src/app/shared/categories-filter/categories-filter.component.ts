@@ -10,8 +10,6 @@ import {Subject} from "rxjs";
 
 @Component({
   selector: 'bae-categories-filter',
-  standalone: true,
-  imports: [CommonModule, FaIconComponent, FormsModule, CategoryItemComponent],
   templateUrl: './categories-filter.component.html',
   styleUrl: './categories-filter.component.css'
 })

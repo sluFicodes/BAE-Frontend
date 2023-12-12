@@ -4,8 +4,6 @@ import {CategoriesFilterComponent} from "../../shared/categories-filter/categori
 
 @Component({
   selector: 'bae-search',
-  standalone: true,
-  imports: [CommonModule, CategoriesFilterComponent],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
