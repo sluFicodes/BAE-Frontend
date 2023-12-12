@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'bae-badge',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './badge.component.html',
   styleUrl: './badge.component.css'
 })

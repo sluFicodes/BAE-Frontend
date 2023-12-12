@@ -9,8 +9,6 @@ import {Subject} from "rxjs";
 
 @Component({
   selector: 'bae-category-item',
-  standalone: true,
-  imports: [CommonModule, FaIconComponent, ReactiveFormsModule, FormsModule],
   templateUrl: './category-item.component.html',
   styleUrl: './category-item.component.css'
 })

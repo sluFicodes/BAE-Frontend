@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'bae-off-featured',
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: './featured.component.html',
   styleUrl: './featured.component.css'
 })

@@ -2,10 +2,10 @@
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <a href="#" class="flex items-center">
       <img src="assets/logos/DOME_Icon_White.svg" class="h-8 mr-3" alt="DOME Marketplace Logo" />
-      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">MARKETPLACE</span>
+      <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">{{ 'HEADER._marketplace' | translate }}</span>
     </a>
     <button data-collapse-toggle="navbar-dropdown" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-dropdown" aria-expanded="false">
-      <span class="sr-only">Open main menu</span>
+      <span class="sr-only">{{ 'HEADER._open_menu' | translate }}</span>
       <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
       </svg>
@@ -13,38 +13,38 @@
     <div class="hidden w-full md:block md:w-auto" id="navbar-dropdown">
       <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 rounded-lg md:text-white md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-primary-100 dark:bg-secondary-100 ">
         <li>
-          <a href="#" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">Home</a>
+          <a href="#" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">{{ 'HEADER._home' | translate }}</a>
         </li>
         <li>
-          <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar" class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 md:w-auto dark:text-blue-100 md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">Categories <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+          <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar" class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 md:w-auto dark:text-blue-100 md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">{{ 'HEADER._categories' | translate }} <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
           </svg></button>
           <!-- Dropdown menu -->
           <div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-blue-900 dark:divide-gray-600">
             <ul class="py-2 text-sm text-gray-700 dark:text-white" aria-labelledby="dropdownLargeButton">
               <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">Cloud Services</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">{{ 'HEADER._cloud' | translate }}</a>
               </li>
               <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">Smart Ports</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">{{ 'HEADER._smart_ports' | translate }}</a>
               </li>
               <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">Smart Cities</a>
+                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">{{ 'HEADER._smart_cities' | translate }}</a>
               </li>
             </ul>
             <div class="py-1">
-              <a href="search" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:text-gray-400 dark:hover:text-primary-100">See all</a>
+              <a href="search" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:text-gray-400 dark:hover:text-primary-100">{{ 'HEADER._see_all' | translate }}</a>
             </div>
           </div>
         </li>
         <li>
-          <a href="#" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Services</a>
+          <a href="#" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">{{ 'HEADER._services' | translate }}</a>
         </li>
         <li>
           <a href="https://dome-marketplace.eu/" target="_blank" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">dome-marketplace.eu</a>
         </li>
         <li>
-          <a href="#" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
+          <a href="#" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">{{ 'HEADER._contact' | translate }}</a>
         </li>
       </ul>
     </div>
@@ -66,17 +66,17 @@
       </div>
       <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
         <li>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faAddressCard" class="mr-2"></fa-icon>Profile</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faAddressCard" class="mr-2"></fa-icon>{{ 'HEADER._profile' | translate }}</a>
         </li>
         <li>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faHandHoldingBox" class="mr-2"></fa-icon>My Offerings</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faHandHoldingBox" class="mr-2"></fa-icon>{{ 'HEADER._offerings' | translate }}</a>
         </li>
         <li>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faCartShopping" class="mr-2"></fa-icon>My shopping cart</a>
+          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faCartShopping" class="mr-2"></fa-icon>{{ 'HEADER._cart' | translate }}</a>
         </li>
       </ul>
       <div class="py-1">
-        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faArrowRightFromBracket" class="mr-2"></fa-icon>Sign out</a>
+        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faArrowRightFromBracket" class="mr-2"></fa-icon>{{ 'HEADER._sign_out' | translate }}</a>
       </div>
     </div>
   </div>

@@ -4,6 +4,78 @@
     "DASHBOARD": {
         "_title": "DOME MARKETPLACE is out! See what's new",
         "_header": "A Distributed Open Marketplace for Cloud and Edge Services",
-        "_subheader": "Welcome to the first open distributed marketplace ecosystem for cloud & edge services in Europe."
-    }    
+        "_subheader": "Welcome to the first open distributed marketplace ecosystem for cloud & edge services in Europe.",
+        "_new": "New",
+        "_learn_more": "Learn more",
+        "_video": "Watch video",
+        "_categories": "All categories",
+        "_cloud": "Cloud Services",
+        "_edge": "Edge Services",
+        "_smart_ports": "Smart ports",
+        "_smart_cities": "Smart cities",
+        "_search_ph": "Search Cloud Services, Edge Services, Providers...",
+        "_search": "Search"
+    },
+    "FEATURED": {
+        "_title": "Featured offerings",
+        "CARD1": {
+            "_badge": "Design",
+            "_title": "Start with Flowbite Design System",
+            "_description": "Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers.",
+            "_more": "Read more"
+        },
+        "CARD2": {
+            "_badge": "Code",
+            "_title": "Best react libraries around the web",
+            "_description": "Static websites are now used to bootstrap lots of websites and are becoming the basis for a variety of tools that even influence both web designers and developers.",
+            "_more": "Read more"
+        }
+    },
+    "GALLERY": {
+        "_title": "Offerings showcase"
+    },
+    "CARD": {
+        "_details": "View details",
+        "_add_cart": "Add to cart",
+        "_close": "Close modal",
+        "_categories": "Categories",
+        "_prod_details": "Product details",
+        "_comp_profile": "Compliance profile",
+        "_extra_info": "Extra information",
+        "_offer_version": "Offer version",
+        "_product_name": "Product name",
+        "_brand": "Brand",
+        "_last_update": "Last update",
+        "_product_version": "Product version",
+        "_id_number": "Identification number",
+        "_added_card": "Added to the cart",
+        "_undo": "Undo",
+        "_close_toast": "Close"
+    },
+    "CATEGORIES_FILTER": {
+        "_remove_badge": "Remove badge"
+    },
+    "FOOTER": {
+        "_about": "About",
+        "_privacy": "Privacy Policy",
+        "_licensing": "Licensing",
+        "_contact": "Contact",
+        "_rights": "All Rights Reserved."
+    },
+    "HEADER": {
+        "_marketplace": "MARKETPLACE",
+        "_open_menu": "Open main menu",
+        "_home": "Home",
+        "_categories": "Categories",
+        "_cloud": "Cloud Services",
+        "_smart_ports": "Smart ports",
+        "_smart_cities": "Smart cities",
+        "_see_all": "See all",
+        "_services": "Services",
+        "_contact": "Contact",
+        "_profile": "Profile",
+        "_offerings": "My Offerings",
+        "_cart": "My shopping cart",
+        "_sign_out": "Sign out"
+    }
 } 
