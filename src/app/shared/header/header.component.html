@@ -1,4 +1,4 @@
-<nav  class="fixed w-full h-25 bg-primary-100 z-20 top-0 start-0 text-white border-gray-200 dark:bg-secondary-100 dark:border-gray-700">
+<nav class="text-white border-gray-200 bg-primary-100 dark:bg-secondary-100 dark:border-gray-700">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <a href="#" class="flex items-center">
       <img src="assets/logos/DOME_Icon_White.svg" class="h-8 mr-3" alt="DOME Marketplace Logo" />
@@ -80,5 +80,7 @@
       </div>
     </div>
   </div>
+
 </nav>
+<bae-categories-panel class="transition transform scale-95 opacity-0 duration-200" [ngClass]="showPanel ? 'scale-100 opacity-100' : 'hidden'"></bae-categories-panel>
 

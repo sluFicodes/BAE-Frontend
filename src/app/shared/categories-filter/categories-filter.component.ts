@@ -1,19 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FaIconComponent } from "@fortawesome/angular-fontawesome";
-import { faCircle } from "@fortawesome/pro-regular-svg-icons";
-import { faCircleCheck } from "@fortawesome/pro-solid-svg-icons";
-import {FormsModule} from "@angular/forms";
-import {CategoryItemComponent} from "../category-item/category-item.component";
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Category} from "../../models/interfaces";
 import {Subject} from "rxjs";
+import {LocalStorageService} from "../../services/local-storage.service";
+import {EventMessageService} from "../../services/event-message.service";
 
 @Component({
   selector: 'bae-categories-filter',
   templateUrl: './categories-filter.component.html',
   styleUrl: './categories-filter.component.css'
 })
-export class CategoriesFilterComponent {
+export class CategoriesFilterComponent implements OnInit {
 
   classListFirst = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   classListLast  = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
@@ -21,8 +17,9 @@ export class CategoriesFilterComponent {
   categories: Category[] = [];
   selected: Category[] = [];
   dismissSubject: Subject<any> = new Subject();
+  @Output() selectedCategories = new EventEmitter<Category[]>();
 
-  constructor() {
+  constructor(private localStorage: LocalStorageService, private eventMessage: EventMessageService) {
     this.categories = [
       {
         "id": "urn:ngsi-ld:category:8c76c67f-411a-4779-b4dd-c3d8becabffb",
@@ -184,6 +181,10 @@ export class CategoriesFilterComponent {
     ];
   }
 
+  ngOnInit(): void {
+    this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+  }
+
   notifyDismiss(cat: Category) {
     this.dismissSubject.next(cat);
     this.removeCategory(cat);
@@ -191,12 +192,18 @@ export class CategoriesFilterComponent {
 
   addCategory(cat: Category) {
     this.selected.push(cat);
+    this.selectedCategories.emit(this.selected);
+    this.localStorage.setObject('selected_categories', this.selected);
+    this.eventMessage.emitAddedFilter(cat);
   }
 
   removeCategory(cat: Category) {
     const index = this.selected.indexOf(cat, 0);
     if(index > -1) {
       this.selected.splice(index,1);
+      this.selectedCategories.emit(this.selected);
+      this.localStorage.setObject('selected_categories', this.selected);
+      this.eventMessage.emitRemovedFilter(cat);
     }
   }
 }

@@ -1,18 +1,5 @@
-<div id="chips" class="flex justify-center w-full min-h-[46px] p-2">
-@for(category of selected; track category.id; let idx = $index) {
-  <span [id]="'badge-dismiss-'+idx" class="inline-flex justify-between items-center px-2 py-1 me-2 text-sm font-medium text-primary-100 border border-1 border-primary-100 bg-secondary-50 rounded dark:bg-secondary-100 dark:text-secondary-50">
-    {{category?.name}}
-    <button type="button" (click)="notifyDismiss(category)" class="inline-flex items-center p-1 ms-2 text-sm text-primary-100 dark:text-secondary-50 bg-transparent rounded-sm hover:bg-primary-100 hover:text-secondary-50 dark:hover:bg-primary-50 dark:hover:text-primary-100" [attr.data-dismiss-target]="'#badge-dismiss-'+idx" aria-label="Remove">
-    <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-    </svg>
-    <span class="sr-only">{{ 'CATEGORIES_FILTER._remove_badge' | translate }}</span>
-    </button>
-  </span>
-}
-</div>
 <h2 class="text-2xl dark:text-secondary-50 p-2">Categories</h2>
-<div id="accordion-collapse" data-accordion="open" class="w-1/5">
+<div id="accordion-collapse" data-accordion="open" class="w-1/4 md:w-1/5">
 @for(category of categories; track category.id; let idx = $index) {
 
     <h2 [id]="'accordion-heading-'+idx">
@@ -24,7 +11,7 @@
           </svg>
         </button>
       } @else {
-        <bae-category-item [data]="category" [dismissSubject]="dismissSubject" [isParent]="true" [isFirst]="$first" [isLast]="$last" (checkedEvent)="addCategory($event)" (uncheckedEvent)="removeCategory($event)"></bae-category-item>
+        <bae-category-item [data]="category" [isParent]="true" [isFirst]="$first" [isLast]="$last"></bae-category-item>
       }
     </h2>
   @if (category.children) {
@@ -35,7 +22,7 @@
           <ul class="grid w-full gap-2">
             @for(child of category.children; track child.id) {
               <li>
-                <bae-category-item [data]="child" [dismissSubject]="dismissSubject"  (checkedEvent)="addCategory($event)" (uncheckedEvent)="removeCategory($event)"></bae-category-item>
+                <bae-category-item [data]="child"></bae-category-item>
               </li>
             }
           </ul>

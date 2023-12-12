@@ -19,6 +19,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CategoryItemComponent} from "./shared/category-item/category-item.component";
+import {CategoriesPanelComponent} from "./shared/categories-panel/categories-panel.component";
 
 @NgModule({
   declarations: [
@@ -32,25 +33,26 @@ import {CategoryItemComponent} from "./shared/category-item/category-item.compon
     CardComponent,
     BadgeComponent,
   ],
-  imports: [
-    BrowserModule,
-    FontAwesomeModule,
-    SharedModule,
-    AppRoutingModule,
-    NgOptimizedImage,  
-    FaIconComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    TranslateModule.forRoot({
-      defaultLanguage: 'en',
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
+    imports: [
+        BrowserModule,
+        FontAwesomeModule,
+        SharedModule,
+        AppRoutingModule,
+        NgOptimizedImage,
+        FaIconComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        TranslateModule.forRoot({
+            defaultLanguage: 'en',
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        CategoriesPanelComponent,
 
-  ],
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -8,6 +8,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {CategoriesPanelComponent} from "./categories-panel/categories-panel.component";
 
 const imports: any[] = [
   CommonModule,
@@ -25,7 +26,7 @@ const declarations: any[] = [
 
 
 @NgModule({
-  imports: [...imports],
+    imports: [...imports, CategoriesPanelComponent],
   exports: [...imports, ...declarations],
   declarations: [...declarations],
   providers:[DatePipe, TranslateService]
