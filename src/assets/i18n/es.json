@@ -56,12 +56,19 @@
         "_remove_badge": "Remove badge",
         "_applied_filters": "Filtros aplicados:"
     },
+    "CART_DRAWER": {
+        "_title": "Shopping Cart",
+        "_close": "Close menu",
+        "_empty": "Empty cart",
+        "_purchase": "Proceed to purchase",
+        "_subtotal": "Subtotal"
+    },
     "FOOTER": {
         "_about": "About",
         "_privacy": "Privacy Policy",
         "_licensing": "Licensing",
         "_contact": "Contact",
-        "_rights": "All Rights Reserved."
+        "_rights": "All Rights Reserved"
     },
     "HEADER": {
         "_marketplace": "MARKETPLACE",

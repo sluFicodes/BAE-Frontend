@@ -19,6 +19,7 @@ import { NgOptimizedImage } from '@angular/common';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CategoryItemComponent} from "./shared/category-item/category-item.component";
+import { CartDrawerComponent } from "./shared/cart-drawer/cart-drawer.component";
 import {CategoriesPanelComponent} from "./shared/categories-panel/categories-panel.component";
 
 @NgModule({
@@ -32,6 +33,8 @@ import {CategoriesPanelComponent} from "./shared/categories-panel/categories-pan
     CategoryItemComponent,
     CardComponent,
     BadgeComponent,
+    CartDrawerComponent,
+    
   ],
     imports: [
         BrowserModule,

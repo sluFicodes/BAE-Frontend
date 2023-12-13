@@ -17,12 +17,10 @@ export class CardComponent implements OnInit {
   price: string = '';
   images: AttachmentRefOrValue[]  = [];
   toastVisibility: boolean = false;
-  test:any;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.test = document.getElementById("progress-bar")
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.value + ' ' +
       this.productOff?.productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.unit ?? 'n/a';
@@ -45,8 +43,9 @@ export class CardComponent implements OnInit {
     this.cdr.detectChanges();
     //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
     let element = document.getElementById("progress-bar")
-    if (element != null) {
-      console.log(document.getElementById("progress-bar"))
+    let parent = document.getElementById("toast-add-cart")
+    if (element != null && parent != null) {
+      console.log(document.getElementById("toast-add-cart"))
       element.style.width = '0%'
       element.offsetWidth
       element.style.width = '100%'

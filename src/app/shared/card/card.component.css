@@ -1,4 +1,4 @@
-#to-from-max-width {
-    width: 0; /* Set the initial width */
-    transition: width 5s, opacity 5s;
+.fade {
+    transition: all linear 500ms;
+    opacity: 1;
 }
