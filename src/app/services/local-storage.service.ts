@@ -25,7 +25,7 @@ export class LocalStorageService {
 
   // Get an object from local storage
   getObject(key: string): object | null {
-    return JSON.parse(localStorage.getItem(key) || '');
+    return JSON.parse(localStorage.getItem(key) || '{}');
   }
 
   // Remove a value from local storage
@@ -39,7 +39,7 @@ export class LocalStorageService {
   }
 
   addCategoryFilter(value: Category): void {
-    const filters = JSON.parse(localStorage.getItem('selected_categories') || '');
+    const filters = JSON.parse(localStorage.getItem('selected_categories') || '[]');
     const index = filters.findIndex((item:Category) => item.id === value.id);
     if(index === -1) {
       filters.push(value);
@@ -48,7 +48,7 @@ export class LocalStorageService {
   }
 
   removeCategoryFilter(value: Category): void {
-    const filters = JSON.parse(localStorage.getItem('selected_categories') || '') as Category[];
+    const filters = JSON.parse(localStorage.getItem('selected_categories') || '[]') as Category[];
     const index = filters.findIndex((item:Category) => item.id === value.id);
     if(index > -1) {
       filters.splice(index,1);

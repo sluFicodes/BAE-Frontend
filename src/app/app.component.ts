@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { initFlowbite } from 'flowbite';
 import { TranslateService } from '@ngx-translate/core';
+import {LocalStorageService} from "./services/local-storage.service";
 
 
 @Component({
@@ -13,10 +14,13 @@ export class AppComponent implements OnInit {
 
   constructor(
     private translate: TranslateService,
+    private localStorage: LocalStorageService
   ) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('es');
     this.translate.use('es');
+    if(!this.localStorage.getObject('selected_categories'))
+      this.localStorage.setObject('selected_categories', []);
   }
 
 
