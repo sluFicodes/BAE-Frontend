@@ -3,13 +3,18 @@ import {TranslateModule} from "@ngx-translate/core";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Category} from "../../models/interfaces";
 import {EventMessageService} from "../../services/event-message.service";
+import {faAddressCard} from "@fortawesome/sharp-solid-svg-icons";
+import {FaIconComponent} from "@fortawesome/angular-fontawesome";
+import {faFilterList} from "@fortawesome/pro-regular-svg-icons";
+import {faTag} from "@fortawesome/pro-solid-svg-icons";
 
 @Component({
   selector: 'bae-categories-panel',
   standalone: true,
-    imports: [
-        TranslateModule
-    ],
+  imports: [
+    TranslateModule,
+    FaIconComponent
+  ],
   templateUrl: './categories-panel.component.html',
   styleUrl: './categories-panel.component.css'
 })
@@ -41,4 +46,7 @@ export class CategoriesPanelComponent implements OnInit {
     this.eventMessage.emitRemovedFilter(cat);
   }
 
+  protected readonly faAddressCard = faAddressCard;
+  protected readonly faFilterList = faFilterList;
+  protected readonly faTag = faTag;
 }
