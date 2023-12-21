@@ -43,7 +43,7 @@
           </svg>
           {{ 'CARD._details' | translate }}
         </button>
-        <a id="add-to-cart" (click)="toggleToast()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{ 'CARD._add_cart' | translate }}</a>
+        <a id="add-to-cart" (click)="addProductToCart(productOff)" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{ 'CARD._add_cart' | translate }}</a>
       </div>
     </div>
   </div>
@@ -86,7 +86,7 @@
                 <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice().price}}</span>
                 <span class="text-xs dark:text-primary-50">{{getPrice().priceType}}</span>
               </div>              
-              <button (click)="toggleToast()" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              <button (click)="addProductToCart(productOff)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
                 <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
                 </svg>
@@ -147,8 +147,8 @@
     <div class="text-sm font-normal">
       {{ 'CARD._added_card' | translate }}.
     </div>
-    <div class="flex items-center ms-auto space-x-2 rtl:space-x-reverse">
-        <a class="text-sm font-medium text-blue-600 p-1.5 hover:bg-blue-100 rounded-lg dark:text-blue-500 dark:hover:bg-gray-700" href="#">{{ 'CARD._undo' | translate }}</a>
+    <div class="flex items-center ms-auto space-x-2 rtl:space-x-reverse p-1.5">
+        <button type="button" (click)="deleteProduct(lastAddedProd)" class="px-3 py-2 text-xs font-medium text-center text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">{{ 'CARD._undo' | translate }}</button>
         <button type="button" (click)="toastVisibility=false" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-add-cart" aria-label="Close">
         <span class="sr-only">{{ 'CARD._close_toast' | translate }}</span>
         <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">

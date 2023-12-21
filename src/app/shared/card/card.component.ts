@@ -4,6 +4,8 @@ import {BadgeComponent} from "../badge/badge.component";
 import {components} from "../../models/product-catalog";
 type Product = components["schemas"]["ProductOffering"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
+import {LocalStorageService} from "../../services/local-storage.service";
+import {EventMessageService} from "../../services/event-message.service";
 
 @Component({
   selector: 'bae-off-card',
@@ -17,8 +19,9 @@ export class CardComponent implements OnInit {
   price: string = '';
   images: AttachmentRefOrValue[]  = [];
   toastVisibility: boolean = false;
+  lastAddedProd:Product | undefined;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef, private localStorage: LocalStorageService, private eventMessage: EventMessageService) {}
 
   ngOnInit() {
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
@@ -38,8 +41,17 @@ export class CardComponent implements OnInit {
     }
   }
 
-  toggleToast(){
+  addProductToCart(productOff:Product| undefined){
+    console.log('Producto...')
+    console.log(productOff)
+    this.localStorage.addCartItem(productOff as Product);
+    if(productOff!== undefined){
+      console.log('emit message')
+      this.eventMessage.emitAddedCartItem(productOff as Product);
+    }    
+    //TOGGLE TOAST
     this.toastVisibility=true;
+    this.lastAddedProd=productOff;
     this.cdr.detectChanges();
     //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
     let element = document.getElementById("progress-bar")
@@ -56,5 +68,13 @@ export class CardComponent implements OnInit {
     }
     
     this.cdr.detectChanges();
+  }
+
+  deleteProduct(product: Product | undefined){
+    if(product !== undefined) {
+      this.localStorage.removeCartItem(product);
+      this.eventMessage.emitRemovedCartItem(product as Product);
+    }
+    this.toastVisibility=false;
   }
 }

@@ -1,53 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   faCartShopping
 } from "@fortawesome/sharp-solid-svg-icons";
 import {components} from "../../models/product-catalog";
 type ProductOffering = components["schemas"]["ProductOffering"];
+import {LocalStorageService} from "../../services/local-storage.service";
+import {EventMessageService} from "../../services/event-message.service";
 
 @Component({
   selector: 'app-cart-drawer',
   templateUrl: './cart-drawer.component.html',
   styleUrl: './cart-drawer.component.css'
 })
-export class CartDrawerComponent {
+export class CartDrawerComponent implements OnInit{
   protected readonly faCartShopping = faCartShopping;
-  p1: ProductOffering;
-  p2: ProductOffering;
+  //p1: ProductOffering;
+  //p2: ProductOffering;
+  //p3: ProductOffering;
   items: ProductOffering[] = [];
   totalPrice:any;
 
-  constructor() {
-    this.p1 = {
-      id: '1',
-      name: 'ETABox Vessel (IDOM)',
-      description: 'Advanced cloud-based solution utilizing AI-driven predictive models to estimate vessel arrivals and departures, tailored for port authorities and shipping companies. Features real-time ETA/ETD dashboards and precise algorithmic accuracy statistics.',
-      productOfferingPrice: [
-        { priceType: 'per 100 requests',
-          price: {
-          dutyFreeAmount: {
-            unit: 'EUR',
-            value: 200
-          },
-          taxIncludedAmount: {
-            unit: 'EUR',
-            value: 242 }
-          }
+  constructor(private localStorage: LocalStorageService, private eventMessage: EventMessageService, private cdr: ChangeDetectorRef) {
+
+  }
+
+  ngOnInit(): void {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'AddedCartItem') {
+        console.log('Elemento añadido')
+        const index = this.items.indexOf(ev.value as ProductOffering, 0);
+        if(index === -1) {
+          this.items.push(ev.value as ProductOffering)
         }
-      ],
-      category: [{ id: '1', name: 'IaaS' }],
-      attachment: [{url: 'assets/images/ETABoxVessel_IDOM-Transparent.png', attachmentType: 'image'}]
-    }
-    this.p2 = {
-      id: '2',
-      name: 'ETABox Container (IDOM)',
-      description: 'AI-enhanced cloud service offering dynamic container arrival predictions, synchronizing transport services. Integrates multi-source data for accurate terminal operations, intuitive interface and comprehensive API support.',
-      productOfferingPrice: [{ priceType: 'per 100 requests', price: {dutyFreeAmount: {unit: 'EUR', value: 200}, taxIncludedAmount: {unit: 'EUR', value: 242 }}}],
-      category: [{ id: '1', name: 'IaaS' }],
-      attachment: [{url: 'assets/images/ETABoxCN_IDOM-Transparent.png', attachmentType: 'image'}]
-    }
-    this.items.push(this.p1);
-    this.items.push(this.p2)
+        this.getTotalPrice();
+      } else if(ev.type === 'RemovedCartItem') {
+        const index = this.items.indexOf(ev.value as ProductOffering, 0);
+        if(index > -1) {
+          this.items.splice(index,1);
+        }
+        this.getTotalPrice();
+      }
+    })
+    this.items = this.localStorage.getObject('cart_items') as ProductOffering[] || [] ;
+    this.cdr.detectChanges();
+    this.getTotalPrice();
+    console.log('Elementos en el carrito....')
+    console.log(this.items)
   }
 
   getProductImage(attachment:any[]) {
@@ -70,8 +68,42 @@ export class CartDrawerComponent {
   }
 
   getTotalPrice(){
+    this.totalPrice=[];
+    let insertCheck = false;
+    let priceInfo={};
     for(let i=0; i<this.items.length; i++){
-
+      insertCheck = false;
+      console.log(this.items[i].productOfferingPrice?.at(0)?.priceType)
+      if(this.totalPrice.length == 0){
+        priceInfo = {
+          'priceType': this.items[i].productOfferingPrice?.at(0)?.priceType,
+          'price': this.items[i].productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.value,
+          'unit': this.items[i].productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.unit
+        }
+        this.totalPrice.push(priceInfo);
+      } else {
+        for(let j=0; j<this.totalPrice.length; j++){
+          if(this.items[i].productOfferingPrice?.at(0)?.priceType == this.totalPrice[j].priceType && this.items[i].productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.unit == this.totalPrice[j].unit){
+            this.totalPrice[j].price=this.totalPrice[j].price+this.items[i].productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.value;
+            insertCheck=true;
+          } else {
+            priceInfo = {
+              'priceType': this.items[i].productOfferingPrice?.at(0)?.priceType,
+              'price': this.items[i].productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.value,
+              'unit': this.items[i].productOfferingPrice?.at(0)?.price?.taxIncludedAmount?.unit
+            }        
+          }
+        }
+        if(insertCheck==false){
+          this.totalPrice.push(priceInfo);
+          insertCheck=true;
+        }       
+      }
     }
+  }
+
+  deleteProduct(product: ProductOffering){
+    this.localStorage.removeCartItem(product);
+    this.eventMessage.emitRemovedCartItem(product as ProductOffering);
   }
 }

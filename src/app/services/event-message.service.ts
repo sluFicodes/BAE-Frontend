@@ -3,7 +3,7 @@ import {Subject} from "rxjs";
 import {Category} from "../models/interfaces";
 
 export interface EventMessage {
-  type: 'AddedFilter' | 'RemovedFilter';
+  type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem';
   text?: string,
   value?: object
 }
@@ -27,5 +27,14 @@ export class EventMessageService {
   /** Emit an event to notify the removal of a filter to the Subject */
   emitRemovedFilter(filter: object) {
     this.eventMessageSubject.next({ type: 'RemovedFilter', value: filter });
+  }
+
+  /** Emit an event to notify the addition of a filter to the Subject */
+  emitAddedCartItem(productOff: object) {
+    this.eventMessageSubject.next({ type: 'AddedCartItem', value: productOff });
+  }
+  /** Emit an event to notify the removal of a filter to the Subject */
+  emitRemovedCartItem(productOff: object) {
+    this.eventMessageSubject.next({ type: 'RemovedCartItem', value: productOff });
   }
 }

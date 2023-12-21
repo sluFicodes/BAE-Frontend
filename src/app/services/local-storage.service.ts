@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Category} from "../models/interfaces";
+import {components} from "../models/product-catalog";
+type ProductOffering = components["schemas"]["ProductOffering"];
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +55,24 @@ export class LocalStorageService {
     if(index > -1) {
       filters.splice(index,1);
       localStorage.setItem('selected_categories', JSON.stringify(filters));
+    }
+  }
+
+  addCartItem(value: ProductOffering): void {
+    const products = JSON.parse(localStorage.getItem('cart_items') || '[]');
+    const index = products.findIndex((item:ProductOffering) => item.id === value.id);
+    if(index === -1) {
+      products.push(value);
+      localStorage.setItem('cart_items', JSON.stringify(products));
+    }
+  }
+
+  removeCartItem(value: ProductOffering): void {
+    const products = JSON.parse(localStorage.getItem('cart_items') || '[]') as Category[];
+    const index = products.findIndex((item:ProductOffering) => item.id === value.id);
+    if(index > -1) {
+      products.splice(index,1);
+      localStorage.setItem('cart_items', JSON.stringify(products));
     }
   }
 }
