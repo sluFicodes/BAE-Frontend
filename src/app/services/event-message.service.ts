@@ -3,9 +3,9 @@ import {Subject} from "rxjs";
 import {Category} from "../models/interfaces";
 
 export interface EventMessage {
-  type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem';
+  type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown';
   text?: string,
-  value?: object
+  value?: object | boolean
 }
 
 
@@ -36,5 +36,9 @@ export class EventMessageService {
   /** Emit an event to notify the removal of a filter to the Subject */
   emitRemovedCartItem(productOff: object) {
     this.eventMessageSubject.next({ type: 'RemovedCartItem', value: productOff });
+  }
+  /** Emit an event to notify if the filter panel is shown or hidden */
+  emitFilterShown(shown: boolean) {
+    this.eventMessageSubject.next({ type: 'FilterShown', value: shown });
   }
 }

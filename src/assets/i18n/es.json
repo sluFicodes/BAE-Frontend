@@ -50,7 +50,8 @@
         "_id_number": "Identification number",
         "_added_card": "Added to the cart",
         "_undo": "Undo",
-        "_close_toast": "Close"
+        "_close_toast": "Close",
+        "_from": "Desde"
     },
     "CATEGORIES_FILTER": {
         "_remove_badge": "Remove badge",

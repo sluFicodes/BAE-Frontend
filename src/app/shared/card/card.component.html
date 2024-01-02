@@ -1,40 +1,46 @@
-<div class="w-full bg-white rounded-lg dark:bg-secondary-50 dark:border-gray-700 border-secondary-50 border">
+<div class="w-full bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-secondary-50 border">
   <a href="#" class="flex justify-center w-full box-decoration-clone">
     <img class=" rounded-t-lg w-fit h-[200px]" src="{{getProductImage()}}" alt="product image" />
   </a>
-  <div class="dark:bg-secondary-100 bg-cover bg-right-bottom bg-opacity-25" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
-    <div class="px-5 py-5 bg-secondary-50/95 dark:bg-secondary-100/95">
+  <div class="dark:bg-white bg-cover bg-right-bottom bg-opacity-25" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
+    <div class="px-5 py-5 bg-secondary-50/95 dark:bg-white/95">
       @if (productOff?.category) {
         <bae-badge category="{{ category }}"></bae-badge>
       }
       <a href="#">
-        <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{productOff?.name}}</h5>
+        <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{productOff?.name}}</h5>
       </a>
-      <div class="min-h-19 h-19 line-clamp-3 dark:text-secondary-50">{{productOff?.description}}</div>
-      <div class="flex items-center mt-2.5 mb-5">
-        <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-        </svg>
-        <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-        </svg>
-        <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-        </svg>
-        <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-        </svg>
-        <svg class="w-4 h-4 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
-          <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
-        </svg>
-        <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3">5.0</span>
-      </div>
-      <div class="flex items-center justify-between">
-        <div class="flex place-content-center flex-col">
-          <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice().price}}</span>
-          <span class="text-xs dark:text-primary-50">{{getPrice().priceType}}</span>
+      <div class="min-h-19 h-19 line-clamp-3 text-gray-600">{{productOff?.description}}</div>
+      <div class="flex w-full justify-between mt-2.5 mb-5 text-gray-500 font-mono">
+        <div>{{productOff?.version || 'V: latest'}}</div>
+        <div class="flex items-center">
+          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <svg class="w-4 h-4 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3">5.0</span>
         </div>
-        <button data-modal-target="details-modal" data-modal-toggle="details-modal" type="button" class="flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+      </div>
+
+      <div class="flex place-content-start items-baseline mb-5">
+        <span class="text-2xl font-bold text-gray-900 mr-1">{{ 'CARD._from' | translate }} {{getPrice().price}}</span>
+        <span class="text-xs font-bold text-gray-900">{{getPrice().priceType}}</span>
+      </div>
+
+      <div class="flex items-center justify-center">
+
+        <button data-modal-target="details-modal" data-modal-toggle="details-modal" type="button" class="flex items-center text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-100 dark:hover:bg-primary-50 dark:focus:ring-primary-100 mr-1">
           <svg class="w-[18px] h-[18px] text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
             <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
               <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
@@ -43,7 +49,7 @@
           </svg>
           {{ 'CARD._details' | translate }}
         </button>
-        <a id="add-to-cart" (click)="addProductToCart(productOff)" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{ 'CARD._add_cart' | translate }}</a>
+        <a id="add-to-cart" (click)="addProductToCart(productOff)" class="text-white bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{ 'CARD._add_cart' | translate }}</a>
       </div>
     </div>
   </div>
@@ -54,8 +60,8 @@
   <div class="relative w-full max-w-7xl max-h-full">
       <!-- Modal content -->
       <div class="relative bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom">
-          <!-- Modal header 
-          <div class="p-4 md:p-5 border-b rounded-t dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom bg-opacity-25" style="background-image: url(assets/logos/dome-logo-element-colour.png)">              
+          <!-- Modal header
+          <div class="p-4 md:p-5 border-b rounded-t dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom bg-opacity-25" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
               <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                 {{productOff?.name}}
               </h3>
@@ -85,7 +91,7 @@
               <div class="flex place-content-center flex-col">
                 <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice().price}}</span>
                 <span class="text-xs dark:text-primary-50">{{getPrice().priceType}}</span>
-              </div>              
+              </div>
               <button (click)="addProductToCart(productOff)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
                 <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
@@ -97,7 +103,7 @@
                 <svg class="mr-2 w-[18px] h-[18px] dark:text-secondary-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 18">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.583 5.445h.01M8.86 16.71l-6.573-6.63a.993.993 0 0 1 0-1.4l7.329-7.394A.98.98 0 0 1 10.31 1l5.734.007A1.968 1.968 0 0 1 18 2.983v5.5a.994.994 0 0 1-.316.727l-7.439 7.5a.975.975 0 0 1-1.385.001Z"/>
                 </svg>
-                {{ 'CARD._categories' | translate }}: 
+                {{ 'CARD._categories' | translate }}:
                 @if (productOff?.category) {
                   <bae-badge class="ml-2" category="{{ category }}"></bae-badge>
                 }
@@ -131,7 +137,7 @@
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                 </svg>
                 </button>
-            </div>            
+            </div>
           </div>
       </div>
   </div>

@@ -1,5 +1,6 @@
 <bae-header class="fixed w-full z-20 top-0 start-0"></bae-header>
-<main class="container mx-auto pt-[118px]">
+<bae-categories-panel class="fixed z-20 w-full top-[72px] transition transform opacity-0 duration-200" [ngClass]="showPanel ? 'opacity-100' : 'hidden'"></bae-categories-panel>
+<main class="bg-fixed bg-no-repeat bg-right" [ngClass]="showPanel ? 'pt-[118px]' : 'pt-[72px]'">
     <router-outlet></router-outlet>
 </main>
 <bae-footer></bae-footer>
