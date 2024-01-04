@@ -1,9 +1,8 @@
 <!-- Offerings Gallery section -->
 <h2 class="text-4xl font-extrabold text-primary-100 text-center dark:text-primary-50">{{ 'GALLERY._title' | translate }}</h2>
 <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 w-full grid gap-2 grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3">
-  <bae-off-card [productOff]=p1 class="w-full"></bae-off-card>
-  <bae-off-card [productOff]=p2 class="w-full"></bae-off-card>
-  <bae-off-card [productOff]=p3 class="w-full"></bae-off-card>
+  @for (prod of products; track prod.id) {
+    <bae-off-card [productOff]=prod class="w-full"></bae-off-card>
+  }
 </div>
 <!-- End Offerings Section -->
-

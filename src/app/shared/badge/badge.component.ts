@@ -9,7 +9,7 @@ import {faCloud} from "@fortawesome/pro-solid-svg-icons";
   styleUrl: './badge.component.css'
 })
 export class BadgeComponent {
-  @Input() category = 'Default'
+  @Input() category = {name:'Default'}
     protected readonly faAddressCard = faAddressCard;
   protected readonly faCloud = faCloud;
 }

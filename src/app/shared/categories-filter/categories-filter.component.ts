@@ -1,8 +1,10 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ChangeDetectorRef} from '@angular/core';
 import {Category} from "../../models/interfaces";
 import {Subject} from "rxjs";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
+import { ApiServiceService } from 'src/app/services/api-service.service';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'bae-categories-filter',
@@ -19,8 +21,14 @@ export class CategoriesFilterComponent implements OnInit {
   dismissSubject: Subject<any> = new Subject();
   @Output() selectedCategories = new EventEmitter<Category[]>();
 
-  constructor(private localStorage: LocalStorageService, private eventMessage: EventMessageService) {
-    this.categories = [
+  constructor(
+    private localStorage: LocalStorageService,
+    private eventMessage: EventMessageService,
+    private api: ApiServiceService,
+    private cdr: ChangeDetectorRef
+    ) {
+      this.categories = [];
+    /*this.categories = [
       {
         "id": "urn:ngsi-ld:category:8c76c67f-411a-4779-b4dd-c3d8becabffb",
         "href": "urn:ngsi-ld:category:8c76c67f-411a-4779-b4dd-c3d8becabffb",
@@ -178,11 +186,30 @@ export class CategoriesFilterComponent implements OnInit {
           "startDateTime": "2023-11-30T18:22:34.205Z"
         }
       }
-    ];
+    ];*/
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+    await this.api.getCategories().then(data => {      
+      for(let i=0; i < data.length; i++){
+        if(data[i].isRoot == true){
+          let root = data[i]
+          root["children"]=[]
+          for(let j=0; j < data.length; j++){
+            if(data[j].isRoot == false && data[j].parentId == data[i].id){
+              root["children"].push(data[j])
+            }
+          }
+          this.categories.push(root)
+          this.cdr.detectChanges();
+        }
+      }
+      initFlowbite();
+    })
+    console.log('--Categorías---')
+    console.log(this.categories)
+    console.log(this.categories[0].children)
   }
 
   notifyDismiss(cat: Category) {
@@ -206,4 +233,5 @@ export class CategoriesFilterComponent implements OnInit {
       this.eventMessage.emitRemovedFilter(cat);
     }
   }
+
 }

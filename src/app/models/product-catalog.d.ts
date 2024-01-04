@@ -1371,7 +1371,8 @@ export interface components {
       /** @description A use of the ProductSpecificationCharacteristicValue by a ProductOffering to which additional properties (attributes) apply or override the properties of similar properties contained in ProductSpecificationCharacteristicValue. It should be noted that characteristics which their value(s) addressed by this object must exist in corresponding product specification. The available characteristic values for a ProductSpecificationCharacteristic in a Product specification can be modified at the ProductOffering level. For example, a characteristic 'Color' might have values White, Blue, Green, and Red. But, the list of values can be restricted to e.g. White and Blue in an associated product offering. It should be noted that the list of values in 'ProductSpecificationCharacteristicValueUse' is a strict subset of the list of values as defined in the corresponding product specification characteristics. */
       prodSpecCharValueUse?: components["schemas"]["ProductSpecificationCharacteristicValueUse"][];
       /** @description An amount, usually of money, that is asked for or allowed when a ProductOffering is bought, rented, or leased. The price is valid for a defined period of time and may not represent the actual price paid by a customer. */
-      productOfferingPrice?: components["schemas"]["ProductOfferingPriceRefOrValue"][];
+      //productOfferingPrice?: components["schemas"]["ProductOfferingPriceRefOrValue"][];
+      productOfferingPrice?: components["schemas"]["ProductOfferingPrice"][];
       /** @description A relationship between this product offering and other product offerings. */
       productOfferingRelationship?: components["schemas"]["ProductOfferingRelationship"][];
       /** @description A condition under which a ProductOffering is made available to Customers. For instance, a productOffering can be offered with multiple commitment periods. */
