@@ -62,7 +62,10 @@ export class CartDrawerComponent implements OnInit{
   getPrice(productOfferingPrice:any[]) {
     let priceType = productOfferingPrice?.at(0)?.priceType
     if(priceType == 'recurring'){
-      priceType= 'recurring '+productOfferingPrice?.at(0)?.recurringChargePeriodType
+      priceType= productOfferingPrice?.at(0)?.recurringChargePeriodType
+    }
+    if(priceType == 'usage'){
+      priceType= '/ '+productOfferingPrice?.at(0)?.unitOfMeasure?.units
     }
     return {
       price: productOfferingPrice.at(0)?.price?.value + ' ' +
@@ -81,7 +84,10 @@ export class CartDrawerComponent implements OnInit{
       if(this.totalPrice.length == 0){
         let priceType = this.items[i].productOfferingPrice?.at(0)?.priceType
         if(priceType == 'recurring'){
-          priceType= 'recurring '+this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
+          priceType= this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
+        }
+        if(priceType == 'usage'){
+          priceType= '/ '+this.items[i].productOfferingPrice?.at(0)?.unitOfMeasure?.units
         }
         priceInfo = {
           'priceType': priceType,
@@ -92,7 +98,7 @@ export class CartDrawerComponent implements OnInit{
       } else {
         for(let j=0; j<this.totalPrice.length; j++){
           if(this.items[i].productOfferingPrice?.at(0)?.priceType == 'recurring'){
-            let priceType= 'recurring '+this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
+            let priceType= this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
             if(priceType == this.totalPrice[j].priceType && this.items[i].productOfferingPrice?.at(0)?.price?.unit == this.totalPrice[j].unit){
               this.totalPrice[j].price=this.totalPrice[j].price+this.items[i].productOfferingPrice?.at(0)?.price?.value;
               insertCheck=true;
@@ -104,6 +110,18 @@ export class CartDrawerComponent implements OnInit{
               }        
             }
 
+          } else if(this.items[i].productOfferingPrice?.at(0)?.priceType == 'usage'){
+            let priceType= '/ '+this.items[i].productOfferingPrice?.at(0)?.unitOfMeasure?.units
+            if(priceType == this.totalPrice[j].priceType && this.items[i].productOfferingPrice?.at(0)?.price?.unit == this.totalPrice[j].unit){
+              this.totalPrice[j].price=this.totalPrice[j].price+this.items[i].productOfferingPrice?.at(0)?.price?.value;
+              insertCheck=true;
+            } else {
+              priceInfo = {
+                'priceType': priceType,
+                'price': this.items[i].productOfferingPrice?.at(0)?.price?.value,
+                'unit': this.items[i].productOfferingPrice?.at(0)?.price?.unit
+              }        
+            }
           } else {
             if(this.items[i].productOfferingPrice?.at(0)?.priceType == this.totalPrice[j].priceType && this.items[i].productOfferingPrice?.at(0)?.price?.unit == this.totalPrice[j].unit){
               this.totalPrice[j].price=this.totalPrice[j].price+this.items[i].productOfferingPrice?.at(0)?.price?.value;
@@ -111,7 +129,10 @@ export class CartDrawerComponent implements OnInit{
             } else {
               let priceType = this.items[i].productOfferingPrice?.at(0)?.priceType
               if(priceType == 'recurring'){
-                priceType= 'recurring '+this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
+                priceType= this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
+              }
+              if(priceType == 'usage'){
+                priceType= '/ '+this.items[i].productOfferingPrice?.at(0)?.unitOfMeasure?.units
               }
               priceInfo = {
                 'priceType': priceType,

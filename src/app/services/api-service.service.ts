@@ -23,6 +23,12 @@ export class ApiServiceService {
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
+  getProductById(id:any) {
+    let url = `http://localhost:8632/productOffering/${id}`;
+
+    return lastValueFrom(this.http.get<any>(url));
+  }
+
   getProductSpecification(id:any) {
     let url = `http://localhost:8632/productSpecification/${id}`;
 

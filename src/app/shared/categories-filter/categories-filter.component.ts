@@ -191,25 +191,48 @@ export class CategoriesFilterComponent implements OnInit {
 
   async ngOnInit() {
     this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
-    await this.api.getCategories().then(data => {      
+    await this.api.getCategories().then(data => {
+      console.log('--- Respuesta categorías api ---')    
+      console.log(data)
       for(let i=0; i < data.length; i++){
-        if(data[i].isRoot == true){
-          let root = data[i]
-          root["children"]=[]
-          for(let j=0; j < data.length; j++){
-            if(data[j].isRoot == false && data[j].parentId == data[i].id){
-              root["children"].push(data[j])
-            }
-          }
-          this.categories.push(root)
-          this.cdr.detectChanges();
-        }
+        this.findChildren(data[i],data)
       }
+      console.log('--- CATEGORIES ---')
+      console.log(this.categories)
+      console.log('------------------')
+      this.cdr.detectChanges();
       initFlowbite();
-    })
-    console.log('--Categorías---')
-    console.log(this.categories)
-    console.log(this.categories[0].children)
+    })    
+  }
+
+  findChildren(parent:any,data:any[]){
+    let childs = data.filter((p => p.parentId === parent.id));
+    parent["children"] = childs;
+    if(parent.isRoot == true){
+      this.categories.push(parent)
+    } else {
+      this.saveChildren(this.categories,parent)
+    }
+    if(childs.length != 0){
+      for(let i=0; i < childs.length; i++){
+        this.findChildren(childs[i],data)
+      }
+    }
+  }
+
+  saveChildren(superCategories:any[],parent:any){
+    for(let i=0; i < superCategories.length; i++){
+      let children = superCategories[i].children;
+      if (children != undefined){
+        let check = children.find((element: { id: any; }) => element.id == parent.id) 
+        if (check != undefined) {
+          let idx = children.findIndex((element: { id: any; }) => element.id == parent.id)
+          children[idx] = parent
+          superCategories[i].children = children         
+        }
+        this.saveChildren(children,parent)
+      }          
+    }
   }
 
   notifyDismiss(cat: Category) {

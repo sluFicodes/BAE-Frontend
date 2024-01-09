@@ -26,7 +26,6 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('API RESPONSE:')
     this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
 
     this.eventMessage.messages$.subscribe(ev => {
@@ -34,8 +33,6 @@ export class SearchComponent implements OnInit {
         this.updateProducts();
       }
     })
-    console.log('Productos...')
-    console.log(this.products)
 
   }
 
@@ -46,48 +43,11 @@ export class SearchComponent implements OnInit {
     if(filters.length == 0){
       this.api.getProducts().then(data => {      
         for(let i=0; i < data.length; i++){
-          console.log(data[i])
-          let attachment: any[]= []
-          console.log(data[i].productSpecification.id)
-          this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
-            attachment = spec.attachment
-            console.log(spec.attachment)
-            let prodPrices: any[] | undefined= data[i].productOfferingPrice;
-            let prices: any[]=[];
-            if(prodPrices!== undefined){            
-              for(let j=0; j < prodPrices.length; j++){
-                this.api.getProductPrice(prodPrices[j].id).then(price => {
-                  prices.push(price);
-                })
-              }
-            }
-            this.products.push(
-              {
-                id: data[i].id,
-                name: data[i].name,
-                category: data[i].category,
-                description: data[i].description,
-                lastUpdate: data[i].lastUpdate,
-                attachment: attachment,
-                productOfferingPrice: prices,
-                productSpecification: data[i].productSpecification,
-                version: data[i].version
-              }
-            )
-          })
-        }
-        this.loading=false;
-      })
-    } else {
-      for(let f=0; f < filters.length; f++){
-        this.api.getProductsByCategory(filters[f].id).then(data => {
-          for(let i=0; i < data.length; i++){
-            console.log(data[i])
+          let check = this.products.find((p => p.id == data[i].id));
+          if(check == undefined){
             let attachment: any[]= []
-            console.log(data[i].productSpecification.id)
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
               attachment = spec.attachment
-              console.log(spec.attachment)
               let prodPrices: any[] | undefined= data[i].productOfferingPrice;
               let prices: any[]=[];
               if(prodPrices!== undefined){            
@@ -110,7 +70,52 @@ export class SearchComponent implements OnInit {
                   version: data[i].version
                 }
               )
+              this.cdr.detectChanges();
             })
+          }
+        }
+        this.loading=false;
+      })
+    } else {
+      for(let f=0; f < filters.length; f++){
+        console.log('-- filtro --')
+        console.log(filters[f])
+        this.api.getProductsByCategory(filters[f].id).then(data => {
+          for(let i=0; i < data.length; i++){
+            let check = this.products.find((p => p.id == data[i].id));
+            console.log('------')
+            console.log(check)
+            console.log(data[i].name)
+            console.log('------')
+            if(check == undefined){
+              let attachment: any[]= []
+              this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
+                attachment = spec.attachment
+                let prodPrices: any[] | undefined= data[i].productOfferingPrice;
+                let prices: any[]=[];
+                if(prodPrices!== undefined){            
+                  for(let j=0; j < prodPrices.length; j++){
+                    this.api.getProductPrice(prodPrices[j].id).then(price => {
+                      prices.push(price);
+                    })
+                  }
+                }
+                this.products.push(
+                  {
+                    id: data[i].id,
+                    name: data[i].name,
+                    category: data[i].category,
+                    description: data[i].description,
+                    lastUpdate: data[i].lastUpdate,
+                    attachment: attachment,
+                    productOfferingPrice: prices,
+                    productSpecification: data[i].productSpecification,
+                    version: data[i].version
+                  }
+                )
+                this.cdr.detectChanges();
+              })
+            }
           }
           this.loading=false;
         })

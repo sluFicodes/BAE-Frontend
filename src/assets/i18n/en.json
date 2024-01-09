@@ -86,5 +86,20 @@
         "_offerings": "My Offerings",
         "_cart": "My shopping cart",
         "_sign_out": "Sign out"
+    },
+    "PRODUCT_DETAILS": {
+        "_back": "Back",
+        "_details": "Details",
+        "_information": "Information",
+        "_chars": "Characteristics",
+        "_attach": "Attachments",
+        "_agreements": "Agreements",
+        "_relationships": "Relationships",
+        "_no_chars": "No characteristics included",
+        "_no_attach": "No attachments included",
+        "_license": "License",
+        "_sla": "SLA",
+        "_no_sla": "No SLA included",
+        "_no_relatioships": "No relationships included"
     }
 }

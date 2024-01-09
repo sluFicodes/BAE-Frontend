@@ -9,9 +9,9 @@
       <span class="sr-only">Loading...</span>
     </div>
   } @else {
-    <div class="w-3/4 md:w-4/5 pl-5 grid gap-5 grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3">
+    <div class="w-3/4 md:w-4/5 pl-5 grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3">
       @for (prod of products; track prod.id) {
-        <bae-off-card [productOff]=prod class="w-full"></bae-off-card>
+        <bae-off-card [productOff]=prod class="w-full p-2"></bae-off-card>
       }
     </div>
   }

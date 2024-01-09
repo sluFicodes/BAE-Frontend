@@ -6,6 +6,7 @@ import { FeaturedComponent } from "./offerings/featured/featured.component";
 import { GalleryComponent } from "./offerings/gallery/gallery.component";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { SearchComponent } from "./pages/search/search.component";
+import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from "./shared/shared.module";
 import { AppRoutingModule } from './app-routing.module';
@@ -34,6 +35,7 @@ import {CategoriesPanelComponent} from "./shared/categories-panel/categories-pan
     CardComponent,
     BadgeComponent,
     CartDrawerComponent,
+    ProductDetailsComponent
     
   ],
     imports: [
