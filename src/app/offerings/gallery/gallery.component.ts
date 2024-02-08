@@ -23,36 +23,37 @@ export class GalleryComponent implements OnInit {
     console.log('API RESPONSE:')
     this.api.getProducts().then(data => {      
       for(let i=0; i < data.length; i++){
-        console.log(data[i])
-        let attachment: any[]= []
-        console.log(data[i].productSpecification.id)
-        this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
-          attachment = spec.attachment
-          console.log(spec.attachment)
-          let prodPrices: any[] | undefined= data[i].productOfferingPrice;
-          let prices: any[]=[];
-          if(prodPrices!== undefined){            
-            for(let j=0; j < prodPrices.length; j++){
-              this.api.getProductPrice(prodPrices[j].id).then(price => {
-                prices.push(price);
-              })
+          let attachment: any[]= []
+          this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
+            attachment = spec.attachment
+            let prodPrices: any[] | undefined= data[i].productOfferingPrice;
+            let prices: any[]=[];
+            if(prodPrices!== undefined){            
+              for(let j=0; j < prodPrices.length; j++){
+                this.api.getProductPrice(prodPrices[j].id).then(price => {
+                  prices.push(price);
+                  if(j+1==prodPrices?.length){
+                    this.products.push(
+                      {
+                        id: data[i].id,
+                        name: data[i].name,
+                        category: data[i].category,
+                        description: data[i].description,
+                        lastUpdate: data[i].lastUpdate,
+                        attachment: attachment,
+                        productOfferingPrice: prices,
+                        productSpecification: data[i].productSpecification,
+                        version: data[i].version
+                      }
+                    )
+                    this.cdr.detectChanges();
+                  }
+                })
+              }
             }
-          }
-          this.products.push(
-            {
-              id: data[i].id,
-              name: data[i].name,
-              category: data[i].category,
-              description: data[i].description,
-              lastUpdate: data[i].lastUpdate,
-              attachment: attachment,
-              productOfferingPrice: prices,
-              productSpecification: data[i].productSpecification,
-              version: data[i].version
-            }
-          )
-        })
-      }
+
+          })
+        }
     })
 
     console.log('Productos...')

@@ -9,6 +9,7 @@ import { FooterComponent } from './footer/footer.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {CategoriesPanelComponent} from "./categories-panel/categories-panel.component";
+import { CartDrawerComponent } from "./cart-drawer/cart-drawer.component";
 
 const imports: any[] = [
   CommonModule,
@@ -16,12 +17,13 @@ const imports: any[] = [
   FormsModule,
   ReactiveFormsModule,
   FontAwesomeModule,
-  TranslateModule,
+  TranslateModule
 ];
 
 const declarations: any[] = [
   HeaderComponent,
-  FooterComponent
+  FooterComponent,
+  CartDrawerComponent
 ];
 
 

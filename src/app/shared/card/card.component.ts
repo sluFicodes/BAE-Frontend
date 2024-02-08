@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ChangeDetectorRef} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectorRef, HostListener, OnChanges, SimpleChanges} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {BadgeComponent} from "../badge/badge.component";
 import {components} from "../../models/product-catalog";
@@ -10,7 +10,7 @@ import {EventMessageService} from "../../services/event-message.service";
 import { ApiServiceService } from 'src/app/services/api-service.service';
 import { Modal } from 'flowbite';
 import { Router } from '@angular/router';
-import { initFlowbite } from 'flowbite';
+import { PriceServiceService } from 'src/app/services/price-service.service';
 
 @Component({
   selector: 'bae-off-card',
@@ -22,7 +22,7 @@ export class CardComponent implements OnInit {
   @Input() productOff: Product | undefined;
   category: string = 'none';
   categories: any[] | undefined  = [];
-  price: string = '';
+  price: any = {price:0,priceType:'X'};
   images: AttachmentRefOrValue[]  = [];
   toastVisibility: boolean = false;
   detailsModalVisibility: boolean = false;
@@ -31,12 +31,14 @@ export class CardComponent implements OnInit {
   modal: Modal;
   prodSpec:ProductSpecification = {};
   complianceProf:any[] = [];
+  showModal:boolean=false;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
     private api: ApiServiceService,
+    private priceService: PriceServiceService,
     private router: Router
     ) {
       this.targetModal = document.getElementById('details-modal');
@@ -48,11 +50,20 @@ export class CardComponent implements OnInit {
       this.complianceProf.push({id: 'iso17025', name: 'ISO 17025', value: 'Not achieved yet', href:'#'})
     }
 
+  @HostListener('document:click')
+  onClick() {
+    if(this.showModal==true){
+      this.showModal=false;
+      this.cdr.detectChanges(); 
+    }     
+  }
+
+
   ngOnInit() {    
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     this.categories = this.productOff?.category;
-    this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
-      this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
+    //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
+    //  this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
     this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
     let specId:any|undefined=this.productOff?.productSpecification?.id;
     if(specId != undefined){
@@ -69,32 +80,23 @@ export class CardComponent implements OnInit {
         }
       })
     }
+    let result:any = this.priceService.formatCheapestPricePlan(this.productOff);
+    this.price = {
+      "price": result.price,
+      "unit": result.unit,
+      "priceType": result.priceType,
+      "text": result.text
+    }
+    this.cdr.detectChanges();
   }
 
   getProductImage() {
     return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
-  getPrice() {
-    let priceType = this.productOff?.productOfferingPrice?.at(0)?.priceType
-    if(priceType == 'recurring'){
-      priceType= this.productOff?.productOfferingPrice?.at(0)?.recurringChargePeriodType
-    }
-    if(priceType == 'usage'){
-      priceType= '/ '+this.productOff?.productOfferingPrice?.at(0)?.unitOfMeasure?.units
-    }
-    return {
-      price: this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
-        this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a',
-      priceType: priceType
-    }
-  }
 
   addProductToCart(productOff:Product| undefined){
-    console.log('Producto...')
-    console.log(productOff)
     this.localStorage.addCartItem(productOff as Product);
     if(productOff!== undefined){
-      console.log('emit message')
       this.eventMessage.emitAddedCartItem(productOff as Product);
     }    
     //TOGGLE TOAST
@@ -105,7 +107,6 @@ export class CardComponent implements OnInit {
     let element = document.getElementById("progress-bar")
     let parent = document.getElementById("toast-add-cart")
     if (element != null && parent != null) {
-      console.log(document.getElementById("toast-add-cart"))
       element.style.width = '0%'
       element.offsetWidth
       element.style.width = '100%'
@@ -126,30 +127,28 @@ export class CardComponent implements OnInit {
     this.toastVisibility=false;
   }
 
-  toggleDetailsModal(product: Product | undefined){
-    console.log('Producto details...')
-    console.log(this.productOff)
-    console.log(this.productOff?.name)
+  toggleDetailsModal(){
+    this.showModal=true;
     this.cdr.detectChanges();
-    initFlowbite();
+    /*initFlowbite();
     this.targetModal = document.getElementById('details-modal');
     this.modal = new Modal(this.targetModal);
     this.cdr.detectChanges();
     this.modal.toggle();
     this.cdr.detectChanges();
-    initFlowbite();
-    console.log('hola')
+    initFlowbite();*/
   }
 
   hideModal() {
-    this.targetModal = document.getElementById('details-modal');
+    this.showModal=false;
+    /*this.targetModal = document.getElementById('details-modal');
     this.modal = new Modal(this.targetModal);
-    this.modal.hide();
-    document.querySelector("body > div[modal-backdrop]")?.remove()
+    this.modal.hide();*/
   }
 
   goToProductDetails(productOff:Product| undefined) {
     document.querySelector("body > div[modal-backdrop]")?.remove()
     this.router.navigate(['/search', productOff?.id]);
   }
+
 }

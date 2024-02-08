@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import {
   faCartShopping
 } from "@fortawesome/sharp-solid-svg-icons";
@@ -6,6 +6,8 @@ import {components} from "../../models/product-catalog";
 type ProductOffering = components["schemas"]["ProductOffering"];
 import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
+import { Drawer } from 'flowbite';
+import { PriceServiceService } from 'src/app/services/price-service.service';
 
 @Component({
   selector: 'app-cart-drawer',
@@ -19,12 +21,23 @@ export class CartDrawerComponent implements OnInit{
   //p3: ProductOffering;
   items: ProductOffering[] = [];
   totalPrice:any;
+  showBackDrop:boolean=true;
 
-  constructor(private localStorage: LocalStorageService, private eventMessage: EventMessageService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private localStorage: LocalStorageService,
+    private eventMessage: EventMessageService,
+    private priceService: PriceServiceService,
+    private cdr: ChangeDetectorRef) {
 
   }
 
+  /*@HostListener('document:click')
+  onClick() {
+    document.querySelector("body > div[drawer-backdrop]")?.remove()
+  }*/
+
   ngOnInit(): void {
+    this.showBackDrop=true;
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'AddedCartItem') {
         console.log('Elemento añadido')
@@ -59,99 +72,57 @@ export class CartDrawerComponent implements OnInit{
       return 'https://placehold.co/600x400/svg'
     }
   }
-  getPrice(productOfferingPrice:any[]) {
-    let priceType = productOfferingPrice?.at(0)?.priceType
-    if(priceType == 'recurring'){
-      priceType= productOfferingPrice?.at(0)?.recurringChargePeriodType
-    }
-    if(priceType == 'usage'){
-      priceType= '/ '+productOfferingPrice?.at(0)?.unitOfMeasure?.units
-    }
+
+  getPrice(prod:ProductOffering){
+    let result:any= this.priceService.formatCheapestPricePlan(prod);
     return {
-      price: productOfferingPrice.at(0)?.price?.value + ' ' +
-      productOfferingPrice.at(0)?.price?.unit ?? 'n/a',
-      priceType: priceType
+      "price": result.price,
+      "unit": result.unit,
+      "priceType": result.priceType,
+      "text": result.text
     }
   }
 
   getTotalPrice(){
     this.totalPrice=[];
     let insertCheck = false;
-    let priceInfo={};
+    let priceInfo:any  ={};
     for(let i=0; i<this.items.length; i++){
+      console.log('totalprice')
+      console.log(this.items[i])
       insertCheck = false;
-      console.log(this.items[i].productOfferingPrice?.at(0)?.priceType)
       if(this.totalPrice.length == 0){
-        let priceType = this.items[i].productOfferingPrice?.at(0)?.priceType
-        if(priceType == 'recurring'){
-          priceType= this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
-        }
-        if(priceType == 'usage'){
-          priceType= '/ '+this.items[i].productOfferingPrice?.at(0)?.unitOfMeasure?.units
-        }
-        priceInfo = {
-          'priceType': priceType,
-          'price': this.items[i].productOfferingPrice?.at(0)?.price?.value,
-          'unit': this.items[i].productOfferingPrice?.at(0)?.price?.unit
-        }
+        priceInfo = this.priceService.formatCheapestPricePlan(this.items[i]);
         this.totalPrice.push(priceInfo);
+        console.log('Añade primero')
       } else {
         for(let j=0; j<this.totalPrice.length; j++){
-          if(this.items[i].productOfferingPrice?.at(0)?.priceType == 'recurring'){
-            let priceType= this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
-            if(priceType == this.totalPrice[j].priceType && this.items[i].productOfferingPrice?.at(0)?.price?.unit == this.totalPrice[j].unit){
-              this.totalPrice[j].price=this.totalPrice[j].price+this.items[i].productOfferingPrice?.at(0)?.price?.value;
-              insertCheck=true;
-            } else {
-              priceInfo = {
-                'priceType': priceType,
-                'price': this.items[i].productOfferingPrice?.at(0)?.price?.value,
-                'unit': this.items[i].productOfferingPrice?.at(0)?.price?.unit
-              }        
-            }
-
-          } else if(this.items[i].productOfferingPrice?.at(0)?.priceType == 'usage'){
-            let priceType= '/ '+this.items[i].productOfferingPrice?.at(0)?.unitOfMeasure?.units
-            if(priceType == this.totalPrice[j].priceType && this.items[i].productOfferingPrice?.at(0)?.price?.unit == this.totalPrice[j].unit){
-              this.totalPrice[j].price=this.totalPrice[j].price+this.items[i].productOfferingPrice?.at(0)?.price?.value;
-              insertCheck=true;
-            } else {
-              priceInfo = {
-                'priceType': priceType,
-                'price': this.items[i].productOfferingPrice?.at(0)?.price?.value,
-                'unit': this.items[i].productOfferingPrice?.at(0)?.price?.unit
-              }        
-            }
-          } else {
-            if(this.items[i].productOfferingPrice?.at(0)?.priceType == this.totalPrice[j].priceType && this.items[i].productOfferingPrice?.at(0)?.price?.unit == this.totalPrice[j].unit){
-              this.totalPrice[j].price=this.totalPrice[j].price+this.items[i].productOfferingPrice?.at(0)?.price?.value;
-              insertCheck=true;
-            } else {
-              let priceType = this.items[i].productOfferingPrice?.at(0)?.priceType
-              if(priceType == 'recurring'){
-                priceType= this.items[i].productOfferingPrice?.at(0)?.recurringChargePeriodType
-              }
-              if(priceType == 'usage'){
-                priceType= '/ '+this.items[i].productOfferingPrice?.at(0)?.unitOfMeasure?.units
-              }
-              priceInfo = {
-                'priceType': priceType,
-                'price': this.items[i].productOfferingPrice?.at(0)?.price?.value,
-                'unit': this.items[i].productOfferingPrice?.at(0)?.price?.unit
-              }        
-            }
+          priceInfo = this.priceService.formatCheapestPricePlan(this.items[i]);
+          if(priceInfo.priceType == this.totalPrice[j].priceType && priceInfo.unit == this.totalPrice[j].unit && priceInfo.text == this.totalPrice[j].text){
+            this.totalPrice[j].price=this.totalPrice[j].price+priceInfo.price;
+            insertCheck=true;
+            console.log('suma')
           }
+          console.log('precio segundo')
+          console.log(priceInfo)
         }
         if(insertCheck==false){
           this.totalPrice.push(priceInfo);
           insertCheck=true;
+          console.log('añade segundo')
         }       
       }
     }
+    console.log(this.totalPrice)
   }
 
   deleteProduct(product: ProductOffering){
     this.localStorage.removeCartItem(product);
     this.eventMessage.emitRemovedCartItem(product as ProductOffering);
+  }
+
+  hideCart(){
+    this.eventMessage.emitToggleDrawer(false);
+    console.log('hola')
   }
 }

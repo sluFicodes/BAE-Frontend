@@ -3,7 +3,7 @@ import {Subject} from "rxjs";
 import {Category} from "../models/interfaces";
 
 export interface EventMessage {
-  type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown';
+  type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer';
   text?: string,
   value?: object | boolean
 }
@@ -40,5 +40,9 @@ export class EventMessageService {
   /** Emit an event to notify if the filter panel is shown or hidden */
   emitFilterShown(shown: boolean) {
     this.eventMessageSubject.next({ type: 'FilterShown', value: shown });
+  }
+
+  emitToggleDrawer(shown: boolean){
+    this.eventMessageSubject.next({ type: 'ToggleCartDrawer', value: shown });
   }
 }

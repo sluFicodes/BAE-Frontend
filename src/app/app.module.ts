@@ -22,6 +22,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CategoryItemComponent} from "./shared/category-item/category-item.component";
 import { CartDrawerComponent } from "./shared/cart-drawer/cart-drawer.component";
 import {CategoriesPanelComponent} from "./shared/categories-panel/categories-panel.component";
+import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
+import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 
 @NgModule({
   declarations: [
@@ -34,9 +36,10 @@ import {CategoriesPanelComponent} from "./shared/categories-panel/categories-pan
     CategoryItemComponent,
     CardComponent,
     BadgeComponent,
-    CartDrawerComponent,
-    ProductDetailsComponent
-    
+    //CartDrawerComponent,
+    ProductDetailsComponent,
+    SearchCatalogComponent,
+    CatalogsComponent    
   ],
     imports: [
         BrowserModule,

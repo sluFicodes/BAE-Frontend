@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiServiceService } from 'src/app/services/api-service.service';
 import {components} from "../../models/product-catalog";
 import { initFlowbite } from 'flowbite';
+import { PriceServiceService } from 'src/app/services/price-service.service';
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
@@ -26,6 +27,7 @@ export class ProductDetailsComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private api: ApiServiceService,
+    private priceService: PriceServiceService,
   ) {
     this.complianceProf.push({id: 'cloudRulebook', name: 'EU Cloud Rulebook', value: 'Not achieved yet', href:'#'})
     this.complianceProf.push({id: 'cloudSecurity', name: 'EU Cloud Security', value: 'Not achieved yet', href:'#'})    
@@ -88,6 +90,14 @@ export class ProductDetailsComponent implements OnInit{
     return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
   getPrice() {
+    let result:any= this.priceService.formatCheapestPricePlan(this.productOff);
+    return {
+      "price": result.price,
+      "unit": result.unit,
+      "priceType": result.priceType,
+      "text": result.text
+    }
+    /*
     let priceType = this.productOff?.productOfferingPrice?.at(0)?.priceType
     if(priceType == 'recurring'){
       priceType= this.productOff?.productOfferingPrice?.at(0)?.recurringChargePeriodType
@@ -99,6 +109,6 @@ export class ProductDetailsComponent implements OnInit{
       price: this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
         this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a',
       priceType: priceType
-    }
+    }*/
   }
 }

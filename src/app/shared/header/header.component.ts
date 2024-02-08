@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, HostListener} from '@angular/core';
 import {
   faCartShopping,
   faHandHoldingBox,
@@ -6,24 +6,51 @@ import {
   faArrowRightFromBracket
 } from "@fortawesome/sharp-solid-svg-icons";
 import {LocalStorageService} from "../../services/local-storage.service";
+import { ApiServiceService } from 'src/app/services/api-service.service';
+import { Router } from '@angular/router';
+import {EventMessageService} from "../../services/event-message.service";
 
 @Component({
   selector: 'bae-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements AfterViewInit {
+export class HeaderComponent implements OnInit, AfterViewInit {
 
   @ViewChild('theme_toggle_dark_icon') themeToggleDarkIcon: ElementRef;
   @ViewChild('theme_toggle_light_icon') themeToggleLightIcon: ElementRef;
 
   constructor(themeToggleDarkIcon: ElementRef,
               themeToggleLightIcon: ElementRef,
-              private localStorage: LocalStorageService) {
+              private localStorage: LocalStorageService,
+              private api: ApiServiceService,
+              private cdr: ChangeDetectorRef,
+              private eventMessage: EventMessageService,
+              private router: Router) {
 
     this.themeToggleDarkIcon = themeToggleDarkIcon;
     this.themeToggleLightIcon = themeToggleLightIcon;
+  }
 
+  catalogs: any[] | undefined  = [];
+  showCart:boolean=false;
+
+  @HostListener('document:click')
+  onClick() {
+    if(this.showCart==true){
+      this.showCart=false;
+      this.cdr.detectChanges();
+    }     
+  }
+
+  ngOnInit(){
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ToggleCartDrawer') {
+        this.showCart=false;
+        this.cdr.detectChanges();
+        console.log('header hola')   
+      }
+    })
   }
 
   ngAfterViewInit() {
@@ -33,6 +60,11 @@ export class HeaderComponent implements AfterViewInit {
     } else {
       this.themeToggleDarkIcon.nativeElement.classList.remove('hidden');
     }
+    this.api.getCatalogs().then(catalogs => {
+      this.catalogs=catalogs;
+      this.cdr.detectChanges();
+    })
+
   }
   toggleDarkMode() {
     // toggle icons inside button
@@ -59,6 +91,15 @@ export class HeaderComponent implements AfterViewInit {
         localStorage.setItem('color-theme', 'dark');
       }
     }
+  }
+
+  goToCatalogSearch(id:any) {
+    this.router.navigate(['/search/catalog', id]);
+  }
+
+  toggleCartDrawer(){
+    this.showCart=!this.showCart;
+    this.cdr.detectChanges();    
   }
 
   protected readonly faCartShopping = faCartShopping;

@@ -75,7 +75,8 @@
         "_marketplace": "MARKETPLACE",
         "_open_menu": "Open main menu",
         "_home": "Home",
-        "_categories": "Categories",
+        "_catalogs": "Catalogs",
+        "_search": "Search",
         "_cloud": "Cloud Services",
         "_smart_ports": "Smart ports",
         "_smart_cities": "Smart cities",
@@ -101,5 +102,9 @@
         "_sla": "SLA",
         "_no_sla": "No SLA included",
         "_no_relatioships": "No relationships included"
+    },
+    "CATALOGS": {
+        "_all_catalogs": "All catalogs",
+        "_no_desc": "No se ha incluido descripción"
     }
 }

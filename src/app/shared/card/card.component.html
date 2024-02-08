@@ -1,5 +1,5 @@
 <div class="w-full h-[500px] bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-secondary-50 border">
-  <a (click)="goToProductDetails(productOff)" class="flex justify-center w-full h-[200px] box-decoration-clone">
+  <a (click)="goToProductDetails(productOff)" class="flex cursor-pointer justify-center w-full h-[200px] box-decoration-clone">
     <img class=" rounded-t-lg w-fit h-[200px]" src="{{getProductImage()}}" alt="product image" />
   </a>
   <div class="dark:bg-white bg-cover bg-right-bottom bg-opacity-25" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
@@ -9,7 +9,7 @@
         <bae-badge class="ml-2" [category]=cat></bae-badge>
       }
       </div>
-      <a (click)="goToProductDetails(productOff)">
+      <a (click)="goToProductDetails(productOff)" class="cursor-pointer">
         <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{productOff?.name}}</h5>
       </a>
       <div class="min-h-19 h-19 line-clamp-2 text-gray-600">{{productOff?.description}}</div>
@@ -36,13 +36,13 @@
       </div>
 
       <div class="flex place-content-start items-baseline mb-5">
-        <span class="text-2xl font-bold text-gray-900 mr-1">{{ 'CARD._from' | translate }} {{getPrice().price}}</span>
-        <span class="text-xs font-bold text-gray-900">{{getPrice().priceType}}</span>
+        <span class="text-2xl font-bold text-gray-900 mr-1">{{ 'CARD._from' | translate }} {{price.price}} {{price.unit}}</span>
+        <span class="text-xs font-bold text-gray-900">{{price.text}}</span>
       </div>
 
       <div class="flex items-center justify-center">
 
-        <button data-modal-target="details-modal" (click)="toggleDetailsModal(productOff)"  type="button" class="flex items-center text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-100 dark:hover:bg-primary-50 dark:focus:ring-primary-100 mr-1">
+        <button (click)="toggleDetailsModal();$event.stopPropagation();"  type="button" class="flex items-center text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-100 dark:hover:bg-primary-50 dark:focus:ring-primary-100 mr-1">
           <svg class="w-[18px] h-[18px] text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
             <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
               <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
@@ -51,92 +51,95 @@
           </svg>
           {{ 'CARD._details' | translate }}
         </button>
-        <a id="add-to-cart" (click)="addProductToCart(productOff)" class="text-white bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{ 'CARD._add_cart' | translate }}</a>
+        <a id="add-to-cart" (click)="addProductToCart(productOff)" class="text-white cursor-pointer bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{ 'CARD._add_cart' | translate }}</a>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Main modal -->
-<div id="details-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-  <div class="relative w-full max-w-7xl max-h-full">
-      <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom">
-          <!-- Modal header -->
-          <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
-            <button (click)="hideModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="details-modal">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                </svg>
-                <span class="sr-only">{{ 'CARD._close' | translate }}</span>
-            </button>
-          </div>
-          <!-- Modal body -->
-          <div class="p-4 md:p-5 grid grid-cols-2 gap-4">
-            <div class="flex items-center justify-center w-full box-decoration-clone bg-white rounded-lg dark:bg-secondary-50 dark:border-gray-700 border-secondary-50" >
-              <img class="rounded-t-lg w-fit h-[200px]" src="{{getProductImage()}}" alt="product image"/>
-            </div>
-            <div>
-              <div class="flex place-content-center flex-col">
-                <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{productOff?.name}}</h5>
-              </div>
-              <hr class="h-px mt-2 mb-2 bg-gray-200 border-0 dark:bg-gray-700">
-              <div class="flex place-content-center flex-col">
-                <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice().price}}</span>
-                <span class="text-xs dark:text-primary-50">{{getPrice().priceType}}</span>
-              </div>
-              <button (click)="addProductToCart(productOff)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
-                <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
-                </svg>
-                {{ 'CARD._add_cart' | translate }}
+@if (showModal){
+  <div id="details-modal" [ngClass]="showModal ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-7xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
+              <button (click)="hideModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="details-modal">
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                  </svg>
+                  <span class="sr-only">{{ 'CARD._close' | translate }}</span>
               </button>
-
-              <div class="inline-flex justify-center items-center dark:text-secondary-50 mt-2">
-                <svg class="mr-2 w-[18px] h-[18px] dark:text-secondary-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 18">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.583 5.445h.01M8.86 16.71l-6.573-6.63a.993.993 0 0 1 0-1.4l7.329-7.394A.98.98 0 0 1 10.31 1l5.734.007A1.968 1.968 0 0 1 18 2.983v5.5a.994.994 0 0 1-.316.727l-7.439 7.5a.975.975 0 0 1-1.385.001Z"/>
-                </svg>
-                {{ 'CARD._categories' | translate }}:
-                @for (cat of categories; track cat.id) {
-                  <bae-badge class="ml-2" [category]=cat></bae-badge>
-                }
-              </div>
-              <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'CARD._prod_details' | translate }}:</h5>
-              <div class="min-h-19 h-19 line-clamp-3 dark:text-secondary-50">{{productOff?.description}}</div>
-              <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'CARD._comp_profile' | translate }}:</h5>
-              <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
-                @for (char of complianceProf; track char.id) {
-                  @if (char.href == '#') {
-                      <li>{{char.name}}: {{char.value}}</li>
-                  } @else {
-                      <li>{{char.name}}: <a href="{{char.href}}">{{char.value}}</a></li>
-                  }
-                }
-              </ul>
-              <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'CARD._extra_info' | translate }}:</h5>
-              <div class="grid grid-cols-2 gap-4">
-                <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
-                  <li>{{ 'CARD._offer_version' | translate }}: v{{productOff?.version}}</li>
-                  <li>{{ 'CARD._product_name' | translate }}: {{prodSpec.name}}</li>
-                  <li>{{ 'CARD._brand' | translate }}: {{prodSpec.brand}}</li>
-                </ul>
-                <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
-                  <li>{{ 'CARD._last_update' | translate }}: {{productOff?.lastUpdate | date:'dd/MM/yy, HH:mm'}}</li>
-                  <li>{{ 'CARD._product_version' | translate }}: v{{prodSpec.version}}</li>
-                  <li>{{ 'CARD._id_number' | translate }}: XX</li>
-                </ul>
-              </div>
-              <button type="button" (click)="goToProductDetails(productOff)" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                {{ 'CARD._details' | translate }}
-                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                </svg>
-                </button>
             </div>
-          </div>
-      </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 grid grid-cols-2 gap-4">
+              <div class="flex items-center justify-center w-full box-decoration-clone bg-white rounded-lg dark:bg-secondary-50 dark:border-gray-700 border-secondary-50" >
+                <img class="rounded-t-lg w-fit h-[200px]" src="{{getProductImage()}}" alt="product image"/>
+              </div>
+              <div>
+                <div class="flex place-content-center flex-col">
+                  <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{productOff?.name}}</h5>
+                </div>
+                <hr class="h-px mt-2 mb-2 bg-gray-200 border-0 dark:bg-gray-700">
+                <div class="flex place-content-center flex-col">
+                  <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{price.price}} {{price.unit}}</span>
+                  <span class="text-xs dark:text-primary-50">{{price.text}}</span>
+                </div>
+                <button (click)="addProductToCart(productOff)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                  <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                  </svg>
+                  {{ 'CARD._add_cart' | translate }}
+                </button>
+  
+                <div class="inline-flex justify-center items-center dark:text-secondary-50 mt-2">
+                  <svg class="mr-2 w-[18px] h-[18px] dark:text-secondary-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 18">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.583 5.445h.01M8.86 16.71l-6.573-6.63a.993.993 0 0 1 0-1.4l7.329-7.394A.98.98 0 0 1 10.31 1l5.734.007A1.968 1.968 0 0 1 18 2.983v5.5a.994.994 0 0 1-.316.727l-7.439 7.5a.975.975 0 0 1-1.385.001Z"/>
+                  </svg>
+                  {{ 'CARD._categories' | translate }}:
+                  @for (cat of categories; track cat.id) {
+                    <bae-badge class="ml-2" [category]=cat></bae-badge>
+                  }
+                </div>
+                <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'CARD._prod_details' | translate }}:</h5>
+                <div class="min-h-19 h-19 line-clamp-3 dark:text-secondary-50">{{productOff?.description}}</div>
+                <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'CARD._comp_profile' | translate }}:</h5>
+                <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
+                  @for (char of complianceProf; track char.id) {
+                    @if (char.href == '#') {
+                        <li>{{char.name}}: {{char.value}}</li>
+                    } @else {
+                        <li>{{char.name}}: <a href="{{char.href}}">{{char.value}}</a></li>
+                    }
+                  }
+                </ul>
+                <h5 class="font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'CARD._extra_info' | translate }}:</h5>
+                <div class="grid grid-cols-2 gap-4">
+                  <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
+                    <li>{{ 'CARD._offer_version' | translate }}: v{{productOff?.version}}</li>
+                    <li>{{ 'CARD._product_name' | translate }}: {{prodSpec.name}}</li>
+                    <li>{{ 'CARD._brand' | translate }}: {{prodSpec.brand}}</li>
+                  </ul>
+                  <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
+                    <li>{{ 'CARD._last_update' | translate }}: {{productOff?.lastUpdate | date:'dd/MM/yy, HH:mm'}}</li>
+                    <li>{{ 'CARD._product_version' | translate }}: v{{prodSpec.version}}</li>
+                    <li>{{ 'CARD._id_number' | translate }}: XX</li>
+                  </ul>
+                </div>
+                <button type="button" (click)="goToProductDetails(productOff)" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  {{ 'CARD._details' | translate }}
+                  <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                  </svg>
+                  </button>
+              </div>
+            </div>
+        </div>
+    </div>
   </div>
-</div>
+}
+
 
 <!-- ADD TO CART TOAST -->
 @if (toastVisibility) {

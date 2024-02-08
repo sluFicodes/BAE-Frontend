@@ -1,3 +1,4 @@
+<div class="relative"> 
 <nav class="text-white border-gray-200 h-[75px] bg-primary-100 dark:bg-secondary-100 dark:border-gray-700">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     <a href="#" class="flex items-center">
@@ -16,26 +17,10 @@
           <a href="#" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">{{ 'HEADER._home' | translate }}</a>
         </li>
         <li>
-          <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar" class="flex items-center justify-between w-full py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 md:w-auto dark:text-blue-100 md:dark:hover:text-blue-500 dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">{{ 'HEADER._categories' | translate }} <svg class="w-2.5 h-2.5 ml-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-          </svg></button>
-          <!-- Dropdown menu -->
-          <div id="dropdownNavbar" class="z-10 hidden font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-blue-900 dark:divide-gray-600">
-            <ul class="py-2 text-sm text-gray-700 dark:text-white" aria-labelledby="dropdownLargeButton">
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">{{ 'HEADER._cloud' | translate }}</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">{{ 'HEADER._smart_ports' | translate }}</a>
-              </li>
-              <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:hover:text-primary-100">{{ 'HEADER._smart_cities' | translate }}</a>
-              </li>
-            </ul>
-            <div class="py-1">
-              <a href="search" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-secondary-50 dark:text-gray-400 dark:hover:text-primary-100">{{ 'HEADER._see_all' | translate }}</a>
-            </div>
-          </div>
+          <a href="/search" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">{{ 'HEADER._search' | translate }}</a>
+        </li>
+        <li>
+          <a href="/catalogs" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">{{ 'HEADER._catalogs' | translate }}</a>
         </li>
         <li>
           <a href="#" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">{{ 'HEADER._services' | translate }}</a>
@@ -55,7 +40,7 @@
         <svg class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" #theme_toggle_light_icon><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
       </button>
 
-      <button data-drawer-target="cart-drawer" data-drawer-show="cart-drawer" data-drawer-placement="right" class="mr-2 text-white dark:text-gray-400 hover:bg-secondary-50 hover:text-primary-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5"><fa-icon [icon]="faCartShopping"></fa-icon></button>
+      <button (click)="toggleCartDrawer();$event.stopPropagation();"  class="mr-2 text-white dark:text-gray-400 hover:bg-secondary-50 hover:text-primary-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5"><fa-icon [icon]="faCartShopping"></fa-icon></button>
 
       <!-- User menu section -->
       <div data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-end" class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer">
@@ -77,7 +62,7 @@
           <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faHandHoldingBox" class="mr-2"></fa-icon>{{ 'HEADER._offerings' | translate }}</a>
         </li>
         <li>
-          <a data-drawer-target="cart-drawer" data-drawer-show="cart-drawer" data-drawer-placement="right" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faCartShopping" class="mr-2"></fa-icon>{{ 'HEADER._cart' | translate }}</a>
+          <a (click)="toggleCartDrawer();$event.stopPropagation();" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faCartShopping" class="mr-2"></fa-icon>{{ 'HEADER._cart' | translate }}</a>
         </li>
       </ul>
       <div class="py-1">
@@ -85,5 +70,9 @@
       </div>
     </div>
   </div>
-
 </nav>
+@if (showCart) {
+  <div class="flex h-screen w-full backdrop-blur-sm absolute top-0 right-0 z-40">
+    <app-cart-drawer (click)="$event.stopPropagation();" class="absolute top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform bg-white w-1/3 dark:bg-gray-800"></app-cart-drawer>
+  </div>  
+}

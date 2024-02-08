@@ -1,31 +1,42 @@
-import { Component, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {CategoriesFilterComponent} from "../../shared/categories-filter/categories-filter.component";
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ApiServiceService } from 'src/app/services/api-service.service';
+import { PriceServiceService } from 'src/app/services/price-service.service';
+import { initFlowbite } from 'flowbite';
 import {components} from "../../models/product-catalog";
 type ProductOffering = components["schemas"]["ProductOffering"];
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import {EventMessageService} from "../../services/event-message.service";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Category} from "../../models/interfaces";
-import {EventMessageService} from "../../services/event-message.service";
 
 @Component({
-  selector: 'bae-search',
-  templateUrl: './search.component.html',
-  styleUrl: './search.component.css'
+  selector: 'app-search-catalog',
+  templateUrl: './search-catalog.component.html',
+  styleUrl: './search-catalog.component.css'
 })
-export class SearchComponent implements OnInit {
+export class SearchCatalogComponent implements OnInit{
+  constructor(
+    private route: ActivatedRoute,
+    private api: ApiServiceService,
+    private priceService: PriceServiceService, 
+    private cdr: ChangeDetectorRef,
+    private eventMessage: EventMessageService,
+    private localStorage: LocalStorageService
+  ) {
+  }
 
+  id:any;
+  catalog:any;
   products: ProductOffering[]=[];
   loading: boolean = false;
 
-  constructor(
-    private api: ApiServiceService,
-    private cdr: ChangeDetectorRef,
-    private localStorage: LocalStorageService,
-    private eventMessage: EventMessageService) {
-  }
-
   async ngOnInit() {
+    initFlowbite();
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.api.getCatalog(this.id).then(catalog => {
+      this.catalog=catalog;
+      this.cdr.detectChanges();
+    })
     await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
 
     this.eventMessage.messages$.subscribe(ev => {
@@ -33,7 +44,8 @@ export class SearchComponent implements OnInit {
         this.updateProducts();
       }
     })
-
+    console.log('Productos:')
+    console.log(this.products)
   }
 
   getProducts(filters:Category[]){
@@ -41,7 +53,10 @@ export class SearchComponent implements OnInit {
     console.log('Filtros...')
     console.log(filters)
     if(filters.length == 0){
-      this.api.getProducts().then(data => {      
+      console.log(this.id)
+      this.api.getProductsByCatalog(this.id).then(data => {
+        console.log('-- catalog products --')
+        console.log(data)
         for(let i=0; i < data.length; i++){
             let attachment: any[]= []
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
@@ -67,17 +82,16 @@ export class SearchComponent implements OnInit {
                         }
                       )
                       this.cdr.detectChanges();
-                    }
+                    }                
                   })
                 }
               }
-
             })
-          }
+        }
         this.loading=false;
       })
     } else {
-      this.api.getProductsByCategory(filters).then(data => {
+      this.api.getProductsByCategoryAndCatalog(filters,this.id).then(data => {
         for(let i=0; i < data.length; i++){
             let attachment: any[]= []
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
@@ -108,7 +122,7 @@ export class SearchComponent implements OnInit {
                 }
               }
             })
-          }
+        }
         this.loading=false;
       })
     }
@@ -119,5 +133,4 @@ export class SearchComponent implements OnInit {
     let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
     this.getProducts(filters);
   }
-
 }

@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
+import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
+import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 
 
 const routes: Routes = [
@@ -18,6 +20,12 @@ const routes: Routes = [
   },
   { path: 'search/:id', 
     component: ProductDetailsComponent
+  },
+  { path: 'search/catalog/:id', 
+  component: SearchCatalogComponent
+  },
+  { path: 'catalogs', 
+  component: CatalogsComponent
   }
 ]
 
