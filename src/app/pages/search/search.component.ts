@@ -7,6 +7,7 @@ import { ApiServiceService } from 'src/app/services/api-service.service';
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Category} from "../../models/interfaces";
 import {EventMessageService} from "../../services/event-message.service";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'bae-search',
@@ -17,6 +18,9 @@ export class SearchComponent implements OnInit {
 
   products: ProductOffering[]=[];
   loading: boolean = false;
+  loading_more: boolean = false;
+  page: number=0;
+  PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
 
   constructor(
     private api: ApiServiceService,
@@ -26,6 +30,8 @@ export class SearchComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.products=[];
+    this.loading=true;
     await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
 
     this.eventMessage.messages$.subscribe(ev => {
@@ -37,11 +43,10 @@ export class SearchComponent implements OnInit {
   }
 
   getProducts(filters:Category[]){
-    this.products=[];
     console.log('Filtros...')
     console.log(filters)
     if(filters.length == 0){
-      this.api.getProducts().then(data => {      
+      this.api.getProducts(this.page).then(data => {      
         for(let i=0; i < data.length; i++){
             let attachment: any[]= []
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
@@ -75,9 +80,10 @@ export class SearchComponent implements OnInit {
             })
           }
         this.loading=false;
+        this.loading_more=false;
       })
     } else {
-      this.api.getProductsByCategory(filters).then(data => {
+      this.api.getProductsByCategory(filters,this.page).then(data => {
         for(let i=0; i < data.length; i++){
             let attachment: any[]= []
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
@@ -110,14 +116,26 @@ export class SearchComponent implements OnInit {
             })
           }
         this.loading=false;
+        this.loading_more=false;
       })
     }
   }
 
   updateProducts() {
     this.loading=true;
+    this.products=[];
+    this.page=0;
+    this.cdr.detectChanges();
     let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
     this.getProducts(filters);
+  }
+
+  async next(){
+    this.loading_more=true;
+    this.page=this.page+this.PRODUCT_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
   }
 
 }

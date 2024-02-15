@@ -13,45 +13,47 @@ export class ApiServiceService {
   public static BASE_URL: String = environment.BASE_URL;
   public static API_PORT: Number = environment.API_PORT;
   public static API_NAME: String = environment.PRODUCT_CATALOG;
+  public static PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
+  public static CATALOG_LIMIT: number= environment.CATALOG_LIMIT;
 
   constructor(private http: HttpClient) { }
 
-  getProducts() {
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productOffering`;    
+  getProducts(page:any) {
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productOffering?limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`;    
 
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
-  getProductsByCategory(ids:Category[]) {
+  getProductsByCategory(ids:Category[],page:any) {
     let id_str='';
     for(let i=0; i<ids.length;i++){
-      if(i==ids.length-1){
+      if(i==0){
         id_str = 'category.id='+ids[i].id
       } else {
-        id_str = 'category.id='+ids[i].id+'&'
+        id_str = id_str+','+ids[i].id
       }
     }
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productOffering?${id_str}`;
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productOffering?${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`;
 
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
-  getProductsByCatalog(catalogId:any){
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog/${catalogId}/productOffering?lifecycleStatus=Active,Launched&limit=12`
-
+  getProductsByCatalog(catalogId:any,page:any){
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog/${catalogId}/productOffering?lifecycleStatus=Active,Launched&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`
+    console.log(url)
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
-  getProductsByCategoryAndCatalog(ids:Category[],catalogId:any) {
+  getProductsByCategoryAndCatalog(ids:Category[],catalogId:any,page:any) {
     let id_str='';
     for(let i=0; i<ids.length;i++){
-      if(i==ids.length-1){
-        id_str = 'categoryId='+ids[i].id
+      if(i==0){
+        id_str = 'category.id='+ids[i].id
       } else {
-        id_str = 'categoryId='+ids[i].id+'&'
+        id_str = id_str+','+ids[i].id
       }
     }    
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog/${catalogId}/productOffering?lifecycleStatus=Active,Launched&limit=12&${id_str}`;
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog/${catalogId}/productOffering?lifecycleStatus=Active,Launched&${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`;
     console.log(url)
 
     return lastValueFrom(this.http.get<any[]>(url));
@@ -81,8 +83,8 @@ export class ApiServiceService {
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
-  getCatalogs() {
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog`;    
+  getCatalogs(page:any) {
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}`;    
 
     return lastValueFrom(this.http.get<any[]>(url));
   }

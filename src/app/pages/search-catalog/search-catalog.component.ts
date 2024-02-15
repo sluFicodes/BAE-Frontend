@@ -8,6 +8,7 @@ type ProductOffering = components["schemas"]["ProductOffering"];
 import {EventMessageService} from "../../services/event-message.service";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Category} from "../../models/interfaces";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-search-catalog',
@@ -29,6 +30,9 @@ export class SearchCatalogComponent implements OnInit{
   catalog:any;
   products: ProductOffering[]=[];
   loading: boolean = false;
+  loading_more: boolean = false;
+  page: number=0;
+  PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
 
   async ngOnInit() {
     initFlowbite();
@@ -48,15 +52,12 @@ export class SearchCatalogComponent implements OnInit{
     console.log(this.products)
   }
 
-  getProducts(filters:Category[]){
-    this.products=[];
+  getProducts(filters:Category[]){    
     console.log('Filtros...')
     console.log(filters)
     if(filters.length == 0){
       console.log(this.id)
-      this.api.getProductsByCatalog(this.id).then(data => {
-        console.log('-- catalog products --')
-        console.log(data)
+      this.api.getProductsByCatalog(this.id,this.page).then(data => {
         for(let i=0; i < data.length; i++){
             let attachment: any[]= []
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
@@ -89,9 +90,10 @@ export class SearchCatalogComponent implements OnInit{
             })
         }
         this.loading=false;
+        this.loading_more=false;
       })
     } else {
-      this.api.getProductsByCategoryAndCatalog(filters,this.id).then(data => {
+      this.api.getProductsByCategoryAndCatalog(filters,this.id,this.page).then(data => {
         for(let i=0; i < data.length; i++){
             let attachment: any[]= []
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
@@ -124,13 +126,24 @@ export class SearchCatalogComponent implements OnInit{
             })
         }
         this.loading=false;
+        this.loading_more=false;
       })
     }
   }
 
   updateProducts() {
+    this.products=[];
+    this.page=0;
     this.loading=true;
     let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
     this.getProducts(filters);
+  }
+
+  async next(){
+    this.loading_more=true;
+    this.page=this.page+this.PRODUCT_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
   }
 }

@@ -60,10 +60,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     } else {
       this.themeToggleDarkIcon.nativeElement.classList.remove('hidden');
     }
-    this.api.getCatalogs().then(catalogs => {
-      this.catalogs=catalogs;
-      this.cdr.detectChanges();
-    })
 
   }
   toggleDarkMode() {
