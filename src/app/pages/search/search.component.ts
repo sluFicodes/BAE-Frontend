@@ -19,6 +19,7 @@ export class SearchComponent implements OnInit {
   products: ProductOffering[]=[];
   loading: boolean = false;
   loading_more: boolean = false;
+  page_check:boolean = true;
   page: number=0;
   PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
 
@@ -46,7 +47,14 @@ export class SearchComponent implements OnInit {
     console.log('Filtros...')
     console.log(filters)
     if(filters.length == 0){
-      this.api.getProducts(this.page).then(data => {      
+      this.api.getProducts(this.page).then(data => {
+        if(data.length<this.PRODUCT_LIMIT){
+          this.page_check=false;
+          this.cdr.detectChanges();
+        }else{
+          this.page_check=true;
+          this.cdr.detectChanges();
+        }
         for(let i=0; i < data.length; i++){
             let attachment: any[]= []
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
@@ -84,6 +92,13 @@ export class SearchComponent implements OnInit {
       })
     } else {
       this.api.getProductsByCategory(filters,this.page).then(data => {
+        if(data.length<this.PRODUCT_LIMIT){
+          this.page_check=false;
+          this.cdr.detectChanges();
+        }else{
+          this.page_check=true;
+          this.cdr.detectChanges();
+        }
         for(let i=0; i < data.length; i++){
             let attachment: any[]= []
             this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {

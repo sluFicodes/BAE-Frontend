@@ -16,6 +16,7 @@ export class CatalogsComponent implements OnInit{
   CATALOG_LIMIT: number = environment.CATALOG_LIMIT;
   loading: boolean = false;
   loading_more: boolean = false;
+  page_check:boolean = true;
   constructor(
     private router: Router,
     private api: ApiServiceService,
@@ -26,6 +27,13 @@ export class CatalogsComponent implements OnInit{
   ngOnInit() {
     this.loading=true;
     this.api.getCatalogs(this.page).then(data => {
+      if(data.length<this.CATALOG_LIMIT){
+        this.page_check=false;
+        this.cdr.detectChanges();
+      }else{
+        this.page_check=true;
+        this.cdr.detectChanges();
+      }
       for(let i=0; i < data.length; i++){
         this.catalogs.push(data[i])
       }
@@ -43,6 +51,13 @@ export class CatalogsComponent implements OnInit{
     this.cdr.detectChanges;
     console.log(this.page)
     await this.api.getCatalogs(this.page).then(data => {
+      if(data.length<this.CATALOG_LIMIT){
+        this.page_check=false;
+        this.cdr.detectChanges();
+      }else{
+        this.page_check=true;
+        this.cdr.detectChanges();
+      }
       for(let i=0; i < data.length; i++){
         this.catalogs.push(data[i])
       }
