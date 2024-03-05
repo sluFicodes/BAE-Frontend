@@ -33,6 +33,9 @@ export class SearchComponent implements OnInit {
   async ngOnInit() {
     this.products=[];
     this.loading=true;
+    /*await this.api.slaCheck().then(data => {  
+      console.log(data)
+    })*/
     await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
 
     this.eventMessage.messages$.subscribe(ev => {

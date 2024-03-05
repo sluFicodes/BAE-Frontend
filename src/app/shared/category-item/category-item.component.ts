@@ -37,11 +37,12 @@ export class CategoryItemComponent implements OnInit {
   ngOnInit() {
 
     const categories = this.localStorage.getObject('selected_categories') as Category[] || [] ;
-    const index = categories.findIndex((item:Category) => item.id === this.data?.id);
-    if(index > -1) {
-      this.checked = true;
+    if(categories.length >0){
+      const index = categories.findIndex((item:Category) => item.id === this.data?.id);
+      if(index > -1) {
+        this.checked = true;
+      }
     }
-
     this.option = this.data?.id;
     if(this.isParent && this.isFirst)
       this.labelClass = 'flex items-center justify-between w-full px-5 py-3 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3 peer-checked:border-primary-50 dark:peer-checked:bg-primary-50 dark:peer-checked:text-secondary-100 peer-checked:text-gray-600';

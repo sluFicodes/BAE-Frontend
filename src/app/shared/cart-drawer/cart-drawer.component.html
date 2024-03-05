@@ -14,7 +14,8 @@
    </button>
 
    <div class="h-3/4 grid grid-flow-row auto-rows-max overflow-y-auto  p-2">
-      @for (item of items; track item) {
+      @if(items.length > 0){
+         @for (item of items; track item) {
             <div class="flex justify-between w-full mt-2 mb-2 rounded-lg bg-secondary-50/95 dark:bg-gray-700 dark:border-gray-800 border-secondary-50 border">
                <button type="button" (click)="deleteProduct(item)" class="flex p-2 box-decoration-clone">
                   @if (item.attachment) {
@@ -45,6 +46,10 @@
       } @empty {
          <p class="text-gray-700 dark:text-gray-400">{{ 'CART_DRAWER._empty' | translate }}.</p>
       } 
+      } @else {
+         <p class="text-gray-700 dark:text-gray-400">{{ 'CART_DRAWER._empty' | translate }}.</p>
+      }
+
    </div>
    
    <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">

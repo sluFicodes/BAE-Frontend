@@ -22,6 +22,7 @@ export class CategoriesPanelComponent implements OnInit {
   selected: Category[] = [];
 
   constructor(private localStorage: LocalStorageService, private eventMessage: EventMessageService) {
+    this.selected = [];
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'AddedFilter') {
         const index = this.selected.indexOf(ev.value as Category, 0);

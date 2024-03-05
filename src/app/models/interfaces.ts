@@ -11,3 +11,11 @@ export interface Category {
   validFor?: object,
   children?: Category[]
 }
+
+export interface LoginInfo {
+  id: string,
+  user: string,
+  email: string,
+  token: string,
+  expire: number
+}

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { FeaturedComponent } from "./offerings/featured/featured.component";
 import { GalleryComponent } from "./offerings/gallery/gallery.component";
@@ -24,6 +24,7 @@ import { CartDrawerComponent } from "./shared/cart-drawer/cart-drawer.component"
 import {CategoriesPanelComponent} from "./shared/categories-panel/categories-panel.component";
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
+import { AuthInterceptor } from '../interceptors/auth';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,7 @@ import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
         CategoriesPanelComponent,
 
     ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

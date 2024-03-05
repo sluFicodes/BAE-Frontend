@@ -32,6 +32,11 @@ export class CardComponent implements OnInit {
   prodSpec:ProductSpecification = {};
   complianceProf:any[] = [];
   showModal:boolean=false;
+  cartSelection:boolean=false;
+  check_prices:boolean=false;
+  check_char:boolean=false;
+  check_terms:boolean=false;
+  formattedPrices:any[]=[];
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -55,11 +60,19 @@ export class CardComponent implements OnInit {
     if(this.showModal==true){
       this.showModal=false;
       this.cdr.detectChanges(); 
-    }     
+    }
+    if(this.cartSelection==true){
+      this.cartSelection=false;
+      this.check_char=false;
+      this.check_terms=false;
+      this.check_prices=false;
+      this.cdr.detectChanges();
+    }   
   }
 
 
-  ngOnInit() {    
+  ngOnInit() {
+
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     this.categories = this.productOff?.category;
     //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
@@ -94,8 +107,8 @@ export class CardComponent implements OnInit {
     return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
-  addProductToCart(productOff:Product| undefined){
-    this.localStorage.addCartItem(productOff as Product);
+  async addProductToCart(productOff:Product| undefined){
+    //this.localStorage.addCartItem(productOff as Product);
     if(productOff!== undefined){
       this.eventMessage.emitAddedCartItem(productOff as Product);
     }    
@@ -115,13 +128,30 @@ export class CardComponent implements OnInit {
       }, 3500);
 
     }
-    
+    console.log(productOff)
+    await this.api.addItemShoppingCart(productOff).subscribe({
+      next: data => {
+          console.log(data)
+          console.log('Update successful');
+      },
+      error: error => {
+          console.error('There was an error while updating!', error);
+      }
+    });
+    if(this.cartSelection==true){
+      this.cartSelection=false;
+      this.check_char=false;
+      this.check_terms=false;
+      this.check_prices=false;
+      this.cdr.detectChanges();
+    }    
     this.cdr.detectChanges();
   }
 
   deleteProduct(product: Product | undefined){
     if(product !== undefined) {
-      this.localStorage.removeCartItem(product);
+      //this.localStorage.removeCartItem(product);
+      this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
@@ -139,8 +169,43 @@ export class CardComponent implements OnInit {
     initFlowbite();*/
   }
 
+  toggleCartSelection(productOff:Product| undefined){
+    this.formattedPrices = this.priceService.getFormattedPriceList(productOff);
+    if (this.formattedPrices != undefined && this.formattedPrices.length > 1){
+      this.check_prices=true;
+      this.cdr.detectChanges();
+    }
+
+    if(productOff?.productOfferingTerm != undefined){
+      this.check_terms=true;
+    }
+
+    console.log(this.prodSpec.productSpecCharacteristic)
+    if(this.prodSpec.productSpecCharacteristic != undefined && this.prodSpec.productSpecCharacteristic.length > 1){
+      this.check_char = true;
+    }
+    
+    if (this.check_prices==true || this.check_char == true || this.check_terms == true){
+      this.cartSelection=true;
+      this.cdr.detectChanges();
+    }else {
+      this.addProductToCart(productOff)
+    }
+
+  }
+
+  hideCartSelection(){
+    this.cartSelection=false;
+    this.check_char=false;
+    this.check_terms=false;
+    this.check_prices=false;
+    this.formattedPrices=[];
+    this.cdr.detectChanges();
+  }
+
   hideModal() {
     this.showModal=false;
+    this.cdr.detectChanges();
     /*this.targetModal = document.getElementById('details-modal');
     this.modal = new Modal(this.targetModal);
     this.modal.hide();*/

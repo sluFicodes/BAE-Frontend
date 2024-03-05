@@ -4,6 +4,12 @@ import { TranslateService } from '@ngx-translate/core';
 import {LocalStorageService} from "./services/local-storage.service";
 import {Category} from "./models/interfaces";
 import {EventMessageService} from "./services/event-message.service";
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { LoginInfo } from 'src/app/models/interfaces';
+import { ApiServiceService } from 'src/app/services/api-service.service';
+import { RefreshLoginServiceService } from "src/app/services/refresh-login-service.service";
+import * as moment from 'moment';
 
 
 @Component({
@@ -17,7 +23,11 @@ export class AppComponent implements OnInit {
 
   constructor(private translate: TranslateService,
               private localStorage: LocalStorageService,
-              private eventMessage: EventMessageService) {
+              private eventMessage: EventMessageService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private api: ApiServiceService,
+              private refreshApi: RefreshLoginServiceService) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('es');
     this.translate.use('es');
@@ -28,11 +38,34 @@ export class AppComponent implements OnInit {
       if(ev.type === 'AddedFilter' || ev.type === 'RemovedFilter') {
         this.checkPanel();
       }
+
     })
+
   }
   ngOnInit(): void {
     initFlowbite();
+    if(!this.localStorage.getObject('selected_categories'))
+      this.localStorage.setObject('selected_categories', []);
+    if(!this.localStorage.getObject('cart_items'))
+      this.localStorage.setObject('cart_items', []);
+    if(!this.localStorage.getObject('login_items'))
+      this.localStorage.setObject('login_items', {});
     this.checkPanel();
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'LoginProcess') {
+        this.refreshApi.stopInterval();
+        let info = ev.value as LoginInfo
+        this.refreshApi.startInterval(((info.expire - moment().unix())-4)*1000, ev);
+        //this.refreshApi.startInterval(3000, ev.value);
+      }
+    })
+    let aux =this.localStorage.getObject('login_items') as LoginInfo;
+    if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      this.refreshApi.stopInterval();
+      this.refreshApi.startInterval(((aux.expire - moment().unix())-4)*1000, aux);
+      console.log('token')
+      console.log(aux.token)
+    }
   }
 
   checkPanel() {

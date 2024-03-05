@@ -14,7 +14,7 @@
     <div class="hidden w-full md:block md:w-auto" id="navbar-dropdown">
       <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 rounded-lg md:text-white md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-primary-100 dark:bg-secondary-100 ">
         <li>
-          <a href="#" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">{{ 'HEADER._home' | translate }}</a>
+          <a href="/dashboard" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">{{ 'HEADER._home' | translate }}</a>
         </li>
         <li>
           <a href="/search" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">{{ 'HEADER._search' | translate }}</a>
@@ -42,33 +42,43 @@
 
       <button (click)="toggleCartDrawer();$event.stopPropagation();"  class="mr-2 text-white dark:text-gray-400 hover:bg-secondary-50 hover:text-primary-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5"><fa-icon [icon]="faCartShopping"></fa-icon></button>
 
+      @if (is_logged) {
       <!-- User menu section -->
       <div data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-end" class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer">
-        <span class="font-medium text-gray-600 dark:text-gray-300">RF</span>
+        <span class="font-medium text-gray-600 dark:text-gray-300">{{usercharacters}}</span>
       </div>
+      } @else {
+        <a href="http://localhost:8004/login" class="flex items-center">
+          <button id="theme-toggle" type="button" class="w-full mr-2 text-white dark:text-gray-400 hover:bg-secondary-50 hover:text-primary-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5">
+            Login</button>
+        </a>
+
+      }
     </div>
 
-    <!-- User menu Dropdown menu -->
-    <div id="userDropdown" class="z-10 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
-      <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-        <div>Rafael Fernández</div>
-        <div class="font-medium truncate">rfernandez&#64;ficodes.com</div>
+    @if (is_logged) {
+      <!-- User menu Dropdown menu -->
+      <div id="userDropdown" class="z-10 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
+        <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+          <div>{{username}}</div>
+          <div class="font-medium truncate">{{email}}</div>
+        </div>
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faAddressCard" class="mr-2"></fa-icon>{{ 'HEADER._profile' | translate }}</a>
+          </li>
+          <li>
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faHandHoldingBox" class="mr-2"></fa-icon>{{ 'HEADER._offerings' | translate }}</a>
+          </li>
+          <li>
+            <a (click)="toggleCartDrawer();$event.stopPropagation();" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faCartShopping" class="mr-2"></fa-icon>{{ 'HEADER._cart' | translate }}</a>
+          </li>
+        </ul>
+        <div class="py-1">
+          <a (click)="logout();" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faArrowRightFromBracket" class="mr-2"></fa-icon>{{ 'HEADER._sign_out' | translate }}</a>
+        </div>
       </div>
-      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-        <li>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faAddressCard" class="mr-2"></fa-icon>{{ 'HEADER._profile' | translate }}</a>
-        </li>
-        <li>
-          <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faHandHoldingBox" class="mr-2"></fa-icon>{{ 'HEADER._offerings' | translate }}</a>
-        </li>
-        <li>
-          <a (click)="toggleCartDrawer();$event.stopPropagation();" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faCartShopping" class="mr-2"></fa-icon>{{ 'HEADER._cart' | translate }}</a>
-        </li>
-      </ul>
-      <div class="py-1">
-        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faArrowRightFromBracket" class="mr-2"></fa-icon>{{ 'HEADER._sign_out' | translate }}</a>
-      </div>
-    </div>
+    }
   </div>
 </nav>
 @if (showCart) {

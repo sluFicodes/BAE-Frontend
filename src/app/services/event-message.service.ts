@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {Subject} from "rxjs";
 import {Category} from "../models/interfaces";
+import { LoginInfo } from 'src/app/models/interfaces';
 
 export interface EventMessage {
-  type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer';
+  type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess';
   text?: string,
   value?: object | boolean
 }
@@ -44,5 +45,9 @@ export class EventMessageService {
 
   emitToggleDrawer(shown: boolean){
     this.eventMessageSubject.next({ type: 'ToggleCartDrawer', value: shown });
+  }
+
+  emitLogin(info: LoginInfo){
+    this.eventMessageSubject.next({ type: 'LoginProcess', value: info });
   }
 }

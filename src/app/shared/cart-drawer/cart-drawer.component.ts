@@ -8,6 +8,7 @@ import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
 import { Drawer } from 'flowbite';
 import { PriceServiceService } from 'src/app/services/price-service.service';
+import { ApiServiceService } from 'src/app/services/api-service.service';
 
 @Component({
   selector: 'app-cart-drawer',
@@ -27,6 +28,7 @@ export class CartDrawerComponent implements OnInit{
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
     private priceService: PriceServiceService,
+    private api: ApiServiceService,
     private cdr: ChangeDetectorRef) {
 
   }
@@ -38,25 +40,45 @@ export class CartDrawerComponent implements OnInit{
 
   ngOnInit(): void {
     this.showBackDrop=true;
+    this.api.getShoppingCart().then(data => {
+      console.log('---CARRITO API---')
+      console.log(data)
+      this.items=data;
+      this.cdr.detectChanges();
+      this.getTotalPrice();
+      console.log('------------------')
+    })
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'AddedCartItem') {
         console.log('Elemento añadido')
-        const index = this.items.indexOf(ev.value as ProductOffering, 0);
+        /*const index = this.items.indexOf(ev.value as ProductOffering, 0);
         if(index === -1) {
           this.items.push(ev.value as ProductOffering)
-        }
-        this.getTotalPrice();
+        }*/
+        this.api.getShoppingCart().then(data => {
+          console.log('---CARRITO API---')
+          console.log(data)
+          this.items=data;
+          this.cdr.detectChanges();
+          this.getTotalPrice();
+          console.log('------------------')
+        })
       } else if(ev.type === 'RemovedCartItem') {
-        const index = this.items.indexOf(ev.value as ProductOffering, 0);
+        /*const index = this.items.indexOf(ev.value as ProductOffering, 0);
         if(index > -1) {
           this.items.splice(index,1);
-        }
-        this.getTotalPrice();
+        }*/
+        this.api.getShoppingCart().then(data => {
+          console.log('---CARRITO API---')
+          console.log(data)
+          this.items=data;
+          this.cdr.detectChanges();
+          this.getTotalPrice();
+          console.log('------------------')
+        })        
       }
     })
-    this.items = this.localStorage.getObject('cart_items') as ProductOffering[] || [] ;
-    this.cdr.detectChanges();
-    this.getTotalPrice();
+    //this.items = this.localStorage.getObject('cart_items') as ProductOffering[] || [] ;
     console.log('Elementos en el carrito....')
     console.log(this.items)
   }
@@ -117,12 +139,12 @@ export class CartDrawerComponent implements OnInit{
   }
 
   deleteProduct(product: ProductOffering){
-    this.localStorage.removeCartItem(product);
+    //this.localStorage.removeCartItem(product);
+    this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
     this.eventMessage.emitRemovedCartItem(product as ProductOffering);
   }
 
   hideCart(){
     this.eventMessage.emitToggleDrawer(false);
-    console.log('hola')
   }
 }

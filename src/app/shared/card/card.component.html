@@ -51,7 +51,7 @@
           </svg>
           {{ 'CARD._details' | translate }}
         </button>
-        <a id="add-to-cart" (click)="addProductToCart(productOff)" class="text-white cursor-pointer bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{ 'CARD._add_cart' | translate }}</a>
+        <a id="add-to-cart" (click)="toggleCartSelection(productOff);$event.stopPropagation();" class="text-white cursor-pointer bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{ 'CARD._add_cart' | translate }}</a>
       </div>
     </div>
   </div>
@@ -86,7 +86,7 @@
                   <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{price.price}} {{price.unit}}</span>
                   <span class="text-xs dark:text-primary-50">{{price.text}}</span>
                 </div>
-                <button (click)="addProductToCart(productOff)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button (click)="toggleCartSelection(productOff);$event.stopPropagation();" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
                   <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
                   </svg>
@@ -165,4 +165,72 @@
     <div id="progress-bar" class="flex bg-green-600 h-2.5 rounded-full dark:bg-green-500 transition-width delay-200 duration-3000 ease-out" style="width: 0px;"></div>
   </div>
 </div>
+}
+
+<!-- Main modal -->
+@if (cartSelection){
+  <div id="cart-selection-modal" [ngClass]="cartSelection ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-7xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
+              <button (click)="hideCartSelection()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cart-selection-modal">
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                  </svg>
+                  <span class="sr-only">{{ 'CARD._close' | translate }}</span>
+              </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5">
+              <div class="flex place-content-center flex-col">
+                @if(check_prices){
+                  <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">Selecciona precio:</h5>
+
+                  @for(prod of formattedPrices; track prod.id; let idx = $index){
+                  <div class="flex items-center mb-4">
+                  <input checked [id]="'price-radio-'+idx" type="radio" value="" name="price-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label [for]="'price-radio-'+idx" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{prod.price}} {{prod.unit}} {{prod.text}}</label>
+                  </div>
+                  }
+                }
+                @if(check_char){
+                  <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">Selecciona características:</h5>
+
+                  @for(char of prodSpec.productSpecCharacteristic; track char.id; let charidx = $index){
+                    <div class="min-h-19 pb-2">
+                      <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{char.name}}:</h5>
+                      @for (val of char?.productSpecCharacteristicValue; track val.value; let validx = $index) {
+                        <div class="flex">
+                        @if (val?.isDefault == true) {
+                        <div class="flex items-center mb-4">
+                          <input checked [id]="'char-radio-'+charidx+validx" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                          <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{val.value}}</label>
+                        </div>
+                      } @else {
+                        <div class="flex items-center mb-4">
+                          <input [id]="'char-radio-'+charidx+validx" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                          <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{val.value}}</label>
+                        </div>
+                      }
+                      </div>
+                    }
+                    </div>
+
+                  }
+                }
+
+              </div>
+             
+                <button (click)="addProductToCart(productOff)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                  <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                  </svg>
+                  {{ 'CARD._add_cart' | translate }}
+                </button>  
+            </div>
+        </div>
+    </div>
+  </div>
 }

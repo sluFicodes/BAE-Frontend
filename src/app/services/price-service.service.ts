@@ -71,4 +71,19 @@ export class PriceServiceService {
     }
     return result;
   }
+
+  getFormattedPriceList(prod:ProductOffering|undefined){
+    let result = [];
+    if(prod != undefined && prod.productOfferingPrice != undefined) {
+      for(let i = 0; i< prod.productOfferingPrice?.length; i++){
+        result.push({
+          'priceType': prod.productOfferingPrice[i]?.priceType,
+          'price': prod.productOfferingPrice[i]?.price?.value,
+          'unit': prod.productOfferingPrice[i]?.price?.unit,
+          'text': prod.productOfferingPrice[i]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? prod.productOfferingPrice[i]?.recurringChargePeriodType : prod.productOfferingPrice[i]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ '+ prod.productOfferingPrice[i]?.unitOfMeasure?.units : ''         
+        })
+      }
+    }
+    return result;
+  }
 }

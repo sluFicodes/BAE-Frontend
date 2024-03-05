@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Category} from "../models/interfaces";
+import {Category, LoginInfo} from "../models/interfaces";
 import {components} from "../models/product-catalog";
 type ProductOffering = components["schemas"]["ProductOffering"];
 
@@ -74,5 +74,13 @@ export class LocalStorageService {
       products.splice(index,1);
       localStorage.setItem('cart_items', JSON.stringify(products));
     }
+  }
+
+  addLoginInfo(value: LoginInfo): void {
+    localStorage.setItem("login_items", JSON.stringify(value));
+  }
+
+  removeLoginInfo(): void {
+    localStorage.setItem("login_items", JSON.stringify({}));
   }
 }
