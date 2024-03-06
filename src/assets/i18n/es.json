@@ -32,7 +32,38 @@
         }
     },
     "GALLERY": {
-        "_title": "Offerings showcase"
+        "_title": "Featured services",
+        "_explore": "Explore marketplace",
+        "_add_your_service": "Add your service"
+    },
+    "PLATFORM": {
+        "_title": "Platform benefits",
+        "_subtitle": "Your Gateway to Europe's Premier Digital Ecosystem",
+        "_learn_more": "Learn more",
+        "OPEN": {
+            "_title": "Open",
+            "_desc": "Navigate with confidence through transparent practices in service provisioning, pricing and operations."
+        },
+        "INTEROPERABLE": {
+            "_title": "Interoperable",
+            "_desc": "Unlock endless possibilities with our open ecosystem, designed for seamless collaboration and innovation."
+        },
+        "TRUSTWORTHY": {
+            "_title": "Trustworthy",
+            "_desc": "Build on a foundation of trust with services vetted for security, reliability and compliance."
+        },
+        "COMPLIANT": {
+            "_title": "Compliant",
+            "_desc": "Stay ahead of the curve with services that adhere strictly to EU regulations and standards, for legal compliance and data protection."
+        },
+        "SUSTAINABLE": {
+            "_title": "Sustainable",
+            "_desc": "Embrace sustainability with services that prioritize enery efficiency and environmental responsability."
+        },
+        "TRANSPARENT": {
+            "_title": "Transparent",
+            "_desc": "Navigate with confidence trough transparent practices in service provisioning, pricing and operations."
+        }
     },
     "CARD": {
         "_details": "View details",
@@ -51,7 +82,8 @@
         "_added_card": "Added to the cart",
         "_undo": "Undo",
         "_close_toast": "Close",
-        "_from": "Desde"
+        "_from": "Desde",
+        "_full_desc": "Full description"
     },
     "CATEGORIES_FILTER": {
         "_remove_badge": "Remove badge",

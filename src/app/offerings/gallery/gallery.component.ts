@@ -19,10 +19,13 @@ export class GalleryComponent implements OnInit {
     private cdr: ChangeDetectorRef) {
   }
 
+  //Must be under environment.PRODUCT_LIMIT (i.e. 6 atm)
+  gallery_limit=4;
+
   ngOnInit() {
     console.log('API RESPONSE:')
     this.api.getProducts(0).then(data => {      
-      for(let i=0; i < data.length; i++){
+      for(let i=0; i < this.gallery_limit; i++){
           let attachment: any[]= []
           this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {
             attachment = spec.attachment

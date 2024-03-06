@@ -4,6 +4,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { FeaturedComponent } from "./offerings/featured/featured.component";
 import { GalleryComponent } from "./offerings/gallery/gallery.component";
+import { PlatformBenefitsComponent } from "./offerings/platform-benefits/platform-benefits.component";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
@@ -33,6 +34,7 @@ import { AuthInterceptor } from '../interceptors/auth';
     SearchComponent,
     FeaturedComponent,
     GalleryComponent,
+    PlatformBenefitsComponent,
     CategoriesFilterComponent,
     CategoryItemComponent,
     CardComponent,
