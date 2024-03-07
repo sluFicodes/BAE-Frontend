@@ -34,7 +34,8 @@
     "GALLERY": {
         "_title": "Featured services",
         "_explore": "Explore marketplace",
-        "_add_your_service": "Add your service"
+        "_add_your_service": "Add your service",
+        "_no_products": "No hay productos disponibles en este momento. Vuelva más tarde por favor."
     },
     "PLATFORM": {
         "_title": "Platform benefits",
