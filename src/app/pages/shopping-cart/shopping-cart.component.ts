@@ -1,44 +1,33 @@
-import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener, AfterViewInit } from '@angular/core';
 import {
   faCartShopping
 } from "@fortawesome/sharp-solid-svg-icons";
-import {components} from "../../models/product-catalog";
-import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
-import { Drawer } from 'flowbite';
-import { PriceServiceService } from 'src/app/services/price-service.service';
 import { ApiServiceService } from 'src/app/services/api-service.service';
 import { cartProduct } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
-import { Router } from '@angular/router';
+import { initFlowbite } from 'flowbite';
 
 @Component({
-  selector: 'app-cart-drawer',
-  templateUrl: './cart-drawer.component.html',
-  styleUrl: './cart-drawer.component.css'
+  selector: 'app-shopping-cart',
+  templateUrl: './shopping-cart.component.html',
+  styleUrl: './shopping-cart.component.css'
 })
-export class CartDrawerComponent implements OnInit{
+export class ShoppingCartComponent implements OnInit, AfterViewInit{
   protected readonly faCartShopping = faCartShopping;
   items: cartProduct[] = [];
   totalPrice:any;
   showBackDrop:boolean=true;
 
   constructor(
-    private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
-    private priceService: PriceServiceService,
     private api: ApiServiceService,
-    private cdr: ChangeDetectorRef,
-    private router: Router,) {
+    private cdr: ChangeDetectorRef) {
 
   }
 
-  /*@HostListener('document:click')
-  onClick() {
-    document.querySelector("body > div[drawer-backdrop]")?.remove()
-  }*/
-
   ngOnInit(): void {
+    //initFlowbite();
     this.showBackDrop=true;
     this.api.getShoppingCart().then(data => {
       console.log('---CARRITO API---')
@@ -47,44 +36,15 @@ export class CartDrawerComponent implements OnInit{
       this.cdr.detectChanges();
       this.getTotalPrice();
       console.log('------------------')
-    })
-    this.eventMessage.messages$.subscribe(ev => {
-      if(ev.type === 'AddedCartItem') {
-        console.log('Elemento añadido')
-        this.api.getShoppingCart().then(data => {
-          console.log('---CARRITO API---')
-          console.log(data)
-          this.items=data;
-          this.cdr.detectChanges();
-          this.getTotalPrice();
-          console.log('------------------')
-        })
-      } else if(ev.type === 'RemovedCartItem') {
-        this.api.getShoppingCart().then(data => {
-          console.log('---CARRITO API---')
-          console.log(data)
-          this.items=data;
-          this.cdr.detectChanges();
-          this.getTotalPrice();
-          console.log('------------------')
-        })        
-      }
+      initFlowbite();
     })
     console.log('Elementos en el carrito....')
     console.log(this.items)
   }
 
-  /*getProductImage(attachment:any[]) {
-    if(attachment.length > 0){
-      for(let i=0; i<attachment.length; i++){
-        if(attachment[i].attachmentType == 'Picture'){
-          return attachment[i].url
-        }
-      }
-    } else {
-      return 'https://placehold.co/600x400/svg'
-    }
-  }*/
+  ngAfterViewInit() {
+    initFlowbite();
+  }
 
   getPrice(item:any){
     return {
@@ -133,13 +93,23 @@ export class CartDrawerComponent implements OnInit{
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 
-  hideCart(){
-    this.eventMessage.emitToggleDrawer(false);
+  removeClass(elem: HTMLElement, cls:string) {
+    var str = " " + elem.className + " ";
+    elem.className = str.replace(" " + cls + " ", " ").replace(/^\s+|\s+$/g, "");
   }
 
+  addClass(elem: HTMLElement, cls:string) {
+      elem.className += (" " + cls);
+  }
 
-  goToShoppingCart() {
-    this.hideCart();
-    this.router.navigate(['/shopping-cart']);
+  clickDropdown(id:any){
+    let elem = document.getElementById(id)
+    if(elem != null){
+      if(elem.className.match('hidden') ) { 
+        this.removeClass(elem,"hidden")
+      } else {
+        this.addClass(elem,"hidden")
+      }
+    }
   }
 }

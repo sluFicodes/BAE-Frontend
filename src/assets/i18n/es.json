@@ -175,6 +175,14 @@
     },
     "CATALOGS": {
         "_all_catalogs": "All catalogs",
-        "_no_desc": "No se ha incluido descripción"
+        "_no_desc": "No description included"
+    },
+    "SHOPPING_CART": {
+        "_buy": "Buy",
+        "_back": "Back",
+        "_confirm": "Confirm and pay",
+        "_note": "Add notes",
+        "_choose_bill": "Choose a billing address",
+        "_cart": "Cart"
     }
 }

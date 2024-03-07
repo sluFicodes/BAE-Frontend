@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ChangeDetectorRef, HostListener, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Input, OnInit, ChangeDetectorRef, HostListener, OnChanges, SimpleChanges, AfterViewChecked, AfterViewInit} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {BadgeComponent} from "../badge/badge.component";
 import {components} from "../../models/product-catalog";
@@ -20,7 +20,7 @@ import { TYPES } from 'src/app/models/types.const';
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnInit, AfterViewInit {
 
   @Input() productOff: Product | undefined;
   category: string = 'none';
@@ -81,7 +81,6 @@ export class CardComponent implements OnInit {
 
 
   ngOnInit() {
-    initFlowbite();
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     this.categories = this.productOff?.category;
     //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
@@ -114,6 +113,10 @@ export class CardComponent implements OnInit {
 
   getProductImage() {
     return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
+  }
+
+  ngAfterViewInit() {
+    initFlowbite();
   }
 
   async addProductToCart(productOff:Product| undefined,options:boolean){
@@ -204,7 +207,7 @@ export class CardComponent implements OnInit {
   deleteProduct(product: Product | undefined){
     if(product !== undefined) {
       //this.localStorage.removeCartItem(product);
-      this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+      this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('removed'));
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
@@ -237,8 +240,8 @@ export class CardComponent implements OnInit {
     }
 
     if(productOff?.productOfferingTerm != undefined){
-      if(productOff.productOfferingTerm.length == 1 && productOff.productOfferingTerm[0].name != undefined){
-        this.check_terms=true;
+      if(productOff.productOfferingTerm.length == 1 && productOff.productOfferingTerm[0].name == undefined){
+        this.check_terms=false;
       } else {
         this.check_terms=true;
       }
@@ -269,6 +272,24 @@ export class CardComponent implements OnInit {
     if (this.check_prices==true || this.check_char == true || this.check_terms == true){
       this.cartSelection=true;
       this.cdr.detectChanges();
+      if(this.check_prices==true){
+        let price_elem = document.getElementById('price')
+        console.log('price elem')
+        console.log(price_elem)
+        if(price_elem!=null){
+          this.removeClass(price_elem,'hidden')
+        }        
+      } else if(this.check_char==true){
+        let char_elem = document.getElementById('char')
+        if(char_elem!=null){
+          this.removeClass(char_elem,'hidden')
+        } 
+      } else {
+        let terms_elem = document.getElementById('terms')
+        if(terms_elem!=null){
+          this.removeClass(terms_elem,'hidden')
+        } 
+      }
     }else {
       this.addProductToCart(productOff,false)
     }
@@ -324,6 +345,111 @@ export class CardComponent implements OnInit {
     console.log('change char')
     console.log(this.selected_chars)
     this.cdr.detectChanges();
+  }
+
+  removeClass(elem: HTMLElement, cls:string) {
+    var str = " " + elem.className + " ";
+    elem.className = str.replace(" " + cls + " ", " ").replace(/^\s+|\s+$/g, "");
+  }
+
+  addClass(elem: HTMLElement, cls:string) {
+      elem.className += (" " + cls);
+  }
+
+  setClass(elem:HTMLElement, cls:string) {
+    elem.className = cls
+  }
+
+  clickShowPrice(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+
+    if(price_elem != null){
+      if(price_elem.className.match('hidden') ) {
+        this.removeClass(price_elem,"hidden")
+        if(char_elem != null){
+          if(char_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(char_elem,"hidden")
+          }
+        }
+        if(terms_elem != null){
+          if(terms_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(terms_elem,"hidden")
+          }
+        }
+      }
+    }
+  }
+
+  clickShowChar(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+
+    if(char_elem != null){
+      if(char_elem.className.match('hidden') ) { 
+        this.removeClass(char_elem,"hidden")
+        if(price_elem != null){
+          if(price_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(price_elem,"hidden")
+          }
+        }
+        if(terms_elem != null){
+          if(terms_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(terms_elem,"hidden")
+          }
+        }
+      }
+    }
+
+  }
+
+  clickShowTerms(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+    
+    if(terms_elem != null){
+      if(terms_elem.className.match('hidden') ) { 
+        this.removeClass(terms_elem,"hidden")
+        if(price_elem != null){
+          if(price_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(price_elem,"hidden")
+          }         
+        }
+        if(char_elem != null){
+          if(char_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(char_elem,"hidden")
+          }          
+        }
+      }
+    }
+
   }
 
 

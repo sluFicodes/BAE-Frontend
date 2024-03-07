@@ -26,6 +26,7 @@ import {CategoryItemComponent} from "./shared/category-item/category-item.compon
 import { CartDrawerComponent } from "./shared/cart-drawer/cart-drawer.component";
 import {CategoriesPanelComponent} from "./shared/categories-panel/categories-panel.component";
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
+import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.component";
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 import { AuthInterceptor } from '../interceptors/auth';
 
@@ -46,7 +47,8 @@ import { AuthInterceptor } from '../interceptors/auth';
     //CartDrawerComponent,
     ProductDetailsComponent,
     SearchCatalogComponent,
-    CatalogsComponent    
+    CatalogsComponent,
+    ShoppingCartComponent
   ],
     imports: [
         BrowserModule,
