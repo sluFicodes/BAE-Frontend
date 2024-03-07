@@ -11,6 +11,9 @@ import { ApiServiceService } from 'src/app/services/api-service.service';
 import { Modal } from 'flowbite';
 import { Router } from '@angular/router';
 import { PriceServiceService } from 'src/app/services/price-service.service';
+import { initFlowbite } from 'flowbite';
+import { cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
+import { TYPES } from 'src/app/models/types.const';
 
 @Component({
   selector: 'bae-off-card',
@@ -26,7 +29,7 @@ export class CardComponent implements OnInit {
   images: AttachmentRefOrValue[]  = [];
   toastVisibility: boolean = false;
   detailsModalVisibility: boolean = false;
-  lastAddedProd:Product | undefined;
+  lastAddedProd:cartProduct | undefined;
   targetModal: any;
   modal: Modal;
   prodSpec:ProductSpecification = {};
@@ -34,8 +37,11 @@ export class CardComponent implements OnInit {
   showModal:boolean=false;
   cartSelection:boolean=false;
   check_prices:boolean=false;
+  selected_price:any;
   check_char:boolean=false;
   check_terms:boolean=false;
+  selected_terms:boolean=false;
+  selected_chars:productSpecCharacteristicValueCart[]=[];
   formattedPrices:any[]=[];
 
   constructor(
@@ -66,13 +72,16 @@ export class CardComponent implements OnInit {
       this.check_char=false;
       this.check_terms=false;
       this.check_prices=false;
+      this.selected_chars=[];
+      this.selected_price={};
+      this.selected_terms=false;
       this.cdr.detectChanges();
     }   
   }
 
 
   ngOnInit() {
-
+    initFlowbite();
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     this.categories = this.productOff?.category;
     //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
@@ -107,14 +116,65 @@ export class CardComponent implements OnInit {
     return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
-  async addProductToCart(productOff:Product| undefined){
+  async addProductToCart(productOff:Product| undefined,options:boolean){
     //this.localStorage.addCartItem(productOff as Product);
+    if(options==true){
+      console.log('termschecked:')
+      console.log(this.selected_terms)
+      if(productOff!= undefined && productOff?.productOfferingPrice != undefined){
+        let prodOptions = {
+          "id": productOff?.id,
+          "name": productOff?.name,
+          "image": this.getProductImage(),
+          "href": productOff.href,
+          "options": {
+            "characteristics": this.selected_chars,
+            "pricing": this.selected_price
+          },
+          "termsAccepted": this.selected_terms
+        }
+        this.lastAddedProd=prodOptions;
+      await this.api.addItemShoppingCart(prodOptions).subscribe({
+        next: data => {
+            console.log(data)
+            console.log('Update successful');
+        },
+        error: error => {
+            console.error('There was an error while updating!', error);
+        }
+      });
+    }
+    } else {
+      if(productOff!= undefined && productOff?.productOfferingPrice != undefined){
+        let prodOptions = {
+          "id": productOff?.id,
+          "name": productOff?.name,
+          "image": this.getProductImage(),
+          "href": productOff.href,
+          "options": {
+            "characteristics": this.selected_chars,
+            "pricing": this.selected_price
+          },
+          "termsAccepted": true
+        }
+        this.lastAddedProd=prodOptions;
+      await this.api.addItemShoppingCart(prodOptions).subscribe({
+        next: data => {
+            console.log(data)
+            console.log('Update successful');
+        },
+        error: error => {
+            console.error('There was an error while updating!', error);
+        }
+      });
+    }
+    }
     if(productOff!== undefined){
-      this.eventMessage.emitAddedCartItem(productOff as Product);
-    }    
+      this.eventMessage.emitAddedCartItem(productOff as cartProduct);
+    }
     //TOGGLE TOAST
     this.toastVisibility=true;
-    this.lastAddedProd=productOff;
+    
     this.cdr.detectChanges();
     //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
     let element = document.getElementById("progress-bar")
@@ -126,23 +186,16 @@ export class CardComponent implements OnInit {
       setTimeout(() => {   
         this.toastVisibility=false
       }, 3500);
-
     }
-    console.log(productOff)
-    await this.api.addItemShoppingCart(productOff).subscribe({
-      next: data => {
-          console.log(data)
-          console.log('Update successful');
-      },
-      error: error => {
-          console.error('There was an error while updating!', error);
-      }
-    });
+
     if(this.cartSelection==true){
       this.cartSelection=false;
       this.check_char=false;
       this.check_terms=false;
       this.check_prices=false;
+      this.selected_chars=[];
+      this.selected_price={};
+      this.selected_terms=false;
       this.cdr.detectChanges();
     }    
     this.cdr.detectChanges();
@@ -170,26 +223,54 @@ export class CardComponent implements OnInit {
   }
 
   toggleCartSelection(productOff:Product| undefined){
-    this.formattedPrices = this.priceService.getFormattedPriceList(productOff);
-    if (this.formattedPrices != undefined && this.formattedPrices.length > 1){
-      this.check_prices=true;
+    //this.formattedPrices = this.priceService.getFormattedPriceList(productOff);
+    console.log(productOff)
+    if (this.productOff?.productOfferingPrice != undefined){
+      if(this.productOff?.productOfferingPrice.length > 1){
+        this.check_prices=true;
+        this.selected_price=this.productOff?.productOfferingPrice[this.productOff?.productOfferingPrice.length-1]
+      } else {
+        this.selected_price=this.productOff?.productOfferingPrice[0]
+      }  
+      
       this.cdr.detectChanges();
     }
 
     if(productOff?.productOfferingTerm != undefined){
-      this.check_terms=true;
+      if(productOff.productOfferingTerm.length == 1 && productOff.productOfferingTerm[0].name != undefined){
+        this.check_terms=true;
+      } else {
+        this.check_terms=true;
+      }
+      
     }
 
-    console.log(this.prodSpec.productSpecCharacteristic)
-    if(this.prodSpec.productSpecCharacteristic != undefined && this.prodSpec.productSpecCharacteristic.length > 1){
-      this.check_char = true;
+    if(this.prodSpec.productSpecCharacteristic != undefined){
+      for(let i=0; i<this.prodSpec.productSpecCharacteristic.length; i++){
+        let charvalue = this.prodSpec.productSpecCharacteristic[i].productSpecCharacteristicValue;        
+        if(charvalue != undefined){
+          if(charvalue?.length>1){
+            this.check_char = true;
+          }
+          for(let j=0; j<charvalue.length;j++){
+            if(charvalue[j]?.isDefault == true){
+              this.selected_chars.push(
+                {
+                "characteristic": this.prodSpec.productSpecCharacteristic[i],
+                "value": charvalue[j]
+              });
+            }
+          }
+        }
+      }      
+      console.log(this.selected_chars)
     }
     
     if (this.check_prices==true || this.check_char == true || this.check_terms == true){
       this.cartSelection=true;
       this.cdr.detectChanges();
     }else {
-      this.addProductToCart(productOff)
+      this.addProductToCart(productOff,false)
     }
 
   }
@@ -200,6 +281,9 @@ export class CardComponent implements OnInit {
     this.check_terms=false;
     this.check_prices=false;
     this.formattedPrices=[];
+    this.selected_chars=[];
+    this.selected_price={};
+    this.selected_terms=false;
     this.cdr.detectChanges();
   }
 
@@ -215,5 +299,32 @@ export class CardComponent implements OnInit {
     document.querySelector("body > div[modal-backdrop]")?.remove()
     this.router.navigate(['/search', productOff?.id]);
   }
+
+  onPriceChange(price:any){
+    this.selected_price=price;
+    console.log('change price')
+    console.log(this.selected_price)
+    this.cdr.detectChanges;
+  }
+
+  onCharChange(idx:number,validx:number,char:any){
+    let defaultChar = { "isDefault": true, "value": char.value}
+    this.selected_chars[idx].value=defaultChar;
+    let prodcharval = this.selected_chars[idx]['characteristic'].productSpecCharacteristicValue
+    if( prodcharval != undefined){
+      for(let i=0; i<prodcharval.length; i++){
+        if(i==validx){
+          prodcharval[i].isDefault=true;
+        } else {
+          prodcharval[i].isDefault=false;
+        }
+      }
+    }
+
+    console.log('change char')
+    console.log(this.selected_chars)
+    this.cdr.detectChanges();
+  }
+
 
 }

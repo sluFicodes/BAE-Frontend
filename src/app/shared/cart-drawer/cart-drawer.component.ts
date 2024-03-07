@@ -3,12 +3,13 @@ import {
   faCartShopping
 } from "@fortawesome/sharp-solid-svg-icons";
 import {components} from "../../models/product-catalog";
-type ProductOffering = components["schemas"]["ProductOffering"];
 import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
 import { Drawer } from 'flowbite';
 import { PriceServiceService } from 'src/app/services/price-service.service';
 import { ApiServiceService } from 'src/app/services/api-service.service';
+import { cartProduct } from '../../models/interfaces';
+import { TYPES } from 'src/app/models/types.const';
 
 @Component({
   selector: 'app-cart-drawer',
@@ -17,10 +18,7 @@ import { ApiServiceService } from 'src/app/services/api-service.service';
 })
 export class CartDrawerComponent implements OnInit{
   protected readonly faCartShopping = faCartShopping;
-  //p1: ProductOffering;
-  //p2: ProductOffering;
-  //p3: ProductOffering;
-  items: ProductOffering[] = [];
+  items: cartProduct[] = [];
   totalPrice:any;
   showBackDrop:boolean=true;
 
@@ -51,10 +49,6 @@ export class CartDrawerComponent implements OnInit{
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'AddedCartItem') {
         console.log('Elemento añadido')
-        /*const index = this.items.indexOf(ev.value as ProductOffering, 0);
-        if(index === -1) {
-          this.items.push(ev.value as ProductOffering)
-        }*/
         this.api.getShoppingCart().then(data => {
           console.log('---CARRITO API---')
           console.log(data)
@@ -64,10 +58,6 @@ export class CartDrawerComponent implements OnInit{
           console.log('------------------')
         })
       } else if(ev.type === 'RemovedCartItem') {
-        /*const index = this.items.indexOf(ev.value as ProductOffering, 0);
-        if(index > -1) {
-          this.items.splice(index,1);
-        }*/
         this.api.getShoppingCart().then(data => {
           console.log('---CARRITO API---')
           console.log(data)
@@ -78,12 +68,11 @@ export class CartDrawerComponent implements OnInit{
         })        
       }
     })
-    //this.items = this.localStorage.getObject('cart_items') as ProductOffering[] || [] ;
     console.log('Elementos en el carrito....')
     console.log(this.items)
   }
 
-  getProductImage(attachment:any[]) {
+  /*getProductImage(attachment:any[]) {
     if(attachment.length > 0){
       for(let i=0; i<attachment.length; i++){
         if(attachment[i].attachmentType == 'Picture'){
@@ -93,15 +82,14 @@ export class CartDrawerComponent implements OnInit{
     } else {
       return 'https://placehold.co/600x400/svg'
     }
-  }
+  }*/
 
-  getPrice(prod:ProductOffering){
-    let result:any= this.priceService.formatCheapestPricePlan(prod);
+  getPrice(item:any){
     return {
-      "price": result.price,
-      "unit": result.unit,
-      "priceType": result.priceType,
-      "text": result.text
+      'priceType': item.options.pricing.priceType,
+      'price': item.options.pricing.price?.value,
+      'unit': item.options.pricing.price?.unit,
+      'text': item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? item.options.pricing.recurringChargePeriodType : item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ '+ item.options.pricing?.unitOfMeasure?.units : ''
     }
   }
 
@@ -114,12 +102,12 @@ export class CartDrawerComponent implements OnInit{
       console.log(this.items[i])
       insertCheck = false;
       if(this.totalPrice.length == 0){
-        priceInfo = this.priceService.formatCheapestPricePlan(this.items[i]);
+        priceInfo = this.getPrice(this.items[i]);
         this.totalPrice.push(priceInfo);
         console.log('Añade primero')
       } else {
         for(let j=0; j<this.totalPrice.length; j++){
-          priceInfo = this.priceService.formatCheapestPricePlan(this.items[i]);
+          priceInfo = this.getPrice(this.items[i]);
           if(priceInfo.priceType == this.totalPrice[j].priceType && priceInfo.unit == this.totalPrice[j].unit && priceInfo.text == this.totalPrice[j].text){
             this.totalPrice[j].price=this.totalPrice[j].price+priceInfo.price;
             insertCheck=true;
@@ -138,10 +126,9 @@ export class CartDrawerComponent implements OnInit{
     console.log(this.totalPrice)
   }
 
-  deleteProduct(product: ProductOffering){
-    //this.localStorage.removeCartItem(product);
+  deleteProduct(product: cartProduct){
     this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
-    this.eventMessage.emitRemovedCartItem(product as ProductOffering);
+    this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 
   hideCart(){

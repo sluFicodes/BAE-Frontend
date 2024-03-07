@@ -1,10 +1,10 @@
-<div class="w-full h-full bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-secondary-50 border">
+<div class="w-full h-full bg-secondary-50 rounded-lg  dark:border-gray-700 border-secondary-50 border">
 
   <a (click)="goToProductDetails(productOff)" class="flex cursor-pointer justify-center w-full h-[200px] box-decoration-clone">
     <img class=" rounded-t-lg w-fit h-[200px]" src="{{getProductImage()}}" alt="product image" />
   </a>
-  <div class="dark:bg-white bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
-    <div class="px-5 py-5 bg-secondary-50/95 dark:bg-white/95">
+  <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
+    <div class="px-5 py-5 bg-secondary-50/95 ">
       <div class="h-[30px] overflow-y-hidden">
       @for (cat of categories; track cat.id) {
         <bae-badge class="ml-2" [category]=cat></bae-badge>
@@ -199,7 +199,7 @@
 </div>
 }
 
-<!-- Main modal -->
+<!-- CART SELECTION modal -->
 @if (cartSelection){
   <div id="cart-selection-modal" [ngClass]="cartSelection ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-7xl max-h-full">
@@ -215,53 +215,118 @@
               </button>
             </div>
             <!-- Modal body -->
-            <div class="p-4 md:p-5">
-              <div class="flex place-content-center flex-col">
+            <div class="w-full h-full p-8">
                 @if(check_prices){
-                  <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">Selecciona precio:</h5>
+                  <div class="pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="price" role="tabpanel" aria-labelledby="price-tab">
+                      <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">Selecciona precio:</h5>
+                      <div class="grid grid-flow-col gap-8 p-4">
+                      @for (price of productOff?.productOfferingPrice; track price.id; let idx = $index) {
+                        @if (price.priceType == 'recurring') {
+                          <div class="flex items-center">
+                            <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 border border-gray-200 rounded-lg cursor-pointer dark:border-gray-700 dark:peer-checked:border-primary-50 peer-checked:border-primary-100">
+                              
+                              <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                                <div class="bg-green-500 rounded-t-lg w-full">
+                                    <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
+                                </div>
+                                <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                <p class="flex justify-center font-normal text-gray-700">/{{price.recurringChargePeriodType}}</p>
+                                <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                              </div> 
+                            
+                            </label>
+                            </div>
+ 
+                        } @else if (price.priceType == 'usage') {
+                          <div class="flex items-center">
+                            <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer items-center w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 border border-gray-200 rounded-lg cursor-pointer dark:border-gray-700 dark:peer-checked:border-primary-50 peer-checked:border-primary-100">
 
-                  @for(prod of formattedPrices; track prod.id; let idx = $index){
-                  <div class="flex items-center mb-4">
-                  <input checked [id]="'price-radio-'+idx" type="radio" value="" name="price-radio" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                  <label [for]="'price-radio-'+idx" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{prod.price}} {{prod.unit}} {{prod.text}}</label>
-                  </div>
-                  }
-                }
-                @if(check_char){
-                  <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">Selecciona características:</h5>
+                              <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                                  <div class="bg-yellow-300 rounded-t-lg w-full">
+                                      <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                                  </div>                                
+                                  <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                  <p class="flex justify-center font-normal text-gray-700">/{{price.unitOfMeasure?.units}}</p>
+                                  <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                              </div>
+                            </label>
+                          </div>
+                        } @else {
+                          <div class="flex items-center">
+                            <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 border border-gray-200 rounded-lg cursor-pointer dark:border-gray-700 dark:peer-checked:border-primary-50 peer-checked:border-primary-100">
 
-                  @for(char of prodSpec.productSpecCharacteristic; track char.id; let charidx = $index){
-                    <div class="min-h-19 pb-2">
-                      <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{char.name}}:</h5>
-                      @for (val of char?.productSpecCharacteristicValue; track val.value; let validx = $index) {
-                        <div class="flex">
-                        @if (val?.isDefault == true) {
-                        <div class="flex items-center mb-4">
-                          <input checked [id]="'char-radio-'+charidx+validx" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                          <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{val.value}}</label>
-                        </div>
-                      } @else {
-                        <div class="flex items-center mb-4">
-                          <input [id]="'char-radio-'+charidx+validx" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                          <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{val.value}}</label>
-                        </div>
-                      }
-                      </div>
+                            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full justify-center">
+                                <div class="bg-blue-500 rounded-t-lg w-full">
+                                    <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                                </div>                                
+                                <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                            </div>
+                          </label>
+                        </div>                     
+                        }                      
                     }
+                  </div>
+                  </div>
+                  }                
+                  @if(check_char){
+                    <div class="pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="char" role="tabpanel" aria-labelledby="char-tab">
+                      <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">Selecciona características:</h5>
+  
+                      @for(char of prodSpec.productSpecCharacteristic; track char.id; let charidx = $index){
+                        <div class="min-h-19 pb-2">
+                          <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{char.name}}:</h5>
+                          @for (val of char?.productSpecCharacteristicValue; track val.value; let validx = $index) {
+                            <div class="flex">
+                            @if (val?.isDefault == true) {
+                            <div class="flex items-center mb-4">
+                              <input checked [id]="'char-radio-'+charidx+validx" (change)="onCharChange(charidx,validx,val)" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                              <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{val.value}}</label>
+                            </div>
+                            } @else {
+                              <div class="flex items-center mb-4">
+                                <input [id]="'char-radio-'+charidx+validx" (change)="onCharChange(charidx,validx,val)" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{val.value}}</label>
+                              </div>
+                            }
+                          </div>
+                        }
+                        </div>                  
+                      }
                     </div>
-
-                  }
-                }
-
-              </div>
-             
-                <button (click)="addProductToCart(productOff)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
-                  <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
-                  </svg>
-                  {{ 'CARD._add_cart' | translate }}
-                </button>  
+                    }
+                    @if(check_terms){
+                      <div class="pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="terms" role="tabpanel" aria-labelledby="terms-tab">
+                        <h5 class="text-3xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">Terms and conditions:</h5>
+                        @for (term of productOff?.productOfferingTerm; track term.name){
+                          <p class="text-gray-900 dark:text-gray-300">{{term.name}}: {{term.description}}</p>
+                        }
+                        <div class="flex items-center mb-4">
+                          <input id="terms-checkbox" type="checkbox" (change)="selected_terms=!selected_terms" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                          <label for="terms-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">He leído y acepto los términos y condiciones</label>
+                      </div>
+                      </div>
+                    }             
+                    @if(check_terms == true && selected_terms == false){
+                      <button disabled (click)="addProductToCart(productOff,true)" type="button" class="cursor-not-allowed mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                        <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                        </svg>
+                        {{ 'CARD._add_cart' | translate }}
+                      </button> 
+                    } @else {
+                      <button (click)="addProductToCart(productOff,true)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                        <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                        </svg>
+                        {{ 'CARD._add_cart' | translate }}
+                      </button> 
+                    }
             </div>
+          
         </div>
     </div>
   </div>

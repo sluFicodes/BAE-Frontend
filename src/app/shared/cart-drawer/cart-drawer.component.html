@@ -18,8 +18,8 @@
          @for (item of items; track item) {
             <div class="flex justify-between w-full mt-2 mb-2 rounded-lg bg-secondary-50/95 dark:bg-gray-700 dark:border-gray-800 border-secondary-50 border">
                <button type="button" (click)="deleteProduct(item)" class="flex p-2 box-decoration-clone">
-                  @if (item.attachment) {
-                     <img class="rounded-t-lg w-fit h-[100px]" src="{{getProductImage(item.attachment)}}" alt="">
+                  @if (item.image) {
+                     <img class="rounded-t-lg w-fit h-[100px]" src="{{item.image}}" alt="">
                   } @else {
                      <img class="rounded-t-lg w-fit h-[100px]" src="https://placehold.co/600x400/svg" alt="">
                   }
@@ -28,7 +28,7 @@
                   <p class="text-lg text-gray-700 dark:text-gray-400">{{item.name}}</p>
                </div>               
                <div class="p-2 flex items-center">
-                  @if (item.productOfferingPrice) {
+                  @if (item.options.pricing) {
                      <div class="flex place-content-center flex-col">
                         <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice(item).price}} {{getPrice(item).unit}}</span>
                         <span class="text-xs dark:text-primary-50">{{getPrice(item).text}}</span>

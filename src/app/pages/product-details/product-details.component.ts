@@ -42,8 +42,11 @@ export class ProductDetailsComponent implements OnInit{
     console.log('--- Details ID:')
     console.log(this.id)
     this.api.getProductById(this.id).then(prod => {
+      console.log('prod')
+      console.log(prod)
       this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
         this.prodSpec=spec;
+        console.log(this.prodSpec)
         let attachment = spec.attachment
         console.log(spec.attachment)
         let prodPrices: any[] | undefined= prod.productOfferingPrice;

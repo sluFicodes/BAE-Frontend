@@ -87,6 +87,7 @@ export class SearchCatalogComponent implements OnInit{
                           attachment: attachment,
                           productOfferingPrice: prices,
                           productSpecification: data[i].productSpecification,
+                          productOfferingTerm: data[i].productOfferingTerm,
                           version: data[i].version
                         }
                       )
@@ -130,6 +131,7 @@ export class SearchCatalogComponent implements OnInit{
                           attachment: attachment,
                           productOfferingPrice: prices,
                           productSpecification: data[i].productSpecification,
+                          productOfferingTerm: data[i].productOfferingTerm,
                           version: data[i].version
                         }
                       )

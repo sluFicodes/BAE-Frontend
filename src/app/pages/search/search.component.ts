@@ -79,6 +79,7 @@ export class SearchComponent implements OnInit {
                           attachment: attachment,
                           productOfferingPrice: prices,
                           productSpecification: data[i].productSpecification,
+                          productOfferingTerm: data[i].productOfferingTerm,
                           version: data[i].version
                         }
                       )
@@ -123,6 +124,7 @@ export class SearchComponent implements OnInit {
                           attachment: attachment,
                           productOfferingPrice: prices,
                           productSpecification: data[i].productSpecification,
+                          productOfferingTerm: data[i].productOfferingTerm,
                           version: data[i].version
                         }
                       )
