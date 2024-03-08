@@ -14,7 +14,7 @@ type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.css'
 })
-export class ProductDetailsComponent implements OnInit{
+export class ProductDetailsComponent implements OnInit {
   id:any;
   productOff: Product | undefined;
   category: string = 'none';
@@ -30,7 +30,7 @@ export class ProductDetailsComponent implements OnInit{
     private priceService: PriceServiceService,
   ) {
     this.complianceProf.push({id: 'cloudRulebook', name: 'EU Cloud Rulebook', value: 'Not achieved yet', href:'#'})
-    this.complianceProf.push({id: 'cloudSecurity', name: 'EU Cloud Security', value: 'Not achieved yet', href:'#'})    
+    this.complianceProf.push({id: 'cloudSecurity', name: 'EU Cloud Security', value: 'Not achieved yet', href:'#'})
     this.complianceProf.push({id: 'iso27001', name: 'ISO 27001', value: 'Not achieved yet', href:'#'})
     this.complianceProf.push({id: 'iso27017', name: 'ISO 27017', value: 'Not achieved yet', href:'#'})
     this.complianceProf.push({id: 'iso17025', name: 'ISO 17025', value: 'Not achieved yet', href:'#'})
@@ -51,7 +51,7 @@ export class ProductDetailsComponent implements OnInit{
         console.log(spec.attachment)
         let prodPrices: any[] | undefined= prod.productOfferingPrice;
         let prices: any[]=[];
-        if(prodPrices!== undefined){            
+        if(prodPrices!== undefined){
           for(let j=0; j < prodPrices.length; j++){
             this.api.getProductPrice(prodPrices[j].id).then(price => {
               prices.push(price);

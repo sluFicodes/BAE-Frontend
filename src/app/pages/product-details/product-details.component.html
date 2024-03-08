@@ -69,12 +69,12 @@
                 }
             </div>
         </div>
-        <div class="h-[320px]">
-            <img class="rounded-r-lg w-full h-[318px]" src="{{getProductImage()}}" alt="product image" />
+        <div class="overflow-hidden flex justify-center items-center bg-white">
+            <img class="rounded-r-lg h-5/6 w-5/6 object-contain" src="{{getProductImage()}}" alt="product image" />
         </div>
     </div>
 <!-- END HEADER CARD -->
-  
+
     <div class="w-full h-full bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-secondary-50 border">
         <div class="w-full bg-secondary-50/95 dark:bg-white/95 rounded-lg">
             <ul class="hidden text-base font-medium text-center text-gray-500 rounded-lg sm:flex dark:text-gray-400" id="detailsTab" data-tabs-toggle="#detailsTabContent" role="tablist">
@@ -124,7 +124,7 @@
                             <li>{{ 'CARD._id_number' | translate }}: XX</li>
                           </ul>
                         </div>
-                    </div>                   
+                    </div>
 
                 </div>
                 <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4 w-full" id="chars" role="tabpanel" aria-labelledby="chars-tab">
@@ -147,7 +147,7 @@
                         </div>
                     } @empty {
                         <div class="min-h-19 dark:text-gray-600 text-center">{{ 'PRODUCT_DETAILS._no_chars' | translate }}.</div>
-                    }                    
+                    }
                 </div>
                 <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
                     <div class="min-h-19 dark:text-gray-600 text-center">{{ 'PRODUCT_DETAILS._no_attach' | translate }}.</div>
@@ -167,12 +167,12 @@
                                 <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
                                 <p class="flex justify-center font-normal text-gray-700">/{{price.recurringChargePeriodType}}</p>
                                 <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
-                            </div>  
+                            </div>
                         } @else if (price.priceType == 'usage') {
                             <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
                                 <div class="bg-yellow-300 rounded-t-lg w-full">
                                     <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
-                                </div>                                
+                                </div>
                                 <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
                                 <p class="flex justify-center font-normal text-gray-700">/{{price.unitOfMeasure?.units}}</p>
                                 <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
@@ -181,11 +181,11 @@
                             <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
                                 <div class="bg-blue-500 rounded-t-lg w-full">
                                     <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
-                                </div>                                
+                                </div>
                                 <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
                                 <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
-                            </div>                            
-                        }                      
+                            </div>
+                        }
                     }
                 </div>
                 </div>
@@ -194,6 +194,6 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 </div>
