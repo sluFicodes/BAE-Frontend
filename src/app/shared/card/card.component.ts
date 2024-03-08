@@ -1,7 +1,18 @@
-import {Component, Input, OnInit, ChangeDetectorRef, HostListener, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectorRef,
+  HostListener,
+  OnChanges,
+  SimpleChanges,
+  ElementRef, ViewChild, AfterViewInit
+} from '@angular/core';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {BadgeComponent} from "../badge/badge.component";
 import {components} from "../../models/product-catalog";
+import { FastAverageColor } from 'fast-average-color';
+
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
@@ -20,13 +31,14 @@ import { TYPES } from 'src/app/models/types.const';
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })
-export class CardComponent implements OnInit {
+export class CardComponent implements OnInit, AfterViewInit {
 
   @Input() productOff: Product | undefined;
   category: string = 'none';
   categories: any[] | undefined  = [];
   price: any = {price:0,priceType:'X'};
   images: AttachmentRefOrValue[]  = [];
+  bgColor: string = '';
   toastVisibility: boolean = false;
   detailsModalVisibility: boolean = false;
   lastAddedProd:cartProduct | undefined;
@@ -43,6 +55,7 @@ export class CardComponent implements OnInit {
   selected_terms:boolean=false;
   selected_chars:productSpecCharacteristicValueCart[]=[];
   formattedPrices:any[]=[];
+  @ViewChild('myProdImage') myProdImage!: ElementRef<HTMLImageElement>;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -55,17 +68,28 @@ export class CardComponent implements OnInit {
       this.targetModal = document.getElementById('details-modal');
       this.modal = new Modal(this.targetModal);
       this.complianceProf.push({id: 'cloudRulebook', name: 'EU Cloud Rulebook', value: 'Not achieved yet', href:'#'})
-      this.complianceProf.push({id: 'cloudSecurity', name: 'EU Cloud Security', value: 'Not achieved yet', href:'#'})    
+      this.complianceProf.push({id: 'cloudSecurity', name: 'EU Cloud Security', value: 'Not achieved yet', href:'#'})
       this.complianceProf.push({id: 'iso27001', name: 'ISO 27001', value: 'Not achieved yet', href:'#'})
       this.complianceProf.push({id: 'iso27017', name: 'ISO 27017', value: 'Not achieved yet', href:'#'})
       this.complianceProf.push({id: 'iso17025', name: 'ISO 17025', value: 'Not achieved yet', href:'#'})
+    }
+
+  ngAfterViewInit(): void {
+      const fac = new FastAverageColor();
+      fac.getColorAsync(this.myProdImage.nativeElement)
+        .then(color => {
+          this.bgColor = color.rgba;
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
 
   @HostListener('document:click')
   onClick() {
     if(this.showModal==true){
       this.showModal=false;
-      this.cdr.detectChanges(); 
+      this.cdr.detectChanges();
     }
     if(this.cartSelection==true){
       this.cartSelection=false;
@@ -76,7 +100,7 @@ export class CardComponent implements OnInit {
       this.selected_price={};
       this.selected_terms=false;
       this.cdr.detectChanges();
-    }   
+    }
   }
 
 
@@ -109,6 +133,7 @@ export class CardComponent implements OnInit {
       "priceType": result.priceType,
       "text": result.text
     }
+
     this.cdr.detectChanges();
   }
 
@@ -174,7 +199,7 @@ export class CardComponent implements OnInit {
     }
     //TOGGLE TOAST
     this.toastVisibility=true;
-    
+
     this.cdr.detectChanges();
     //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
     let element = document.getElementById("progress-bar")
@@ -183,7 +208,7 @@ export class CardComponent implements OnInit {
       element.style.width = '0%'
       element.offsetWidth
       element.style.width = '100%'
-      setTimeout(() => {   
+      setTimeout(() => {
         this.toastVisibility=false
       }, 3500);
     }
@@ -197,7 +222,7 @@ export class CardComponent implements OnInit {
       this.selected_price={};
       this.selected_terms=false;
       this.cdr.detectChanges();
-    }    
+    }
     this.cdr.detectChanges();
   }
 
@@ -231,8 +256,8 @@ export class CardComponent implements OnInit {
         this.selected_price=this.productOff?.productOfferingPrice[this.productOff?.productOfferingPrice.length-1]
       } else {
         this.selected_price=this.productOff?.productOfferingPrice[0]
-      }  
-      
+      }
+
       this.cdr.detectChanges();
     }
 
@@ -242,12 +267,12 @@ export class CardComponent implements OnInit {
       } else {
         this.check_terms=true;
       }
-      
+
     }
 
     if(this.prodSpec.productSpecCharacteristic != undefined){
       for(let i=0; i<this.prodSpec.productSpecCharacteristic.length; i++){
-        let charvalue = this.prodSpec.productSpecCharacteristic[i].productSpecCharacteristicValue;        
+        let charvalue = this.prodSpec.productSpecCharacteristic[i].productSpecCharacteristicValue;
         if(charvalue != undefined){
           if(charvalue?.length>1){
             this.check_char = true;
@@ -262,10 +287,10 @@ export class CardComponent implements OnInit {
             }
           }
         }
-      }      
+      }
       console.log(this.selected_chars)
     }
-    
+
     if (this.check_prices==true || this.check_char == true || this.check_terms == true){
       this.cartSelection=true;
       this.cdr.detectChanges();
