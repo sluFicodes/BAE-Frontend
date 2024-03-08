@@ -19,6 +19,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
   totalPrice:any;
   showBackDrop:boolean=true;
   billing_accounts: billingAccountCart[] =[];
+  loading: boolean = false;
 
   constructor(
     private eventMessage: EventMessageService,
@@ -29,6 +30,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void {
     //initFlowbite();
+    this.loading=true;
     this.showBackDrop=true;
     this.api.getShoppingCart().then(data => {
       console.log('---CARRITO API---')
@@ -75,6 +77,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
       }
       console.log('billing account...')
       console.log(this.billing_accounts)
+      this.loading=false;
       this.cdr.detectChanges();
     })
     console.log('Elementos en el carrito....')

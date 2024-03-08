@@ -290,10 +290,10 @@ export class CardComponent implements OnInit, AfterViewInit {
         }
         let price_button = document.getElementById('button-price')
         if(price_button != null){
-          if(price_button.className.match('underline')){
+          if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
             console.log('already selected')
           } else {
-            this.addClass(price_button,"underline")
+            this.addClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
           }
         }    
       } else if(this.check_char==true){
@@ -303,10 +303,10 @@ export class CardComponent implements OnInit, AfterViewInit {
         }
         let char_button = document.getElementById('button-char')
         if(char_button != null){
-          if(char_button.className.match('underline')){
+          if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
             console.log('already selected')
           } else {
-            this.addClass(char_button,"underline")
+            this.addClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
           }
         } 
       } else {
@@ -316,10 +316,10 @@ export class CardComponent implements OnInit, AfterViewInit {
         } 
         let terms_button = document.getElementById('button-terms')
         if(terms_button != null){
-          if(terms_button.className.match('underline')){
+          if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
             console.log('already selected')
           } else {
-            this.addClass(terms_button,"underline")
+            this.addClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
           }
         } 
       }
@@ -422,24 +422,24 @@ export class CardComponent implements OnInit, AfterViewInit {
       }
 
       if(price_button != null){
-        if(price_button.className.match('underline')){
+        if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
           console.log('already selected')
         } else {
-          this.addClass(price_button,"underline")
+          this.addClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
         }
       }
 
       if(char_button != null){
-        if(char_button.className.match('underline')){
-          this.removeClass(char_button,"underline")
+        if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          this.removeClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
         } else {
           console.log('already unselected')
         }
       }
 
       if(terms_button != null){
-        if(terms_button.className.match('underline')){
-          this.removeClass(terms_button,"underline")
+        if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          this.removeClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
         } else {
           console.log('already unselected')
         }
@@ -476,24 +476,24 @@ export class CardComponent implements OnInit, AfterViewInit {
       }
 
       if(char_button != null){
-        if(char_button.className.match('underline')){
+        if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
           console.log('already selected')
         } else {
-          this.addClass(char_button,"underline")
+          this.addClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
         }
       }
 
       if(price_button != null){
-        if(price_button.className.match('underline')){
-          this.removeClass(price_button,"underline")
+        if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          this.removeClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
         } else {
           console.log('already unselected')
         }
       }
 
       if(terms_button != null){
-        if(terms_button.className.match('underline')){
-          this.removeClass(terms_button,"underline")
+        if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          this.removeClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
         } else {
           console.log('already unselected')
         }
@@ -530,24 +530,24 @@ export class CardComponent implements OnInit, AfterViewInit {
         }
 
         if(terms_button != null){
-          if(terms_button.className.match('underline')){
+          if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
             console.log('already selected')
           } else {
-            this.addClass(terms_button,"underline")
+            this.addClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
           }
         }
 
         if(price_button != null){
-          if(price_button.className.match('underline')){
-            this.removeClass(price_button,"underline")
+          if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            this.removeClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
           } else {
             console.log('already unselected')
           }
         }
 
         if(char_button != null){
-          if(char_button.className.match('underline')){
-            this.removeClass(char_button,"underline")
+          if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            this.removeClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
           } else {
             console.log('already unselected')
           }
