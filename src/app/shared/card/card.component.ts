@@ -12,8 +12,9 @@ import { Modal } from 'flowbite';
 import { Router } from '@angular/router';
 import { PriceServiceService } from 'src/app/services/price-service.service';
 import { initFlowbite } from 'flowbite';
-import { cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
+import { LoginInfo, cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
+import * as moment from 'moment';
 
 @Component({
   selector: 'bae-off-card',
@@ -43,6 +44,7 @@ export class CardComponent implements OnInit, AfterViewInit {
   selected_terms:boolean=false;
   selected_chars:productSpecCharacteristicValueCart[]=[];
   formattedPrices:any[]=[];
+  check_logged:boolean=false;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -81,6 +83,15 @@ export class CardComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      this.check_logged=true;
+      this.cdr.detectChanges();
+    } else {
+      this.check_logged=false,
+      this.cdr.detectChanges();
+    }
+
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     this.categories = this.productOff?.category;
     //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
@@ -274,20 +285,42 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
       if(this.check_prices==true){
         let price_elem = document.getElementById('price')
-        console.log('price elem')
-        console.log(price_elem)
         if(price_elem!=null){
           this.removeClass(price_elem,'hidden')
-        }        
+        }
+        let price_button = document.getElementById('button-price')
+        if(price_button != null){
+          if(price_button.className.match('underline')){
+            console.log('already selected')
+          } else {
+            this.addClass(price_button,"underline")
+          }
+        }    
       } else if(this.check_char==true){
         let char_elem = document.getElementById('char')
         if(char_elem!=null){
           this.removeClass(char_elem,'hidden')
+        }
+        let char_button = document.getElementById('button-char')
+        if(char_button != null){
+          if(char_button.className.match('underline')){
+            console.log('already selected')
+          } else {
+            this.addClass(char_button,"underline")
+          }
         } 
       } else {
         let terms_elem = document.getElementById('terms')
         if(terms_elem!=null){
           this.removeClass(terms_elem,'hidden')
+        } 
+        let terms_button = document.getElementById('button-terms')
+        if(terms_button != null){
+          if(terms_button.className.match('underline')){
+            console.log('already selected')
+          } else {
+            this.addClass(terms_button,"underline")
+          }
         } 
       }
     }else {
@@ -387,6 +420,30 @@ export class CardComponent implements OnInit, AfterViewInit {
           }
         }
       }
+
+      if(price_button != null){
+        if(price_button.className.match('underline')){
+          console.log('already selected')
+        } else {
+          this.addClass(price_button,"underline")
+        }
+      }
+
+      if(char_button != null){
+        if(char_button.className.match('underline')){
+          this.removeClass(char_button,"underline")
+        } else {
+          console.log('already unselected')
+        }
+      }
+
+      if(terms_button != null){
+        if(terms_button.className.match('underline')){
+          this.removeClass(terms_button,"underline")
+        } else {
+          console.log('already unselected')
+        }
+      }
     }
   }
 
@@ -415,6 +472,30 @@ export class CardComponent implements OnInit, AfterViewInit {
           } else {
             this.addClass(terms_elem,"hidden")
           }
+        }
+      }
+
+      if(char_button != null){
+        if(char_button.className.match('underline')){
+          console.log('already selected')
+        } else {
+          this.addClass(char_button,"underline")
+        }
+      }
+
+      if(price_button != null){
+        if(price_button.className.match('underline')){
+          this.removeClass(price_button,"underline")
+        } else {
+          console.log('already unselected')
+        }
+      }
+
+      if(terms_button != null){
+        if(terms_button.className.match('underline')){
+          this.removeClass(terms_button,"underline")
+        } else {
+          console.log('already unselected')
         }
       }
     }
@@ -447,6 +528,31 @@ export class CardComponent implements OnInit, AfterViewInit {
             this.addClass(char_elem,"hidden")
           }          
         }
+
+        if(terms_button != null){
+          if(terms_button.className.match('underline')){
+            console.log('already selected')
+          } else {
+            this.addClass(terms_button,"underline")
+          }
+        }
+
+        if(price_button != null){
+          if(price_button.className.match('underline')){
+            this.removeClass(price_button,"underline")
+          } else {
+            console.log('already unselected')
+          }
+        }
+
+        if(char_button != null){
+          if(char_button.className.match('underline')){
+            this.removeClass(char_button,"underline")
+          } else {
+            console.log('already unselected')
+          }
+        }
+
       }
     }
 

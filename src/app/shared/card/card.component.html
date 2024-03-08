@@ -52,8 +52,10 @@
           </svg>
           {{ 'CARD._details' | translate }}
         </button>
-        <a id="add-to-cart" (click)="toggleCartSelection(productOff);$event.stopPropagation();" class="text-white cursor-pointer bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{ 'CARD._add_cart' | translate }}</a>
-      </div>
+        @if(check_logged){
+          <a id="add-to-cart" (click)="toggleCartSelection(productOff);$event.stopPropagation();" class="text-white cursor-pointer bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{ 'CARD._add_cart' | translate }}</a>
+        }
+        </div>
     </div>
   </div>
 </div>
@@ -154,12 +156,14 @@
             </div>
             <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
             <div class="flex">
+              @if(check_logged){
               <button (click)="toggleCartSelection(productOff);$event.stopPropagation();" type="button" class="m-4 w-fit flex items-center justify-start text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
                 <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
                 </svg>
                 {{ 'CARD._add_cart' | translate }}
               </button>
+              }
               <button type="button" (click)="goToProductDetails(productOff)" class="m-4 w-fit flex items-center justify-start text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 {{ 'CARD._details' | translate }}
                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -218,18 +222,18 @@
             <div class="w-full h-full p-8">
               <div class="flex">
                 @if(check_prices){
-                  <button type="button-price" (click)="clickShowPrice()" class="h-fit ml-4 w-fit text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
-                    Price plans
+                  <button id="button-price" type="button" (click)="clickShowPrice()" class="h-fit ml-4 w-fit text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                    {{ 'CARD._price_plans' | translate }}
                   </button>
                 }
                 @if(check_char){
-                  <button type="button-char" (click)="clickShowChar()" class="h-fit w-fit ml-4 text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
-                    Characteristics
+                  <button id="button-char" type="button" (click)="clickShowChar()" class="h-fit w-fit ml-4 text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                    {{ 'CARD._chars' | translate }}
                   </button>
                 }
                 @if(check_terms){
-                  <button type="button-terms" (click)="clickShowTerms()" class="h-fit w-fit ml-4 text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
-                    Terms
+                  <button id="button-terms" type="button" (click)="clickShowTerms()" class="h-fit w-fit ml-4 text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                    {{ 'CARD._terms' | translate }}
                   </button>
                   }
               </div>
@@ -237,7 +241,7 @@
               <div class="border border-gray-300 bg-secondary-50/95 rounded-lg">
                 @if(check_prices){
                   <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="price">
-                      <h5 class="text-3xl font-semibold tracking-tight text-primary-100 ">Select price plan:</h5>
+                      <h5 class="text-3xl font-semibold tracking-tight text-primary-100 ">{{ 'CARD._select_price' | translate }}:</h5>
                       <div class="grid grid-flow-col gap-8 p-4">
                       @for (price of productOff?.productOfferingPrice; track price.id; let idx = $index) {
                         @if (price.priceType == 'recurring') {
@@ -293,7 +297,7 @@
                   }                
                   @if(check_char){
                     <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="char">
-                      <h5 class="text-3xl font-semibold tracking-tight text-primary-100">Select characteristics:</h5>
+                      <h5 class="text-3xl font-semibold tracking-tight text-primary-100">{{ 'CARD._select_char' | translate }}:</h5>
   
                       @for(char of prodSpec.productSpecCharacteristic; track char.id; let charidx = $index){
                         <div class="min-h-19 pb-2">
@@ -319,13 +323,13 @@
                     }
                     @if(check_terms){
                       <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="terms">
-                        <h5 class="text-3xl font-semibold tracking-tight text-primary-100">Terms and conditions:</h5>
+                        <h5 class="text-3xl font-semibold tracking-tight text-primary-100">{{ 'CARD._terms' | translate }}:</h5>
                         @for (term of productOff?.productOfferingTerm; track term.name){
                           <p class="text-gray-900">{{term.name}}: {{term.description}}</p>
                         }
                         <div class="flex items-center mb-4">
                           <input id="terms-checkbox" type="checkbox" (change)="selected_terms=!selected_terms" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-                          <label for="terms-checkbox" class="ms-2 text-sm font-medium text-gray-900">I have read and I accept the terms and conditions.</label>
+                          <label for="terms-checkbox" class="ms-2 text-sm font-medium text-gray-900">{{ 'CARD._accept_terms' | translate }}</label>
                       </div>
                       </div>
                     }

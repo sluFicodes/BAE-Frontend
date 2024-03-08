@@ -33,7 +33,7 @@ export class SearchCatalogComponent implements OnInit{
   loading_more: boolean = false;
   page_check:boolean = true;
   page: number=0;
-  PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
+  PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;  
 
   async ngOnInit() {
     initFlowbite();

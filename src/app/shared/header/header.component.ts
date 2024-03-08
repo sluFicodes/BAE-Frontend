@@ -56,7 +56,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit(){
-    initFlowbite();
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.is_logged=true;

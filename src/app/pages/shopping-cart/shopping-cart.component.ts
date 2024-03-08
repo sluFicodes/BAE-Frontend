@@ -4,7 +4,7 @@ import {
 } from "@fortawesome/sharp-solid-svg-icons";
 import {EventMessageService} from "../../services/event-message.service";
 import { ApiServiceService } from 'src/app/services/api-service.service';
-import { cartProduct } from '../../models/interfaces';
+import { cartProduct, billingAccountCart } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
 import { initFlowbite } from 'flowbite';
 
@@ -18,6 +18,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
   items: cartProduct[] = [];
   totalPrice:any;
   showBackDrop:boolean=true;
+  billing_accounts: billingAccountCart[] =[];
 
   constructor(
     private eventMessage: EventMessageService,
@@ -37,6 +38,44 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
       this.getTotalPrice();
       console.log('------------------')
       initFlowbite();
+    })
+    this.api.getBillingAccount().then(data => {
+      for(let i=0; i< data.length;i++){
+        let email =''
+        let phone=''
+        let address = {
+          "city": '',
+          "country": '',
+          "postCode": '',
+          "stateOrProvince": '',
+          "street": ''
+        }
+        for(let j=0; j<data[i].contact[0].contactMedium.length;j++){
+          if(data[i].contact[0].contactMedium[j].mediumType == 'Email'){
+            email = data[i].contact[0].contactMedium[j].characteristic.emailAddress
+          } else if (data[i].contact[0].contactMedium[j].mediumType == 'PostalAddress'){
+            address = {
+              "city": data[i].contact[0].contactMedium[j].characteristic.city,
+              "country": data[i].contact[0].contactMedium[j].characteristic.country,
+              "postCode": data[i].contact[0].contactMedium[j].characteristic.postCode,
+              "stateOrProvince": data[i].contact[0].contactMedium[j].characteristic.stateOrProvince,
+              "street": data[i].contact[0].contactMedium[j].characteristic.street1
+            }
+          } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber'){
+            phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
+          }
+        }
+        this.billing_accounts.push({
+          "id": data[i].id,
+          "email": email,
+          "postalAddress": address,
+          "telephoneNumber": phone,
+          "selected": i==0 ? true : false
+        })
+      }
+      console.log('billing account...')
+      console.log(this.billing_accounts)
+      this.cdr.detectChanges();
     })
     console.log('Elementos en el carrito....')
     console.log(this.items)
@@ -111,5 +150,20 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
         this.addClass(elem,"hidden")
       }
     }
+  }
+
+  selectBill(idx:number){
+    for(let i = 0; i<this.billing_accounts.length; i++){
+      if(idx==i){
+        this.billing_accounts[i].selected=true;
+        this.cdr.detectChanges();
+      } else {
+        this.billing_accounts[i].selected=false;
+        this.cdr.detectChanges();
+      }
+    }
+    console.log('selecting bill')
+    console.log(this.billing_accounts)
+    this.cdr.detectChanges();
   }
 }
