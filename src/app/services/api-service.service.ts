@@ -14,14 +14,15 @@ import * as moment from 'moment';
 export class ApiServiceService {
   public static BASE_URL: String = environment.BASE_URL;
   public static API_PORT: Number = environment.API_PORT;
-  public static API_NAME: String = environment.PRODUCT_CATALOG;
+  public static API_PRODUCT: String = environment.PRODUCT_CATALOG;
+  public static API_ACCOUNT: String = environment.ACCOUNT;
   public static PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
   public static CATALOG_LIMIT: number= environment.CATALOG_LIMIT;
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
   getProducts(page:any) {
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productOffering?limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;    
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering?limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;    
 
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
@@ -44,7 +45,7 @@ export class ApiServiceService {
         id_str = id_str+','+ids[i].id
       }
     }
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productOffering?${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering?${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;
 
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
@@ -59,7 +60,7 @@ export class ApiServiceService {
   }
 
   getProductsByCatalog(catalogId:any,page:any){
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog/${catalogId}/productOffering?lifecycleStatus=Launched&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog/${catalogId}/productOffering?lifecycleStatus=Launched&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`
     console.log(url)
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
@@ -82,7 +83,7 @@ export class ApiServiceService {
         id_str = id_str+','+ids[i].id
       }
     }    
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog/${catalogId}/productOffering?lifecycleStatus=Launched&${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`;
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog/${catalogId}/productOffering?lifecycleStatus=Launched&${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`;
 
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
@@ -97,7 +98,7 @@ export class ApiServiceService {
   }
 
   getProductById(id:any) {
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productOffering/${id}`;
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering/${id}`;
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       var header = {
@@ -111,7 +112,7 @@ export class ApiServiceService {
   }
 
   getProductSpecification(id:any) {
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productSpecification/${id}`;
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productSpecification/${id}`;
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       var header = {
@@ -125,7 +126,7 @@ export class ApiServiceService {
   }
 
   getProductPrice(id:any) {
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/productOfferingPrice/${id}`
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOfferingPrice/${id}`
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       var header = {
@@ -139,7 +140,7 @@ export class ApiServiceService {
   }
 
   getCategories(){
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/category?limit=100`;
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/category?limit=100`;
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       var header = {
@@ -153,7 +154,7 @@ export class ApiServiceService {
   }
 
   getCatalogs(page:any) {
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}`;    
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}`;    
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       var header = {
@@ -167,7 +168,7 @@ export class ApiServiceService {
   }
 
   getCatalog(id:any){
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_NAME}/catalog/${id}`;
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog/${id}`;
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       var header = {
@@ -261,6 +262,22 @@ app.post(config.shoppingCartPath + '/empty', shoppingCart.empty);
       return this.http.delete<any>(url, header);
     } else {
       return this.http.delete<any>(url);
+    }
+  }
+
+  getBillingAccount(){
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_ACCOUNT}/billingAccount/`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      console.log('--- get shopping cart ---')
+      console.log(header)
+      return lastValueFrom(this.http.get<any[]>(url,header));
+    } else {
+      return lastValueFrom(this.http.get<any[]>(url));
     }
   }
 }

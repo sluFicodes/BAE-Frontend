@@ -6,7 +6,7 @@ import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
-
+import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -26,6 +26,9 @@ const routes: Routes = [
   },
   { path: 'catalogs', 
   component: CatalogsComponent
+  },
+  { path: 'shopping-cart', 
+  component: ShoppingCartComponent
   }
 ]
 

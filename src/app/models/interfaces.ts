@@ -41,3 +41,17 @@ export interface cartProduct {
   }
   termsAccepted: boolean
 }
+
+export interface billingAccountCart {
+  id: string,
+  email: string,
+  postalAddress: {
+    city: string,
+    country: string,
+    postCode: string,
+    stateOrProvince: string,
+    street: string
+  },
+  telephoneNumber: string,
+  selected:boolean
+}

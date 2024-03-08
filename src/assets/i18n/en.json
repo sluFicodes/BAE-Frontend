@@ -121,7 +121,13 @@
         "_undo": "Undo",
         "_close_toast": "Close",
         "_from": "From",
-        "_full_desc": "Full description"
+        "_full_desc": "Full description",
+        "_price_plans": "Price plans",
+        "_select_price": "Select price plan",
+        "_chars": "Characteristics",
+        "_select_char": "Select characteristics",
+        "_terms": "Terms and conditions",
+        "_accept_terms": "I have read and I accept the terms and conditions."
     },
     "CATEGORIES_FILTER": {
         "_remove_badge": "Remove badge",
@@ -175,6 +181,19 @@
     },
     "CATALOGS": {
         "_all_catalogs": "All catalogs",
-        "_no_desc": "No se ha incluido descripción"
+        "_no_desc": "No description included"
+    },
+    "SHOPPING_CART": {
+        "_buy": "Buy",
+        "_back": "Back",
+        "_confirm": "Confirm and pay",
+        "_note": "Add notes",
+        "_choose_bill": "Choose a billing address",
+        "_cart": "Cart",
+        "_email": "Email",
+        "_postalAddress": "Postal address",
+        "_phone": "Phone number",
+        "_billing_check": "You should first create at least a billing address in order to checkout an order.",
+        "_click_here": "Click here"
     }
 }

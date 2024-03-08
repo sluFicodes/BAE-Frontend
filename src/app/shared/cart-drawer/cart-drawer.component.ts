@@ -10,6 +10,7 @@ import { PriceServiceService } from 'src/app/services/price-service.service';
 import { ApiServiceService } from 'src/app/services/api-service.service';
 import { cartProduct } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart-drawer',
@@ -27,7 +28,8 @@ export class CartDrawerComponent implements OnInit{
     private eventMessage: EventMessageService,
     private priceService: PriceServiceService,
     private api: ApiServiceService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private router: Router,) {
 
   }
 
@@ -133,5 +135,11 @@ export class CartDrawerComponent implements OnInit{
 
   hideCart(){
     this.eventMessage.emitToggleDrawer(false);
+  }
+
+
+  goToShoppingCart() {
+    this.hideCart();
+    this.router.navigate(['/shopping-cart']);
   }
 }

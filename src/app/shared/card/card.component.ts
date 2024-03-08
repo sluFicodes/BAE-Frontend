@@ -4,12 +4,8 @@ import {
   OnInit,
   ChangeDetectorRef,
   HostListener,
-  OnChanges,
-  SimpleChanges,
   ElementRef, ViewChild, AfterViewInit
 } from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {BadgeComponent} from "../badge/badge.component";
 import {components} from "../../models/product-catalog";
 import { FastAverageColor } from 'fast-average-color';
 
@@ -23,8 +19,8 @@ import { Modal } from 'flowbite';
 import { Router } from '@angular/router';
 import { PriceServiceService } from 'src/app/services/price-service.service';
 import { initFlowbite } from 'flowbite';
-import { cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
-import { TYPES } from 'src/app/models/types.const';
+import { LoginInfo, cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
+import * as moment from 'moment';
 
 @Component({
   selector: 'bae-off-card',
@@ -56,6 +52,7 @@ export class CardComponent implements OnInit, AfterViewInit {
   selected_chars:productSpecCharacteristicValueCart[]=[];
   formattedPrices:any[]=[];
   @ViewChild('myProdImage') myProdImage!: ElementRef<HTMLImageElement>;
+  check_logged:boolean=false;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -72,17 +69,6 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.complianceProf.push({id: 'iso27001', name: 'ISO 27001', value: 'Not achieved yet', href:'#'})
       this.complianceProf.push({id: 'iso27017', name: 'ISO 27017', value: 'Not achieved yet', href:'#'})
       this.complianceProf.push({id: 'iso17025', name: 'ISO 17025', value: 'Not achieved yet', href:'#'})
-    }
-
-  ngAfterViewInit(): void {
-      const fac = new FastAverageColor();
-      fac.getColorAsync(this.myProdImage.nativeElement)
-        .then(color => {
-          this.bgColor = color.rgba;
-        })
-        .catch(e => {
-          console.error(e);
-        });
     }
 
   @HostListener('document:click')
@@ -105,7 +91,15 @@ export class CardComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
-    initFlowbite();
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      this.check_logged=true;
+      this.cdr.detectChanges();
+    } else {
+      this.check_logged=false,
+      this.cdr.detectChanges();
+    }
+
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     this.categories = this.productOff?.category;
     //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
@@ -139,6 +133,18 @@ export class CardComponent implements OnInit, AfterViewInit {
 
   getProductImage() {
     return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
+  }
+
+  ngAfterViewInit() {
+    initFlowbite();
+    const fac = new FastAverageColor();
+    fac.getColorAsync(this.myProdImage.nativeElement)
+      .then(color => {
+        this.bgColor = color.rgba;
+      })
+      .catch(e => {
+        console.error(e);
+      });
   }
 
   async addProductToCart(productOff:Product| undefined,options:boolean){
@@ -229,7 +235,7 @@ export class CardComponent implements OnInit, AfterViewInit {
   deleteProduct(product: Product | undefined){
     if(product !== undefined) {
       //this.localStorage.removeCartItem(product);
-      this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+      this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('removed'));
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
@@ -262,8 +268,8 @@ export class CardComponent implements OnInit, AfterViewInit {
     }
 
     if(productOff?.productOfferingTerm != undefined){
-      if(productOff.productOfferingTerm.length == 1 && productOff.productOfferingTerm[0].name != undefined){
-        this.check_terms=true;
+      if(productOff.productOfferingTerm.length == 1 && productOff.productOfferingTerm[0].name == undefined){
+        this.check_terms=false;
       } else {
         this.check_terms=true;
       }
@@ -294,6 +300,46 @@ export class CardComponent implements OnInit, AfterViewInit {
     if (this.check_prices==true || this.check_char == true || this.check_terms == true){
       this.cartSelection=true;
       this.cdr.detectChanges();
+      if(this.check_prices==true){
+        let price_elem = document.getElementById('price')
+        if(price_elem!=null){
+          this.removeClass(price_elem,'hidden')
+        }
+        let price_button = document.getElementById('button-price')
+        if(price_button != null){
+          if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            console.log('already selected')
+          } else {
+            this.addClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          }
+        }
+      } else if(this.check_char==true){
+        let char_elem = document.getElementById('char')
+        if(char_elem!=null){
+          this.removeClass(char_elem,'hidden')
+        }
+        let char_button = document.getElementById('button-char')
+        if(char_button != null){
+          if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            console.log('already selected')
+          } else {
+            this.addClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          }
+        }
+      } else {
+        let terms_elem = document.getElementById('terms')
+        if(terms_elem!=null){
+          this.removeClass(terms_elem,'hidden')
+        }
+        let terms_button = document.getElementById('button-terms')
+        if(terms_button != null){
+          if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            console.log('already selected')
+          } else {
+            this.addClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          }
+        }
+      }
     }else {
       this.addProductToCart(productOff,false)
     }
@@ -351,5 +397,181 @@ export class CardComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
+  removeClass(elem: HTMLElement, cls:string) {
+    var str = " " + elem.className + " ";
+    elem.className = str.replace(" " + cls + " ", " ").replace(/^\s+|\s+$/g, "");
+  }
 
+  addClass(elem: HTMLElement, cls:string) {
+      elem.className += (" " + cls);
+  }
+
+  setClass(elem:HTMLElement, cls:string) {
+    elem.className = cls
+  }
+
+  clickShowPrice(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+
+    if(price_elem != null){
+      if(price_elem.className.match('hidden') ) {
+        this.removeClass(price_elem,"hidden")
+        if(char_elem != null){
+          if(char_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(char_elem,"hidden")
+          }
+        }
+        if(terms_elem != null){
+          if(terms_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(terms_elem,"hidden")
+          }
+        }
+      }
+
+      if(price_button != null){
+        if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          console.log('already selected')
+        } else {
+          this.addClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+        }
+      }
+
+      if(char_button != null){
+        if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          this.removeClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+        } else {
+          console.log('already unselected')
+        }
+      }
+
+      if(terms_button != null){
+        if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          this.removeClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+        } else {
+          console.log('already unselected')
+        }
+      }
+    }
+  }
+
+  clickShowChar(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+
+    if(char_elem != null){
+      if(char_elem.className.match('hidden') ) {
+        this.removeClass(char_elem,"hidden")
+        if(price_elem != null){
+          if(price_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(price_elem,"hidden")
+          }
+        }
+        if(terms_elem != null){
+          if(terms_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(terms_elem,"hidden")
+          }
+        }
+      }
+
+      if(char_button != null){
+        if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          console.log('already selected')
+        } else {
+          this.addClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+        }
+      }
+
+      if(price_button != null){
+        if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          this.removeClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+        } else {
+          console.log('already unselected')
+        }
+      }
+
+      if(terms_button != null){
+        if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+          this.removeClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+        } else {
+          console.log('already unselected')
+        }
+      }
+    }
+
+  }
+
+  clickShowTerms(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+
+    if(terms_elem != null){
+      if(terms_elem.className.match('hidden') ) {
+        this.removeClass(terms_elem,"hidden")
+        if(price_elem != null){
+          if(price_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(price_elem,"hidden")
+          }
+        }
+        if(char_elem != null){
+          if(char_elem.className.match('hidden') ) {
+            console.log('already hidden')
+          } else {
+            this.addClass(char_elem,"hidden")
+          }
+        }
+
+        if(terms_button != null){
+          if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            console.log('already selected')
+          } else {
+            this.addClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          }
+        }
+
+        if(price_button != null){
+          if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            this.removeClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          } else {
+            console.log('already unselected')
+          }
+        }
+
+        if(char_button != null){
+          if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            this.removeClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          } else {
+            console.log('already unselected')
+          }
+        }
+
+      }
+    }
+
+  }
 }
