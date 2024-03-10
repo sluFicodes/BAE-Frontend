@@ -38,14 +38,24 @@ export class ApiServiceService {
 
   getProductsByCategory(ids:Category[],page:any) {
     let id_str='';
-    for(let i=0; i<ids.length;i++){
-      if(i==0){
-        id_str = 'category.id='+ids[i].id
+    for(let i = 0; i < ids.length; i++){
+      if(i == 0){
+        id_str = 'category.id=' + ids[i].id
       } else {
-        id_str = id_str+','+ids[i].id
+        id_str = id_str + ',' + ids[i].id
       }
     }
-    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering?${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;
+
+    const baseUrl = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering`;
+    const query = `limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;
+
+    // Add the ID string only when some categories are selected
+    let url;
+    if (id_str !== '') {
+      url = `${baseUrl}?${id_str}&${query}`;
+    } else {
+      url = `${baseUrl}?${query}`
+    }
 
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
