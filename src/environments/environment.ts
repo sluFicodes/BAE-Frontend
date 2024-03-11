@@ -6,5 +6,6 @@ export const environment = {
     ACCOUNT: '/account',
     PRODUCT_LIMIT: 6,
     CATALOG_LIMIT: 4,
-    SIOP: true
+    SIOP: true,
+    TAX_RATE: 20
 };

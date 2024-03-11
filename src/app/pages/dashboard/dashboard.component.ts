@@ -42,7 +42,7 @@ export class DashboardComponent implements OnInit {
         console.log('---- loginangular response ----')
         console.log(data)
         console.log(data.username)
-        let info = {"id": data.id, "user": data.username, "email": data.email, "token": data.accessToken, "expire": data.expire } as LoginInfo;
+        let info = {"id": data.id, "user": data.username, "email": data.email, "token": data.accessToken, "expire": data.expire, "partyId": data.partyId } as LoginInfo;
         this.localStorage.addLoginInfo(info);
         this.eventMessage.emitLogin(info);
         console.log('----')

@@ -4,9 +4,12 @@ import {
 } from "@fortawesome/sharp-solid-svg-icons";
 import {EventMessageService} from "../../services/event-message.service";
 import { ApiServiceService } from 'src/app/services/api-service.service';
-import { cartProduct, billingAccountCart } from '../../models/interfaces';
+import { cartProduct, billingAccountCart, LoginInfo } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
 import { initFlowbite } from 'flowbite';
+import * as moment from 'moment';
+import { environment } from 'src/environments/environment';
+import {LocalStorageService} from "../../services/local-storage.service";
 
 @Component({
   selector: 'app-shopping-cart',
@@ -15,21 +18,27 @@ import { initFlowbite } from 'flowbite';
 })
 export class ShoppingCartComponent implements OnInit, AfterViewInit{
   protected readonly faCartShopping = faCartShopping;
+  TAX_RATE: number = environment.TAX_RATE;
   items: cartProduct[] = [];
   totalPrice:any;
   showBackDrop:boolean=true;
   billing_accounts: billingAccountCart[] =[];
+  selectedBilling:any;
   loading: boolean = false;
+  relatedParty:string='';
 
   constructor(
     private eventMessage: EventMessageService,
     private api: ApiServiceService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private localStorage: LocalStorageService) {
 
   }
 
   ngOnInit(): void {
     //initFlowbite();
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    this.relatedParty=aux.partyId;
     this.loading=true;
     this.showBackDrop=true;
     this.api.getShoppingCart().then(data => {
@@ -69,11 +78,22 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
         }
         this.billing_accounts.push({
           "id": data[i].id,
+          "href": data[i].href,
           "email": email,
           "postalAddress": address,
           "telephoneNumber": phone,
           "selected": i==0 ? true : false
         })
+        if(i==0){
+          this.selectedBilling={
+            "id": data[i].id,
+            "href": data[i].href,
+            "email": email,
+            "postalAddress": address,
+            "telephoneNumber": phone,
+            "selected": true
+          }
+        }
       }
       console.log('billing account...')
       console.log(this.billing_accounts)
@@ -159,6 +179,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
     for(let i = 0; i<this.billing_accounts.length; i++){
       if(idx==i){
         this.billing_accounts[i].selected=true;
+        this.selectedBilling=this.billing_accounts[i];
         this.cdr.detectChanges();
       } else {
         this.billing_accounts[i].selected=false;
@@ -168,5 +189,96 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
     console.log('selecting bill')
     console.log(this.billing_accounts)
     this.cdr.detectChanges();
+  }
+
+  async orderProduct(){
+    console.log('buying')
+    console.log(moment().utc())
+    let products = []
+    for(let i = 0; i<this.items.length; i++){
+      let char = [];
+      let opChars = this.items[i].options.characteristics
+      if(opChars != undefined){
+        for(let j = 0; j< opChars.length; j++){
+          char.push({
+            "name": opChars[j].characteristic.name,
+            "value": opChars[j].value?.value,
+            "valueType": opChars[j].characteristic.valueType
+          })
+        }
+      }
+
+      products.push({
+          "id": this.items[i].id,
+          "action": "add",
+          "state": "acknowledged",
+          "productOffering": {
+              "id": this.items[i].id,
+              "href": this.items[i].id
+          },
+          "product": {
+            "productCharacteristic": char,
+            "productPrice": [
+              {
+                  "description": this.items[i].options.pricing?.description,
+                  "name": this.items[i].options.pricing?.name,
+                  "price": {
+                      "taxIncludedAmount": {
+                          "value": this.items[i].options.pricing?.price?.value,
+                          "unit": this.items[i].options.pricing?.price?.unit
+                      },
+                      "taxRate": this.TAX_RATE
+                  },
+                  "priceType": this.items[i].options.pricing?.priceType,
+                  "recurringChargePeriod": this.items[i].options.pricing?.recurringChargePeriodType != undefined ? this.items[i].options.pricing?.recurringChargePeriodType : '',
+                  "unitOfMeasure": this.items[i].options.pricing?.unitOfMeasure != undefined ? this.items[i].options.pricing?.unitOfMeasure?.units : '',
+                  "id": this.items[i].options.pricing?.id,
+                  "productOfferingPrice": {
+                      "id": this.items[i].options.pricing?.id,
+                      "href": this.items[i].options.pricing?.href,
+                  }
+              }
+            ]
+        }
+      })
+    }
+    let productOrder = {
+      "state": "acknowledged",
+      "productOrderItem": products,
+      "relatedParty": [
+        {
+            "id": this.relatedParty,
+            "href": this.relatedParty,
+            "role": "Customer"
+        }
+      ],
+      //priority??
+      "priority": '4',
+      "billingAccount": {
+        "id": this.selectedBilling.id,
+        "href": this.selectedBilling.id
+      },      
+      "orderDate": moment().utc(),
+      "notificationContact": this.selectedBilling.email,
+    }
+    await this.api.postProductOrder(productOrder).subscribe({
+      next: data => {
+          console.log(data)
+          console.log('PROD ORDER DONE');
+          this.api.emptyShoppingCart().subscribe({
+            next: data => {
+                console.log(data)
+                console.log('EMPTY');     
+            },
+            error: error => {
+                console.error('There was an error while updating!', error);
+            }
+          });
+          window.location.href='http://proxy.docker:8004/#/inventory/product';          
+      },
+      error: error => {
+          console.error('There was an error while updating!', error);
+      }
+    });
   }
 }

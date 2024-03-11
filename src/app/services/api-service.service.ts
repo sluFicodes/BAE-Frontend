@@ -219,13 +219,7 @@ export class ApiServiceService {
     //return this.http.get<any>(url, {observe: 'response', withCredentials: true });
 
   }
-/*
-app.get(config.shoppingCartPath + '/item/', shoppingCart.getCart);
-app.post(config.shoppingCartPath + '/item/', shoppingCart.add);
-app.get(config.shoppingCartPath + '/item/:id', shoppingCart.getItem);
-app.delete(config.shoppingCartPath + '/item/:id', shoppingCart.remove);
-app.post(config.shoppingCartPath + '/empty', shoppingCart.empty);
-*/
+
   getShoppingCart(){
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/shoppingCart/item/`;
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
@@ -256,9 +250,9 @@ app.post(config.shoppingCartPath + '/empty', shoppingCart.empty);
       return this.http.post<any>(url, item, header);
     } else {
       return this.http.post<any>(url, item);
-    }
-    
+    }    
   }
+
   removeItemShoppingCart(id:any){
     //DELETE
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/shoppingCart/item/${id}`;
@@ -289,5 +283,38 @@ app.post(config.shoppingCartPath + '/empty', shoppingCart.empty);
     } else {
       return lastValueFrom(this.http.get<any[]>(url));
     }
+  }
+
+  emptyShoppingCart(){
+    console.log('removing cart')
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/shoppingCart/empty/`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    console.log(aux)
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      console.log('logged')
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      return this.http.post<any>(url, {}, header);
+    } else {
+      return this.http.post<any>(url, {});
+    }    
+  }
+
+  postProductOrder(prod:any){
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/ordering/productOrder`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      return this.http.post<any>(url, prod, header);
+    } else {
+      return this.http.post<any>(url, prod);
+    }    
   }
 }
