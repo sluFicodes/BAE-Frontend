@@ -5,5 +5,6 @@ export const environment = {
     PRODUCT_CATALOG: '/catalog',
     ACCOUNT: '/account',
     PRODUCT_LIMIT: 6,
-    CATALOG_LIMIT: 4
+    CATALOG_LIMIT: 4,
+    SIOP: true
 };

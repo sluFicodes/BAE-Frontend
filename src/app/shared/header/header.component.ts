@@ -9,6 +9,7 @@ import {LocalStorageService} from "../../services/local-storage.service";
 import { ApiServiceService } from 'src/app/services/api-service.service';
 import { Router } from '@angular/router';
 import {EventMessageService} from "../../services/event-message.service";
+import { environment } from 'src/environments/environment';
 import { LoginInfo } from 'src/app/models/interfaces';
 import { interval, Subscription} from 'rxjs';
 import * as moment from 'moment';
@@ -46,6 +47,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   email:string='';
   usercharacters:string='';
   loginSubscription: Subscription = new Subscription();
+  loginUrl:string = `${environment.BASE_URL}:${environment.API_PORT}` + (environment.SIOP ? '/login/vc' : '/login');
 
   @HostListener('document:click')
   onClick() {
@@ -84,7 +86,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
         }
       }
     })
-    
   }
 
   ngAfterViewInit() {
