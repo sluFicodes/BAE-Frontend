@@ -10,6 +10,7 @@ import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import {LocalStorageService} from "../../services/local-storage.service";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -31,7 +32,8 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
     private eventMessage: EventMessageService,
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
-    private localStorage: LocalStorageService) {
+    private localStorage: LocalStorageService,
+    private router: Router) {
 
   }
 
@@ -106,6 +108,10 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit() {
     initFlowbite();
+  }
+
+  goTo(path:string) {
+    this.router.navigate([path]);
   }
 
   getPrice(item:any){
