@@ -18,6 +18,8 @@ import {LocalStorageService} from "../../services/local-storage.service";
 })
 export class ShoppingCartComponent implements OnInit, AfterViewInit{
   protected readonly faCartShopping = faCartShopping;
+  public static BASE_URL: String = environment.BASE_URL;
+  public static API_PORT: Number = environment.API_PORT;
   TAX_RATE: number = environment.TAX_RATE;
   items: cartProduct[] = [];
   totalPrice:any;
@@ -274,7 +276,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
                 console.error('There was an error while updating!', error);
             }
           });
-          window.location.href='http://proxy.docker:8004/#/inventory/product';          
+          window.location.href=`${ShoppingCartComponent.BASE_URL}:${ShoppingCartComponent.API_PORT}/#/inventory/product`;         
       },
       error: error => {
           console.error('There was an error while updating!', error);
