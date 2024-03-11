@@ -317,4 +317,32 @@ export class ApiServiceService {
       return this.http.post<any>(url, prod);
     }    
   }
+
+  getServiceSpec(id:any){    
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/service/serviceSpecification/${id}`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      return lastValueFrom(this.http.get<any>(url,header));
+    } else {
+      return lastValueFrom(this.http.get<any>(url));
+    } 
+  }
+
+  getResourceSpec(id:any){    
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/resource/resourceSpecification/${id}`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      return lastValueFrom(this.http.get<any>(url,header));
+    } else {
+      return lastValueFrom(this.http.get<any>(url));
+    } 
+  }
 }

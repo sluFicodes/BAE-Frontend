@@ -23,6 +23,8 @@ export class ProductDetailsComponent implements OnInit {
   images: AttachmentRefOrValue[]  = [];
   prodSpec:ProductSpecification = {};
   complianceProf:any[] = [];
+  serviceSpecs:any[] = [];
+  resourceSpecs:any[]=[];
 
   constructor(
     private route: ActivatedRoute,
@@ -41,13 +43,15 @@ export class ProductDetailsComponent implements OnInit {
     initFlowbite();
     this.id = this.route.snapshot.paramMap.get('id');
     console.log('--- Details ID:')
-    console.log(this.id)
+    console.log(this.id)    
     this.api.getProductById(this.id).then(prod => {
       console.log('prod')
       console.log(prod)
       this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
         this.prodSpec=spec;
+        console.log('--- Prod spec ---')
         console.log(this.prodSpec)
+        console.log('------')
         let attachment = spec.attachment
         console.log(spec.attachment)
         let prodPrices: any[] | undefined= prod.productOfferingPrice;
@@ -59,6 +63,22 @@ export class ProductDetailsComponent implements OnInit {
             })
           }
         }
+        if(this.prodSpec.serviceSpecification != undefined){
+          for(let j=0; j < this.prodSpec.serviceSpecification.length; j++){
+            this.api.getServiceSpec(this.prodSpec.serviceSpecification[j].id).then(serv => {
+              this.serviceSpecs.push(serv);
+            })
+          }
+        }
+        if(this.prodSpec.resourceSpecification != undefined){
+          for(let j=0; j < this.prodSpec.resourceSpecification.length; j++){
+            this.api.getResourceSpec(this.prodSpec.resourceSpecification[j].id).then(res => {
+              this.resourceSpecs.push(res);
+            })
+          }
+        }
+        console.log('serv specs')
+        console.log(this.serviceSpecs)
         this.productOff={
           id: prod.id,
           name: prod.name,
