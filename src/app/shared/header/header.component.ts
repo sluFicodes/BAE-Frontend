@@ -129,6 +129,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/search/catalog', id]);
   }
 
+  goTo(path:string) {
+    this.router.navigate([path]);
+  }
+
   toggleCartDrawer(){
     this.showCart=!this.showCart;
     this.cdr.detectChanges();    
