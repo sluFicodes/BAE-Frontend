@@ -330,7 +330,7 @@
                       <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="terms">
                         <h5 class="text-3xl font-semibold tracking-tight text-primary-100">{{ 'CARD._terms' | translate }}:</h5>
                         @for (term of productOff?.productOfferingTerm; track term.name){
-                          <p class="text-gray-900">{{term.name}}: {{term.description}}</p>
+                          <p class="text-gray-900 text-bold"> <span class="font-bold">{{term.name}}:</span> {{term.description}}</p>
                         }
                         <div class="flex items-center mb-4">
                           <input id="terms-checkbox" type="checkbox" (change)="selected_terms=!selected_terms" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
