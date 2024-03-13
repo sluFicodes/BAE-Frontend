@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import { PriceServiceService } from 'src/app/services/price-service.service';
 import { initFlowbite } from 'flowbite';
 import {components} from "../../models/product-catalog";

@@ -23,7 +23,8 @@ export interface LoginInfo {
   email: string,
   token: string,
   expire: number,
-  partyId: string
+  partyId: string,
+  roles: any[]
 }
 
 export interface productSpecCharacteristicValueCart {

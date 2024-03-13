@@ -10,6 +10,7 @@ import { HowItWorksComponent } from "./offerings/how-it-works/how-it-works.compo
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
+import { ProductInventoryComponent } from "./pages/product-inventory/product-inventory.component";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from "./shared/shared.module";
 import { AppRoutingModule } from './app-routing.module';
@@ -48,7 +49,8 @@ import { AuthInterceptor } from '../interceptors/auth';
     ProductDetailsComponent,
     SearchCatalogComponent,
     CatalogsComponent,
-    ShoppingCartComponent
+    ShoppingCartComponent,
+    ProductInventoryComponent
   ],
     imports: [
         BrowserModule,

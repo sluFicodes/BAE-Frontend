@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { ProductInventoryComponent } from './pages/product-inventory/product-inventory.component';
 import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
@@ -29,6 +30,9 @@ const routes: Routes = [
   },
   { path: 'shopping-cart', 
   component: ShoppingCartComponent
+  },
+  { path: 'product-inventory', 
+  component: ProductInventoryComponent
   }
 ]
 

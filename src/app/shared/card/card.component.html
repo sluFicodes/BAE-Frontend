@@ -4,14 +4,16 @@
   <div (click)="goToProductDetails(productOff)" class="rounded overflow-hidden cursor-pointer">
     <div class="relative h-48 flex justify-center items-center">
       <!-- Imagen de fondo difuminada -->
-      <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-color: {{bgColor}};"></div>
+      <!--<div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-color: {{bgColor}};"></div>-->
+      <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage()}});filter: blur(20px);"></div>
       <!-- Imagen superior -->
-      <img crossorigin="anonymous" #myProdImage class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="Descripción de la imagen">
+      <!-- <img crossorigin="anonymous" #myProdImage class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="Descripción de la imagen">-->
+      <img class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="Descripción de la imagen">
     </div>
   </div>
 
   <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
-    <div class="px-5 py-5 bg-secondary-50/95 ">
+    <div class="px-5 py-5 bg-secondary-50/95 rounded-lg">
       <div class="h-[30px] overflow-y-hidden">
       @for (cat of categories; track cat.id) {
         <bae-badge class="ml-2" [category]=cat></bae-badge>

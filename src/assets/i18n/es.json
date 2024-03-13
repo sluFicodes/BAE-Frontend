@@ -162,7 +162,8 @@
         "_profile": "Profile",
         "_offerings": "My Offerings",
         "_cart": "My shopping cart",
-        "_sign_out": "Sign out"
+        "_sign_out": "Sign out",
+        "_inventory": "My inventory"
     },
     "PRODUCT_DETAILS": {
         "_back": "Back",

@@ -32,7 +32,9 @@ module.exports = {
       gridTemplateColumns:
       {
         '60/40': '60% 40%',
-        '80/20': '80% 20%'
+        '80/20': '80% 20%',
+        '20/80': '20% 80%',
+        '10/90': '10% 90%'
       },
       gridTemplateRows:
       {

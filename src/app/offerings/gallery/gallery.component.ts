@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {CardComponent} from "../../shared/card/card.component";
 import {components} from "../../models/product-catalog";
 type ProductOffering = components["schemas"]["ProductOffering"];
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 
 @Component({
   selector: 'bae-off-gallery',

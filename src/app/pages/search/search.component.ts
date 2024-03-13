@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {CategoriesFilterComponent} from "../../shared/categories-filter/categories-filter.component";
 import {components} from "../../models/product-catalog";
 type ProductOffering = components["schemas"]["ProductOffering"];
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Category} from "../../models/interfaces";
 import {EventMessageService} from "../../services/event-message.service";

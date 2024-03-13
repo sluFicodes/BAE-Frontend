@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import { Router } from '@angular/router';
 import {components} from "../../models/product-catalog";
 type Catalog = components["schemas"]["Catalog"];

@@ -3,7 +3,7 @@ import {Category} from "../../models/interfaces";
 import {Subject} from "rxjs";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import { initFlowbite } from 'flowbite';
 
 @Component({

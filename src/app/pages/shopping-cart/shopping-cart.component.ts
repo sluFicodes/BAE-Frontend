@@ -3,13 +3,17 @@ import {
   faCartShopping
 } from "@fortawesome/sharp-solid-svg-icons";
 import {EventMessageService} from "../../services/event-message.service";
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
+import { AccountServiceService } from 'src/app/services/account-service.service';
+import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
+import { ProductOrderService } from 'src/app/services/product-order-service.service';
 import { cartProduct, billingAccountCart, LoginInfo } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
 import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import {LocalStorageService} from "../../services/local-storage.service";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -32,8 +36,12 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
   constructor(
     private eventMessage: EventMessageService,
     private api: ApiServiceService,
+    private account: AccountServiceService,
+    private cartService: ShoppingCartServiceService,
     private cdr: ChangeDetectorRef,
-    private localStorage: LocalStorageService) {
+    private localStorage: LocalStorageService,
+    private orderService: ProductOrderService,
+    private router: Router) {
 
   }
 
@@ -43,7 +51,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
     this.relatedParty=aux.partyId;
     this.loading=true;
     this.showBackDrop=true;
-    this.api.getShoppingCart().then(data => {
+    this.cartService.getShoppingCart().then(data => {
       console.log('---CARRITO API---')
       console.log(data)
       this.items=data;
@@ -52,7 +60,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
       console.log('------------------')
       initFlowbite();
     })
-    this.api.getBillingAccount().then(data => {
+    this.account.getBillingAccount().then(data => {
       for(let i=0; i< data.length;i++){
         let email =''
         let phone=''
@@ -153,7 +161,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
   }
 
   deleteProduct(product: cartProduct){
-    this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+    this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 
@@ -263,11 +271,11 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
       "orderDate": moment().utc(),
       "notificationContact": this.selectedBilling.email,
     }
-    await this.api.postProductOrder(productOrder).subscribe({
+    await this.orderService.postProductOrder(productOrder).subscribe({
       next: data => {
           console.log(data)
           console.log('PROD ORDER DONE');
-          this.api.emptyShoppingCart().subscribe({
+          this.cartService.emptyShoppingCart().subscribe({
             next: data => {
                 console.log(data)
                 console.log('EMPTY');     
@@ -276,11 +284,16 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
                 console.error('There was an error while updating!', error);
             }
           });
-          window.location.href=`${ShoppingCartComponent.BASE_URL}:${ShoppingCartComponent.API_PORT}/#/inventory/product`;         
+          //window.location.href=`${ShoppingCartComponent.BASE_URL}:${ShoppingCartComponent.API_PORT}/#/inventory/product`;
+          this.goToInventory();    
       },
       error: error => {
           console.error('There was an error while updating!', error);
       }
     });
+  }
+
+  goToInventory() {
+    this.router.navigate(['/product-inventory']);
   }
 }

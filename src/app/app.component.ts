@@ -7,7 +7,7 @@ import {EventMessageService} from "./services/event-message.service";
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { LoginInfo } from 'src/app/models/interfaces';
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import { RefreshLoginServiceService } from "src/app/services/refresh-login-service.service";
 import * as moment from 'moment';
 
@@ -55,12 +55,12 @@ export class AppComponent implements OnInit {
       if(ev.type === 'LoginProcess') {
         this.refreshApi.stopInterval();
         let info = ev.value as LoginInfo
-        this.refreshApi.startInterval(((info.expire - moment().unix())-4)*1000, ev);
+        this.refreshApi.startInterval(((info.expire - moment().unix())-5)*1000, ev);
         //this.refreshApi.startInterval(3000, ev.value);
       }
     })
     let aux =this.localStorage.getObject('login_items') as LoginInfo;
-    if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+    if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-5) > 0)) {
       this.refreshApi.stopInterval();
       this.refreshApi.startInterval(((aux.expire - moment().unix())-4)*1000, aux);
       console.log('token')
