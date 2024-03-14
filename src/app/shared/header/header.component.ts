@@ -52,6 +52,8 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   loginSubscription: Subscription = new Subscription();
   loginUrl:string = `${environment.BASE_URL}:${environment.API_PORT}` + (environment.SIOP ? '/login/vc' : '/login');
   roles:string[]=[];
+  public static BASE_URL: String = environment.BASE_URL;
+  public static API_PORT: Number = environment.API_PORT;
 
   @HostListener('document:click')
   onClick() {
@@ -143,6 +145,10 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   toggleCartDrawer(){
     this.showCart=!this.showCart;
     this.cdr.detectChanges();    
+  }
+
+  goToMyOfferings(){
+    window.location.href=`${HeaderComponent.BASE_URL}:${HeaderComponent.API_PORT}/#/stock/offering?status=Active,Launched`;
   }
 
   async toggleLogin(){

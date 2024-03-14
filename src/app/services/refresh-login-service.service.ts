@@ -33,7 +33,7 @@ export class RefreshLoginServiceService {
         this.localStorage.setObject('login_items',{"id": refreshed.id, "user": refreshed.username, "email": refreshed.email, "token": refreshed.accessToken,"expire": refreshed.expire, "partyId": aux['partyId'], "roles": refreshed.roles });
         console.log('usuario despues')
         console.log(this.localStorage.getObject('login_items') as LoginInfo)
-        this.startInterval(((refreshed.expire - moment().unix())-5)*1000, refreshed)
+        this.startInterval(((refreshed.expire - moment().unix())-4)*1000, refreshed)
         //this.startInterval(4000, refreshed)
       })
     });

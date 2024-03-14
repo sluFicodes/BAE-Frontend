@@ -116,53 +116,6 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getOrders(){
-    this.selectOrder();
-    this.orders=[];
-    if(this.partyId!=''){
-      this.orderService.getProductOrders(this.partyId,0).then(orders=> {
-        for(let i=0;i<orders.length;i++){
-          let items:any[] = [];
-          this.orders.push(orders[i]);
-          for(let j=0;j<orders[i].productOrderItem.length;j++){
-            this.api.getProductById(orders[i].productOrderItem[j].id).then(item => {
-              this.api.getProductSpecification(item.productSpecification.id).then(spec => {
-                this.api.getProductPrice(item.productOfferingPrice[0].id).then(prodprice => {
-                  items.push({
-                    id: item.id,
-                    name: item.name,
-                    category: item.category,
-                    description: item.description,
-                    lastUpdate: item.lastUpdate,
-                    attachment: spec.attachment,
-                    productOfferingPrice: {
-                      "price": prodprice.price.value,
-                      "unit": prodprice.price.unit,
-                      "priceType": prodprice.priceType,
-                      "text": prodprice.unitOfMeasure != undefined ? '/'+prodprice.unitOfMeasure.units : prodprice.recurringChargePeriodType
-                    },
-                    productSpecification: item.productSpecification,
-                    productOfferingTerm: item.productOfferingTerm,
-                    version: item.version
-                  }) 
-                })   
-              })
-            })            
-          }
-          this.orders[i].productOrderItem=items;
-        }
-        console.log(this.orders)
-      })
-    }
-
-    this.show_serv=false;
-    this.show_prods=false;
-    this.show_res=false;
-    this.show_orders=true;   
-    this.loading=false;
-    this.cdr.detectChanges();
-  }
-
   getServices(){    
     this.selectServ();
     this.show_orders=false;    
@@ -270,18 +223,6 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
     this.unselectMenu(prod_button,'text-white bg-primary-100');
     this.unselectMenu(serv_button,'text-white bg-primary-100');
     this.unselectMenu(order_button,'text-white bg-primary-100');
-  }
-
-  selectOrder(){
-    let prod_button = document.getElementById('prod-button')
-    let serv_button = document.getElementById('serv-button')
-    let res_button = document.getElementById('res-button')
-    let order_button = document.getElementById('order-button')
-
-    this.selectMenu(order_button,'text-white bg-primary-100');
-    this.unselectMenu(prod_button,'text-white bg-primary-100');
-    this.unselectMenu(serv_button,'text-white bg-primary-100');
-    this.unselectMenu(res_button,'text-white bg-primary-100');
   }
 
 }

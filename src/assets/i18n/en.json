@@ -200,5 +200,39 @@
         "_phone": "Phone number",
         "_billing_check": "You should first create at least a billing address in order to checkout an order.",
         "_click_here": "Click here"
+    },
+    "PROFILE":{
+        "_general": "General",
+        "_bill": "Billing addresses",
+        "_orders": "Orders",
+        "_update": "Update",
+        "_account": "Account",
+        "_username": "Username",
+        "_token": "Access token",
+        "_email": "Email",
+        "_profile": "Profile",
+        "_name": "Name",
+        "_lastname": "Lastname",
+        "_treatment": "Treatment",
+        "_marital_status": "Marital status",
+        "_gender": "Gender",
+        "_nacionality": "Nacionality",
+        "_birthdate": "Birthdate",
+        "_date": "Date",
+        "_country": "Country",
+        "_city": "City"
+    },
+    "PRODUCT_INVENTORY":{
+        "_loading": "Loading...",
+        "_products": "Products",
+        "_services": "Services",
+        "_resources": "Resources",
+        "_orders": "Orders",
+        "_not_found": "No offers found",
+        "_order_id": "Order Id",
+        "_state": "State",
+        "_priority": "Priority",
+        "_desc": "Description",
+        "_price": "Price"
     }
 }

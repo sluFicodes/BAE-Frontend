@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProductInventoryComponent } from './pages/product-inventory/product-inventory.component';
@@ -9,6 +8,8 @@ import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.co
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.component";
 import {CheckoutComponent} from "./pages/checkout/checkout.component";
+import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -37,6 +38,9 @@ const routes: Routes = [
   },
   { path: 'product-inventory',
   component: ProductInventoryComponent
+  },
+  { path: 'profile',
+  component: UserProfileComponent
   }
 ]
 
