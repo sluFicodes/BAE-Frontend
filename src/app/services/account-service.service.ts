@@ -26,11 +26,23 @@ export class AccountServiceService {
         headers: new HttpHeaders()
           .set('Authorization',  `Bearer `+aux.token)
       }
-      console.log('--- get shopping cart ---')
-      console.log(header)
       return lastValueFrom(this.http.get<any[]>(url,header));
     } else {
       return lastValueFrom(this.http.get<any[]>(url));
+    }
+  }
+
+  getUserInfo(partyId:any){
+    let url = `${AccountServiceService.BASE_URL}:${AccountServiceService.API_PORT}/party/individual/${partyId}`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      return lastValueFrom(this.http.get<any>(url,header));
+    } else {
+      return lastValueFrom(this.http.get<any>(url));
     }
   }
 }

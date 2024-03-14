@@ -11,6 +11,7 @@ import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
 import { ProductInventoryComponent } from "./pages/product-inventory/product-inventory.component";
+import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from "./shared/shared.module";
 import { AppRoutingModule } from './app-routing.module';
@@ -50,7 +51,8 @@ import { AuthInterceptor } from '../interceptors/auth';
     SearchCatalogComponent,
     CatalogsComponent,
     ShoppingCartComponent,
-    ProductInventoryComponent
+    ProductInventoryComponent,
+    UserProfileComponent
   ],
     imports: [
         BrowserModule,

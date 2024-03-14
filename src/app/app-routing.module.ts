@@ -8,6 +8,7 @@ import { ProductDetailsComponent } from "./pages/product-details/product-details
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.component";
+import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -33,6 +34,9 @@ const routes: Routes = [
   },
   { path: 'product-inventory', 
   component: ProductInventoryComponent
+  },
+  { path: 'profile', 
+  component: UserProfileComponent
   }
 ]
 
