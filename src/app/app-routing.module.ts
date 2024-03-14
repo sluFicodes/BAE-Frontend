@@ -8,6 +8,7 @@ import { ProductDetailsComponent } from "./pages/product-details/product-details
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.component";
+import {CheckoutComponent} from "./pages/checkout/checkout.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -19,19 +20,22 @@ const routes: Routes = [
     path: 'search',
     component: SearchComponent
   },
-  { path: 'search/:id', 
+  { path: 'search/:id',
     component: ProductDetailsComponent
   },
-  { path: 'search/catalog/:id', 
+  { path: 'search/catalog/:id',
   component: SearchCatalogComponent
   },
-  { path: 'catalogs', 
+  { path: 'catalogs',
   component: CatalogsComponent
   },
-  { path: 'shopping-cart', 
+  { path: 'shopping-cart',
   component: ShoppingCartComponent
   },
-  { path: 'product-inventory', 
+  { path: 'checkout',
+    component: CheckoutComponent
+  },
+  { path: 'product-inventory',
   component: ProductInventoryComponent
   }
 ]

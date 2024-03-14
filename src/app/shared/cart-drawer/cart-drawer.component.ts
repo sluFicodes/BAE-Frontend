@@ -142,6 +142,6 @@ export class CartDrawerComponent implements OnInit{
 
   goToShoppingCart() {
     this.hideCart();
-    this.router.navigate(['/shopping-cart']);
+    this.router.navigate(['/checkout']);
   }
 }

@@ -189,7 +189,9 @@
     "SHOPPING_CART": {
         "_buy": "Buy",
         "_back": "Back",
+        "_billingAddress": "Dirección de Facturación",
         "_confirm": "Confirm and pay",
+        "_checkout": "Checkout",
         "_note": "Add notes",
         "_choose_bill": "Choose a billing address",
         "_cart": "Cart",

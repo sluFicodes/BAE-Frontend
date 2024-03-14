@@ -24,6 +24,7 @@ export interface LoginInfo {
   token: string,
   expire: number,
   partyId: string,
+  username: string,
   roles: any[]
 }
 

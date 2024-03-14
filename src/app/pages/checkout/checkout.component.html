@@ -1,0 +1,168 @@
+<div class="container mx-auto px-4 py-8 lg:py-10 lg:px-8 xl:py-14 xl:px-16 2xl:px-20">
+
+  <div
+    class="m-auto flex w-full max-w-5xl flex-col items-center rtl:space-x-reverse lg:flex-row lg:items-start lg:space-x-8">
+    <div class="w-full space-y-6 lg:max-w-2xl">
+      <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'SHOPPING_CART._checkout' | translate }}</h5>
+      <div class="bg-secondary-50 p-5 shadow-700 md:p-8">
+        <div class="mb-5 flex items-center justify-between md:mb-8">
+          <div class="flex items-center space-x-3 rtl:space-x-reverse md:space-x-4"><span
+            class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-base text-white lg:text-xl">1</span>
+            <p class="text-lg capitalize text-heading lg:text-xl">Contact</p>
+          </div>
+
+          <button
+            class="flex items-center text-sm font-semibold text-accent transition-colors duration-200 hover:text-accent-hover focus:text-accent-hover focus:outline-0">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 stroke-2 ltr:mr-0.5 rtl:ml-0.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Update
+          </button>
+        </div>
+        <div class="w-full">
+          <div class="">
+            <div class="special-label">Contact Person</div>
+            <p class="text-lg text-heading lg:text-xl">{{contact.username}} {{contact.email}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-secondary-50 p-5 shadow-700 md:p-8">
+        <div class="mb-5 flex items-center justify-between md:mb-8">
+          <div class="flex items-center space-x-3 rtl:space-x-reverse md:space-x-4"><span
+            class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-base text-white lg:text-xl">2</span>
+            <p class="text-lg capitalize text-heading lg:text-xl">Billing Address</p></div>
+          <button
+            class="flex items-center text-sm font-semibold text-accent transition-colors duration-200 hover:text-accent-hover focus:text-accent-hover focus:outline-0">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 stroke-2 ltr:mr-0.5 rtl:ml-0.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Add
+          </button>
+        </div>
+
+        <div id="headlessui-radiogroup-:rg:" role="radiogroup" aria-labelledby="headlessui-label-:rh:"><label
+          class="sr-only" id="headlessui-label-:rh:" role="none">Billing Address</label>
+          @if (billingAddresses.length > 0) {
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3" role="none">
+              @for(baddrr of billingAddresses; track baddrr) {
+                <div id="headlessui-radiogroup-option-:ri:" role="radio" aria-checked="true" tabindex="0"
+                     data-headlessui-state="checked">
+                  <div class="group relative cursor-pointer rounded border p-4 hover:border-primary-50 border-primary-100 shadow-sm bg-primary-50/50">
+                    <p class="mb-3 text-sm font-semibold capitalize text-heading">{{ baddrr.href }}</p>
+                    <p class="text-sm text-sub-heading">{{ baddrr.postalAddress.street }}, {{ baddrr.postalAddress.postCode }}, {{ baddrr.postalAddress.city}}, {{ baddrr.postalAddress.stateOrProvince }}, {{ baddrr.postalAddress.country }}</p>
+                    <div
+                      class="absolute top-4 flex space-x-2 opacity-0 group-hover:opacity-100 right-4">
+                      <button class="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-light"><span
+                        class="sr-only">Edit</span>
+                        <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path
+                            d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                        </svg>
+                      </button>
+                      <button class="flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-light" [disabled]="this.selectedBillingAddress !== undefined"><span
+                        class="sr-only">Delete</span>
+                        <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <form novalidate="" class="grid h-full grid-cols-2 gap-5">
+              <div class="col-span-2"><label for="title"
+                                             class="mb-3 block text-sm font-semibold leading-none text-body-dark">Title</label><input
+                id="title" name="title" type="text"
+                class="flex w-full appearance-none items-center px-4 text-sm text-heading transition duration-300 ease-in-out focus:outline-0 focus:ring-0 border border-border-base rounded focus:border-accent h-12"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-invalid="false"></div>
+              <div><label for="address.country" class="mb-3 block text-sm font-semibold leading-none text-body-dark">Country</label><input
+                id="address.country" name="address.country" type="text"
+                class="flex w-full appearance-none items-center px-4 text-sm text-heading transition duration-300 ease-in-out focus:outline-0 focus:ring-0 border border-border-base rounded focus:border-accent h-12"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-invalid="false"></div>
+              <div><label for="address.city"
+                          class="mb-3 block text-sm font-semibold leading-none text-body-dark">City</label><input
+                id="address.city" name="address.city" type="text"
+                class="flex w-full appearance-none items-center px-4 text-sm text-heading transition duration-300 ease-in-out focus:outline-0 focus:ring-0 border border-border-base rounded focus:border-accent h-12"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-invalid="false"></div>
+              <div><label for="address.state"
+                          class="mb-3 block text-sm font-semibold leading-none text-body-dark">State / Province</label><input
+                id="address.state" name="address.state" type="text"
+                class="flex w-full appearance-none items-center px-4 text-sm text-heading transition duration-300 ease-in-out focus:outline-0 focus:ring-0 border border-border-base rounded focus:border-accent h-12"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-invalid="false"></div>
+              <div><label for="address.zip"
+                          class="mb-3 block text-sm font-semibold leading-none text-body-dark">ZIP / Postal Code</label><input
+                id="address.zip" name="address.zip" type="text"
+                class="flex w-full appearance-none items-center px-4 text-sm text-heading transition duration-300 ease-in-out focus:outline-0 focus:ring-0 border border-border-base rounded focus:border-accent h-12"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" aria-invalid="false"></div>
+              <div class="col-span-2"><label for="address.street_address"
+                                             class="mb-3 block text-sm font-semibold leading-none text-body-dark">Street
+                Address</label><textarea id="address.street_address" name="address.street_address"
+                                         class="flex w-full appearance-none items-center rounded px-4 py-3 text-sm text-heading transition duration-300 ease-in-out focus:outline-0 focus:ring-0 border border-border-base focus:border-accent"
+                                         autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                                         rows="4"></textarea></div>
+              <button class="inline-flex items-center justify-center shrink-0 font-semibold leading-none rounded outline-none transition duration-300 ease-in-out focus:outline-0 focus:shadow focus:ring-1 focus:ring-accent-700 bg-primary-50 text-white border border-transparent hover:bg-primary-100 px-5 py-0 h-12 w-full col-span-2">
+                Add Billing Address
+              </button>
+            </form>
+          }
+        </div>
+      </div>
+      <div class="bg-secondary-50 p-5 shadow-700 md:p-8">
+        <div class="mb-5 flex items-center justify-between md:mb-8">
+          <div class="flex items-center space-x-3 rtl:space-x-reverse md:space-x-4"><span
+            class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-base text-white lg:text-xl">3</span>
+            <p class="text-lg capitalize text-heading lg:text-xl">Order Note</p></div>
+        </div>
+        <div class="block">
+          <div><textarea id="large-input" name="orderNote"
+                         class="flex w-full appearance-none items-center rounded px-4 py-3 text-sm text-heading transition duration-300 ease-in-out focus:outline-0 focus:ring-0 border border-border-base focus:border-accent"
+                         autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                         rows="4"></textarea></div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 mb-10 w-full sm:mb-12 lg:mb-0 lg:w-96">
+      <div class="w-full">
+        <div class="mb-4 flex flex-col items-center space-x-4 rtl:space-x-reverse"><span
+          class="text-base font-bold text-heading">Your Order</span></div>
+        <div class="flex flex-col border-b border-border-200 py-3">
+          @for (item of items; track item.id; let idx = $index) {
+          <div class="flex justify-between py-2">
+            <div class="flex items-center justify-between text-base">
+              <img class="w-10 pr-2" [src]="item.image" alt="{{ item.name }}">
+              <span class="text-sm text-body">
+                <span class="text-sm font-bold text-heading">1</span><span class="mx-2">x</span><span>{{item.name}}</span>
+              </span>
+            </div>
+            <span class="text-sm text-body"> {{ getPrice(item).text }} {{ formatter.format(getPrice(item).price) }}</span></div>
+          }
+        </div>
+        <div class="mt-4 space-y-2">
+          <div class="flex justify-between text-primary-100 font-bold">
+            <p class="text-sm text-body">Sub Total</p>
+            <div class="flex flex-col items-end">
+            @for (price of totalPrice; track price) {
+              <p class="text-sm text-body">{{ formatter.format(price.price)}} {{price.text ? price.text : 'single'}}</p>
+            } @empty {
+              <span class="text-sm text-body">{{ formatter.format(0) }}</span>
+            }
+            </div>
+          </div>
+          <div class="flex justify-between"><p class="text-sm text-body">Tax</p><span class="text-sm text-body">Calculated at checkout</span>
+          </div>
+          <div class="flex justify-between"><p class="text-sm text-body">Service fee*</p><span
+            class="text-sm text-body">Calculated at checkout</span></div>
+        </div>
+        <button class="inline-flex items-center justify-center shrink-0 font-semibold leading-none rounded outline-none transition duration-300 ease-in-out focus:outline-0 focus:shadow focus:ring-1 focus:ring-accent-700 bg-primary-50 text-white border border-transparent hover:bg-secondary-100 px-5 py-0 h-12 mt-5 w-full"
+                (click)="orderProduct()">
+          {{ 'SHOPPING_CART._checkout' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
