@@ -30,12 +30,13 @@ export class BillingAddressComponent {
   @Output() selectedEvent= new EventEmitter<billingAccountCart>();
   @Output() deletedEvent= new EventEmitter<billingAccountCart>();
 
-  selectBillingAddress(){
+  selectBillingAddress($event:Event){
     this.selectedEvent.emit(this.data)
     this.data.selected = true;
   }
 
   deleteBAddr(){
+    console.log("deleting " + this.data.id)
     this.deletedEvent.emit(this.data)
   }
 }

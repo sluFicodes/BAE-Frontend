@@ -35,7 +35,7 @@ export class CheckoutComponent implements OnInit {
   totalPrice: any;
   showBackDrop: boolean = true;
   billingAddresses1: billingAccountCart[] = [];
-  billingAddresses: billingAccountCart[] = [{  id: '',
+  billingAddresses: billingAccountCart[] = [{  id: '1',
     href: '',
     name: 'FICODES',
     email: 'rfernandez@ficodes.com',
@@ -47,7 +47,7 @@ export class CheckoutComponent implements OnInit {
       street: 'Hespérides 5'
     },
     telephoneNumber: '+34614207447',
-    selected: true},{  id: '',
+    selected: true},{  id: '2',
     href: '',
     name: 'FICODES 2',
     email: 'rfernandez@ficodes.com',
@@ -299,7 +299,7 @@ export class CheckoutComponent implements OnInit {
     })
   }
 
-  onSelected(baddr: billingAccountCart){
+  onSelected(baddr:billingAccountCart){
     for(let ba of this.billingAddresses){
       ba.selected = false;
     }
@@ -308,5 +308,6 @@ export class CheckoutComponent implements OnInit {
 
   onDeleted(baddr: billingAccountCart) {
     console.log('--- DELETE BILLING ADDRESS ---')
+    console.log(baddr)
   }
 }
