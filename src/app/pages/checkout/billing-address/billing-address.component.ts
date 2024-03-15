@@ -28,9 +28,14 @@ export class BillingAddressComponent {
     selected: false
   };
   @Output() selectedEvent= new EventEmitter<billingAccountCart>();
+  @Output() deletedEvent= new EventEmitter<billingAccountCart>();
 
   selectBillingAddress(){
     this.selectedEvent.emit(this.data)
     this.data.selected = true;
+  }
+
+  deleteBAddr(){
+    this.deletedEvent.emit(this.data)
   }
 }

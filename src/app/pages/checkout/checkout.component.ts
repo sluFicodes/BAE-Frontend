@@ -62,6 +62,7 @@ export class CheckoutComponent implements OnInit {
     selected: false}];
   selectedBillingAddress: any;
   loading: boolean = false;
+  loading_baddrs: boolean = false;
   relatedParty: string = '';
   contact = {email: '', username: ''};
   formatter: any;
@@ -251,6 +252,7 @@ export class CheckoutComponent implements OnInit {
     console.log('--- ITEMS ---')
     console.log(this.items)
 
+    this.loading_baddrs = true;
     this.account.getBillingAccount().then(data => {
       for (let i = 0; i < data.length; i++) {
         let email = ''
@@ -293,6 +295,7 @@ export class CheckoutComponent implements OnInit {
       }
       console.log('billing account...')
       console.log(this.billingAddresses)
+      this.loading_baddrs = false;
     })
   }
 
@@ -301,5 +304,9 @@ export class CheckoutComponent implements OnInit {
       ba.selected = false;
     }
     this.selectedBillingAddress = baddr;
+  }
+
+  onDeleted(baddr: billingAccountCart) {
+    console.log('--- DELETE BILLING ADDRESS ---')
   }
 }

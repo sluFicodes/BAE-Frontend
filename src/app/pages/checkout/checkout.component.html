@@ -45,7 +45,7 @@
           @if (billingAddresses.length > 0) {
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3" role="none">
               @for(baddr of billingAddresses; track baddr) {
-                <app-billing-address [data]="baddr" (selectedEvent)="onSelected(baddr)"></app-billing-address>
+                <app-billing-address [data]="baddr" (selectedEvent)="onSelected(baddr)" (deletedEvent)="onDeleted(baddr)"></app-billing-address>
               }
             </div>
           } @else {
