@@ -89,6 +89,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
         this.billing_accounts.push({
           "id": data[i].id,
           "href": data[i].href,
+          "name": data[i].name,
           "email": email,
           "postalAddress": address,
           "telephoneNumber": phone,
@@ -98,6 +99,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
           this.selectedBilling={
             "id": data[i].id,
             "href": data[i].href,
+            "name": data[i].name,
             "email": email,
             "postalAddress": address,
             "telephoneNumber": phone,
@@ -154,7 +156,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
           this.totalPrice.push(priceInfo);
           insertCheck=true;
           console.log('añade segundo')
-        }       
+        }
       }
     }
     console.log(this.totalPrice)
@@ -177,7 +179,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
   clickDropdown(id:any){
     let elem = document.getElementById(id)
     if(elem != null){
-      if(elem.className.match('hidden') ) { 
+      if(elem.className.match('hidden') ) {
         this.removeClass(elem,"hidden")
       } else {
         this.addClass(elem,"hidden")
@@ -267,7 +269,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
       "billingAccount": {
         "id": this.selectedBilling.id,
         "href": this.selectedBilling.id
-      },      
+      },
       "orderDate": moment().utc(),
       "notificationContact": this.selectedBilling.email,
     }
@@ -278,14 +280,14 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
           this.cartService.emptyShoppingCart().subscribe({
             next: data => {
                 console.log(data)
-                console.log('EMPTY');     
+                console.log('EMPTY');
             },
             error: error => {
                 console.error('There was an error while updating!', error);
             }
           });
           //window.location.href=`${ShoppingCartComponent.BASE_URL}:${ShoppingCartComponent.API_PORT}/#/inventory/product`;
-          this.goToInventory();    
+          this.goToInventory();
       },
       error: error => {
           console.error('There was an error while updating!', error);

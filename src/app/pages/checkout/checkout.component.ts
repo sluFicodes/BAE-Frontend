@@ -32,9 +32,10 @@ export class CheckoutComponent implements OnInit {
   items: cartProduct[] = [];
   totalPrice: any;
   showBackDrop: boolean = true;
-  billingAddresses2: billingAccountCart[] = [];
+  billingAddresses1: billingAccountCart[] = [];
   billingAddresses: billingAccountCart[] = [{  id: '',
-    href: 'FICODES',
+    href: '',
+    name: 'FICODES',
     email: 'rfernandez@ficodes.com',
     postalAddress: {
       city: 'Las Rozas de Madrid',
@@ -265,6 +266,7 @@ export class CheckoutComponent implements OnInit {
         const baddr = {
           "id": data[i].id,
           "href": data[i].href,
+          "name": data[i].name,
           "email": email,
           "postalAddress": address,
           "telephoneNumber": phone,

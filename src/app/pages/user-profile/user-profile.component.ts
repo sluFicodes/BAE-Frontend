@@ -50,7 +50,7 @@ export class UserProfileComponent implements OnInit{
 
   getProfile(){
     this.selectGeneral();
-    this.accountService.getUserInfo(this.partyId).then(data=> { 
+    this.accountService.getUserInfo(this.partyId).then(data=> {
       console.log(data)
       this.profile=data;
       this.loading=false;
@@ -94,6 +94,7 @@ export class UserProfileComponent implements OnInit{
         this.billing_accounts.push({
           "id": data[i].id,
           "href": data[i].href,
+          "name": data[i].name,
           "email": email,
           "postalAddress": address,
           "telephoneNumber": phone,
@@ -103,6 +104,7 @@ export class UserProfileComponent implements OnInit{
           this.selectedBilling={
             "id": data[i].id,
             "href": data[i].href,
+            "name": data[i].name,
             "email": email,
             "postalAddress": address,
             "telephoneNumber": phone,
@@ -154,10 +156,10 @@ export class UserProfileComponent implements OnInit{
                     productSpecification: item.productSpecification,
                     productOfferingTerm: item.productOfferingTerm,
                     version: item.version
-                  }) 
-                })   
+                  })
+                })
               })
-            })            
+            })
           }
           this.orders[i].productOrderItem=items;
         }
@@ -167,7 +169,7 @@ export class UserProfileComponent implements OnInit{
 
     this.show_billing=false;
     this.show_profile=false;
-    this.show_orders=true;   
+    this.show_orders=true;
     this.loading=false;
     this.cdr.detectChanges();
   }

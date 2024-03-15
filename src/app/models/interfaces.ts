@@ -48,6 +48,7 @@ export interface cartProduct {
 export interface billingAccountCart {
   id: string,
   href: string,
+  name: string,
   email: string,
   postalAddress: {
     city: string,

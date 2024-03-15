@@ -69,7 +69,7 @@ export class CartDrawerComponent implements OnInit{
           this.cdr.detectChanges();
           this.getTotalPrice();
           console.log('------------------')
-        })        
+        })
       }
     })
     console.log('Elementos en el carrito....')
@@ -124,7 +124,7 @@ export class CartDrawerComponent implements OnInit{
           this.totalPrice.push(priceInfo);
           insertCheck=true;
           console.log('añade segundo')
-        }       
+        }
       }
     }
     console.log(this.totalPrice)
