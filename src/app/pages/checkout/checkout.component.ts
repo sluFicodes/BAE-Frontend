@@ -14,12 +14,14 @@ import {AccountServiceService} from "../../services/account-service.service";
 import {NumberFormatStyle} from "@angular/common";
 import * as moment from "moment/moment";
 import {ProductOrderService} from "../../services/product-order-service.service";
+import {BillingAddressComponent} from "./billing-address/billing-address.component";
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
   imports: [
-    TranslateModule
+    TranslateModule,
+    BillingAddressComponent
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
@@ -45,7 +47,19 @@ export class CheckoutComponent implements OnInit {
       street: 'Hespérides 5'
     },
     telephoneNumber: '+34614207447',
-    selected: true}];
+    selected: true},{  id: '',
+    href: '',
+    name: 'FICODES 2',
+    email: 'rfernandez@ficodes.com',
+    postalAddress: {
+      city: 'Las Rozas de Madrid',
+      country: 'Spain',
+      postCode: '28232',
+      stateOrProvince: 'Madrid',
+      street: 'Hespérides 5'
+    },
+    telephoneNumber: '+34614207447',
+    selected: false}];
   selectedBillingAddress: any;
   loading: boolean = false;
   relatedParty: string = '';
@@ -280,5 +294,12 @@ export class CheckoutComponent implements OnInit {
       console.log('billing account...')
       console.log(this.billingAddresses)
     })
+  }
+
+  onSelected(baddr: billingAccountCart){
+    for(let ba of this.billingAddresses){
+      ba.selected = false;
+    }
+    this.selectedBillingAddress = baddr;
   }
 }
