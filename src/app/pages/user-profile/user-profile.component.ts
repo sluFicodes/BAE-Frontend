@@ -331,7 +331,6 @@ export class UserProfileComponent implements OnInit{
         contactMedium: [
           {
             mediumType: 'Email',
-            //Revisar
             preferred: this.billing_accounts.length > 0 ? false : true,
             characteristic: {
               contactType: 'Email',
@@ -340,7 +339,6 @@ export class UserProfileComponent implements OnInit{
           },
           {
             mediumType: 'PostalAddress',
-            //Revisar
             preferred: this.billing_accounts.length > 0 ? false : true,
             characteristic: {
               contactType: 'PostalAddress',
@@ -353,7 +351,6 @@ export class UserProfileComponent implements OnInit{
           },
           {
             mediumType: 'TelephoneNumber',
-            //Revisar
             preferred: this.billing_accounts.length > 0 ? false : true,
             characteristic: {
               contactType: this.billingForm.value.telephoneType,
@@ -390,8 +387,7 @@ export class UserProfileComponent implements OnInit{
         contactMedium: [
           {
             mediumType: 'Email',
-            //Revisar
-            preferred: this.billing_accounts.length > 0 ? false : true,
+            preferred: this.billToUpdate.selected,
             characteristic: {
               contactType: 'Email',
               emailAddress: this.billingFormUpdate.value.email
@@ -399,8 +395,7 @@ export class UserProfileComponent implements OnInit{
           },
           {
             mediumType: 'PostalAddress',
-            //Revisar
-            preferred: this.billing_accounts.length > 0 ? false : true,
+            preferred: this.billToUpdate.selected,
             characteristic: {
               contactType: 'PostalAddress',
               city: this.billingFormUpdate.value.city,
@@ -412,8 +407,7 @@ export class UserProfileComponent implements OnInit{
           },
           {
             mediumType: 'TelephoneNumber',
-            //Revisar
-            preferred: this.billing_accounts.length > 0 ? false : true,
+            preferred: this.billToUpdate.selected,
             characteristic: {
               contactType: this.billingFormUpdate.value.telephoneType,
               phoneNumber: this.updatePrefix.code+this.billingFormUpdate.value.telephoneNumber
