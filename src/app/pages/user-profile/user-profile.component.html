@@ -176,8 +176,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (bill of billing_accounts; track bill.id; let idx = $index) {
-                                    <tr (click)="selectBill(idx)" class="border-b hover:bg-gray-200" [ngClass]="bill.selected == true ? 'bg-primary-30' : 'bg-white'">
+                                @for (bill of billing_accounts; track bill.id) {
+                                    <tr (click)="selectBill(bill)" class="border-b hover:bg-gray-200" [ngClass]="bill.selected == true ? 'bg-primary-30' : 'bg-white'">
                                         <td class="px-6 py-4">
                                             {{bill.name}}
                                         </td>
@@ -196,7 +196,7 @@
                                                     <path fill-rule="evenodd" d="M14 4.182A4.136 4.136 0 0 1 16.9 3c1.087 0 2.13.425 2.899 1.182A4.01 4.01 0 0 1 21 7.037c0 1.068-.43 2.092-1.194 2.849L18.5 11.214l-5.8-5.71 1.287-1.31.012-.012Zm-2.717 2.763L6.186 12.13l2.175 2.141 5.063-5.218-2.141-2.108Zm-6.25 6.886-1.98 5.849a.992.992 0 0 0 .245 1.026 1.03 1.03 0 0 0 1.043.242L10.282 19l-5.25-5.168Zm6.954 4.01 5.096-5.186-2.218-2.183-5.063 5.218 2.185 2.15Z" clip-rule="evenodd"/>
                                                 </svg>                                                                                                                                       
                                             </button>
-                                            <button (click)="onDeletedBill(bill);$event.stopPropagation();" type="button" class="text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2">
+                                            <button (click)="toggleDeleteBill(bill);$event.stopPropagation();" type="button" class="text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2">
                                                 <svg class="w-[18px] h-[18px] text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                                     <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
                                                   </svg>                                                                                                                                     
@@ -281,12 +281,12 @@
 
 <!-- BILL ADDRESS EDIT modal -->
 @if (editBill){
-    <div id="cart-selection-modal" [ngClass]="editBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+    <div id="edit-bill-modal" [ngClass]="editBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
         <div class="w-1/2 relative bg-secondary-50 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
             <!-- Modal header -->
             <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
                 <h5 class="text-xl ml-4 mr-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">Edit shipping address:</h5>
-                <button (click)="editBill=false;" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cart-selection-modal">
+                <button (click)="editBill=false;" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-bill-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
@@ -358,6 +358,93 @@
                       Update Billing Address
                     </button>
                   </form>
+            </div>
+        </div>
+    </div>
+
+}
+
+<!-- BILL ADDRESS DELETE modal -->
+@if (deleteBill){
+    <div id="delete-bill-modal" [ngClass]="deleteBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+        <div class="w-1/2 relative bg-secondary-50 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
+                <h5 class="text-xl ml-4 mr-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">Are you sure about deleting the following billing address?</h5>
+                <button (click)="deleteBill=false;" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="delete-bill-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">{{ 'CARD._close' | translate }}</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="w-full h-full">                
+                <div class="grid h-full grid-cols-2 gap-5 m-4">
+                    <div class="col-span-2">
+                        <label for="title" class="mb-3 block text-sm font-semibold leading-none text-body-dark">Title</label>
+                        <p type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.name}}
+                        </p>
+                    </div>
+                    <div>
+                        <label for="address.country" class="mb-3 block text-sm font-semibold leading-none text-body-dark">Country</label>
+                        <p class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.postalAddress.country}}
+                        </p>
+                    </div>
+                    <div>
+                        <label for="address.city" class="mb-3 block text-sm font-semibold leading-none text-body-dark">City</label>
+                        <p type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.postalAddress.city}}
+                        </p>
+                    </div>
+                    <div>
+                        <label for="address.state" class="mb-3 block text-sm font-semibold leading-none text-body-dark">State / Province</label>
+                        <p type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.postalAddress.stateOrProvince}}
+                        </p>
+                    </div>
+                    <div>
+                        <label for="address.zip" class="mb-3 block text-sm font-semibold leading-none text-body-dark">ZIP / Postal Code</label>
+                        <p type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.postalAddress.postCode}}
+                        </p>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="address.street_address" class="mb-3 block text-sm font-semibold leading-none text-body-dark">Street Address</label>
+                        <p class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.postalAddress.street}}
+                        </p>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="email" class="mb-3 block text-sm font-semibold leading-none text-body-dark">Email</label>
+                        <p type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.email}}
+                        </p>
+                    </div>
+                    <div>
+                        <label for="phoneType" class="mb-3 block text-sm font-semibold leading-none text-body-dark">Tipo de número</label>
+                        <p type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.telephoneType}}
+                        </p>
+                    </div>
+                    <div>
+                        <label for="phoneNumber" class="mb-3 block text-sm font-semibold leading-none text-body-dark">Número de teléfono</label>                    
+                        <p type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{billToDelete.telephoneNumber}}
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 w-full col-span-2">
+                        <button (click)="deleteBill=false" class="h-12 w-full bg-primary-100 hover:bg-primary-50 items-center justify-center shrink-0 font-semibold leading-none rounded outline-none transition duration-300 ease-in-out focus:outline-0 focus:shadow focus:ring-1 focus:ring-accent-700 text-white border border-transparent">
+                            Cancel
+                        </button>
+                        <button (click)="onDeletedBill(billToDelete)" class="h-12 w-full bg-red-800 hover:bg-red-600 items-center justify-center shrink-0 font-semibold leading-none rounded outline-none transition duration-300 ease-in-out focus:outline-0 focus:shadow focus:ring-1 focus:ring-accent-700 text-white border border-transparent">
+                            Delete Billing Address
+                        </button>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

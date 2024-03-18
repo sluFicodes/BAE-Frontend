@@ -30,7 +30,10 @@ export class UserProfileComponent implements OnInit{
   email:string='';
   billing_accounts: billingAccountCart[] =[];
   selectedBilling:any;
+  billToDelete:any;
+  billToUpdate:any;
   editBill:boolean=false;
+  deleteBill:boolean=false;
   prefixCheck:boolean=false;
   prefixCheckUpdate:boolean=false;
   billingForm = new FormGroup({
@@ -72,6 +75,10 @@ export class UserProfileComponent implements OnInit{
   onClick() {
     if(this.editBill==true){
       this.editBill=false;
+      this.cdr.detectChanges();
+    }
+    if(this.deleteBill==true){
+      this.deleteBill=false;
       this.cdr.detectChanges();
     }
   }
@@ -234,17 +241,11 @@ export class UserProfileComponent implements OnInit{
     this.unselectMenu(order_button,'text-white bg-primary-100');
   }
 
-  selectBill(idx:number){
-    for(let i = 0; i<this.billing_accounts.length; i++){
-      if(idx==i){
-        this.billing_accounts[i].selected=true;
-        this.selectedBilling=this.billing_accounts[i];
-        this.cdr.detectChanges();
-      } else {
-        this.billing_accounts[i].selected=false;
-        this.cdr.detectChanges();
-      }
+  selectBill(baddr: billingAccountCart){
+    for(let ba of this.billing_accounts){
+      ba.selected = false;
     }
+    this.selectedBilling = baddr;
     this.cdr.detectChanges();
   }
 
@@ -299,6 +300,7 @@ export class UserProfileComponent implements OnInit{
     if(pref.length > 0){
       this.updatePrefix= pref[0];
     }
+    this.billToUpdate=bill;
     this.cdr.detectChanges();
     console.log(bill.telephoneNumber.slice(0, -9))
     console.log(this.updatePrefix)
@@ -314,6 +316,11 @@ export class UserProfileComponent implements OnInit{
     this.billingFormUpdate.controls['postCode'].setValue(bill.postalAddress.postCode);
     this.billingFormUpdate.controls['telephoneNumber'].setValue(bill.telephoneNumber.slice(-9));
     this.billingFormUpdate.controls['telephoneType'].setValue(bill.telephoneType);
+  }
+
+  toggleDeleteBill(bill:billingAccountCart){
+    this.deleteBill=true;
+    this.billToDelete=bill;
   }
 
   createBilling(){
@@ -409,7 +416,7 @@ export class UserProfileComponent implements OnInit{
             preferred: this.billing_accounts.length > 0 ? false : true,
             characteristic: {
               contactType: this.billingFormUpdate.value.telephoneType,
-              phoneNumber: this.createPrefix.code+this.billingFormUpdate.value.telephoneNumber
+              phoneNumber: this.updatePrefix.code+this.billingFormUpdate.value.telephoneNumber
             }              
           }
         ]
@@ -421,7 +428,7 @@ export class UserProfileComponent implements OnInit{
       }],
       state: "Defined"
     }
-    this.accountService.updateBillingAccount(this.selectedBilling.id,billacc).subscribe({
+    this.accountService.updateBillingAccount(this.billToUpdate.id,billacc).subscribe({
       next: data => {
           console.log(billacc)
           this.getBilling();
