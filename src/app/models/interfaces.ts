@@ -47,8 +47,8 @@ export interface cartProduct {
 
 export interface billingAccountCart {
   id: string,
-  href: string,
   name: string,
+  href: string,
   email: string,
   postalAddress: {
     city: string,
@@ -58,5 +58,6 @@ export interface billingAccountCart {
     street: string
   },
   telephoneNumber: string,
+  telephoneType: string,
   selected:boolean
 }

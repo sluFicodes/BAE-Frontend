@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { LoginInfo, billingAccountCart } from 'src/app/models/interfaces';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { AccountServiceService } from 'src/app/services/account-service.service';
@@ -6,8 +6,11 @@ import {LocalStorageService} from "../../services/local-storage.service";
 import { ProductOrderService } from 'src/app/services/product-order-service.service';
 import { FastAverageColor } from 'fast-average-color';
 import {components} from "../../models/product-catalog";
+import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 type ProductOffering = components["schemas"]["ProductOffering"];
+import { phoneNumbers } from '../../models/country-prefix.const'
+import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
 
 @Component({
@@ -27,6 +30,34 @@ export class UserProfileComponent implements OnInit{
   email:string='';
   billing_accounts: billingAccountCart[] =[];
   selectedBilling:any;
+  editBill:boolean=false;
+  prefixCheck:boolean=false;
+  prefixCheckUpdate:boolean=false;
+  billingForm = new FormGroup({
+    name: new FormControl(''),
+    email: new FormControl(''),
+    country: new FormControl(''),
+    city: new FormControl(''),
+    stateOrProvince: new FormControl(''),
+    postCode: new FormControl(''),
+    street: new FormControl(''),
+    telephoneNumber: new FormControl(''),
+    telephoneType: new FormControl('')
+  });
+  billingFormUpdate = new FormGroup({
+    name: new FormControl(''),
+    email: new FormControl(''),
+    country: new FormControl(''),
+    city: new FormControl(''),
+    stateOrProvince: new FormControl(''),
+    postCode: new FormControl(''),
+    street: new FormControl(''),
+    telephoneNumber: new FormControl(''),
+    telephoneType: new FormControl('')
+  });
+  prefixes: any[] = phoneNumbers;
+  createPrefix:any=phoneNumbers[0];
+  updatePrefix:any=phoneNumbers[0];
 
   constructor(
     private localStorage: LocalStorageService,
@@ -36,6 +67,14 @@ export class UserProfileComponent implements OnInit{
     private accountService: AccountServiceService,
     private orderService: ProductOrderService
   ) {}
+
+  @HostListener('document:click')
+  onClick() {
+    if(this.editBill==true){
+      this.editBill=false;
+      this.cdr.detectChanges();
+    }
+  }
 
   ngOnInit() {
     this.loading=true;
@@ -63,12 +102,13 @@ export class UserProfileComponent implements OnInit{
   }
 
   getBilling(){
-    this.selectBilling();
-    this.billing_accounts=[];
+    this.selectBilling();    
     this.accountService.getBillingAccount().then(data => {
+      this.billing_accounts=[];
       for(let i=0; i< data.length;i++){
         let email =''
         let phone=''
+        let phoneType = ''
         let address = {
           "city": '',
           "country": '',
@@ -89,6 +129,7 @@ export class UserProfileComponent implements OnInit{
             }
           } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber'){
             phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
+            phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
           }
         }
         this.billing_accounts.push({
@@ -98,6 +139,7 @@ export class UserProfileComponent implements OnInit{
           "email": email,
           "postalAddress": address,
           "telephoneNumber": phone,
+          "telephoneType": phoneType,
           "selected": i==0 ? true : false
         })
         if(i==0){
@@ -112,8 +154,6 @@ export class UserProfileComponent implements OnInit{
           }
         }
       }
-      console.log('billing account...')
-      console.log(this.billing_accounts)
       this.loading=false;
       this.cdr.detectChanges();
     })
@@ -129,10 +169,10 @@ export class UserProfileComponent implements OnInit{
   }
 
   getOrders(){
-    this.selectOrder();
-    this.orders=[];
+    this.selectOrder();    
     if(this.partyId!=''){
       this.orderService.getProductOrders(this.partyId,0).then(orders=> {
+        this.orders=[];
         for(let i=0;i<orders.length;i++){
           let items:any[] = [];
           this.orders.push(orders[i]);
@@ -205,8 +245,13 @@ export class UserProfileComponent implements OnInit{
         this.cdr.detectChanges();
       }
     }
-    console.log('selecting bill')
-    console.log(this.billing_accounts)
+    this.cdr.detectChanges();
+  }
+
+  onDeletedBill(baddr: billingAccountCart) {
+    console.log('--- DELETE BILLING ADDRESS ---')
+    this.accountService.deleteBillingAccount(baddr.id).subscribe(() => this.getBilling());
+    
     this.cdr.detectChanges();
   }
 
@@ -247,5 +292,158 @@ export class UserProfileComponent implements OnInit{
         this.addClass(elem,cls)
       }
     }
+  }
+
+  toggleEditBill(bill:billingAccountCart){    
+    let pref = this.prefixes.filter(item => item.code === bill.telephoneNumber.slice(0, -9));
+    if(pref.length > 0){
+      this.updatePrefix= pref[0];
+    }
+    this.cdr.detectChanges();
+    console.log(bill.telephoneNumber.slice(0, -9))
+    console.log(this.updatePrefix)
+    initFlowbite()
+    this.editBill=true;
+    //Get old bilAcc values
+    this.billingFormUpdate.controls['name'].setValue(bill.name);
+    this.billingFormUpdate.controls['email'].setValue(bill.email);
+    this.billingFormUpdate.controls['country'].setValue(bill.postalAddress.country);
+    this.billingFormUpdate.controls['city'].setValue(bill.postalAddress.city);
+    this.billingFormUpdate.controls['stateOrProvince'].setValue(bill.postalAddress.stateOrProvince);
+    this.billingFormUpdate.controls['street'].setValue(bill.postalAddress.street);
+    this.billingFormUpdate.controls['postCode'].setValue(bill.postalAddress.postCode);
+    this.billingFormUpdate.controls['telephoneNumber'].setValue(bill.telephoneNumber.slice(-9));
+    this.billingFormUpdate.controls['telephoneType'].setValue(bill.telephoneType);
+  }
+
+  createBilling(){
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    let billacc = {
+      name: this.billingForm.value.name,
+      contact: [{
+        contactMedium: [
+          {
+            mediumType: 'Email',
+            //Revisar
+            preferred: this.billing_accounts.length > 0 ? false : true,
+            characteristic: {
+              contactType: 'Email',
+              emailAddress: this.billingForm.value.email
+            }
+          },
+          {
+            mediumType: 'PostalAddress',
+            //Revisar
+            preferred: this.billing_accounts.length > 0 ? false : true,
+            characteristic: {
+              contactType: 'PostalAddress',
+              city: this.billingForm.value.city,
+              country: this.billingForm.value.country,
+              postCode: this.billingForm.value.postCode,
+              stateOrProvince: this.billingForm.value.stateOrProvince,
+              street1: this.billingForm.value.street
+            }            
+          },
+          {
+            mediumType: 'TelephoneNumber',
+            //Revisar
+            preferred: this.billing_accounts.length > 0 ? false : true,
+            characteristic: {
+              contactType: this.billingForm.value.telephoneType,
+              phoneNumber: this.createPrefix.code+this.billingForm.value.telephoneNumber
+            }              
+          }
+        ]
+      }],
+      relatedParty:[{
+        href: aux.partyId,
+        id: aux.partyId,
+        role: "bill receiver"
+      }],
+      state: "Defined"
+    }
+    this.accountService.postBillingAccount(billacc).subscribe({
+      next: data => {
+          console.log(billacc)
+          this.getBilling();
+          this.billingForm.reset();
+      },
+      error: error => {
+          console.error('There was an error while updating!', error);
+      }
+    });
+  }
+
+  updateBilling(){
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    this.cdr.detectChanges();
+    let billacc = {
+      name: this.billingFormUpdate.value.name,
+      contact: [{
+        contactMedium: [
+          {
+            mediumType: 'Email',
+            //Revisar
+            preferred: this.billing_accounts.length > 0 ? false : true,
+            characteristic: {
+              contactType: 'Email',
+              emailAddress: this.billingFormUpdate.value.email
+            }
+          },
+          {
+            mediumType: 'PostalAddress',
+            //Revisar
+            preferred: this.billing_accounts.length > 0 ? false : true,
+            characteristic: {
+              contactType: 'PostalAddress',
+              city: this.billingFormUpdate.value.city,
+              country: this.billingFormUpdate.value.country,
+              postCode: this.billingFormUpdate.value.postCode,
+              stateOrProvince: this.billingFormUpdate.value.stateOrProvince,
+              street1: this.billingFormUpdate.value.street
+            }            
+          },
+          {
+            mediumType: 'TelephoneNumber',
+            //Revisar
+            preferred: this.billing_accounts.length > 0 ? false : true,
+            characteristic: {
+              contactType: this.billingFormUpdate.value.telephoneType,
+              phoneNumber: this.createPrefix.code+this.billingFormUpdate.value.telephoneNumber
+            }              
+          }
+        ]
+      }],
+      relatedParty:[{
+        href: aux.partyId,
+        id: aux.partyId,
+        role: "bill receiver"
+      }],
+      state: "Defined"
+    }
+    this.accountService.updateBillingAccount(this.selectedBilling.id,billacc).subscribe({
+      next: data => {
+          console.log(billacc)
+          this.getBilling();
+          this.billingFormUpdate.reset();
+          this.editBill=false;
+      },
+      error: error => {
+          console.error('There was an error while updating!', error);
+      }
+    });
+  }
+
+  selectPrefix(pref:any,op:any){
+    console.log(pref)
+    if(op=='create'){
+      this.prefixCheck=false;
+      this.createPrefix=pref;
+    } else if(op=='update'){
+      this.prefixCheckUpdate=false;
+      this.updatePrefix=pref;
+    }
+    
+    
   }
 }

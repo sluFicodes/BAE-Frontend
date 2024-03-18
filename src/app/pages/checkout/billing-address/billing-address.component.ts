@@ -25,6 +25,7 @@ export class BillingAddressComponent {
       street: ''
     },
     telephoneNumber: '',
+    telephoneType: '',
     selected: false
   };
   @Output() selectedEvent= new EventEmitter<billingAccountCart>();

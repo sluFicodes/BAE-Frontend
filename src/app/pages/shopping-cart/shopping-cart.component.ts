@@ -64,6 +64,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
       for(let i=0; i< data.length;i++){
         let email =''
         let phone=''
+        let phoneType = ''
         let address = {
           "city": '',
           "country": '',
@@ -84,6 +85,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
             }
           } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber'){
             phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
+            phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
           }
         }
         this.billing_accounts.push({
@@ -93,6 +95,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
           "email": email,
           "postalAddress": address,
           "telephoneNumber": phone,
+          "telephoneType": phoneType,
           "selected": i==0 ? true : false
         })
         if(i==0){

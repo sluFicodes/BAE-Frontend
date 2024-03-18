@@ -47,6 +47,7 @@ export class CheckoutComponent implements OnInit {
       street: 'Hespérides 5'
     },
     telephoneNumber: '+34614207447',
+    telephoneType: 'movil',
     selected: true},{  id: '2',
     href: '',
     name: 'FICODES 2',
@@ -59,6 +60,7 @@ export class CheckoutComponent implements OnInit {
       street: 'Hespérides 5'
     },
     telephoneNumber: '+34614207447',
+    telephoneType: 'movil',
     selected: false}];
   selectedBillingAddress: any;
   loading: boolean = false;
@@ -257,6 +259,7 @@ export class CheckoutComponent implements OnInit {
       for (let i = 0; i < data.length; i++) {
         let email = ''
         let phone = ''
+        let phoneType = ''
         let address = {
           "city": '',
           "country": '',
@@ -277,6 +280,7 @@ export class CheckoutComponent implements OnInit {
             }
           } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber') {
             phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
+            phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
           }
         }
         const baddr = {
@@ -286,6 +290,7 @@ export class CheckoutComponent implements OnInit {
           "email": email,
           "postalAddress": address,
           "telephoneNumber": phone,
+          "telephoneType": phoneType,
           "selected": i == 0
         }
         this.billingAddresses.push(baddr)
