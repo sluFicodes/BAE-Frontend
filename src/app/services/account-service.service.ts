@@ -87,4 +87,18 @@ export class AccountServiceService {
       return lastValueFrom(this.http.get<any>(url));
     }
   }
+
+  updateUserInfo(partyId:any,profile:any){
+    let url = `${AccountServiceService.BASE_URL}:${AccountServiceService.API_PORT}/party/individual/${partyId}`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      return this.http.patch<any>(url, profile, header);
+    } else {
+      return this.http.patch<any>(url, profile);
+    }    
+  }
 }

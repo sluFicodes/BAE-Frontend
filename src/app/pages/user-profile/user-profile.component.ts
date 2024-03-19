@@ -6,11 +6,12 @@ import {LocalStorageService} from "../../services/local-storage.service";
 import { ProductOrderService } from 'src/app/services/product-order-service.service';
 import { FastAverageColor } from 'fast-average-color';
 import {components} from "../../models/product-catalog";
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 type ProductOffering = components["schemas"]["ProductOffering"];
-import { phoneNumbers } from '../../models/country-prefix.const'
+import { phoneNumbers, countries } from '../../models/country.const'
 import { initFlowbite } from 'flowbite';
+import {EventMessageService} from "../../services/event-message.service";
 import * as moment from 'moment';
 
 @Component({
@@ -34,33 +35,18 @@ export class UserProfileComponent implements OnInit{
   billToUpdate:any;
   editBill:boolean=false;
   deleteBill:boolean=false;
-  prefixCheck:boolean=false;
-  prefixCheckUpdate:boolean=false;
-  billingForm = new FormGroup({
+  userProfileForm = new FormGroup({
     name: new FormControl(''),
-    email: new FormControl(''),
-    country: new FormControl(''),
+    lastname: new FormControl(''),
+    treatment: new FormControl(''),
+    maritalstatus: new FormControl(''),
+    gender: new FormControl(''),
+    nacionality: new FormControl(''),
+    birthdate: new FormControl(''),
     city: new FormControl(''),
-    stateOrProvince: new FormControl(''),
-    postCode: new FormControl(''),
-    street: new FormControl(''),
-    telephoneNumber: new FormControl(''),
-    telephoneType: new FormControl('')
-  });
-  billingFormUpdate = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl(''),
     country: new FormControl(''),
-    city: new FormControl(''),
-    stateOrProvince: new FormControl(''),
-    postCode: new FormControl(''),
-    street: new FormControl(''),
-    telephoneNumber: new FormControl(''),
-    telephoneType: new FormControl('')
   });
-  prefixes: any[] = phoneNumbers;
-  createPrefix:any=phoneNumbers[0];
-  updatePrefix:any=phoneNumbers[0];
+  countries: any[] = countries;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -68,8 +54,18 @@ export class UserProfileComponent implements OnInit{
     private cdr: ChangeDetectorRef,
     private router: Router,
     private accountService: AccountServiceService,
-    private orderService: ProductOrderService
-  ) {}
+    private orderService: ProductOrderService,
+    private eventMessage: EventMessageService
+  ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'BillAccChanged') {
+        this.getBilling();
+      }
+      if(ev.value == false){
+        this.editBill=false;
+      }
+    })
+  }
 
   @HostListener('document:click')
   onClick() {
@@ -99,6 +95,7 @@ export class UserProfileComponent implements OnInit{
     this.accountService.getUserInfo(this.partyId).then(data=> {
       console.log(data)
       this.profile=data;
+      this.loadProfileData(this.profile)
       this.loading=false;
       this.cdr.detectChanges();
     })
@@ -295,27 +292,10 @@ export class UserProfileComponent implements OnInit{
     }
   }
 
-  toggleEditBill(bill:billingAccountCart){    
-    let pref = this.prefixes.filter(item => item.code === bill.telephoneNumber.slice(0, -9));
-    if(pref.length > 0){
-      this.updatePrefix= pref[0];
-    }
-    this.billToUpdate=bill;
-    this.cdr.detectChanges();
-    console.log(bill.telephoneNumber.slice(0, -9))
-    console.log(this.updatePrefix)
-    initFlowbite()
+  toggleEditBill(bill:billingAccountCart){
+    this.billToUpdate=bill;    
     this.editBill=true;
-    //Get old bilAcc values
-    this.billingFormUpdate.controls['name'].setValue(bill.name);
-    this.billingFormUpdate.controls['email'].setValue(bill.email);
-    this.billingFormUpdate.controls['country'].setValue(bill.postalAddress.country);
-    this.billingFormUpdate.controls['city'].setValue(bill.postalAddress.city);
-    this.billingFormUpdate.controls['stateOrProvince'].setValue(bill.postalAddress.stateOrProvince);
-    this.billingFormUpdate.controls['street'].setValue(bill.postalAddress.street);
-    this.billingFormUpdate.controls['postCode'].setValue(bill.postalAddress.postCode);
-    this.billingFormUpdate.controls['telephoneNumber'].setValue(bill.telephoneNumber.slice(-9));
-    this.billingFormUpdate.controls['telephoneType'].setValue(bill.telephoneType);
+    this.cdr.detectChanges();
   }
 
   toggleDeleteBill(bill:billingAccountCart){
@@ -323,54 +303,33 @@ export class UserProfileComponent implements OnInit{
     this.billToDelete=bill;
   }
 
-  createBilling(){
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    let billacc = {
-      name: this.billingForm.value.name,
-      contact: [{
-        contactMedium: [
-          {
-            mediumType: 'Email',
-            preferred: this.billing_accounts.length > 0 ? false : true,
-            characteristic: {
-              contactType: 'Email',
-              emailAddress: this.billingForm.value.email
-            }
-          },
-          {
-            mediumType: 'PostalAddress',
-            preferred: this.billing_accounts.length > 0 ? false : true,
-            characteristic: {
-              contactType: 'PostalAddress',
-              city: this.billingForm.value.city,
-              country: this.billingForm.value.country,
-              postCode: this.billingForm.value.postCode,
-              stateOrProvince: this.billingForm.value.stateOrProvince,
-              street1: this.billingForm.value.street
-            }            
-          },
-          {
-            mediumType: 'TelephoneNumber',
-            preferred: this.billing_accounts.length > 0 ? false : true,
-            characteristic: {
-              contactType: this.billingForm.value.telephoneType,
-              phoneNumber: this.createPrefix.code+this.billingForm.value.telephoneNumber
-            }              
-          }
-        ]
-      }],
-      relatedParty:[{
-        href: aux.partyId,
-        id: aux.partyId,
-        role: "bill receiver"
-      }],
-      state: "Defined"
+  updateProfile(){
+    let profile = {
+      "id": this.partyId,
+      "href": this.partyId,
+      "countryOfBirth": this.userProfileForm.value.country,
+      "familyName": this.userProfileForm.value.lastname,
+      "gender": this.userProfileForm.value.gender,
+      "givenName": this.userProfileForm.value.name,
+      "maritalStatus": this.userProfileForm.value.maritalstatus,
+      "nationality": this.userProfileForm.value.nacionality,
+      "placeOfBirth": this.userProfileForm.value.city,
+      "title": this.userProfileForm.value.treatment,
+      "contactMedium": [],
+      "externalReference": [
+        {
+          "externalReferenceType": "idm_id",
+          "name": "75b24055-1092-4488-b15e-43f1be6fec89"
+        }
+      ],
+      "partyCharacteristic": [],
+      "birthDate": this.userProfileForm.value.birthdate
     }
-    this.accountService.postBillingAccount(billacc).subscribe({
+    console.log(profile)
+    this.accountService.updateUserInfo(this.partyId,profile).subscribe({
       next: data => {
-          console.log(billacc)
-          this.getBilling();
-          this.billingForm.reset();
+        this.userProfileForm.reset();
+        this.getProfile();        
       },
       error: error => {
           console.error('There was an error while updating!', error);
@@ -378,73 +337,15 @@ export class UserProfileComponent implements OnInit{
     });
   }
 
-  updateBilling(){
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    this.cdr.detectChanges();
-    let billacc = {
-      name: this.billingFormUpdate.value.name,
-      contact: [{
-        contactMedium: [
-          {
-            mediumType: 'Email',
-            preferred: this.billToUpdate.selected,
-            characteristic: {
-              contactType: 'Email',
-              emailAddress: this.billingFormUpdate.value.email
-            }
-          },
-          {
-            mediumType: 'PostalAddress',
-            preferred: this.billToUpdate.selected,
-            characteristic: {
-              contactType: 'PostalAddress',
-              city: this.billingFormUpdate.value.city,
-              country: this.billingFormUpdate.value.country,
-              postCode: this.billingFormUpdate.value.postCode,
-              stateOrProvince: this.billingFormUpdate.value.stateOrProvince,
-              street1: this.billingFormUpdate.value.street
-            }            
-          },
-          {
-            mediumType: 'TelephoneNumber',
-            preferred: this.billToUpdate.selected,
-            characteristic: {
-              contactType: this.billingFormUpdate.value.telephoneType,
-              phoneNumber: this.updatePrefix.code+this.billingFormUpdate.value.telephoneNumber
-            }              
-          }
-        ]
-      }],
-      relatedParty:[{
-        href: aux.partyId,
-        id: aux.partyId,
-        role: "bill receiver"
-      }],
-      state: "Defined"
-    }
-    this.accountService.updateBillingAccount(this.billToUpdate.id,billacc).subscribe({
-      next: data => {
-          console.log(billacc)
-          this.getBilling();
-          this.billingFormUpdate.reset();
-          this.editBill=false;
-      },
-      error: error => {
-          console.error('There was an error while updating!', error);
-      }
-    });
-  }
-
-  selectPrefix(pref:any,op:any){
-    console.log(pref)
-    if(op=='create'){
-      this.prefixCheck=false;
-      this.createPrefix=pref;
-    } else if(op=='update'){
-      this.prefixCheckUpdate=false;
-      this.updatePrefix=pref;
-    }
-    
-    
+  loadProfileData(profile:any){
+    this.userProfileForm.controls['name'].setValue(profile.givenName);
+    this.userProfileForm.controls['lastname'].setValue(profile.familyName);
+    //this.userProfileForm.controls['treatment'].setValue(profile.title);
+    this.userProfileForm.controls['maritalstatus'].setValue(profile.maritalStatus);
+    this.userProfileForm.controls['gender'].setValue(profile.gender);
+    this.userProfileForm.controls['nacionality'].setValue(profile.nacionality);
+    //this.userProfileForm.controls['birthdate'].setValue(profile.birthDate);
+    this.userProfileForm.controls['city'].setValue(profile.placeOfBirth);
+    this.userProfileForm.controls['country'].setValue(profile.countryOfBirth);
   }
 }

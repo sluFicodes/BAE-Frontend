@@ -21,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import {CategoriesFilterComponent} from "./shared/categories-filter/categories-filter.component";
 import {CardComponent} from "./shared/card/card.component";
 import {BadgeComponent} from "./shared/badge/badge.component";
+import {BillingAccountFormComponent} from "./shared/billing-account-form/billing-account-form.component";
 import { NgOptimizedImage } from '@angular/common';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -46,6 +47,7 @@ import { AuthInterceptor } from '../interceptors/auth';
     CategoryItemComponent,
     CardComponent,
     BadgeComponent,
+    BillingAccountFormComponent,
     //CartDrawerComponent,
     ProductDetailsComponent,
     SearchCatalogComponent,

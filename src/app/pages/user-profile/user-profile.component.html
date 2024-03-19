@@ -44,66 +44,64 @@
                     </div>
                     <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._profile' | translate }}:</h5>
                     <hr class="h-px mr-4 ml-4 bg-primary-100 border-0">
-                    <form class="m-4 grid grid-cols-2 gap-4">
+                    <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="userProfileForm">
                         <div>
                             <label for="user-name" class="font-bold">{{ 'PROFILE._name' | translate }}:</label>
-                            <input type="user-name" id="user-name" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="{{profile.givenName}}" />    
+                            <input formControlName="name" type="user-name" id="user-name" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />    
                             <label for="treatment" class="font-bold">{{ 'PROFILE._treatment' | translate }}:</label>
-                            <select id="treatment" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option>I'd rather not say</option>
-                                <option>Miss</option>
-                                <option>Mrs</option>
-                                <option>Mr</option>
-                                <option>Ms</option>
+                            <select id="treatment" formControlName="treatment" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">I'd rather not say</option>
+                                <option value="Miss">Miss</option>
+                                <option value="Mrs">Mrs</option>
+                                <option value="Mr">Mr</option>
+                                <option value="Ms">Ms</option>
                             </select>
                             <label for="gender" class="font-bold">{{ 'PROFILE._gender' | translate }}:</label>
-                            <select id="gender" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option>I'd rather not say</option>
-                                <option>Female</option>
-                                <option>Male</option>
-                                <option>Other</option>
+                            <select id="gender" formControlName="gender" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">I'd rather not say</option>
+                                <option value="Female">Female</option>
+                                <option value="Male">Male</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
                         <div>
                             <label for="lastname" class="font-bold">{{ 'PROFILE._lastname' | translate }}:</label>
-                            <input type="lastname" id="lastname" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="{{profile.familyName}}" />    
+                            <input type="lastname" formControlName="lastname" id="lastname" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />    
                             <label for="marital-status" class="font-bold">{{ 'PROFILE._marital_status' | translate }}:</label>
-                            <select id="marital-status" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option>I'd rather not say</option>
-                                <option>Divorced</option>
-                                <option>Married</option>
-                                <option>Separated</option>
-                                <option>Single</option>
-                                <option>Widowed</option>
+                            <select id="marital-status" formControlName="maritalstatus" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">I'd rather not say</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Married">Married</option>
+                                <option value="Separated">Separated</option>
+                                <option value="Single">Single</option>
+                                <option value="Widowed">Widowed</option>
                             </select>
                             <label for="nacionality" class="font-bold">{{ 'PROFILE._nacionality' | translate }}:</label>
-                            <input type="nacionality" id="nacionality" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="{{profile.nacionality}}" />    
+                            <input type="nacionality" formControlName="nacionality" id="nacionality" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />    
                         </div>                    
                     </form>
                     <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._birthdate' | translate }}:</h5>
                     <hr class="h-px mr-4 ml-4 bg-primary-100 border-0">
-                    <form class="m-4 grid grid-cols-2 gap-4">
+                    <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="userProfileForm">
                         <div>
                             <label for="birthdate" class="font-bold">{{ 'PROFILE._date' | translate }}:</label>
-                            <input type="birthdate" id="birthdate" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="XX/XX/XXXX" />
+                            <input type="birthdate" formControlName="birthdate" id="birthdate" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="XX/XX/XXXX" />
   
                             <label for="city" class="font-bold">{{ 'PROFILE._city' | translate }}:</label>
-                            <input type="city" id="city" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="{{profile.placeOfBirth}}" />    
+                            <input type="city" formControlName="city" id="city" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />    
                         </div>
                         <div class="align-items-bottom align-bottom">
                             <label for="country" class="font-bold">{{ 'PROFILE._country' | translate }}:</label>
-                            <select id="marital-status" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option>Spain</option>
-                                <option>France</option>
-                                <option>Portugal</option>
-                                <option>Canada</option>
-                                <option>Italy</option>
-                                <option>Germany</option>
+                            <select id="country" formControlName="country" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <option value="">Select country</option>
+                                @for(country of countries; track country.code){
+                                    <option value="country.code">{{country.name}}</option>
+                                }
                             </select>   
                         </div> 
                     </form>
                     <div class="flex w-full justify-end">
-                        <button type="button"  href="https://dome-marketplace.eu/" target="_blank" class="m-2 flex w-fit justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                        <button type="button"  (click)="updateProfile()" class="m-2 flex w-fit justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
                             {{ 'PROFILE._update' | translate }}
                         </button>
                     </div>
@@ -209,70 +207,7 @@
                     </div>
                     <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">New shipping address:</h5>
                     <hr class="h-px mr-4 ml-4 bg-primary-100 border-0">
-                    <form novalidate="" class="grid h-full grid-cols-2 gap-5 m-4" [formGroup]="billingForm">
-                        <div class="col-span-2">
-                            <label for="title" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._title' | translate }}</label>
-                            <input id="title" formControlName="name" name="title" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        </div>
-                        <div>
-                            <label for="address.country" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._country' | translate }}</label>
-                            <input id="address.country" formControlName="country" name="address.country" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        </div>
-                        <div>
-                            <label for="address.city" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._city' | translate }}</label>
-                            <input id="address.city" formControlName="city" name="address.city" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        </div>
-                        <div>
-                            <label for="address.state" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._state' | translate }}</label>
-                            <input id="address.state" formControlName="stateOrProvince" name="address.state" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        </div>
-                        <div>
-                            <label for="address.zip" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._post_code' | translate }}</label>
-                            <input id="address.zip" formControlName="postCode" name="address.zip" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        </div>
-                        <div class="col-span-2">
-                            <label for="address.street_address" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._street' | translate }}</label>
-                            <textarea id="address.street_address" formControlName="street" name="address.street_address" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="4"></textarea>
-                        </div>
-                        <div class="col-span-2">
-                            <label for="email" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._email' | translate }}</label>
-                            <input id="email" formControlName="email" name="email" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        </div>
-                        <div>
-                            <label for="phoneType" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._phone_type' | translate }}</label>
-                            <input id="phoneType" formControlName="telephoneType"  name="phoneType" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        </div>
-                        <div>
-                            <label for="phoneNumber" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._phone' | translate }}</label>
-                            <div class="relative flex items-center">
-                                <button (click)="prefixCheck=!prefixCheck" class="mb-2 flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100" type="button">
-                                    {{createPrefix.flag}} {{createPrefix.code}}
-                                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
-                                </button>
-                                @if(prefixCheck==true){
-                                    <div class="absolute bottom-12 right-0 z-20 max-h-48 w-full bg-white divide-y divide-gray-100 rounded-lg shadow overflow-y-auto">
-                                        <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdown-phone-button">
-                                            <li>
-                                                @for(pref of prefixes;track pref.code){
-                                                    <button type="button" (click)="selectPrefix(pref,'create')" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                                                        <div class="inline-flex items-center">
-                                                            {{pref.text}}
-                                                        </div>
-                                                    </button>
-                                                }
-                                            </li>
-                                        </ul>
-                                    </div>
-                                }
-                            <input id="phoneNumber" formControlName="telephoneNumber" name="phoneNumber" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            </div>
-                        </div>
-                        <div class="flex w-full justify-end col-span-2">
-                            <button type="button"  (click)="createBilling()" class="m-2 flex w-fit justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
-                                {{ 'BILLING._add' | translate }}
-                            </button>
-                        </div>
-                      </form>
+                    <app-billing-account-form></app-billing-account-form>
                 </div>
               }
           }
@@ -295,69 +230,7 @@
             </div>
             <!-- Modal body -->
             <div class="w-full h-full">                
-                <form novalidate="" class="grid h-full grid-cols-2 gap-5 m-4" [formGroup]="billingFormUpdate">
-                    <div class="col-span-2">
-                        <label for="title" class="mb-3 block text-sm font-semibold leading-none text-body-dark">Title</label>
-                        <input id="title" formControlName="name" name="title" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
-                    <div>
-                        <label for="address.country" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._country' | translate }}</label>
-                        <input formControlName="country" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
-                    <div>
-                        <label for="address.city" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._city' | translate }}</label>
-                        <input id="address.city" formControlName="city" name="address.city" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
-                    <div>
-                        <label for="address.state" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._state' | translate }}</label>
-                        <input id="address.state" formControlName="stateOrProvince" name="address.state" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
-                    <div>
-                        <label for="address.zip" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._post_code' | translate }}</label>
-                        <input id="address.zip" formControlName="postCode" name="address.zip" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="address.street_address" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._street' | translate }}</label>
-                        <textarea id="address.street_address" formControlName="street" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="4"></textarea>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="email" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._email' | translate }}</label>
-                        <input id="email" formControlName="email" name="email" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
-                    <div>
-                        <label for="phoneType" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._phone_type' | translate }}</label>
-                        <input id="phoneType" formControlName="telephoneType"  name="phoneType" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                    </div>
-                    <div>
-                        <label for="phoneNumber" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._phone' | translate }}</label>
-                        <div class="relative flex items-center">
-                            
-                            <button (click)="prefixCheckUpdate=!prefixCheckUpdate" class="mb-2 flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100" type="button">
-                                {{updatePrefix.flag}} {{updatePrefix.code}}
-                                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
-                            </button>
-                            @if(prefixCheckUpdate==true){
-                                <div class="absolute bottom-12 right-0 z-20 max-h-48 w-full bg-white divide-y divide-gray-100 rounded-lg shadow overflow-y-auto">
-                                    <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdown-phone-button">
-                                        <li>
-                                            @for(pref of prefixes;track pref.code){
-                                                <button type="button" (click)="selectPrefix(pref,'update')" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                                                    <div class="inline-flex items-center">
-                                                        {{pref.text}}
-                                                    </div>
-                                                </button>
-                                            }
-                                        </li>
-                                    </ul>
-                                </div>
-                            }                        
-                        <input id="phoneNumber" formControlName="telephoneNumber" name="phoneNumber" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        </div>
-                    </div>
-                    <button (click)="updateBilling()" class="inline-flex items-center justify-center shrink-0 font-semibold leading-none rounded outline-none transition duration-300 ease-in-out focus:outline-0 focus:shadow focus:ring-1 focus:ring-accent-700 bg-primary-100 text-white border border-transparent hover:bg-primary-50 px-5 py-0 h-12 w-full col-span-2">
-                        {{ 'BILLING._update' | translate }}
-                    </button>
-                  </form>
+               <app-billing-account-form [billAcc]="billToUpdate"></app-billing-account-form>
             </div>
         </div>
     </div>
