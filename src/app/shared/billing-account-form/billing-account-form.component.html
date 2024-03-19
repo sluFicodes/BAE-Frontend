@@ -25,7 +25,7 @@
     </div>
     <div class="col-span-2">
         <label for="email" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._email' | translate }}</label>
-        <input id="email" [ngClass]="billingForm.get('email')?.invalid == true ? 'border-red-600' : 'border-gray-300'" formControlName="email" name="email" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        <input id="email" [ngClass]="billingForm.get('email')?.invalid == true && billingForm.value.email!='' ? 'border-red-600' : 'border-gray-300'" formControlName="email" name="email" type="text" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
     </div>
     <div>
         <label for="phoneType" class="mb-3 block text-sm font-semibold leading-none text-body-dark">{{ 'BILLING._phone_type' | translate }}</label>
@@ -65,14 +65,24 @@
         </div>
     </div>
     <div class="flex w-full justify-end col-span-2">
-        @if(is_create==true){
-            <button type="button"  (click)="createBilling()" class="m-2 flex w-fit justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
-                {{ 'BILLING._add' | translate }}
+        @if(this.billingForm.invalid == true){
+            <button disabled type="button"  (click)="createBilling()" class="m-2 cursor-not-allowed flex w-fit justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                @if(is_create==true){
+                    {{ 'BILLING._add' | translate }}
+                } @else{
+                    {{ 'BILLING._update' | translate }}
+                }
             </button>
-        } @else {
-            <button (click)="updateBilling()" class="inline-flex items-center justify-center shrink-0 font-semibold leading-none rounded outline-none transition duration-300 ease-in-out focus:outline-0 focus:shadow focus:ring-1 focus:ring-accent-700 bg-primary-100 text-white border border-transparent hover:bg-primary-50 px-5 py-0 h-12 w-full col-span-2">
-                {{ 'BILLING._update' | translate }}
-            </button>
+        } @else{
+            @if(is_create==true){
+                <button type="button"  (click)="createBilling()" class="m-2 flex w-fit justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                    {{ 'BILLING._add' | translate }}
+                </button>
+            } @else {
+                <button (click)="updateBilling()" class="m-2 flex w-fit justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                    {{ 'BILLING._update' | translate }}
+                </button>
+            }
         }
 
     </div>

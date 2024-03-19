@@ -236,6 +236,12 @@ export class BillingAccountFormComponent implements OnInit {
       }
     }
     if (this.billingForm.invalid) {
+      if(this.billingForm.get('email')?.invalid == true){
+        this.billingForm.controls['email'].setErrors({ 'invalidEmail': true });
+      } else {
+        this.billingForm.controls['email'].setErrors(null);
+      }
+      
       this.toastVisibility=true;
       setTimeout(() => {
         this.toastVisibility=false
