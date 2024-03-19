@@ -221,7 +221,8 @@
         "_date": "Date",
         "_country": "Country",
         "_city": "City",
-        "_mybills": "My billing addresses"
+        "_mybills": "My billing addresses",
+        "_user_id": "User id"
     },
     "PRODUCT_INVENTORY":{
         "_loading": "Loading...",
@@ -254,6 +255,7 @@
         "_delete": "Delete billing address",
         "_confirm_delete": "Are you sure about deleting the following billing address?",
         "_cancel": "Cancel",
-        "_invalid_phone": "Phonenumber is invalid!"
+        "_invalid_phone": "Phonenumber is invalid!",
+        "_invalid_email": "Email is invalid!"
     }
 }

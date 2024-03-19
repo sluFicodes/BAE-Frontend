@@ -23,20 +23,13 @@ export class BillingAccountFormComponent implements OnInit {
 
   billingForm = new FormGroup({
     name: new FormControl(''),
-    email: new FormControl(''),
+    email: new FormControl('',[Validators.required, Validators.email,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
     country: new FormControl(''),
     city: new FormControl(''),
     stateOrProvince: new FormControl(''),
-    postCode: new FormControl('', [
-      Validators.required,
-      Validators.pattern("^[0-9]*$")
-    ]),
+    postCode: new FormControl(''),
     street: new FormControl(''),
-    telephoneNumber: new FormControl('',[
-      Validators.required,
-      Validators.pattern("^[0-9]*$"),
-      Validators.maxLength(9),
-    ]),
+    telephoneNumber: new FormControl(''),
     telephoneType: new FormControl('')
   });
   billing_accounts: billingAccountCart[] =[];
@@ -164,58 +157,65 @@ export class BillingAccountFormComponent implements OnInit {
         this.toastVisibility=false;
       }
     }
-
-    let billacc = {
-      name: this.billingForm.value.name,
-      contact: [{
-        contactMedium: [
-          {
-            mediumType: 'Email',
-            preferred: this.billing_accounts.length > 0 ? false : true,
-            characteristic: {
-              contactType: 'Email',
-              emailAddress: this.billingForm.value.email
+    if (this.billingForm.invalid) {
+      this.toastVisibility=true;
+      setTimeout(() => {
+        this.toastVisibility=false
+      }, 2000);
+      return;
+    } else {
+      let billacc = {
+        name: this.billingForm.value.name,
+        contact: [{
+          contactMedium: [
+            {
+              mediumType: 'Email',
+              preferred: this.billing_accounts.length > 0 ? false : true,
+              characteristic: {
+                contactType: 'Email',
+                emailAddress: this.billingForm.value.email
+              }
+            },
+            {
+              mediumType: 'PostalAddress',
+              preferred: this.billing_accounts.length > 0 ? false : true,
+              characteristic: {
+                contactType: 'PostalAddress',
+                city: this.billingForm.value.city,
+                country: this.billingForm.value.country,
+                postCode: this.billingForm.value.postCode,
+                stateOrProvince: this.billingForm.value.stateOrProvince,
+                street1: this.billingForm.value.street
+              }            
+            },
+            {
+              mediumType: 'TelephoneNumber',
+              preferred: this.billing_accounts.length > 0 ? false : true,
+              characteristic: {
+                contactType: this.billingForm.value.telephoneType,
+                phoneNumber: this.phonePrefix.code+this.billingForm.value.telephoneNumber
+              }              
             }
-          },
-          {
-            mediumType: 'PostalAddress',
-            preferred: this.billing_accounts.length > 0 ? false : true,
-            characteristic: {
-              contactType: 'PostalAddress',
-              city: this.billingForm.value.city,
-              country: this.billingForm.value.country,
-              postCode: this.billingForm.value.postCode,
-              stateOrProvince: this.billingForm.value.stateOrProvince,
-              street1: this.billingForm.value.street
-            }            
-          },
-          {
-            mediumType: 'TelephoneNumber',
-            preferred: this.billing_accounts.length > 0 ? false : true,
-            characteristic: {
-              contactType: this.billingForm.value.telephoneType,
-              phoneNumber: this.phonePrefix.code+this.billingForm.value.telephoneNumber
-            }              
-          }
-        ]
-      }],
-      relatedParty:[{
-        href: aux.partyId,
-        id: aux.partyId,
-        role: "bill receiver"
-      }],
-      state: "Defined"
-    }
-    this.accountService.postBillingAccount(billacc).subscribe({
-      next: data => {
-          this.eventMessage.emitBillAccChange(true);
-          this.getBilling();
-          this.billingForm.reset();
-      },
-      error: error => {
-          console.error('There was an error while updating!', error);
+          ]
+        }],
+        relatedParty:[{
+          href: aux.partyId,
+          id: aux.partyId,
+          role: "bill receiver"
+        }],
+        state: "Defined"
       }
-    });
+      this.accountService.postBillingAccount(billacc).subscribe({
+        next: data => {
+            this.eventMessage.emitBillAccChange(true);
+            this.getBilling();
+            this.billingForm.reset();
+        },
+        error: error => {
+            console.error('There was an error while updating!', error);
+        }
+      });
+    }    
   }
 
   updateBilling(){
@@ -235,58 +235,66 @@ export class BillingAccountFormComponent implements OnInit {
         this.toastVisibility=false;
       }
     }
-    if(this.billAcc != undefined){
-      let bill_body = {
-        name: this.billingForm.value.name,
-        contact: [{
-          contactMedium: [
-            {
-              mediumType: 'Email',
-              preferred: this.billAcc.selected,
-              characteristic: {
-                contactType: 'Email',
-                emailAddress: this.billingForm.value.email
+    if (this.billingForm.invalid) {
+      this.toastVisibility=true;
+      setTimeout(() => {
+        this.toastVisibility=false
+      }, 2000);
+      return;
+    } else {
+      if(this.billAcc != undefined){
+        let bill_body = {
+          name: this.billingForm.value.name,
+          contact: [{
+            contactMedium: [
+              {
+                mediumType: 'Email',
+                preferred: this.billAcc.selected,
+                characteristic: {
+                  contactType: 'Email',
+                  emailAddress: this.billingForm.value.email
+                }
+              },
+              {
+                mediumType: 'PostalAddress',
+                preferred: this.billAcc.selected,
+                characteristic: {
+                  contactType: 'PostalAddress',
+                  city: this.billingForm.value.city,
+                  country: this.billingForm.value.country,
+                  postCode: this.billingForm.value.postCode,
+                  stateOrProvince: this.billingForm.value.stateOrProvince,
+                  street1: this.billingForm.value.street
+                }            
+              },
+              {
+                mediumType: 'TelephoneNumber',
+                preferred: this.billAcc.selected,
+                characteristic: {
+                  contactType: this.billingForm.value.telephoneType,
+                  phoneNumber: this.phonePrefix.code+this.billingForm.value.telephoneNumber
+                }              
               }
-            },
-            {
-              mediumType: 'PostalAddress',
-              preferred: this.billAcc.selected,
-              characteristic: {
-                contactType: 'PostalAddress',
-                city: this.billingForm.value.city,
-                country: this.billingForm.value.country,
-                postCode: this.billingForm.value.postCode,
-                stateOrProvince: this.billingForm.value.stateOrProvince,
-                street1: this.billingForm.value.street
-              }            
-            },
-            {
-              mediumType: 'TelephoneNumber',
-              preferred: this.billAcc.selected,
-              characteristic: {
-                contactType: this.billingForm.value.telephoneType,
-                phoneNumber: this.phonePrefix.code+this.billingForm.value.telephoneNumber
-              }              
-            }
-          ]
-        }],
-        relatedParty:[{
-          href: aux.partyId,
-          id: aux.partyId,
-          role: "bill receiver"
-        }],
-        state: "Defined"
-      }
-      this.accountService.updateBillingAccount(this.billAcc.id,bill_body).subscribe({
-        next: data => {
-            this.eventMessage.emitBillAccChange(false);
-            this.getBilling();
-            this.billingForm.reset();
-        },
-        error: error => {
-            console.error('There was an error while updating!', error);
+            ]
+          }],
+          relatedParty:[{
+            href: aux.partyId,
+            id: aux.partyId,
+            role: "bill receiver"
+          }],
+          state: "Defined"
         }
-      });
+        this.accountService.updateBillingAccount(this.billAcc.id,bill_body).subscribe({
+          next: data => {
+              this.eventMessage.emitBillAccChange(false);
+              this.getBilling();
+              this.billingForm.reset();
+          },
+          error: error => {
+              console.error('There was an error while updating!', error);
+          }
+        });
+      }
     }    
   }
 

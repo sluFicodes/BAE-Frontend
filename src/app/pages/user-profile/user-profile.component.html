@@ -32,7 +32,7 @@
                     <hr class="h-px mr-4 ml-4 bg-primary-100 border-0">
                     <div class="m-4 grid grid-cols-2 gap-4">
                         <div>
-                            <span class="font-bold">{{ 'PROFILE._username' | translate }}:</span>
+                            <span class="font-bold">{{ 'PROFILE._user_id' | translate }}:</span>
                             <input type="text" id="username" class="mb-2 bg-gray-300 border border-gray-400  text-primary-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value="{{profile.externalReference[0].name}}" disabled readonly>    
                             <span class="font-bold">{{ 'PROFILE._email' | translate }}:</span>
                             <input type="text" id="email" class="mb-2 bg-gray-300 border border-gray-400  text-primary-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value="{{email}}" disabled readonly>    
@@ -95,7 +95,7 @@
                             <select id="country" formControlName="country" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 <option value="">Select country</option>
                                 @for(country of countries; track country.code){
-                                    <option value="country.code">{{country.name}}</option>
+                                    <option value="{{country.code}}">{{country.name}}</option>
                                 }
                             </select>   
                         </div> 
