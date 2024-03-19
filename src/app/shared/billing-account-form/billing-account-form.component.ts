@@ -10,6 +10,7 @@ import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
 import { LoginInfo, billingAccountCart } from 'src/app/models/interfaces';
 import {EventMessageService} from "../../services/event-message.service";
+import parsePhoneNumber from 'libphonenumber-js'
 
 @Component({
   selector: 'app-billing-account-form',
@@ -43,6 +44,7 @@ export class BillingAccountFormComponent implements OnInit {
   countries: any[] = countries;
   phonePrefix:any=phoneNumbers[0];
   prefixCheck:boolean=false;
+  toastVisibility:boolean=false;
 
   partyId:any;
   loading:boolean=false;
@@ -78,21 +80,25 @@ export class BillingAccountFormComponent implements OnInit {
 
   setDefaultValues(){
     if(this.billAcc != undefined){
-      /*let pref = this.prefixes.filter(item => item.code === this.billAcc.telephoneNumber.slice(0, -9));
-      if(pref.length > 0){
-        this.phonePrefix= pref[0];
-      }*/
-    //Get old bilAcc values
-    this.billingForm.controls['name'].setValue(this.billAcc.name);
-    this.billingForm.controls['email'].setValue(this.billAcc.email);
-    this.billingForm.controls['country'].setValue(this.billAcc.postalAddress.country);
-    this.billingForm.controls['city'].setValue(this.billAcc.postalAddress.city);
-    this.billingForm.controls['stateOrProvince'].setValue(this.billAcc.postalAddress.stateOrProvince);
-    this.billingForm.controls['street'].setValue(this.billAcc.postalAddress.street);
-    this.billingForm.controls['postCode'].setValue(this.billAcc.postalAddress.postCode);
-    this.billingForm.controls['telephoneNumber'].setValue(this.billAcc.telephoneNumber.slice(-9));
-    this.billingForm.controls['telephoneType'].setValue(this.billAcc.telephoneType);
+      const phoneNumber = parsePhoneNumber(this.billAcc.telephoneNumber)
+      if (phoneNumber) {
+        let pref = this.prefixes.filter(item => item.code === '+'+phoneNumber.countryCallingCode);
+        if(pref.length > 0){
+          this.phonePrefix= pref[0];
+        }
+        this.billingForm.controls['telephoneNumber'].setValue(phoneNumber.nationalNumber);
+      }
+      //Get old bilAcc values
+      this.billingForm.controls['name'].setValue(this.billAcc.name);
+      this.billingForm.controls['email'].setValue(this.billAcc.email);
+      this.billingForm.controls['country'].setValue(this.billAcc.postalAddress.country);
+      this.billingForm.controls['city'].setValue(this.billAcc.postalAddress.city);
+      this.billingForm.controls['stateOrProvince'].setValue(this.billAcc.postalAddress.stateOrProvince);
+      this.billingForm.controls['street'].setValue(this.billAcc.postalAddress.street);
+      this.billingForm.controls['postCode'].setValue(this.billAcc.postalAddress.postCode);
+      this.billingForm.controls['telephoneType'].setValue(this.billAcc.telephoneType);
     }
+    this.cdr.detectChanges()
   }
 
   getBilling(){ 
@@ -143,6 +149,22 @@ export class BillingAccountFormComponent implements OnInit {
 
   createBilling(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    const phoneNumber = parsePhoneNumber(this.phonePrefix.code+this.billingForm.value.telephoneNumber);
+    if(phoneNumber){
+      if(phoneNumber.isValid() == false){
+        console.log('NUMERO INVALIDO')
+        this.billingForm.controls['telephoneNumber'].setErrors({ 'invalidPhoneNumber': true });
+        this.toastVisibility=true;
+        setTimeout(() => {
+          this.toastVisibility=false
+        }, 2000);
+        return;
+      } else {
+        this.billingForm.controls['telephoneNumber'].setErrors(null);
+        this.toastVisibility=false;
+      }
+    }
+
     let billacc = {
       name: this.billingForm.value.name,
       contact: [{
@@ -198,7 +220,21 @@ export class BillingAccountFormComponent implements OnInit {
 
   updateBilling(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    this.cdr.detectChanges();
+    const phoneNumber = parsePhoneNumber(this.phonePrefix.code+this.billingForm.value.telephoneNumber);
+    if(phoneNumber){
+      if(phoneNumber.isValid() == false){
+        console.log('NUMERO INVALIDO')
+        this.billingForm.controls['telephoneNumber'].setErrors({ 'invalidPhoneNumber': true });
+        this.toastVisibility=true;
+        setTimeout(() => {
+          this.toastVisibility=false
+        }, 2000);
+        return;
+      } else {
+        this.billingForm.controls['telephoneNumber'].setErrors(null);
+        this.toastVisibility=false;
+      }
+    }
     if(this.billAcc != undefined){
       let bill_body = {
         name: this.billingForm.value.name,

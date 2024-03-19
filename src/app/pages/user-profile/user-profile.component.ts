@@ -315,14 +315,6 @@ export class UserProfileComponent implements OnInit{
       "nationality": this.userProfileForm.value.nacionality,
       "placeOfBirth": this.userProfileForm.value.city,
       "title": this.userProfileForm.value.treatment,
-      "contactMedium": [],
-      "externalReference": [
-        {
-          "externalReferenceType": "idm_id",
-          "name": "75b24055-1092-4488-b15e-43f1be6fec89"
-        }
-      ],
-      "partyCharacteristic": [],
       "birthDate": this.userProfileForm.value.birthdate
     }
     console.log(profile)
