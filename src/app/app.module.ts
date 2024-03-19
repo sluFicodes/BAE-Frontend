@@ -47,7 +47,6 @@ import { AuthInterceptor } from '../interceptors/auth';
     CategoryItemComponent,
     CardComponent,
     BadgeComponent,
-    BillingAccountFormComponent,
     //CartDrawerComponent,
     ProductDetailsComponent,
     SearchCatalogComponent,
@@ -56,27 +55,31 @@ import { AuthInterceptor } from '../interceptors/auth';
     ProductInventoryComponent,
     UserProfileComponent
   ],
-    imports: [
-        BrowserModule,
-        FontAwesomeModule,
-        SharedModule,
-        AppRoutingModule,
-        NgOptimizedImage,
-        FaIconComponent,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule.forRoot({
-            defaultLanguage: 'en',
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
-        CategoriesPanelComponent,
+  imports: [
+    BrowserModule,
+    FontAwesomeModule,
+    SharedModule,
+    AppRoutingModule,
+    NgOptimizedImage,
+    FaIconComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+    CategoriesPanelComponent,
+    BillingAccountFormComponent,
 
-    ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  ],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  exports: [
+    BillingAccountFormComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

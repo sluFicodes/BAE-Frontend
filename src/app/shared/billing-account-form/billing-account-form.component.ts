@@ -1,20 +1,39 @@
-import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit, HostListener, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { AccountServiceService } from 'src/app/services/account-service.service';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  HostListener,
+  Input
+} from '@angular/core';
+import {FormGroup, FormControl, Validators, ReactiveFormsModule} from '@angular/forms';
+import {AccountServiceService} from 'src/app/services/account-service.service';
 import {LocalStorageService} from "../../services/local-storage.service";
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {components} from "../../models/product-catalog";
+
 type ProductOffering = components["schemas"]["ProductOffering"];
-import { phoneNumbers, countries } from '../../models/country.const'
-import { initFlowbite } from 'flowbite';
+import {phoneNumbers, countries} from '../../models/country.const'
+import {initFlowbite} from 'flowbite';
 import * as moment from 'moment';
-import { LoginInfo, billingAccountCart } from 'src/app/models/interfaces';
+import {LoginInfo, billingAccountCart} from 'src/app/models/interfaces';
 import {EventMessageService} from "../../services/event-message.service";
 import parsePhoneNumber from 'libphonenumber-js'
+import {TranslateModule} from "@ngx-translate/core";
+import {NgClass} from "@angular/common";
+
 
 @Component({
   selector: 'app-billing-account-form',
+  standalone: true,
   templateUrl: './billing-account-form.component.html',
+  imports: [
+    TranslateModule,
+    ReactiveFormsModule,
+    NgClass
+  ],
   styleUrl: './billing-account-form.component.css'
 })
 export class BillingAccountFormComponent implements OnInit {
@@ -23,7 +42,7 @@ export class BillingAccountFormComponent implements OnInit {
 
   billingForm = new FormGroup({
     name: new FormControl(''),
-    email: new FormControl('',[Validators.required, Validators.email,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
     country: new FormControl(''),
     city: new FormControl(''),
     stateOrProvince: new FormControl(''),
@@ -32,16 +51,16 @@ export class BillingAccountFormComponent implements OnInit {
     telephoneNumber: new FormControl(''),
     telephoneType: new FormControl('')
   });
-  billing_accounts: billingAccountCart[] =[];
+  billing_accounts: billingAccountCart[] = [];
   prefixes: any[] = phoneNumbers;
   countries: any[] = countries;
-  phonePrefix:any=phoneNumbers[0];
-  prefixCheck:boolean=false;
-  toastVisibility:boolean=false;
+  phonePrefix: any = phoneNumbers[0];
+  prefixCheck: boolean = false;
+  toastVisibility: boolean = false;
 
-  partyId:any;
-  loading:boolean=false;
-  is_create:boolean=false;
+  partyId: any;
+  loading: boolean = false;
+  is_create: boolean = false;
 
 
   constructor(
@@ -50,34 +69,35 @@ export class BillingAccountFormComponent implements OnInit {
     private router: Router,
     private accountService: AccountServiceService,
     private eventMessage: EventMessageService
-  ) {}
+  ) {
+  }
 
 
   ngOnInit() {
-    this.loading=true;
-    if(this.billAcc != undefined){
-      this.is_create=false;
+    this.loading = true;
+    if (this.billAcc != undefined) {
+      this.is_create = false;
     } else {
-      this.is_create=true;
+      this.is_create = true;
     }
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      this.partyId=aux.partyId;
+    if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix()) - 4) > 0)) {
+      this.partyId = aux.partyId;
     }
     this.getBilling();
-    if(this.is_create==false){
+    if (this.is_create == false) {
       this.setDefaultValues();
-    }    
-    
+    }
+
   }
 
-  setDefaultValues(){
-    if(this.billAcc != undefined){
+  setDefaultValues() {
+    if (this.billAcc != undefined) {
       const phoneNumber = parsePhoneNumber(this.billAcc.telephoneNumber)
       if (phoneNumber) {
-        let pref = this.prefixes.filter(item => item.code === '+'+phoneNumber.countryCallingCode);
-        if(pref.length > 0){
-          this.phonePrefix= pref[0];
+        let pref = this.prefixes.filter(item => item.code === '+' + phoneNumber.countryCallingCode);
+        if (pref.length > 0) {
+          this.phonePrefix = pref[0];
         }
         this.billingForm.controls['telephoneNumber'].setValue(phoneNumber.nationalNumber);
       }
@@ -94,12 +114,12 @@ export class BillingAccountFormComponent implements OnInit {
     this.cdr.detectChanges()
   }
 
-  getBilling(){ 
+  getBilling() {
     this.accountService.getBillingAccount().then(data => {
-      this.billing_accounts=[];
-      for(let i=0; i< data.length;i++){
-        let email =''
-        let phone=''
+      this.billing_accounts = [];
+      for (let i = 0; i < data.length; i++) {
+        let email = ''
+        let phone = ''
         let phoneType = ''
         let address = {
           "city": '',
@@ -108,31 +128,33 @@ export class BillingAccountFormComponent implements OnInit {
           "stateOrProvince": '',
           "street": ''
         }
-        for(let j=0; j<data[i].contact[0].contactMedium.length;j++){
-          if(data[i].contact[0].contactMedium[j].mediumType == 'Email'){
-            email = data[i].contact[0].contactMedium[j].characteristic.emailAddress
-          } else if (data[i].contact[0].contactMedium[j].mediumType == 'PostalAddress'){
-            address = {
-              "city": data[i].contact[0].contactMedium[j].characteristic.city,
-              "country": data[i].contact[0].contactMedium[j].characteristic.country,
-              "postCode": data[i].contact[0].contactMedium[j].characteristic.postCode,
-              "stateOrProvince": data[i].contact[0].contactMedium[j].characteristic.stateOrProvince,
-              "street": data[i].contact[0].contactMedium[j].characteristic.street1
+        if (data[i].contact) {
+          for (let j = 0; j < data[i].contact[0].contactMedium.length; j++) {
+            if (data[i].contact[0].contactMedium[j].mediumType == 'Email') {
+              email = data[i].contact[0].contactMedium[j].characteristic.emailAddress
+            } else if (data[i].contact[0].contactMedium[j].mediumType == 'PostalAddress') {
+              address = {
+                "city": data[i].contact[0].contactMedium[j].characteristic.city,
+                "country": data[i].contact[0].contactMedium[j].characteristic.country,
+                "postCode": data[i].contact[0].contactMedium[j].characteristic.postCode,
+                "stateOrProvince": data[i].contact[0].contactMedium[j].characteristic.stateOrProvince,
+                "street": data[i].contact[0].contactMedium[j].characteristic.street1
+              }
+            } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber') {
+              phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
+              phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
             }
-          } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber'){
-            phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
-            phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
           }
         }
         this.billing_accounts.push({
           "id": data[i].id,
           "href": data[i].href,
           "name": data[i].name,
-          "email": email,
-          "postalAddress": address,
-          "telephoneNumber": phone,
-          "telephoneType": phoneType,
-          "selected": i==0 ? true : false
+          "email": email ?? '',
+          "postalAddress": address ?? {},
+          "telephoneNumber": phone ?? '',
+          "telephoneType": phoneType ?? '',
+          "selected": i == 0 ? true : false
         })
       }
       this.cdr.detectChanges();
@@ -140,27 +162,29 @@ export class BillingAccountFormComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  createBilling(){
+  createBilling() {
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    const phoneNumber = parsePhoneNumber(this.phonePrefix.code+this.billingForm.value.telephoneNumber);
-    if(phoneNumber){
-      if(phoneNumber.isValid() == false){
+
+    const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.billingForm.value.telephoneNumber);
+    if (phoneNumber) {
+      if (!phoneNumber.isValid()) {
         console.log('NUMERO INVALIDO')
-        this.billingForm.controls['telephoneNumber'].setErrors({ 'invalidPhoneNumber': true });
-        this.toastVisibility=true;
+        this.billingForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+        this.toastVisibility = true;
         setTimeout(() => {
-          this.toastVisibility=false
+          this.toastVisibility = false
         }, 2000);
         return;
       } else {
         this.billingForm.controls['telephoneNumber'].setErrors(null);
-        this.toastVisibility=false;
+        this.toastVisibility = false;
       }
     }
+
     if (this.billingForm.invalid) {
-      this.toastVisibility=true;
+      this.toastVisibility = true;
       setTimeout(() => {
-        this.toastVisibility=false
+        this.toastVisibility = false
       }, 2000);
       return;
     } else {
@@ -186,19 +210,19 @@ export class BillingAccountFormComponent implements OnInit {
                 postCode: this.billingForm.value.postCode,
                 stateOrProvince: this.billingForm.value.stateOrProvince,
                 street1: this.billingForm.value.street
-              }            
+              }
             },
             {
               mediumType: 'TelephoneNumber',
               preferred: this.billing_accounts.length > 0 ? false : true,
               characteristic: {
                 contactType: this.billingForm.value.telephoneType,
-                phoneNumber: this.phonePrefix.code+this.billingForm.value.telephoneNumber
-              }              
+                phoneNumber: this.phonePrefix.code + this.billingForm.value.telephoneNumber
+              }
             }
           ]
         }],
-        relatedParty:[{
+        relatedParty: [{
           href: aux.partyId,
           id: aux.partyId,
           role: "bill receiver"
@@ -207,48 +231,48 @@ export class BillingAccountFormComponent implements OnInit {
       }
       this.accountService.postBillingAccount(billacc).subscribe({
         next: data => {
-            this.eventMessage.emitBillAccChange(true);
-            this.getBilling();
-            this.billingForm.reset();
+          this.eventMessage.emitBillAccChange(true);
+          this.getBilling();
+          this.billingForm.reset();
         },
         error: error => {
-            console.error('There was an error while updating!', error);
+          console.error('There was an error while updating!', error);
         }
       });
-    }    
+    }
   }
 
-  updateBilling(){
+  updateBilling() {
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    const phoneNumber = parsePhoneNumber(this.phonePrefix.code+this.billingForm.value.telephoneNumber);
-    if(phoneNumber){
-      if(phoneNumber.isValid() == false){
+    const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.billingForm.value.telephoneNumber);
+    if (phoneNumber) {
+      if (!phoneNumber.isValid()) {
         console.log('NUMERO INVALIDO')
-        this.billingForm.controls['telephoneNumber'].setErrors({ 'invalidPhoneNumber': true });
-        this.toastVisibility=true;
+        this.billingForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+        this.toastVisibility = true;
         setTimeout(() => {
-          this.toastVisibility=false
+          this.toastVisibility = false
         }, 2000);
         return;
       } else {
         this.billingForm.controls['telephoneNumber'].setErrors(null);
-        this.toastVisibility=false;
+        this.toastVisibility = false;
       }
     }
     if (this.billingForm.invalid) {
-      if(this.billingForm.get('email')?.invalid == true){
-        this.billingForm.controls['email'].setErrors({ 'invalidEmail': true });
+      if (this.billingForm.get('email')?.invalid == true) {
+        this.billingForm.controls['email'].setErrors({'invalidEmail': true});
       } else {
         this.billingForm.controls['email'].setErrors(null);
       }
-      
-      this.toastVisibility=true;
+
+      this.toastVisibility = true;
       setTimeout(() => {
-        this.toastVisibility=false
+        this.toastVisibility = false
       }, 2000);
       return;
     } else {
-      if(this.billAcc != undefined){
+      if (this.billAcc != undefined) {
         let bill_body = {
           name: this.billingForm.value.name,
           contact: [{
@@ -271,44 +295,42 @@ export class BillingAccountFormComponent implements OnInit {
                   postCode: this.billingForm.value.postCode,
                   stateOrProvince: this.billingForm.value.stateOrProvince,
                   street1: this.billingForm.value.street
-                }            
+                }
               },
               {
                 mediumType: 'TelephoneNumber',
                 preferred: this.billAcc.selected,
                 characteristic: {
                   contactType: this.billingForm.value.telephoneType,
-                  phoneNumber: this.phonePrefix.code+this.billingForm.value.telephoneNumber
-                }              
+                  phoneNumber: this.phonePrefix.code + this.billingForm.value.telephoneNumber
+                }
               }
             ]
           }],
-          relatedParty:[{
+          relatedParty: [{
             href: aux.partyId,
             id: aux.partyId,
             role: "bill receiver"
           }],
           state: "Defined"
         }
-        this.accountService.updateBillingAccount(this.billAcc.id,bill_body).subscribe({
+        this.accountService.updateBillingAccount(this.billAcc.id, bill_body).subscribe({
           next: data => {
-              this.eventMessage.emitBillAccChange(false);
-              this.getBilling();
-              this.billingForm.reset();
+            this.eventMessage.emitBillAccChange(false);
+            this.getBilling();
+            this.billingForm.reset();
           },
           error: error => {
-              console.error('There was an error while updating!', error);
+            console.error('There was an error while updating!', error);
           }
         });
       }
-    }    
+    }
   }
 
-  selectPrefix(pref:any){
+  selectPrefix(pref:any) {
     console.log(pref)
-    this.prefixCheck=false;
-    this.phonePrefix=pref;
+    this.prefixCheck = false;
+    this.phonePrefix = pref;
   }
-  
-
 }

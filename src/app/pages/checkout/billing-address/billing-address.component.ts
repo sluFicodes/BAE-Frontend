@@ -12,6 +12,7 @@ import {NgClass} from "@angular/common";
   styleUrl: './billing-address.component.css'
 })
 export class BillingAddressComponent {
+  @Input() position: number = 0;
   @Input() data: billingAccountCart = {
     id: '',
     href: '',

@@ -15,13 +15,16 @@ import {NumberFormatStyle} from "@angular/common";
 import * as moment from "moment/moment";
 import {ProductOrderService} from "../../services/product-order-service.service";
 import {BillingAddressComponent} from "./billing-address/billing-address.component";
+import {BillingAccountFormComponent} from "../../shared/billing-account-form/billing-account-form.component";
+
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
   imports: [
     TranslateModule,
-    BillingAddressComponent
+    BillingAddressComponent,
+    BillingAccountFormComponent
   ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
@@ -34,8 +37,8 @@ export class CheckoutComponent implements OnInit {
   items: cartProduct[] = [];
   totalPrice: any;
   showBackDrop: boolean = true;
-  billingAddresses1: billingAccountCart[] = [];
-  billingAddresses: billingAccountCart[] = [{  id: '1',
+  billingAddresses: billingAccountCart[] = [];
+  billingAddresses2: billingAccountCart[] = [{  id: '1',
     href: '',
     name: 'FICODES',
     email: 'rfernandez@ficodes.com',
@@ -267,30 +270,32 @@ export class CheckoutComponent implements OnInit {
           "stateOrProvince": '',
           "street": ''
         }
-        for (let j = 0; j < data[i].contact[0].contactMedium.length; j++) {
-          if (data[i].contact[0].contactMedium[j].mediumType == 'Email') {
-            email = data[i].contact[0].contactMedium[j].characteristic.emailAddress
-          } else if (data[i].contact[0].contactMedium[j].mediumType == 'PostalAddress') {
-            address = {
-              "city": data[i].contact[0].contactMedium[j].characteristic.city,
-              "country": data[i].contact[0].contactMedium[j].characteristic.country,
-              "postCode": data[i].contact[0].contactMedium[j].characteristic.postCode,
-              "stateOrProvince": data[i].contact[0].contactMedium[j].characteristic.stateOrProvince,
-              "street": data[i].contact[0].contactMedium[j].characteristic.street1
+        if(data[i].contact) {
+          for (let j = 0; j < data[i].contact[0].contactMedium.length; j++) {
+            if (data[i].contact[0].contactMedium[j].mediumType == 'Email') {
+              email = data[i].contact[0].contactMedium[j].characteristic.emailAddress
+            } else if (data[i].contact[0].contactMedium[j].mediumType == 'PostalAddress') {
+              address = {
+                "city": data[i].contact[0].contactMedium[j].characteristic.city,
+                "country": data[i].contact[0].contactMedium[j].characteristic.country,
+                "postCode": data[i].contact[0].contactMedium[j].characteristic.postCode,
+                "stateOrProvince": data[i].contact[0].contactMedium[j].characteristic.stateOrProvince,
+                "street": data[i].contact[0].contactMedium[j].characteristic.street1
+              }
+            } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber') {
+              phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
+              phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
             }
-          } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber') {
-            phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
-            phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
           }
         }
         const baddr = {
           "id": data[i].id,
           "href": data[i].href,
           "name": data[i].name,
-          "email": email,
-          "postalAddress": address,
-          "telephoneNumber": phone,
-          "telephoneType": phoneType,
+          "email": email ?? '',
+          "postalAddress": address ?? {},
+          "telephoneNumber": phone ?? '',
+          "telephoneType": phoneType ?? '',
           "selected": i == 0
         }
         this.billingAddresses.push(baddr)
@@ -312,7 +317,18 @@ export class CheckoutComponent implements OnInit {
   }
 
   onDeleted(baddr: billingAccountCart) {
-    console.log('--- DELETE BILLING ADDRESS ---')
-    console.log(baddr)
+    console.log('holi')
+    this.account.deleteBillingAccount(baddr.id).subscribe({
+        next: result => {
+          console.log('--- DELETE BILLING ADDRESS ---')
+          console.log(baddr.id)
+          this.billingAddresses.filter(item => item.id != baddr.id)
+        },
+        error: error => {
+          console.log('--- ERROR WHILE DELETING BILLING ADDRESS ---')
+          console.log(error)
+        }
+      }
+    )
   }
 }
