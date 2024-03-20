@@ -34,7 +34,7 @@
                 <h5 class="md:text-3xl lg:text-4xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{productOff?.name}}</h5>
                 </a>
             </div>
-            <div class="pt-2 line-clamp-2 dark:text-gray-600">{{productOff?.description}}</div>
+            <markdown class="pt-2 line-clamp-2 dark:text-gray-600" [data]="productOff?.description"></markdown>
             <div class="grid grid-cols-2">
                 <div class="min-h-19 pt-2 dark:text-gray-600">V: {{productOff?.version || 'latest'}}</div>
                 <div class="flex items-center justify-end">
@@ -99,7 +99,7 @@
                     <div>
                         <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'CARD._full_desc' | translate }}:</h5>
                         <div class="min-h-19 dark:text-gray-600">
-                            <p>{{productOff?.description}}</p>
+                            <markdown class="pt-2 dark:text-gray-600" [data]="productOff?.description"></markdown>
                             @if(serviceSpecs.length > 0){
                                 <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PRODUCT_DETAILS._service_spec' | translate }}:</h5>
                                 <ul class="max-w-md space-y-1 list-disc list-inside dark:text-gray-600">

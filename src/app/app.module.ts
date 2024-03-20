@@ -34,6 +34,7 @@ import { BillingAddressComponent } from "./pages/checkout/billing-address/billin
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
 import { AuthInterceptor } from '../interceptors/auth';
+import { MarkdownModule } from 'ngx-markdown';
 
 
 @NgModule({
@@ -70,6 +71,7 @@ import { AuthInterceptor } from '../interceptors/auth';
     FaIconComponent,
     FormsModule,
     ReactiveFormsModule,
+    MarkdownModule.forRoot(),
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {
