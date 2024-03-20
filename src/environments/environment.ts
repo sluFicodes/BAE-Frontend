@@ -10,7 +10,7 @@ export const environment = {
     PRODUCT_ORDER: '/ordering',
     //API PAGINATION
     PRODUCT_LIMIT: 6,
-    CATALOG_LIMIT: 4,
+    CATALOG_LIMIT: 8,
     INVENTORY_LIMIT: 6,
     ORDER_LIMIT: 6,
     SIOP: false,

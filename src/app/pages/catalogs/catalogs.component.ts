@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import {components} from "../../models/product-catalog";
 type Catalog = components["schemas"]["Catalog"];
 import { environment } from 'src/environments/environment';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-catalogs',
@@ -17,6 +18,9 @@ export class CatalogsComponent implements OnInit{
   loading: boolean = false;
   loading_more: boolean = false;
   page_check:boolean = true;
+  filter:any=undefined;
+  searchField = new FormControl();
+  
   constructor(
     private router: Router,
     private api: ApiServiceService,
@@ -26,7 +30,24 @@ export class CatalogsComponent implements OnInit{
 
   ngOnInit() {
     this.loading=true;
-    this.api.getCatalogs(this.page).then(data => {
+    this.getCatalogs();
+    let input = document.querySelector('[type=search]')
+    if(input!=undefined){
+      input.addEventListener('input', e => {
+        // Easy way to get the value of the element who trigger the current `e` event
+        console.log(`Input updated`)
+        if(this.searchField.value==''){
+          this.filter=undefined;
+          this.getCatalogs();
+        }
+      });
+    }
+
+  }
+
+  getCatalogs(){
+    this.catalogs=[];
+    this.api.getCatalogs(this.page,this.filter).then(data => {
       if(data.length<this.CATALOG_LIMIT){
         this.page_check=false;
         this.cdr.detectChanges();
@@ -38,7 +59,15 @@ export class CatalogsComponent implements OnInit{
         this.catalogs.push(data[i])
       }
       this.loading=false;
+      console.log('--- CATALOGS')
+      console.log(this.catalogs)
     })
+  }
+
+  filterCatalogs(){
+    this.filter=this.searchField.value;
+    this.page=0;
+    this.getCatalogs();
   }
 
   goToCatalogSearch(id:any) {
@@ -50,7 +79,7 @@ export class CatalogsComponent implements OnInit{
     this.page=this.page+this.CATALOG_LIMIT;
     this.cdr.detectChanges;
     console.log(this.page)
-    await this.api.getCatalogs(this.page).then(data => {
+    await this.api.getCatalogs(this.page,this.filter).then(data => {
       if(data.length<this.CATALOG_LIMIT){
         this.page_check=false;
         this.cdr.detectChanges();

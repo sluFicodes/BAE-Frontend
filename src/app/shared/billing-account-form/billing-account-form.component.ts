@@ -33,6 +33,7 @@ import {NgClass} from "@angular/common";
 export class BillingAccountFormComponent implements OnInit {
 
   @Input() billAcc: billingAccountCart | undefined;
+  @Input() preferred: boolean | undefined;
 
   billingForm = new FormGroup({
     name: new FormControl(''),
@@ -45,7 +46,6 @@ export class BillingAccountFormComponent implements OnInit {
     telephoneNumber: new FormControl(''),
     telephoneType: new FormControl('')
   });
-  billing_accounts: billingAccountCart[] = [];
   prefixes: any[] = phoneNumbers;
   countries: any[] = countries;
   phonePrefix: any = phoneNumbers[0];
@@ -78,7 +78,6 @@ export class BillingAccountFormComponent implements OnInit {
     if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix()) - 4) > 0)) {
       this.partyId = aux.partyId;
     }
-    this.getBilling();
     if (this.is_create == false) {
       this.setDefaultValues();
     }
@@ -106,54 +105,6 @@ export class BillingAccountFormComponent implements OnInit {
       this.billingForm.controls['telephoneType'].setValue(this.billAcc.telephoneType);
     }
     this.cdr.detectChanges()
-  }
-
-  getBilling() {
-    this.accountService.getBillingAccount().then(data => {
-      this.billing_accounts = [];
-      for (let i = 0; i < data.length; i++) {
-        let email = ''
-        let phone = ''
-        let phoneType = ''
-        let address = {
-          "city": '',
-          "country": '',
-          "postCode": '',
-          "stateOrProvince": '',
-          "street": ''
-        }
-        if (data[i].contact) {
-          for (let j = 0; j < data[i].contact[0].contactMedium.length; j++) {
-            if (data[i].contact[0].contactMedium[j].mediumType == 'Email') {
-              email = data[i].contact[0].contactMedium[j].characteristic.emailAddress
-            } else if (data[i].contact[0].contactMedium[j].mediumType == 'PostalAddress') {
-              address = {
-                "city": data[i].contact[0].contactMedium[j].characteristic.city,
-                "country": data[i].contact[0].contactMedium[j].characteristic.country,
-                "postCode": data[i].contact[0].contactMedium[j].characteristic.postCode,
-                "stateOrProvince": data[i].contact[0].contactMedium[j].characteristic.stateOrProvince,
-                "street": data[i].contact[0].contactMedium[j].characteristic.street1
-              }
-            } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber') {
-              phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
-              phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
-            }
-          }
-        }
-        this.billing_accounts.push({
-          "id": data[i].id,
-          "href": data[i].href,
-          "name": data[i].name,
-          "email": email ?? '',
-          "postalAddress": address ?? {},
-          "telephoneNumber": phone ?? '',
-          "telephoneType": phoneType ?? '',
-          "selected": i == 0 ? true : false
-        })
-      }
-      this.cdr.detectChanges();
-    })
-    this.cdr.detectChanges();
   }
 
   createBilling() {
@@ -188,7 +139,7 @@ export class BillingAccountFormComponent implements OnInit {
           contactMedium: [
             {
               mediumType: 'Email',
-              preferred: this.billing_accounts.length > 0 ? false : true,
+              preferred: this.preferred,
               characteristic: {
                 contactType: 'Email',
                 emailAddress: this.billingForm.value.email
@@ -196,7 +147,7 @@ export class BillingAccountFormComponent implements OnInit {
             },
             {
               mediumType: 'PostalAddress',
-              preferred: this.billing_accounts.length > 0 ? false : true,
+              preferred: this.preferred,
               characteristic: {
                 contactType: 'PostalAddress',
                 city: this.billingForm.value.city,
@@ -208,7 +159,7 @@ export class BillingAccountFormComponent implements OnInit {
             },
             {
               mediumType: 'TelephoneNumber',
-              preferred: this.billing_accounts.length > 0 ? false : true,
+              preferred: this.preferred,
               characteristic: {
                 contactType: this.billingForm.value.telephoneType,
                 phoneNumber: this.phonePrefix.code + this.billingForm.value.telephoneNumber
@@ -226,7 +177,6 @@ export class BillingAccountFormComponent implements OnInit {
       this.accountService.postBillingAccount(billacc).subscribe({
         next: data => {
           this.eventMessage.emitBillAccChange(true);
-          this.getBilling();
           this.billingForm.reset();
         },
         error: error => {
@@ -311,7 +261,6 @@ export class BillingAccountFormComponent implements OnInit {
         this.accountService.updateBillingAccount(this.billAcc.id, bill_body).subscribe({
           next: data => {
             this.eventMessage.emitBillAccChange(false);
-            this.getBilling();
             this.billingForm.reset();
           },
           error: error => {

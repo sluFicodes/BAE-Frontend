@@ -39,6 +39,7 @@ export class CheckoutComponent implements OnInit {
   relatedParty: string = '';
   contact = {email: '', username: ''};
   formatter: any;
+  preferred:boolean=false;
 
 
   constructor(
@@ -295,6 +296,11 @@ export class CheckoutComponent implements OnInit {
       console.log('billing account...')
       console.log(this.billingAddresses)
       this.loading_baddrs = false;
+      if(this.billingAddresses.length>0){
+        this.preferred=false;
+      }else{
+        this.preferred=true;
+      }
     })
   }
 

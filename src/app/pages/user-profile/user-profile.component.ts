@@ -47,6 +47,7 @@ export class UserProfileComponent implements OnInit{
     country: new FormControl(''),
   });
   countries: any[] = countries;
+  preferred:boolean=false;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -159,6 +160,11 @@ export class UserProfileComponent implements OnInit{
         }
       }
       this.loading=false;
+      if(this.billing_accounts.length>0){
+        this.preferred=false;
+      }else{
+        this.preferred=true;
+      }
       this.cdr.detectChanges();
     })
     this.show_billing=true;
