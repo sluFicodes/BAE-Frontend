@@ -20,9 +20,9 @@ import {initFlowbite} from 'flowbite';
 import * as moment from 'moment';
 import {LoginInfo, billingAccountCart} from 'src/app/models/interfaces';
 import {EventMessageService} from "../../services/event-message.service";
-import parsePhoneNumber from 'libphonenumber-js'
+import {parsePhoneNumber, getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
 import {TranslateModule} from "@ngx-translate/core";
-import {NgClass} from "@angular/common";
+import { getLocaleId } from '@angular/common';
 
 
 @Component({
@@ -36,8 +36,8 @@ export class BillingAccountFormComponent implements OnInit {
   @Input() preferred: boolean | undefined;
 
   billingForm = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    name: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
     country: new FormControl(''),
     city: new FormControl(''),
     stateOrProvince: new FormControl(''),
@@ -64,6 +64,7 @@ export class BillingAccountFormComponent implements OnInit {
     private accountService: AccountServiceService,
     private eventMessage: EventMessageService
   ) {
+    getLocaleId
   }
 
 
@@ -80,6 +81,8 @@ export class BillingAccountFormComponent implements OnInit {
     }
     if (this.is_create == false) {
       this.setDefaultValues();
+    } else {
+      this.detectCountry();
     }
 
   }
@@ -275,5 +278,21 @@ export class BillingAccountFormComponent implements OnInit {
     console.log(pref)
     this.prefixCheck = false;
     this.phonePrefix = pref;
+  }
+
+  detectCountry() {
+    const userLanguage = navigator.language;
+    // Extract the country code from the language setting
+    // Assuming the language setting is in the format 'en-US'
+    const countryCode = userLanguage.split('-')[1];
+    // Set detectedCountry based on the countryCode
+    let detectedCountry = countryCode.toUpperCase() as CountryCode;  
+    let code = getCountryCallingCode(detectedCountry);
+    if (code) {
+      let pref = this.prefixes.filter(item => item.code === '+' + code);
+      if (pref.length > 0) {
+        this.phonePrefix = pref[0];
+      }
+    }
   }
 }
