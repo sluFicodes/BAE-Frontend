@@ -27,13 +27,7 @@ import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-billing-account-form',
-  standalone: true,
   templateUrl: './billing-account-form.component.html',
-  imports: [
-    TranslateModule,
-    ReactiveFormsModule,
-    NgClass
-  ],
   styleUrl: './billing-account-form.component.css'
 })
 export class BillingAccountFormComponent implements OnInit {

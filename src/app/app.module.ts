@@ -30,8 +30,11 @@ import { CartDrawerComponent } from "./shared/cart-drawer/cart-drawer.component"
 import {CategoriesPanelComponent} from "./shared/categories-panel/categories-panel.component";
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
 import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.component";
+import { BillingAddressComponent } from "./pages/checkout/billing-address/billing-address.component";
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
+import { CheckoutComponent } from "./pages/checkout/checkout.component";
 import { AuthInterceptor } from '../interceptors/auth';
+
 
 @NgModule({
   declarations: [
@@ -48,11 +51,14 @@ import { AuthInterceptor } from '../interceptors/auth';
     CardComponent,
     BadgeComponent,
     //CartDrawerComponent,
+    BillingAddressComponent,
+    CheckoutComponent,
     ProductDetailsComponent,
     SearchCatalogComponent,
     CatalogsComponent,
     ShoppingCartComponent,
     ProductInventoryComponent,
+    BillingAccountFormComponent,
     UserProfileComponent
   ],
   imports: [
@@ -73,12 +79,10 @@ import { AuthInterceptor } from '../interceptors/auth';
       }
     }),
     CategoriesPanelComponent,
-    BillingAccountFormComponent,
 
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   exports: [
-    BillingAccountFormComponent
   ],
   bootstrap: [AppComponent]
 })

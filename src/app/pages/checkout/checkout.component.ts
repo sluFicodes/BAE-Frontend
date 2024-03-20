@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, HostListener, OnInit} from '@angular/core';
 import {TranslateModule} from "@ngx-translate/core";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
@@ -20,12 +20,6 @@ import {BillingAccountFormComponent} from "../../shared/billing-account-form/bil
 
 @Component({
   selector: 'app-checkout',
-  standalone: true,
-  imports: [
-    TranslateModule,
-    BillingAddressComponent,
-    BillingAccountFormComponent
-  ],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css'
 })
@@ -38,36 +32,10 @@ export class CheckoutComponent implements OnInit {
   totalPrice: any;
   showBackDrop: boolean = true;
   billingAddresses: billingAccountCart[] = [];
-  billingAddresses2: billingAccountCart[] = [{  id: '1',
-    href: '',
-    name: 'FICODES',
-    email: 'rfernandez@ficodes.com',
-    postalAddress: {
-      city: 'Las Rozas de Madrid',
-      country: 'Spain',
-      postCode: '28232',
-      stateOrProvince: 'Madrid',
-      street: 'Hespérides 5'
-    },
-    telephoneNumber: '+34614207447',
-    telephoneType: 'movil',
-    selected: true},{  id: '2',
-    href: '',
-    name: 'FICODES 2',
-    email: 'rfernandez@ficodes.com',
-    postalAddress: {
-      city: 'Las Rozas de Madrid',
-      country: 'Spain',
-      postCode: '28232',
-      stateOrProvince: 'Madrid',
-      street: 'Hespérides 5'
-    },
-    telephoneNumber: '+34614207447',
-    telephoneType: 'movil',
-    selected: false}];
   selectedBillingAddress: any;
   loading: boolean = false;
   loading_baddrs: boolean = false;
+  addBill: boolean = false;
   relatedParty: string = '';
   contact = {email: '', username: ''};
   formatter: any;
@@ -83,7 +51,22 @@ export class CheckoutComponent implements OnInit {
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private router: Router,) {
+      this.eventMessage.messages$.subscribe(ev => {
+        if(ev.type === 'BillAccChanged') {
+          this.getBilling();
+        }
+        if(ev.value == true){
+          this.addBill=false;
+        }
+      })
+  }
 
+  @HostListener('document:click')
+  onClick() {
+    if(this.addBill==true){
+      this.addBill=false;
+      this.cdr.detectChanges();
+    }
   }
 
   getPrice(item: any) {
@@ -258,6 +241,12 @@ export class CheckoutComponent implements OnInit {
     console.log(this.items)
 
     this.loading_baddrs = true;
+    this.getBilling();
+
+  }
+
+  getBilling(){
+    this.billingAddresses=[];
     this.account.getBillingAccount().then(data => {
       for (let i = 0; i < data.length; i++) {
         let email = ''
