@@ -1,13 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {EventMessageService} from "../../services/event-message.service";
 import {LocalStorageService} from "../../services/local-storage.service";
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { LoginInfo } from 'src/app/models/interfaces';
 import * as moment from 'moment';
 import { interval, Subscription} from 'rxjs';
 import { RefreshLoginServiceService } from "src/app/services/refresh-login-service.service"
+import { LoginServiceService } from "src/app/services/login-service.service"
 
 @Component({
   selector: 'app-dashboard',
@@ -23,6 +24,7 @@ export class DashboardComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private api: ApiServiceService,
+              private loginService: LoginServiceService,
               private refreshApi: RefreshLoginServiceService) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'FilterShown') {
@@ -38,11 +40,11 @@ export class DashboardComponent implements OnInit {
     console.log(this.route.queryParams)
     console.log(this.route.snapshot.queryParamMap.get('token'))
     if(this.route.snapshot.queryParamMap.get('token') != null){    
-      this.api.getLogin(this.route.snapshot.queryParamMap.get('token')).then(data => {
+      this.loginService.getLogin(this.route.snapshot.queryParamMap.get('token')).then(data => {
         console.log('---- loginangular response ----')
         console.log(data)
         console.log(data.username)
-        let info = {"id": data.id, "user": data.username, "email": data.email, "token": data.accessToken, "expire": data.expire, "partyId": data.partyId } as LoginInfo;
+        let info = {"id": data.id, "user": data.username, "email": data.email, "token": data.accessToken, "expire": data.expire, "partyId": data.partyId, "roles": data.roles } as LoginInfo;
         this.localStorage.addLoginInfo(info);
         this.eventMessage.emitLogin(info);
         console.log('----')

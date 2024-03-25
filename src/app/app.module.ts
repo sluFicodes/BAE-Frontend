@@ -10,6 +10,8 @@ import { HowItWorksComponent } from "./offerings/how-it-works/how-it-works.compo
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
+import { ProductInventoryComponent } from "./pages/product-inventory/product-inventory.component";
+import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from "./shared/shared.module";
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import {CategoriesFilterComponent} from "./shared/categories-filter/categories-filter.component";
 import {CardComponent} from "./shared/card/card.component";
 import {BadgeComponent} from "./shared/badge/badge.component";
+import {BillingAccountFormComponent} from "./shared/billing-account-form/billing-account-form.component";
 import { NgOptimizedImage } from '@angular/common';
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -27,8 +30,12 @@ import { CartDrawerComponent } from "./shared/cart-drawer/cart-drawer.component"
 import {CategoriesPanelComponent} from "./shared/categories-panel/categories-panel.component";
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
 import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.component";
+import { BillingAddressComponent } from "./pages/checkout/billing-address/billing-address.component";
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
+import { CheckoutComponent } from "./pages/checkout/checkout.component";
 import { AuthInterceptor } from '../interceptors/auth';
+import { MarkdownModule } from 'ngx-markdown';
+
 
 @NgModule({
   declarations: [
@@ -45,32 +52,40 @@ import { AuthInterceptor } from '../interceptors/auth';
     CardComponent,
     BadgeComponent,
     //CartDrawerComponent,
+    BillingAddressComponent,
+    CheckoutComponent,
     ProductDetailsComponent,
     SearchCatalogComponent,
     CatalogsComponent,
-    ShoppingCartComponent
+    ShoppingCartComponent,
+    ProductInventoryComponent,
+    BillingAccountFormComponent,
+    UserProfileComponent
   ],
-    imports: [
-        BrowserModule,
-        FontAwesomeModule,
-        SharedModule,
-        AppRoutingModule,
-        NgOptimizedImage,
-        FaIconComponent,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule.forRoot({
-            defaultLanguage: 'en',
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
-        CategoriesPanelComponent,
+  imports: [
+    BrowserModule,
+    FontAwesomeModule,
+    SharedModule,
+    AppRoutingModule,
+    NgOptimizedImage,
+    FaIconComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    MarkdownModule.forRoot(),
+    TranslateModule.forRoot({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
+    CategoriesPanelComponent,
 
-    ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  ],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

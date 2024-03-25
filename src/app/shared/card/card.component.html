@@ -4,14 +4,16 @@
   <div (click)="goToProductDetails(productOff)" class="rounded overflow-hidden cursor-pointer">
     <div class="relative h-48 flex justify-center items-center">
       <!-- Imagen de fondo difuminada -->
-      <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-color: {{bgColor}};"></div>
+      <!--<div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-color: {{bgColor}};"></div>-->
+      <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage()}});filter: blur(20px);"></div>
       <!-- Imagen superior -->
-      <img crossorigin="anonymous" #myProdImage class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="Descripción de la imagen">
+      <!-- <img crossorigin="anonymous" #myProdImage class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="Descripción de la imagen">-->
+      <img class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="Descripción de la imagen">
     </div>
   </div>
 
   <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
-    <div class="px-5 py-5 bg-secondary-50/95 ">
+    <div class="px-5 py-5 bg-secondary-50/95 rounded-lg">
       <div class="h-[30px] overflow-y-hidden">
       @for (cat of categories; track cat.id) {
         <bae-badge class="ml-2" [category]=cat></bae-badge>
@@ -20,7 +22,7 @@
       <a (click)="goToProductDetails(productOff)" class="cursor-pointer">
         <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{productOff?.name}}</h5>
       </a>
-      <div class="min-h-19 h-19 line-clamp-2 text-gray-600">{{productOff?.description}}</div>
+      <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600" [data]="productOff?.description"></markdown>
       <div class="flex w-full justify-between mt-2.5 mb-5 text-gray-500 font-mono">
         <div>V: {{productOff?.version || 'latest'}}</div>
         <div class="flex items-center">
@@ -135,7 +137,7 @@
             <div class="p-4 md:p-5 grid grid-cols-3 gap-4">
               <div class="justify-start">
                   <h5 class="font-semibold tracking-tight text-lg text-primary-100 dark:text-primary-50">{{ 'CARD._prod_details' | translate }}:</h5>
-                  <div class="min-h-19 h-19 line-clamp-3 dark:text-secondary-50">{{productOff?.description}}</div>
+                  <markdown class="min-h-19 h-19 dark:text-secondary-50" [data]="productOff?.description"></markdown>
               </div>
               <div class="justify-start">
                 <h5 class="font-semibold tracking-tight text-lg text-primary-100 dark:text-primary-50">{{ 'CARD._comp_profile' | translate }}:</h5>

@@ -23,7 +23,9 @@ export interface LoginInfo {
   email: string,
   token: string,
   expire: number,
-  partyId: string
+  partyId: string,
+  username: string,
+  roles: any[]
 }
 
 export interface productSpecCharacteristicValueCart {
@@ -45,6 +47,7 @@ export interface cartProduct {
 
 export interface billingAccountCart {
   id: string,
+  name: string,
   href: string,
   email: string,
   postalAddress: {
@@ -55,5 +58,6 @@ export interface billingAccountCart {
     street: string
   },
   telephoneNumber: string,
+  telephoneType: string,
   selected:boolean
 }

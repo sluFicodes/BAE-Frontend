@@ -3,10 +3,12 @@ import {
   faCartShopping,
   faHandHoldingBox,
   faAddressCard,
-  faArrowRightFromBracket
+  faArrowRightFromBracket,
+  faBoxesStacked
 } from "@fortawesome/sharp-solid-svg-icons";
 import {LocalStorageService} from "../../services/local-storage.service";
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
+import { LoginServiceService } from 'src/app/services/login-service.service';
 import { Router } from '@angular/router';
 import {EventMessageService} from "../../services/event-message.service";
 import { environment } from 'src/environments/environment';
@@ -30,6 +32,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
               themeToggleLightIcon: ElementRef,
               private localStorage: LocalStorageService,
               private api: ApiServiceService,
+              private loginService: LoginServiceService,
               private cdr: ChangeDetectorRef,
               private route: ActivatedRoute,
               private eventMessage: EventMessageService,
@@ -48,6 +51,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   usercharacters:string='';
   loginSubscription: Subscription = new Subscription();
   loginUrl:string = `${environment.BASE_URL}:${environment.API_PORT}` + (environment.SIOP ? '/login/vc' : '/login');
+  roles:string[]=[];
+  public static BASE_URL: String = environment.BASE_URL;
+  public static API_PORT: Number = environment.API_PORT;
 
   @HostListener('document:click')
   onClick() {
@@ -64,6 +70,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       this.username=aux.user;
       this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();
       this.email=aux.email;
+      for(let i=0;i<aux.roles.length;i++){
+        this.roles.push(aux.roles[i].name)
+      }
       this.cdr.detectChanges();
     }
     
@@ -138,13 +147,17 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();    
   }
 
+  goToMyOfferings(){
+    window.location.href=`${HeaderComponent.BASE_URL}:${HeaderComponent.API_PORT}/#/stock/offering?status=Active,Launched`;
+  }
+
   async toggleLogin(){
     console.log('login')
     this.showLogin=true;
     //this.api.getLogin()
     //await (window.location.href='http://localhost:8004/login');
     
-    this.api.doLogin();
+    this.loginService.doLogin();
     this.cdr.detectChanges();
   }
 
@@ -161,4 +174,5 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   protected readonly faHandHoldingBox = faHandHoldingBox;
   protected readonly faAddressCard = faAddressCard;
   protected readonly faArrowRightFromBracket = faArrowRightFromBracket;
+  protected readonly faBoxesStacked = faBoxesStacked;
 }

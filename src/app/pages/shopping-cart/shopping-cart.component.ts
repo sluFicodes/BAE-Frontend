@@ -3,7 +3,10 @@ import {
   faCartShopping
 } from "@fortawesome/sharp-solid-svg-icons";
 import {EventMessageService} from "../../services/event-message.service";
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
+import { AccountServiceService } from 'src/app/services/account-service.service';
+import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
+import { ProductOrderService } from 'src/app/services/product-order-service.service';
 import { cartProduct, billingAccountCart, LoginInfo } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
 import { initFlowbite } from 'flowbite';
@@ -33,8 +36,11 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
   constructor(
     private eventMessage: EventMessageService,
     private api: ApiServiceService,
+    private account: AccountServiceService,
+    private cartService: ShoppingCartServiceService,
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
+    private orderService: ProductOrderService,
     private router: Router) {
 
   }
@@ -45,7 +51,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
     this.relatedParty=aux.partyId;
     this.loading=true;
     this.showBackDrop=true;
-    this.api.getShoppingCart().then(data => {
+    this.cartService.getShoppingCart().then(data => {
       console.log('---CARRITO API---')
       console.log(data)
       this.items=data;
@@ -54,10 +60,11 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
       console.log('------------------')
       initFlowbite();
     })
-    this.api.getBillingAccount().then(data => {
+    this.account.getBillingAccount().then(data => {
       for(let i=0; i< data.length;i++){
         let email =''
         let phone=''
+        let phoneType = ''
         let address = {
           "city": '',
           "country": '',
@@ -78,20 +85,24 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
             }
           } else if (data[i].contact[0].contactMedium[j].mediumType == 'TelephoneNumber'){
             phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
+            phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
           }
         }
         this.billing_accounts.push({
           "id": data[i].id,
           "href": data[i].href,
+          "name": data[i].name,
           "email": email,
           "postalAddress": address,
           "telephoneNumber": phone,
+          "telephoneType": phoneType,
           "selected": i==0 ? true : false
         })
         if(i==0){
           this.selectedBilling={
             "id": data[i].id,
             "href": data[i].href,
+            "name": data[i].name,
             "email": email,
             "postalAddress": address,
             "telephoneNumber": phone,
@@ -152,14 +163,14 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
           this.totalPrice.push(priceInfo);
           insertCheck=true;
           console.log('añade segundo')
-        }       
+        }
       }
     }
     console.log(this.totalPrice)
   }
 
   deleteProduct(product: cartProduct){
-    this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+    this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 
@@ -175,7 +186,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
   clickDropdown(id:any){
     let elem = document.getElementById(id)
     if(elem != null){
-      if(elem.className.match('hidden') ) { 
+      if(elem.className.match('hidden') ) {
         this.removeClass(elem,"hidden")
       } else {
         this.addClass(elem,"hidden")
@@ -265,28 +276,33 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
       "billingAccount": {
         "id": this.selectedBilling.id,
         "href": this.selectedBilling.id
-      },      
+      },
       "orderDate": moment().utc(),
       "notificationContact": this.selectedBilling.email,
     }
-    await this.api.postProductOrder(productOrder).subscribe({
+    await this.orderService.postProductOrder(productOrder).subscribe({
       next: data => {
           console.log(data)
           console.log('PROD ORDER DONE');
-          this.api.emptyShoppingCart().subscribe({
+          this.cartService.emptyShoppingCart().subscribe({
             next: data => {
                 console.log(data)
-                console.log('EMPTY');     
+                console.log('EMPTY');
             },
             error: error => {
                 console.error('There was an error while updating!', error);
             }
           });
-          window.location.href=`${ShoppingCartComponent.BASE_URL}:${ShoppingCartComponent.API_PORT}/#/inventory/product`;         
+          //window.location.href=`${ShoppingCartComponent.BASE_URL}:${ShoppingCartComponent.API_PORT}/#/inventory/product`;
+          this.goToInventory();
       },
       error: error => {
           console.error('There was an error while updating!', error);
       }
     });
+  }
+
+  goToInventory() {
+    this.router.navigate(['/product-inventory']);
   }
 }

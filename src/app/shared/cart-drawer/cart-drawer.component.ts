@@ -4,10 +4,11 @@ import {
 } from "@fortawesome/sharp-solid-svg-icons";
 import {components} from "../../models/product-catalog";
 import {LocalStorageService} from "../../services/local-storage.service";
+import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
 import {EventMessageService} from "../../services/event-message.service";
 import { Drawer } from 'flowbite';
 import { PriceServiceService } from 'src/app/services/price-service.service';
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import { cartProduct } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
 import { Router } from '@angular/router';
@@ -27,6 +28,7 @@ export class CartDrawerComponent implements OnInit{
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
     private priceService: PriceServiceService,
+    private cartService: ShoppingCartServiceService,
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private router: Router,) {
@@ -40,7 +42,7 @@ export class CartDrawerComponent implements OnInit{
 
   ngOnInit(): void {
     this.showBackDrop=true;
-    this.api.getShoppingCart().then(data => {
+    this.cartService.getShoppingCart().then(data => {
       console.log('---CARRITO API---')
       console.log(data)
       this.items=data;
@@ -51,7 +53,7 @@ export class CartDrawerComponent implements OnInit{
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'AddedCartItem') {
         console.log('Elemento añadido')
-        this.api.getShoppingCart().then(data => {
+        this.cartService.getShoppingCart().then(data => {
           console.log('---CARRITO API---')
           console.log(data)
           this.items=data;
@@ -60,14 +62,14 @@ export class CartDrawerComponent implements OnInit{
           console.log('------------------')
         })
       } else if(ev.type === 'RemovedCartItem') {
-        this.api.getShoppingCart().then(data => {
+        this.cartService.getShoppingCart().then(data => {
           console.log('---CARRITO API---')
           console.log(data)
           this.items=data;
           this.cdr.detectChanges();
           this.getTotalPrice();
           console.log('------------------')
-        })        
+        })
       }
     })
     console.log('Elementos en el carrito....')
@@ -122,14 +124,14 @@ export class CartDrawerComponent implements OnInit{
           this.totalPrice.push(priceInfo);
           insertCheck=true;
           console.log('añade segundo')
-        }       
+        }
       }
     }
     console.log(this.totalPrice)
   }
 
   deleteProduct(product: cartProduct){
-    this.api.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+    this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 
@@ -140,6 +142,6 @@ export class CartDrawerComponent implements OnInit{
 
   goToShoppingCart() {
     this.hideCart();
-    this.router.navigate(['/shopping-cart']);
+    this.router.navigate(['/checkout']);
   }
 }

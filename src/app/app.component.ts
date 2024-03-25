@@ -7,7 +7,7 @@ import {EventMessageService} from "./services/event-message.service";
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { LoginInfo } from 'src/app/models/interfaces';
-import { ApiServiceService } from 'src/app/services/api-service.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import { RefreshLoginServiceService } from "src/app/services/refresh-login-service.service";
 import * as moment from 'moment';
 

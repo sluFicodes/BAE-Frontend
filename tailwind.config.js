@@ -2,7 +2,8 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
-    "./node_modules/flowbite/**/*.js"
+    "./node_modules/flowbite/**/*.js",
+    "./node_modules/flowbite-datepicker/**/*.js"
   ],
   theme: {
     fontFamily: {
@@ -32,7 +33,9 @@ module.exports = {
       gridTemplateColumns:
       {
         '60/40': '60% 40%',
-        '80/20': '80% 20%'
+        '80/20': '80% 20%',
+        '20/80': '20% 80%',
+        '10/90': '10% 90%'
       },
       gridTemplateRows:
       {
