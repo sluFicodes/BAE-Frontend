@@ -186,8 +186,14 @@ export class UserProfileComponent implements OnInit{
     return images.length > 0 ? images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
-  getOrders(size:number){
-    this.selectOrder();    
+  goToOrders(){
+    this.selectOrder();
+    this.page=0;
+    this.orders=[];
+    this.getOrders(0);
+  }
+
+  getOrders(size:number){        
     if(this.partyId!=''){
       this.orderService.getProductOrders(this.partyId,this.page).then(orders=> {
         if(orders.length<this.ORDER_LIMIT){
