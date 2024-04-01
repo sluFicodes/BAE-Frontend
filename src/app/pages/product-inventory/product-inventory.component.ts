@@ -8,6 +8,8 @@ import {LocalStorageService} from "../../services/local-storage.service";
 import { FastAverageColor } from 'fast-average-color';
 import {components} from "../../models/product-catalog";
 import { Router } from '@angular/router';
+import { initFlowbite } from 'flowbite';
+import { environment } from 'src/environments/environment';
 type ProductOffering = components["schemas"]["ProductOffering"];
 import * as moment from 'moment';
 
@@ -28,7 +30,11 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
   show_res:boolean = false;
   show_orders:boolean = false;
   prices: any[]=[];
-  filters: any[]=['active','launched'];
+  filters: any[]=['active','created'];
+  loading_more: boolean = false;
+  page_check:boolean = true;
+  page: number=0;
+  INVENTORY_LIMIT: number = environment.INVENTORY_LIMIT;
 
   constructor(
     private inventoryService: ProductInventoryServiceService,
@@ -46,17 +52,9 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.partyId=aux.partyId;
-      this.inventoryService.getInventory(0,aux.partyId,this.filters).then(data => {
-        this.inventory=data;        
-        console.log('inv')
-        console.log(this.inventory)
-        this.getOffers();
-        this.cdr.detectChanges();
-
-        this.loading=false;
-        this.cdr.detectChanges();
-      })
+      this.getInventory();
     }
+    initFlowbite();
   }
 
   ngAfterViewInit() {
@@ -71,13 +69,22 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
         console.error(e);
       });
     }
-
+    initFlowbite();
   }
 
-  getOffers(){
+  goToOffers(){
+    initFlowbite();
+    this.page=0;
+    this.inventory=[];
     this.products=[];
     this.prices=[];
-    for(let i=0; i<this.inventory.length; i++){
+    this.getInventory();
+  }
+
+  getOffers(size:number){
+    //this.products=[];
+    //this.prices=[];
+    for(let i=size; i<this.inventory.length; i++){
       this.api.getProductById(this.inventory[i].productOffering.id).then(prod=> {           
         let attachment: any[]= []
         this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
@@ -109,6 +116,7 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
           this.show_prods=true;
           this.loading=false;
           this.cdr.detectChanges();
+          initFlowbite();  
 
         })
 
@@ -124,6 +132,7 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
     this.show_serv=true;  
     this.loading=false;
     this.cdr.detectChanges();
+    initFlowbite();
   }
 
   getResources(){  
@@ -134,6 +143,7 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
     this.show_res=true;
     this.loading=false;
     this.cdr.detectChanges();
+    initFlowbite();
   }
 
   getProductImage(prod:ProductOffering) {
@@ -224,5 +234,58 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
     this.unselectMenu(serv_button,'text-white bg-primary-100');
     this.unselectMenu(order_button,'text-white bg-primary-100');
   }
+
+  getInventory(){
+    let existingInventorySize=this.inventory.length;
+    this.inventoryService.getInventory(this.page,this.partyId,this.filters).then(data => {
+      if(data.length<this.INVENTORY_LIMIT){
+        this.page_check=false;
+        this.cdr.detectChanges();
+      }else{
+        this.page_check=true;
+        this.cdr.detectChanges();
+      }
+      for(let i=0; i<data.length;i++){
+        this.inventory.push(data[i])
+      }
+      //this.inventory=data;        
+      console.log('inv')
+      console.log(this.inventory)
+      this.getOffers(existingInventorySize);
+      this.cdr.detectChanges();
+
+      this.loading=false;
+      this.loading_more=false;
+      this.cdr.detectChanges();
+    })
+  }
+
+  onStateFilterChange(filter:string){
+    const index = this.filters.findIndex(item => item === filter);
+    if (index !== -1) {
+      this.filters.splice(index, 1);
+      console.log('elimina filtro')
+      console.log(this.filters)
+    } else {
+      console.log('añade filtro')
+      console.log(this.filters)
+      this.filters.push(filter)
+    }
+    this.page=0;
+    this.inventory=[];
+    this.products=[];
+    this.prices=[];
+    this.getInventory();
+  }
+
+  async next(){
+    this.loading_more=true;
+    this.page=this.page+this.INVENTORY_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getInventory();
+  }
+
+
 
 }

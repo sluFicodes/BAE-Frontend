@@ -13,6 +13,7 @@ import { phoneNumbers, countries } from '../../models/country.const'
 import { initFlowbite } from 'flowbite';
 import {EventMessageService} from "../../services/event-message.service";
 import * as moment from 'moment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-profile',
@@ -48,6 +49,10 @@ export class UserProfileComponent implements OnInit{
   });
   countries: any[] = countries;
   preferred:boolean=false;
+  loading_more: boolean = false;
+  page_check:boolean = true;
+  page: number=0;
+  ORDER_LIMIT: number = environment.ORDER_LIMIT;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -89,6 +94,7 @@ export class UserProfileComponent implements OnInit{
       this.partyId=aux.partyId;
       this.getProfile();
     }
+    initFlowbite();
   }
 
   getProfile(){
@@ -104,6 +110,7 @@ export class UserProfileComponent implements OnInit{
     this.show_profile=true;
     this.show_orders=false;
     this.cdr.detectChanges();
+    initFlowbite();
   }
 
   getBilling(){
@@ -171,6 +178,7 @@ export class UserProfileComponent implements OnInit{
     this.show_profile=false;
     this.show_orders=false;
     this.cdr.detectChanges();
+    initFlowbite();
   }
 
   getProductImage(prod:ProductOffering) {
@@ -178,16 +186,25 @@ export class UserProfileComponent implements OnInit{
     return images.length > 0 ? images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
-  getOrders(){
+  getOrders(size:number){
     this.selectOrder();    
     if(this.partyId!=''){
-      this.orderService.getProductOrders(this.partyId,0).then(orders=> {
-        this.orders=[];
-        for(let i=0;i<orders.length;i++){
-          let items:any[] = [];
+      this.orderService.getProductOrders(this.partyId,this.page).then(orders=> {
+        if(orders.length<this.ORDER_LIMIT){
+          this.page_check=false;
+          this.cdr.detectChanges();
+        }else{
+          this.page_check=true;
+          this.cdr.detectChanges();
+        }
+        //this.orders=[];
+        for(let i=0;i<orders.length;i++){          
           this.orders.push(orders[i]);
-          for(let j=0;j<orders[i].productOrderItem.length;j++){
-            this.api.getProductById(orders[i].productOrderItem[j].id).then(item => {
+        }
+        for(let i=size;i<this.orders.length;i++){
+          let items:any[] = [];
+          for(let j=0;j<this.orders[i].productOrderItem.length;j++){
+            this.api.getProductById(this.orders[i].productOrderItem[j].id).then(item => {
               this.api.getProductSpecification(item.productSpecification.id).then(spec => {
                 this.api.getProductPrice(item.productOfferingPrice[0].id).then(prodprice => {
                   items.push({
@@ -221,7 +238,9 @@ export class UserProfileComponent implements OnInit{
     this.show_profile=false;
     this.show_orders=true;
     this.loading=false;
+    this.loading_more=false; 
     this.cdr.detectChanges();
+    initFlowbite();
   }
 
   selectGeneral(){
@@ -345,5 +364,14 @@ export class UserProfileComponent implements OnInit{
     //this.userProfileForm.controls['birthdate'].setValue(profile.birthDate);
     this.userProfileForm.controls['city'].setValue(profile.placeOfBirth);
     this.userProfileForm.controls['country'].setValue(profile.countryOfBirth);
+  }
+
+  async next(){
+    let existingOrderSize=this.orders.length;
+    this.loading_more=true;
+    this.page=this.page+this.ORDER_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getOrders(existingOrderSize);
   }
 }
