@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output, ChangeDetectorRef} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ChangeDetectorRef, Input} from '@angular/core';
 import {Category} from "../../models/interfaces";
 import {Subject} from "rxjs";
 import {LocalStorageService} from "../../services/local-storage.service";
@@ -19,7 +19,9 @@ export class CategoriesFilterComponent implements OnInit {
   categories: Category[] = [];
   selected: Category[] = [];
   dismissSubject: Subject<any> = new Subject();
+  catalog:any;
   @Output() selectedCategories = new EventEmitter<Category[]>();
+  @Input() catalogId: any = undefined;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -32,18 +34,42 @@ export class CategoriesFilterComponent implements OnInit {
 
   async ngOnInit() {
     this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
-    await this.api.getCategories().then(data => {
-      console.log('--- Respuesta categorías api ---')    
-      console.log(data)
-      for(let i=0; i < data.length; i++){
-        this.findChildren(data[i],data)
-      }
-      console.log('--- CATEGORIES ---')
-      console.log(this.categories)
-      console.log('------------------')
-      this.cdr.detectChanges();
-      initFlowbite();
-    })    
+    if(this.catalogId!=undefined){
+      this.api.getCatalog(this.catalogId).then(data => {
+        if(data.category){
+          for (let i=0; i<data.category.length; i++){
+            this.api.getCategoryById(data.category[i].id).then(categoryInfo => {
+              this.findChildrenByParent(categoryInfo);
+            })
+          }
+          initFlowbite();
+        } else {
+          this.api.getCategories().then(data => {
+            for(let i=0; i < data.length; i++){
+              this.findChildren(data[i],data)
+            }
+            this.cdr.detectChanges();
+            initFlowbite();
+          })           
+        }
+      })
+    } else {
+      await this.api.getCategories().then(data => {
+        for(let i=0; i < data.length; i++){
+          this.findChildren(data[i],data)
+        }
+        this.cdr.detectChanges();
+        initFlowbite();
+
+        console.log('--- CATEGORIES ---')
+        console.log(this.categories)
+        console.log('------------------')
+      }) 
+    }
+  }
+
+  ngAfterViewInit() {
+    initFlowbite();
   }
 
   findChildren(parent:any,data:any[]){
@@ -59,6 +85,26 @@ export class CategoriesFilterComponent implements OnInit {
         this.findChildren(childs[i],data)
       }
     }
+  }
+
+  findChildrenByParent(parent:any){
+    let childs: any[] = []
+    this.api.getCategoriesByParentId(parent.id).then(c => {
+      childs=c;
+      parent["children"] = childs;
+      if(parent.isRoot == true){
+        this.categories.push(parent)
+      } else {
+        this.saveChildren(this.categories,parent)
+      }
+      if(childs.length != 0){
+        for(let i=0; i < childs.length; i++){
+          this.findChildrenByParent(childs[i])
+        }
+      }
+      initFlowbite();
+    })
+
   }
 
   saveChildren(superCategories:any[],parent:any){

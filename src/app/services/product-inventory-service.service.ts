@@ -19,17 +19,22 @@ export class ProductInventoryServiceService {
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
-  getInventory(page:any,id:any,filters:any[]) {
-    let url = `${ProductInventoryServiceService.BASE_URL}:${ProductInventoryServiceService.API_PORT}${ProductInventoryServiceService.API_INVENTORY}/product?limit=${ProductInventoryServiceService.INVENTORY_LIMIT}&offset=${page}&relatedParty.id=${id}&status=`
+  getInventory(page:any,id:any,filters:any[],keywords:any) {
+    let url = `${ProductInventoryServiceService.BASE_URL}:${ProductInventoryServiceService.API_PORT}${ProductInventoryServiceService.API_INVENTORY}/product?limit=${ProductInventoryServiceService.INVENTORY_LIMIT}&offset=${page}&relatedParty.id=${id}`
     let status=''
-    for(let i=0; i < filters.length; i++){
-      if(i==filters.length-1){
-        status=status+filters[i]
-      } else {
-        status=status+filters[i]+','
-      }    
+    if(filters.length>0){
+      for(let i=0; i < filters.length; i++){
+        if(i==filters.length-1){
+          status=status+filters[i]
+        } else {
+          status=status+filters[i]+','
+        }    
+      }
+      url=url+'&status='+status;
     }
-    url=url+status;
+    if(keywords!=undefined){
+      url=url+'&body='+keywords
+    }
     console.log(url)
     
     let aux = this.localStorage.getObject('login_items') as LoginInfo;

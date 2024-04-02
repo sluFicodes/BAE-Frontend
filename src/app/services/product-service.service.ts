@@ -162,6 +162,34 @@ export class ApiServiceService {
     }
   }
 
+  getCategoryById(id:any){
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/category/${id}`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      return lastValueFrom(this.http.get<any>(url,header));
+    } else {
+      return lastValueFrom(this.http.get<any>(url));
+    }
+  }
+
+  getCategoriesByParentId(id:any){
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/category?parentId=${id}`;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      var header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+aux.token)
+      }
+      return lastValueFrom(this.http.get<any[]>(url,header));
+    } else {
+      return lastValueFrom(this.http.get<any[]>(url));
+    }
+  }
+
   getCatalogs(page:any,filter:any) {
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&lifecycleStatus=Active,Launched`;    
     if(filter!=undefined){

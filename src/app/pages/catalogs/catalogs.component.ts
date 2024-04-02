@@ -92,6 +92,7 @@ export class CatalogsComponent implements OnInit{
       }
       this.loading_more=false;
     })
+    console.log(this.catalogs)
   }
 
 }

@@ -12,6 +12,7 @@ import { initFlowbite } from 'flowbite';
 import { environment } from 'src/environments/environment';
 type ProductOffering = components["schemas"]["ProductOffering"];
 import * as moment from 'moment';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-product-inventory',
@@ -35,6 +36,8 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
   page_check:boolean = true;
   page: number=0;
   INVENTORY_LIMIT: number = environment.INVENTORY_LIMIT;
+  searchField = new FormControl();
+  keywordFilter:any=undefined;
 
   constructor(
     private inventoryService: ProductInventoryServiceService,
@@ -53,6 +56,17 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.partyId=aux.partyId;
       this.getInventory();
+    }
+    let input = document.querySelector('[type=search]')
+    if(input!=undefined){
+      input.addEventListener('input', e => {
+        // Easy way to get the value of the element who trigger the current `e` event
+        console.log(`Input updated`)
+        if(this.searchField.value==''){
+          this.keywordFilter=undefined;
+          this.getInventory();
+        }
+      });
     }
     initFlowbite();
   }
@@ -237,7 +251,7 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
 
   getInventory(){
     let existingInventorySize=this.inventory.length;
-    this.inventoryService.getInventory(this.page,this.partyId,this.filters).then(data => {
+    this.inventoryService.getInventory(this.page,this.partyId,this.filters,this.keywordFilter).then(data => {
       if(data.length<this.INVENTORY_LIMIT){
         this.page_check=false;
         this.cdr.detectChanges();
@@ -286,6 +300,10 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
     await this.getInventory();
   }
 
-
+  filterInventoryByKeywords(){
+    this.keywordFilter=this.searchField.value;
+    this.page=0;
+    this.getInventory();
+  }
 
 }

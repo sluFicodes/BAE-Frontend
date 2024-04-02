@@ -163,7 +163,10 @@
         "_offerings": "My Offerings",
         "_cart": "My shopping cart",
         "_sign_out": "Sign out",
-        "_inventory": "My inventory"
+        "_inventory": "My inventory",
+        "_support": "Support",
+        "_knowledge": "Knowledgebase",
+        "_ticketing": "Ticketing"
     },
     "PRODUCT_DETAILS": {
         "_back": "Back",
@@ -184,7 +187,8 @@
     },
     "CATALOGS": {
         "_all_catalogs": "All catalogs",
-        "_no_desc": "No description included"
+        "_no_desc": "No description included",
+        "_no_cat": "No categories included"
     },
     "SHOPPING_CART": {
         "_buy": "Buy",
@@ -223,7 +227,8 @@
         "_country": "Country",
         "_city": "City",
         "_mybills": "My billing addresses",
-        "_user_id": "User id"
+        "_user_id": "User id",
+        "_no_orders": "No orders found"
     },
     "PRODUCT_INVENTORY":{
         "_loading": "Loading...",

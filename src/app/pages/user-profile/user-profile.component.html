@@ -16,7 +16,7 @@
                 {{ 'PROFILE._orders' | translate }}
             </button>
         </div>
-
+        <div>
         @if (loading) {
             <div role="status" class="w-3/4 md:w-4/5 h-full flex justify-center align-middle">
               <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -108,6 +108,83 @@
                 </div>
             }
             @if(show_orders){
+            <!-- FILTERS -->
+            <div class="flex items-end justify-end p-4 z-20">
+                <button id="dropdownDefault" data-dropdown-toggle="dropdown"
+                    class="text-black border border-gray-200 dark:text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                    type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                    </svg>
+                    Filter by state
+                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                
+                <div id="dropdown" class="z-20 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                    <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
+                    State
+                    </h6>
+                    <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
+                    <li class="flex items-center">
+                        <input id="acknowledged" type="checkbox" value="" (change)="onStateFilterChange('acknowledged')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="acknowledged" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Acknowledged
+                        </label>
+                    </li>
+                
+                    <li class="flex items-center">
+                        <input id="inProgress" type="checkbox" value="" (change)="onStateFilterChange('inProgress')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="inProgress" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        In Progress
+                        </label>
+                    </li>
+                
+                    <li class="flex items-center">
+                        <input id="completed" type="checkbox" value="" (change)="onStateFilterChange('completed')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="completed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Completed
+                        </label>
+                    </li>
+                
+                    <li class="flex items-center">
+                        <input id="failed" type="checkbox" value="" (change)="onStateFilterChange('failed')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="failed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Failed
+                        </label>
+                    </li>
+
+                    <li class="flex items-center">
+                        <input id="pending" type="checkbox" value="" (change)="onStateFilterChange('pending')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="pending" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Pending
+                        </label>
+                    </li>
+
+                    <li class="flex items-center">
+                        <input id="cancelled" type="checkbox" value="" (change)="onStateFilterChange('cancelled')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="cancelled" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Cancelled
+                        </label>
+                    </li>
+                    </ul>
+                </div>
+                </div>        
+                <!-- END FILTERS -->
                 <div class="w-full h-fit bg-secondary-50 rounded-lg dark:border-gray-700 border-secondary-50 border">
                     <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._order_list' | translate }}:</h5>
                     <hr class="h-px mr-4 ml-4 bg-primary-100 border-0">
@@ -147,6 +224,10 @@
                                                     <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{order.state}}</span>
                                                 } @else if(order.state == 'pending') {
                                                     <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{order.state}}</span>
+                                                }@else if(order.state == 'acknowledged'){
+                                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{order.state}}</span>
+                                                }@else if(order.state == 'cancelled') {
+                                                    <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{order.state}}</span>
                                                 }
                                             </td>
                                             <td class="px-6 py-4 text-center align-middle">
@@ -169,11 +250,27 @@
                                     }
                                 </tbody>
                             </table>
+                            @if(!loadingOrders){
+                                @if(orders.length == 0){
+                                    <div class="text-center items-center w-full col-span-2">
+                                        <span class="text-primary-100 text-sm text-center w-full font-medium">{{ 'PROFILE._no_orders' | translate }}</span>
+                                    </div>
+                                }
+                            } @else {
+                                <div role="status" class="w-full h-full flex justify-center align-middle">
+                                    <svg aria-hidden="true" class="w-12 h-12 text-gray-300 animate-spin fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                    </svg>
+                                    <span class="sr-only">Loading...</span>
+                                </div>                                
+                            }
+
                         </div>
 
                     @if (!loading_more) {
                         @if (page_check) {
-                        <div class="flex pb-12 justify-center align-middle">
+                        <div class="flex pb-6 justify-center align-middle">
                             <button (click)="next()" class="flex cursor-pointer items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
                             Load more
                             <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -256,6 +353,7 @@
                 </div>
               }
           }
+        </div>
     </div>
 </div>
 

@@ -34,8 +34,21 @@ export class ProductOrderService {
     }    
   }
 
-  getProductOrders(partyId:any,page:any){
+  getProductOrders(partyId:any,page:any,filters:any[]){
     let url = `${ProductOrderService.BASE_URL}:${ProductOrderService.API_PORT}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Customer`;
+    let status=''
+    if(filters.length>0){
+      for(let i=0; i < filters.length; i++){
+        if(i==filters.length-1){
+          status=status+filters[i]
+        } else {
+          status=status+filters[i]+','
+        }    
+      }
+      url=url+'&state='+status;
+    }
+
+    
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       var header = {

@@ -22,6 +22,7 @@ import { environment } from 'src/environments/environment';
 })
 export class UserProfileComponent implements OnInit{
   loading: boolean = false;
+  loadingOrders: boolean = false;
   show_profile: boolean = true;
   show_orders: boolean = false;
   show_billing: boolean = false;
@@ -53,6 +54,7 @@ export class UserProfileComponent implements OnInit{
   page_check:boolean = true;
   page: number=0;
   ORDER_LIMIT: number = environment.ORDER_LIMIT;
+  filters: any[]=[];
 
   constructor(
     private localStorage: LocalStorageService,
@@ -188,20 +190,25 @@ export class UserProfileComponent implements OnInit{
 
   goToOrders(){
     this.selectOrder();
+    this.loadingOrders=true;
     this.page=0;
     this.orders=[];
+    this.filters=[];
     this.getOrders(0);
   }
 
   getOrders(size:number){        
     if(this.partyId!=''){
-      this.orderService.getProductOrders(this.partyId,this.page).then(orders=> {
+      this.orderService.getProductOrders(this.partyId,this.page,this.filters).then(orders=> {
         if(orders.length<this.ORDER_LIMIT){
           this.page_check=false;
           this.cdr.detectChanges();
         }else{
           this.page_check=true;
           this.cdr.detectChanges();
+        }
+        if(orders.length==0){
+          this.loadingOrders=false;
         }
         //this.orders=[];
         for(let i=0;i<orders.length;i++){          
@@ -230,6 +237,7 @@ export class UserProfileComponent implements OnInit{
                     productOfferingTerm: item.productOfferingTerm,
                     version: item.version
                   })
+                  this.loadingOrders=false;
                 })
               })
             })
@@ -243,7 +251,7 @@ export class UserProfileComponent implements OnInit{
     this.show_billing=false;
     this.show_profile=false;
     this.show_orders=true;
-    this.loading=false;
+    this.loading=false;    
     this.loading_more=false; 
     this.cdr.detectChanges();
     initFlowbite();
@@ -373,11 +381,29 @@ export class UserProfileComponent implements OnInit{
   }
 
   async next(){
+    this.loadingOrders=true;
     let existingOrderSize=this.orders.length;
     this.loading_more=true;
     this.page=this.page+this.ORDER_LIMIT;
     this.cdr.detectChanges;
     console.log(this.page)
     await this.getOrders(existingOrderSize);
+  }
+
+  onStateFilterChange(filter:string){
+    this.loadingOrders=true;
+    const index = this.filters.findIndex(item => item === filter);
+    if (index !== -1) {
+      this.filters.splice(index, 1);
+      console.log('elimina filtro')
+      console.log(this.filters)
+    } else {
+      console.log('añade filtro')
+      console.log(this.filters)
+      this.filters.push(filter)
+    }
+    this.page=0;
+    this.orders=[];
+    this.getOrders(0);
   }
 }

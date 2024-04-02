@@ -31,6 +31,9 @@
         <li>
           <a href="#" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-secondary-50 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">{{ 'HEADER._contact' | translate }}</a>
         </li>
+        <li>
+          <button data-dropdown-toggle="support-dropdown" data-dropdown-placement="bottom-end" class="block py-2 pl-3 pr-4 text-white bg-primary-100 rounded md:bg-transparent md:text-secondary-50 md:p-0" aria-current="page">{{ 'HEADER._support' | translate }}</button>
+        </li>
       </ul>
     </div>
 
@@ -85,6 +88,16 @@
         </div>
       </div>
     }
+  </div>
+  <div id="support-dropdown" class="z-10 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+      <li>
+        <a href="http://85.215.243.214:6875/" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ 'HEADER._knowledge' | translate }}</a>
+      </li>
+      <li>
+        <a href="http://85.215.243.214:8080/" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{{ 'HEADER._ticketing' | translate }}</a>
+      </li>
+    </ul>
   </div>
 </nav>
 @if (showCart) {
