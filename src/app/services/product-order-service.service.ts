@@ -34,7 +34,7 @@ export class ProductOrderService {
     }    
   }
 
-  getProductOrders(partyId:any,page:any,filters:any[]){
+  getProductOrders(partyId:any,page:any,filters:any[],date:any){
     let url = `${ProductOrderService.BASE_URL}:${ProductOrderService.API_PORT}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Customer`;
     let status=''
     if(filters.length>0){
@@ -46,6 +46,9 @@ export class ProductOrderService {
         }    
       }
       url=url+'&state='+status;
+    }
+    if(date!=undefined){
+      url=url+'&orderDate>'+date;
     }
 
     

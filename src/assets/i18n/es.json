@@ -165,8 +165,8 @@
         "_sign_out": "Sign out",
         "_inventory": "My inventory",
         "_support": "Support",
-        "_knowledge": "Knowledgebase",
-        "_ticketing": "Ticketing"
+        "_knowledge": "Knowledge Base",
+        "_ticketing": "Ticketing System"
     },
     "PRODUCT_DETAILS": {
         "_back": "Back",
@@ -241,7 +241,8 @@
         "_state": "State",
         "_priority": "Priority",
         "_desc": "Description",
-        "_price": "Price"
+        "_price": "Price",
+        "_bill": "Billing address"
     },
     "BILLING": {
         "_title": "Title",

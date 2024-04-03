@@ -110,6 +110,12 @@
             @if(show_orders){
             <!-- FILTERS -->
             <div class="flex items-end justify-end p-4 z-20">
+                <select id="dateRange" (change)="filterOrdersByDate()" [formControl]="dateRange" class="mr-4 text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                    <option selected value="month">This month</option>
+                    <option value="months">Last 3 months</option>
+                    <option value="year">Last year</option>
+                    <option value="all">All</option>
+                </select>
                 <button id="dropdownDefault" data-dropdown-toggle="dropdown"
                     class="text-black border border-gray-200 dark:text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                     type="button">
@@ -202,6 +208,9 @@
                                             {{ 'PRODUCT_INVENTORY._priority' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-center align-middle">
+                                            {{ 'PRODUCT_INVENTORY._bill' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-center align-middle">
                                             Date
                                         </th>
                                         <th scope="col" class="text-center align-middle">
@@ -232,6 +241,9 @@
                                             </td>
                                             <td class="px-6 py-4 text-center align-middle">
                                                 {{order.priority}}
+                                            </td>
+                                            <td class="px-6 py-4 text-center align-middle">
+                                                {{order.billingAccount.name}}
                                             </td>
                                             <td class="px-6 py-4 text-center align-middle">
                                                 {{order?.orderDate | date:'EEEE, dd/MM/yy, HH:mm'}}
