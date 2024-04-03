@@ -249,7 +249,7 @@
                                                 {{order?.orderDate | date:'EEEE, dd/MM/yy, HH:mm'}}
                                             </td>
                                             <td class="px-6 py-4 text-center align-middle">
-                                                <button type="button" class="text-white bg-primary-100 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2">
+                                                <button (click)="toggleShowDetails(order);$event.stopPropagation();" type="button" class="text-white bg-primary-100 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2">
                                                     <svg class="w-[18px] h-[18px] text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
                                                         <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                                           <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
@@ -471,6 +471,130 @@
                         </button>
                     </div>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<!-- ORDER DETAILS modal -->
+@if (showOrderDetails){
+    <div id="order-details-modal" [ngClass]="showOrderDetails ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+        <div class="w-1/2 relative bg-secondary-50 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-2 rounded-t dark:border-gray-600 shadow-lg">
+                <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">Order details:</h5>                
+                <button (click)="showOrderDetails=false;" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="delete-bill-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">{{ 'CARD._close' | translate }}</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="w-full h-full">
+                <div class="p-4 relative overflow-x-auto rounded-lg">
+                    <div class="flex flex-row gap-2 pb-2 text-gray-600">
+                        <p class="w-fit text-base font-bold shrink-0">
+                            {{ 'PRODUCT_INVENTORY._order_id' | translate }}
+                        </p>
+                        <h3 class="text-base">
+                            {{orderToShow.id}}
+                        </h3>
+                    </div>
+                    <div class="flex flex-row gap-2 pb-2 text-gray-600">
+                        <p class="w-fit text-base font-bold shrink-0">
+                            {{ 'PRODUCT_INVENTORY._state' | translate }}
+                        </p>
+                        @if(orderToShow.state == 'inProgress'){
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400 w-fit">{{orderToShow.state}}</span>
+                        } @else if(orderToShow.state ==  'completed') {
+                            <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500 w-fit">{{orderToShow.state}}</span>
+                        } @else if(orderToShow.state == 'failed') {
+                            <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{orderToShow.state}}</span>
+                        } @else if(orderToShow.state == 'pending') {
+                            <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{orderToShow.state}}</span>
+                        }@else if(orderToShow.state == 'acknowledged'){
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{orderToShow.state}}</span>
+                        }@else if(orderToShow.state == 'cancelled') {
+                            <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{orderToShow.state}}</span>
+                        }
+                    </div>
+                    <div class="flex flex-row gap-2 pb-2 text-gray-600">
+                        <p class="w-fit text-base font-bold shrink-0">
+                            {{ 'PRODUCT_INVENTORY._priority' | translate }}
+                        </p>
+                        <h3 class="text-base">
+                            {{orderToShow.priority}}
+                        </h3>
+                    </div>
+                    <div class="flex flex-row gap-2 pb-2 text-gray-600">
+                        <p class="w-fit text-base font-bold shrink-0">
+                            Billing address
+                        </p>
+                        <h3 class="text-base">
+                            {{orderToShow.billingAccount.contact[0].contactMedium[1].characteristic.city}}, {{orderToShow.billingAccount.contact[0].contactMedium[1].characteristic.street1}}, {{orderToShow.billingAccount.contact[0].contactMedium[1].characteristic.country}} ({{orderToShow.billingAccount.name}})
+                        </h3>
+                    </div>
+                    <div class="flex flex-row gap-2 pb-2 text-gray-600">
+                        <p class="w-fit text-base font-bold shrink-0">
+                            Email
+                        </p>
+                        <h3 class="text-base">
+                            {{orderToShow.billingAccount.contact[0].contactMedium[0].characteristic.emailAddress}}
+                        </h3>
+                    </div>
+                    <div class="flex flex-row gap-2 pb-2 text-gray-600">
+                        <p class="w-fit text-base font-bold shrink-0">
+                            Date
+                        </p>
+                        <h3 class="text-base">
+                            {{orderToShow?.orderDate | date:'EEEE, dd/MM/yy, HH:mm'}}
+                        </h3>
+                    </div>
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 rounded-lg">
+                        <thead class="text-xs text-gray-700 uppercase  bg-gray-100 ">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-center align-middle">
+                                    Img
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-center align-middle">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-center align-middle">
+                                    Price
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of orderToShow.productOrderItem; track item.id; let idx = $index) {
+                                <tr class="border-b bg-white hover:bg-gray-200">
+                                    <td class="px-6 py-4 text-center align-middle flex justify-center items-center">
+                                        <img class="w-16 object-contain z-10 " src="{{getProductImage(item)}}" alt="Descripción de la imagen">
+                                    </td>
+                                    <td class="px-6 py-4 text-center align-middle">
+                                        {{item.name}}
+                                    </td>
+                                    <td class="px-6 py-4 text-center align-middle">
+                                        {{item.productOfferingPrice.price}} {{item.productOfferingPrice.unit}} {{item.productOfferingPrice.text}}
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
+                    <div class="flex block">
+                       <p class="flex float-left w-1/2 ml-2 text-sm text-gray-500">{{ 'CART_DRAWER._subtotal' | translate }}:</p>
+                       <hr class="h-px my-2 bg-gray-200 border-0">
+                          <div class="flex grid grid-cols-1 grid-flow-row w-1/2">
+                             @for (price of getTotalPrice(orderToShow.productOrderItem); track price) {
+                                <p class="flex block justify-end mr-2 text-sm text-gray-500">{{price.price}} {{price.unit}} {{price.text}}</p>
+                             } @empty {
+                                <p class="flex flex-right text-gray-700 justify-end text-gray-500">0</p>
+                             }
+                          </div>
+                    </div>
                 </div>
             </div>
         </div>

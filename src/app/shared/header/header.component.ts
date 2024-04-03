@@ -4,7 +4,9 @@ import {
   faHandHoldingBox,
   faAddressCard,
   faArrowRightFromBracket,
-  faBoxesStacked
+  faBoxesStacked,
+  faClipboardCheck,
+  faBrain
 } from "@fortawesome/sharp-solid-svg-icons";
 import {LocalStorageService} from "../../services/local-storage.service";
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -175,4 +177,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   protected readonly faAddressCard = faAddressCard;
   protected readonly faArrowRightFromBracket = faArrowRightFromBracket;
   protected readonly faBoxesStacked = faBoxesStacked;
+  protected readonly faClipboardCheck = faClipboardCheck;
+  protected readonly faBrain = faBrain;
 }

@@ -37,6 +37,8 @@ export class UserProfileComponent implements OnInit{
   billToUpdate:any;
   editBill:boolean=false;
   deleteBill:boolean=false;
+  showOrderDetails:boolean=false;
+  orderToShow:any;
   userProfileForm = new FormGroup({
     name: new FormControl(''),
     lastname: new FormControl(''),
@@ -85,6 +87,10 @@ export class UserProfileComponent implements OnInit{
     }
     if(this.deleteBill==true){
       this.deleteBill=false;
+      this.cdr.detectChanges();
+    }
+    if(this.showOrderDetails==true){
+      this.showOrderDetails=false;
       this.cdr.detectChanges();
     }
   }
@@ -302,6 +308,7 @@ export class UserProfileComponent implements OnInit{
     this.cdr.detectChanges();
   }
 
+
   selectOrder(){
     let bill_button = document.getElementById('bill-button')
     let general_button = document.getElementById('general-button')
@@ -350,6 +357,12 @@ export class UserProfileComponent implements OnInit{
   toggleDeleteBill(bill:billingAccountCart){
     this.deleteBill=true;
     this.billToDelete=bill;
+  }
+
+  toggleShowDetails(order:any){
+    console.log(order)
+    this.showOrderDetails=true;
+    this.orderToShow=order;
   }
 
   updateProfile(){
@@ -441,5 +454,28 @@ export class UserProfileComponent implements OnInit{
     this.page=0;
     this.orders=[];
     this.getOrders(0);
+  }
+
+  getTotalPrice(items:any[]){
+    let totalPrice = [];
+    let insertCheck = false;
+    for(let i=0; i<items.length; i++){
+      insertCheck = false;
+      if(totalPrice.length == 0){
+        totalPrice.push(items[i].productOfferingPrice);
+      } else {
+        for(let j=0; j<totalPrice.length; j++){
+          if(items[i].productOfferingPrice.priceType == totalPrice[j].priceType && items[i].productOfferingPrice.unit == totalPrice[j].unit && items[i].productOfferingPrice.text == totalPrice[j].text){
+            totalPrice[j].price=totalPrice[j].price+items[i].productOfferingPrice.price;
+            insertCheck=true;
+          }
+        }
+        if(insertCheck==false){
+          totalPrice.push(items[i].productOfferingPrice);
+          insertCheck=true;
+        }
+      }
+    }
+    return totalPrice
   }
 }
