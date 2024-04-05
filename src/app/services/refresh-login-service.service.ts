@@ -30,7 +30,16 @@ export class RefreshLoginServiceService {
       console.log(aux)
       this.api.getLogin(aux['token']).then(refreshed => {
         this.stopInterval()
-        this.localStorage.setObject('login_items',{"id": refreshed.id, "user": refreshed.username, "email": refreshed.email, "token": refreshed.accessToken,"expire": refreshed.expire, "partyId": aux['partyId'], "roles": refreshed.roles });
+        this.localStorage.setObject('login_items',
+          {"id": refreshed.id,
+          "user": refreshed.username,
+          "email": refreshed.email,
+          "token": refreshed.accessToken,
+          "expire": refreshed.expire,
+          "partyId": aux['partyId'],
+          "roles": refreshed.roles,
+          "organizations": aux['organizations'],
+          "logged_as": aux['logged_as'] });
         console.log('usuario despues')
         console.log(this.localStorage.getObject('login_items') as LoginInfo)
         this.startInterval(((refreshed.expire - moment().unix())-4)*1000, refreshed)

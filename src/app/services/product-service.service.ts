@@ -23,16 +23,7 @@ export class ApiServiceService {
   getProducts(page:any) {
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering?limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;    
 
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any[]>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any[]>(url));
-    }
+    return lastValueFrom(this.http.get<any[]>(url));
   }
 
   getProductsByCategory(ids:Category[],page:any) {
@@ -55,32 +46,13 @@ export class ApiServiceService {
     } else {
       url = `${baseUrl}?${query}`
     }
-
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any[]>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any[]>(url));
-    }
+    return lastValueFrom(this.http.get<any[]>(url));
   }
 
   getProductsByCatalog(catalogId:any,page:any){
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog/${catalogId}/productOffering?lifecycleStatus=Launched&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`
-    console.log(url)
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any[]>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any[]>(url));
-    }
+
+    return lastValueFrom(this.http.get<any[]>(url));
   }
 
   getProductsByCategoryAndCatalog(ids:Category[],catalogId:any,page:any) {
@@ -94,100 +66,43 @@ export class ApiServiceService {
     }    
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog/${catalogId}/productOffering?lifecycleStatus=Launched&${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`;
 
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any[]>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any[]>(url));
-    }
+    return lastValueFrom(this.http.get<any[]>(url));
   }
 
   getProductById(id:any) {
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering/${id}`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any>(url));
-    }
+
+    return lastValueFrom(this.http.get<any>(url));
   }
 
   getProductSpecification(id:any) {
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productSpecification/${id}`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any>(url));
-    }
+
+    return lastValueFrom(this.http.get<any>(url));
   }
 
   getProductPrice(id:any) {
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOfferingPrice/${id}`
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any>(url));
-    }
+
+    return lastValueFrom(this.http.get<any>(url));
   }
 
   getCategories(){
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/category?limit=100`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any[]>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any[]>(url));
-    }
+
+    return lastValueFrom(this.http.get<any[]>(url));
   }
 
   getCategoryById(id:any){
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/category/${id}`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any>(url));
-    }
+
+    return lastValueFrom(this.http.get<any>(url));
   }
 
   getCategoriesByParentId(id:any){
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/category?parentId=${id}`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any[]>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any[]>(url));
-    }
+
+    return lastValueFrom(this.http.get<any[]>(url));
   }
 
   getCatalogs(page:any,filter:any) {
@@ -195,57 +110,25 @@ export class ApiServiceService {
     if(filter!=undefined){
       url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&lifecycleStatus=Active,Launched&body=${filter}`;
     }
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any>(url));
-    }
+
+    return lastValueFrom(this.http.get<any>(url));
   }
 
   getCatalog(id:any){
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog/${id}`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any>(url));
-    } 
+ 
+    return lastValueFrom(this.http.get<any>(url));
   }
 
   getServiceSpec(id:any){    
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/service/serviceSpecification/${id}`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any>(url));
-    } 
+
+    return lastValueFrom(this.http.get<any>(url));
   }
 
   getResourceSpec(id:any){    
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/resource/resourceSpecification/${id}`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return lastValueFrom(this.http.get<any>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any>(url));
-    } 
+ 
+    return lastValueFrom(this.http.get<any>(url));
   }
 }

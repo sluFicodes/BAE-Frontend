@@ -54,7 +54,12 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
 
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      this.partyId=aux.partyId;
+      if(aux.logged_as==aux.id){
+        this.partyId = aux.partyId;
+      } else {
+        let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
+        this.partyId = loggedOrg.partyId
+      }
       this.getInventory();
     }
     let input = document.querySelector('[type=search]')

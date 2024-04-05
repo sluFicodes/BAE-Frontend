@@ -65,12 +65,14 @@
       <div id="userDropdown" class="z-10 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
         <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
           <div>{{username}}</div>
-          <div class="font-medium truncate">{{email}}</div>
+          <div class="font-medium truncate line-clamp-2">{{email}}</div>
         </div>
         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-          <li>
-            <button (click)="goTo('/profile')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faAddressCard" class="mr-2"></fa-icon>{{ 'HEADER._profile' | translate }}</button>
-          </li>
+          @if(loggedAsOrg==false){
+            <li>
+              <button (click)="goTo('/profile')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faAddressCard" class="mr-2"></fa-icon>{{ 'HEADER._profile' | translate }}</button>
+            </li>
+          }
           @if(roles.includes('seller')){
             <li>
               <button (click)="goToMyOfferings()" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faHandHoldingBox" class="mr-2"></fa-icon>{{ 'HEADER._offerings' | translate }}</button>
@@ -84,6 +86,9 @@
           </li>
         </ul>
         <div class="py-1">
+          @if(orgs.length>0){
+            <button data-dropdown-toggle="orgs-dropdown" data-dropdown-placement="left-start" class="flex w-full justify-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faAnglesLeft" class="mr-2"></fa-icon>{{ 'HEADER._change_session' | translate }}</button>
+          }        
           <button (click)="logout();" class="flex w-full justify-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faArrowRightFromBracket" class="mr-2"></fa-icon>{{ 'HEADER._sign_out' | translate }}</button>
         </div>
       </div>
@@ -97,6 +102,22 @@
       <li>
         <a href="http://85.215.243.214:8080/" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faClipboardCheck" class="mr-2"></fa-icon>{{ 'HEADER._ticketing' | translate }}</a>
       </li>
+    </ul>
+  </div>
+  <div id="orgs-dropdown" class="z-10 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
+    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+        @for (org of orgs; track org.id; let idx = $index) {
+          @if(org.id != loginInfo.logged_as || loginInfo.logged_as == loginInfo.id){
+            <li>
+              <button (click)="changeSession(idx,false);hideDropdown('orgs-dropdown');" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faUsers" class="mr-2"></fa-icon>{{ org.name }}</button>
+            </li>
+          }
+        }
+        @if(loggedAsOrg){
+          <li>
+            <button (click)="changeSession(0,true);hideDropdown('orgs-dropdown');" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faUser" class="mr-2"></fa-icon>{{ loginInfo.user }}</button>
+          </li>
+        }
     </ul>
   </div>
 </nav>

@@ -125,7 +125,7 @@
                                 <a (click)="goToProductDetails(prod)" class="cursor-pointer">
                                   <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{prod?.name}}</h5>
                                 </a>
-                                <div class="min-h-19 h-19 line-clamp-2 text-gray-600">{{prod?.description}}</div>
+                                <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600" [data]="prod?.description"></markdown>
                                 <div class="flex w-full justify-between mt-2.5 mb-5 text-gray-500 font-mono">
                                   <div>V: {{prod?.version || 'latest'}}</div>
                                   <div class="flex items-center justify-center rounded-lg">

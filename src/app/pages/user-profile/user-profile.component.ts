@@ -104,7 +104,7 @@ export class UserProfileComponent implements OnInit{
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.token=aux.token;
       this.email=aux.email;
-      this.partyId=aux.partyId;
+      this.partyId = aux.partyId;
       this.getProfile();
     }
     initFlowbite();

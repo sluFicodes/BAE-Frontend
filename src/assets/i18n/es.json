@@ -166,7 +166,8 @@
         "_inventory": "My inventory",
         "_support": "Support",
         "_knowledge": "Knowledge Base",
-        "_ticketing": "Ticketing System"
+        "_ticketing": "Ticketing System",
+        "_change_session": "Change session"
     },
     "PRODUCT_DETAILS": {
         "_back": "Back",

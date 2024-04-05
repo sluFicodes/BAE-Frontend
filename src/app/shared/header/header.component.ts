@@ -6,7 +6,10 @@ import {
   faArrowRightFromBracket,
   faBoxesStacked,
   faClipboardCheck,
-  faBrain
+  faBrain,
+  faAnglesLeft,
+  faUser,
+  faUsers
 } from "@fortawesome/sharp-solid-svg-icons";
 import {LocalStorageService} from "../../services/local-storage.service";
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -48,6 +51,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   showCart:boolean=false;
   is_logged:boolean=false;
   showLogin:boolean=false;
+  loggedAsOrg:boolean=false;
+  loginInfo:any;
+  orgs:any[]=[];
   username:string='';
   email:string='';
   usercharacters:string='';
@@ -67,13 +73,29 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
   async ngOnInit(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    console.log(aux)
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      this.loginInfo=aux;
       this.is_logged=true;
-      this.username=aux.user;
-      this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();
-      this.email=aux.email;
-      for(let i=0;i<aux.roles.length;i++){
-        this.roles.push(aux.roles[i].name)
+      this.orgs=aux.organizations;
+      if(aux.logged_as == aux.id){
+        this.username=aux.user;
+        this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();
+        this.email=aux.email;
+        for(let i=0;i<aux.roles.length;i++){
+          this.roles.push(aux.roles[i].name)
+        }
+      } else {
+        let loggedOrg = this.orgs.find((element: { id: any; }) => element.id == aux.logged_as)
+        console.log('loggedOrg')
+        console.log(loggedOrg)
+        this.loggedAsOrg=true;
+        this.username=loggedOrg.name;
+        this.usercharacters=(loggedOrg.name.slice(0, 2)).toUpperCase();
+        this.email=loggedOrg.description;
+        for(let i=0;i<loggedOrg.roles.length;i++){
+          this.roles.push(loggedOrg.roles[i].name)
+        }
       }
       this.cdr.detectChanges();
     }
@@ -89,10 +111,29 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       if(ev.type === 'LoginProcess') {
         let aux = this.localStorage.getObject('login_items') as LoginInfo;
         if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+          this.loginInfo=aux;
           this.is_logged=true;
-          this.username=aux.user;
-          this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();
-          this.email=aux.email;          
+          this.cdr.detectChanges();
+          this.orgs=aux.organizations;
+          if(aux.logged_as == aux.id){
+            this.username=aux.user;
+            this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();
+            this.email=aux.email;
+            for(let i=0;i<aux.roles.length;i++){
+              this.roles.push(aux.roles[i].name)
+            }
+          } else {
+            let loggedOrg = this.orgs.find((element: { id: any; }) => element.id == aux.logged_as)
+            console.log('loggedOrg')
+            console.log(loggedOrg)
+            this.loggedAsOrg=true;
+            this.username=loggedOrg.name;
+            this.usercharacters=(loggedOrg.name.slice(0, 2)).toUpperCase();
+            this.email=loggedOrg.description;
+            for(let i=0;i<loggedOrg.roles.length;i++){
+              this.roles.push(loggedOrg.roles[i].name)
+            }
+          }
           this.cdr.detectChanges();
         }
       }
@@ -172,6 +213,58 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
+  changeSession(idx:number,exitOrgLogin:boolean){
+    if(exitOrgLogin){
+      this.loginInfo = {"id": this.loginInfo.id,
+      "user": this.loginInfo.user,
+      "email": this.loginInfo.email,
+      "token": this.loginInfo.token,
+      "expire": this.loginInfo.expire,
+      "partyId": this.loginInfo.partyId,
+      "roles": this.loginInfo.roles,
+      "organizations": this.loginInfo.organizations,
+      "logged_as": this.loginInfo.id };
+      this.localStorage.setObject('login_items',this.loginInfo);
+      this.loggedAsOrg=false;
+      this.username=this.loginInfo.user;
+      this.usercharacters=(this.loginInfo.user.slice(0, 2)).toUpperCase();
+      this.email=this.loginInfo.email;
+      this.roles=[];
+      for(let i=0;i<this.loginInfo.roles.length;i++){
+        this.roles.push(this.loginInfo.roles[i].name)
+      }
+      this.cdr.detectChanges();
+    } else {
+      this.loginInfo = {"id": this.loginInfo.id,
+      "user": this.loginInfo.user,
+      "email": this.loginInfo.email,
+      "token": this.loginInfo.token,
+      "expire": this.loginInfo.expire,
+      "partyId": this.loginInfo.partyId,
+      "roles": this.loginInfo.roles,
+      "organizations": this.loginInfo.organizations,
+      "logged_as": this.orgs[idx].id };
+      this.localStorage.setObject('login_items',this.loginInfo);
+      this.loggedAsOrg=true;
+      this.username=this.orgs[idx].name;
+      this.usercharacters=(this.orgs[idx].name.slice(0, 2)).toUpperCase();
+      this.email=this.orgs[idx].description;
+      this.roles=[];
+      for(let i=0;i<this.orgs[idx].roles.length;i++){
+        this.roles.push(this.orgs[idx].roles[i].name)
+      }
+      this.cdr.detectChanges();
+    }
+    initFlowbite();
+  }
+
+  hideDropdown(dropdownId:any){
+    const dropdown = document.getElementById(dropdownId);
+    if (dropdown) {
+      dropdown.classList.add('hidden');
+    }
+  }
+
   protected readonly faCartShopping = faCartShopping;
   protected readonly faHandHoldingBox = faHandHoldingBox;
   protected readonly faAddressCard = faAddressCard;
@@ -179,4 +272,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   protected readonly faBoxesStacked = faBoxesStacked;
   protected readonly faClipboardCheck = faClipboardCheck;
   protected readonly faBrain = faBrain;
+  protected readonly faAnglesLeft = faAnglesLeft;
+  protected readonly faUser = faUser;
+  protected  readonly faUsers = faUsers;
 }
