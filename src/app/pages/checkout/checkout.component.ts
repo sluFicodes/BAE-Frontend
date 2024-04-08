@@ -226,7 +226,13 @@ export class CheckoutComponent implements OnInit {
       this.contact.email = aux.email;
       this.contact.username = aux.username;
     }
-    this.relatedParty = aux.partyId;
+    if(aux.logged_as==aux.id){
+      this.relatedParty = aux.partyId;
+    } else {
+      let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
+      this.relatedParty = loggedOrg.partyId
+    }
+    
     console.log('--- Login Info ---')
     console.log(aux)
 

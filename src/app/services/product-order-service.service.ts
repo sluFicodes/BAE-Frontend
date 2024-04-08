@@ -22,29 +22,25 @@ export class ProductOrderService {
   postProductOrder(prod:any){
     //POST - El item va en el body de la petición
     let url = `${ProductOrderService.BASE_URL}:${ProductOrderService.API_PORT}${ProductOrderService.API_ORDERING}/productOrder`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
-      }
-      return this.http.post<any>(url, prod, header);
-    } else {
-      return this.http.post<any>(url, prod);
-    }    
+    return this.http.post<any>(url, prod);
   }
 
-  getProductOrders(partyId:any,page:any){
+  getProductOrders(partyId:any,page:any,filters:any[],date:any){
     let url = `${ProductOrderService.BASE_URL}:${ProductOrderService.API_PORT}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Customer`;
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      var header = {
-        headers: new HttpHeaders()
-          .set('Authorization',  `Bearer `+aux.token)
+    let status=''
+    if(filters.length>0){
+      for(let i=0; i < filters.length; i++){
+        if(i==filters.length-1){
+          status=status+filters[i]
+        } else {
+          status=status+filters[i]+','
+        }    
       }
-      return lastValueFrom(this.http.get<any[]>(url,header));
-    } else {
-      return lastValueFrom(this.http.get<any[]>(url));
+      url=url+'&state='+status;
     }
+    if(date!=undefined){
+      url=url+'&orderDate>'+date;
+    }
+    return lastValueFrom(this.http.get<any[]>(url));
   }
 }

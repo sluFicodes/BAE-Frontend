@@ -48,7 +48,14 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
     //initFlowbite();
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    this.relatedParty=aux.partyId;
+    if(aux.logged_as==aux.id){
+      this.relatedParty = aux.partyId;
+    } else {
+      let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
+      console.log('loggedorg')
+      console.log(loggedOrg)
+      this.relatedParty = loggedOrg.partyId
+    }
     this.loading=true;
     this.showBackDrop=true;
     this.cartService.getShoppingCart().then(data => {

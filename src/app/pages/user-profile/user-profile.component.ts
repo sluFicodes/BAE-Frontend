@@ -13,6 +13,7 @@ import { phoneNumbers, countries } from '../../models/country.const'
 import { initFlowbite } from 'flowbite';
 import {EventMessageService} from "../../services/event-message.service";
 import * as moment from 'moment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-user-profile',
@@ -21,6 +22,7 @@ import * as moment from 'moment';
 })
 export class UserProfileComponent implements OnInit{
   loading: boolean = false;
+  loadingOrders: boolean = false;
   show_profile: boolean = true;
   show_orders: boolean = false;
   show_billing: boolean = false;
@@ -35,6 +37,8 @@ export class UserProfileComponent implements OnInit{
   billToUpdate:any;
   editBill:boolean=false;
   deleteBill:boolean=false;
+  showOrderDetails:boolean=false;
+  orderToShow:any;
   userProfileForm = new FormGroup({
     name: new FormControl(''),
     lastname: new FormControl(''),
@@ -46,8 +50,15 @@ export class UserProfileComponent implements OnInit{
     city: new FormControl(''),
     country: new FormControl(''),
   });
+  dateRange = new FormControl();
+  selectedDate:any;
   countries: any[] = countries;
   preferred:boolean=false;
+  loading_more: boolean = false;
+  page_check:boolean = true;
+  page: number=0;
+  ORDER_LIMIT: number = environment.ORDER_LIMIT;
+  filters: any[]=[];
 
   constructor(
     private localStorage: LocalStorageService,
@@ -78,17 +89,25 @@ export class UserProfileComponent implements OnInit{
       this.deleteBill=false;
       this.cdr.detectChanges();
     }
+    if(this.showOrderDetails==true){
+      this.showOrderDetails=false;
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnInit() {
     this.loading=true;
+    let today = new Date();
+    today.setMonth(today.getMonth()-1);
+    this.selectedDate = today.toISOString();
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.token=aux.token;
       this.email=aux.email;
-      this.partyId=aux.partyId;
+      this.partyId = aux.partyId;
       this.getProfile();
     }
+    initFlowbite();
   }
 
   getProfile(){
@@ -104,6 +123,7 @@ export class UserProfileComponent implements OnInit{
     this.show_profile=true;
     this.show_orders=false;
     this.cdr.detectChanges();
+    initFlowbite();
   }
 
   getBilling(){
@@ -171,6 +191,7 @@ export class UserProfileComponent implements OnInit{
     this.show_profile=false;
     this.show_orders=false;
     this.cdr.detectChanges();
+    initFlowbite();
   }
 
   getProductImage(prod:ProductOffering) {
@@ -178,41 +199,67 @@ export class UserProfileComponent implements OnInit{
     return images.length > 0 ? images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
-  getOrders(){
-    this.selectOrder();    
+  goToOrders(){
+    this.selectOrder();
+    this.loadingOrders=true;
+    this.page=0;
+    this.orders=[];
+    this.filters=[];
+    this.getOrders(0);
+  }
+
+  getOrders(size:number){        
     if(this.partyId!=''){
-      this.orderService.getProductOrders(this.partyId,0).then(orders=> {
-        this.orders=[];
-        for(let i=0;i<orders.length;i++){
-          let items:any[] = [];
+      this.orderService.getProductOrders(this.partyId,this.page,this.filters,this.selectedDate).then(orders=> {
+        if(orders.length<this.ORDER_LIMIT){
+          this.page_check=false;
+          this.cdr.detectChanges();
+        }else{
+          this.page_check=true;
+          this.cdr.detectChanges();
+        }
+        if(orders.length==0){
+          this.loadingOrders=false;
+        }
+        //this.orders=[];
+        for(let i=0;i<orders.length;i++){          
           this.orders.push(orders[i]);
-          for(let j=0;j<orders[i].productOrderItem.length;j++){
-            this.api.getProductById(orders[i].productOrderItem[j].id).then(item => {
-              this.api.getProductSpecification(item.productSpecification.id).then(spec => {
-                this.api.getProductPrice(item.productOfferingPrice[0].id).then(prodprice => {
-                  items.push({
-                    id: item.id,
-                    name: item.name,
-                    category: item.category,
-                    description: item.description,
-                    lastUpdate: item.lastUpdate,
-                    attachment: spec.attachment,
-                    productOfferingPrice: {
-                      "price": prodprice.price.value,
-                      "unit": prodprice.price.unit,
-                      "priceType": prodprice.priceType,
-                      "text": prodprice.unitOfMeasure != undefined ? '/'+prodprice.unitOfMeasure.units : prodprice.recurringChargePeriodType
-                    },
-                    productSpecification: item.productSpecification,
-                    productOfferingTerm: item.productOfferingTerm,
-                    version: item.version
+        }
+        for(let i=size;i<this.orders.length;i++){
+          let items:any[] = [];
+          this.accountService.getBillingAccountById(this.orders[i].billingAccount.id).then(bill => {
+            for(let j=0;j<this.orders[i].productOrderItem.length;j++){
+              this.api.getProductById(this.orders[i].productOrderItem[j].id).then(item => {
+                this.api.getProductSpecification(item.productSpecification.id).then(spec => {
+                  this.api.getProductPrice(item.productOfferingPrice[0].id).then(prodprice => {
+                      items.push({
+                        id: item.id,
+                        name: item.name,
+                        category: item.category,
+                        description: item.description,
+                        lastUpdate: item.lastUpdate,
+                        attachment: spec.attachment,
+                        productOfferingPrice: {
+                          "price": prodprice.price.value,
+                          "unit": prodprice.price.unit,
+                          "priceType": prodprice.priceType,
+                          "text": prodprice.unitOfMeasure != undefined ? '/'+prodprice.unitOfMeasure.units : prodprice.recurringChargePeriodType
+                        },
+                        productSpecification: item.productSpecification,
+                        productOfferingTerm: item.productOfferingTerm,
+                        version: item.version
+                      })
+                      this.loadingOrders=false;
                   })
                 })
               })
-            })
-          }
-          this.orders[i].productOrderItem=items;
+            }
+            this.orders[i]['billingAccount']=bill;
+            this.orders[i].productOrderItem=items;
+          })
+          
         }
+        console.log('--- ORDERS ---')
         console.log(this.orders)
       })
     }
@@ -220,8 +267,10 @@ export class UserProfileComponent implements OnInit{
     this.show_billing=false;
     this.show_profile=false;
     this.show_orders=true;
-    this.loading=false;
+    this.loading=false;    
+    this.loading_more=false; 
     this.cdr.detectChanges();
+    initFlowbite();
   }
 
   selectGeneral(){
@@ -258,6 +307,7 @@ export class UserProfileComponent implements OnInit{
     
     this.cdr.detectChanges();
   }
+
 
   selectOrder(){
     let bill_button = document.getElementById('bill-button')
@@ -309,6 +359,12 @@ export class UserProfileComponent implements OnInit{
     this.billToDelete=bill;
   }
 
+  toggleShowDetails(order:any){
+    console.log(order)
+    this.showOrderDetails=true;
+    this.orderToShow=order;
+  }
+
   updateProfile(){
     let profile = {
       "id": this.partyId,
@@ -345,5 +401,81 @@ export class UserProfileComponent implements OnInit{
     //this.userProfileForm.controls['birthdate'].setValue(profile.birthDate);
     this.userProfileForm.controls['city'].setValue(profile.placeOfBirth);
     this.userProfileForm.controls['country'].setValue(profile.countryOfBirth);
+  }
+
+  async next(){
+    this.loadingOrders=true;
+    let existingOrderSize=this.orders.length;
+    this.loading_more=true;
+    this.page=this.page+this.ORDER_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getOrders(existingOrderSize);
+  }
+
+  onStateFilterChange(filter:string){
+    this.loadingOrders=true;
+    const index = this.filters.findIndex(item => item === filter);
+    if (index !== -1) {
+      this.filters.splice(index, 1);
+      console.log('elimina filtro')
+      console.log(this.filters)
+    } else {
+      console.log('añade filtro')
+      console.log(this.filters)
+      this.filters.push(filter)
+    }
+    this.page=0;
+    this.orders=[];
+    this.getOrders(0);
+  }
+
+  filterOrdersByDate(){
+    if(this.dateRange.value == 'month'){
+      let today = new Date();
+      today.setDate(1);
+      today.setMonth(today.getMonth()-1);
+      this.selectedDate = today.toISOString();
+    } else if (this.dateRange.value == 'months'){
+      let today = new Date();
+      today.setDate(1);
+      today.setMonth(today.getMonth()-3);
+      this.selectedDate = today.toISOString();
+    } else if(this.dateRange.value == 'year'){
+      let today = new Date();
+      today.setDate(1);
+      today.setMonth(0);
+      today.setFullYear(today.getFullYear()-1);
+      this.selectedDate = today.toISOString();
+    } else {
+      this.selectedDate = undefined
+    }
+    console.log(this.selectedDate)
+    this.page=0;
+    this.orders=[];
+    this.getOrders(0);
+  }
+
+  getTotalPrice(items:any[]){
+    let totalPrice = [];
+    let insertCheck = false;
+    for(let i=0; i<items.length; i++){
+      insertCheck = false;
+      if(totalPrice.length == 0){
+        totalPrice.push(items[i].productOfferingPrice);
+      } else {
+        for(let j=0; j<totalPrice.length; j++){
+          if(items[i].productOfferingPrice.priceType == totalPrice[j].priceType && items[i].productOfferingPrice.unit == totalPrice[j].unit && items[i].productOfferingPrice.text == totalPrice[j].text){
+            totalPrice[j].price=totalPrice[j].price+items[i].productOfferingPrice.price;
+            insertCheck=true;
+          }
+        }
+        if(insertCheck==false){
+          totalPrice.push(items[i].productOfferingPrice);
+          insertCheck=true;
+        }
+      }
+    }
+    return totalPrice
   }
 }

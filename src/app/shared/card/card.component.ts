@@ -437,9 +437,9 @@ export class CardComponent implements OnInit, AfterViewInit {
     let char_button = document.getElementById('button-char')
     let terms_button = document.getElementById('button-terms')
 
-    this.selectTag(price_elem,'hidden')
-    this.unselectTag(char_elem,'hidden')
-    this.unselectTag(terms_elem,'hidden')
+    this.unselectTag(price_elem,'hidden')
+    this.selectTag(char_elem,'hidden')
+    this.selectTag(terms_elem,'hidden')
 
     this.selectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
     this.unselectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
@@ -456,9 +456,9 @@ export class CardComponent implements OnInit, AfterViewInit {
     let char_button = document.getElementById('button-char')
     let terms_button = document.getElementById('button-terms')
 
-    this.selectTag(char_elem,'hidden')
-    this.unselectTag(price_elem,'hidden')
-    this.unselectTag(terms_elem,'hidden')
+    this.unselectTag(char_elem,'hidden')
+    this.selectTag(price_elem,'hidden')
+    this.selectTag(terms_elem,'hidden')
 
     this.selectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
     this.unselectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
@@ -475,9 +475,9 @@ export class CardComponent implements OnInit, AfterViewInit {
     let char_button = document.getElementById('button-char')
     let terms_button = document.getElementById('button-terms')
 
-    this.selectTag(terms_elem,'hidden')
-    this.unselectTag(price_elem,'hidden')
-    this.unselectTag(char_elem,'hidden')
+    this.unselectTag(terms_elem,'hidden')
+    this.selectTag(price_elem,'hidden')
+    this.selectTag(char_elem,'hidden')
 
     this.selectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
     this.unselectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')

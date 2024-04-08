@@ -25,7 +25,9 @@ export interface LoginInfo {
   expire: number,
   partyId: string,
   username: string,
-  roles: any[]
+  roles: any[],
+  organizations: any[],
+  logged_as: string
 }
 
 export interface productSpecCharacteristicValueCart {

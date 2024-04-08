@@ -33,7 +33,7 @@ import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.compo
 import { BillingAddressComponent } from "./pages/checkout/billing-address/billing-address.component";
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
-import { AuthInterceptor } from '../interceptors/auth';
+import { RequestInterceptor } from './interceptors/requests-interceptor';
 import { MarkdownModule } from 'ngx-markdown';
 
 
@@ -83,7 +83,13 @@ import { MarkdownModule } from 'ngx-markdown';
     CategoriesPanelComponent,
 
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestInterceptor,
+      multi: true,
+    }
+  ],
   exports: [
   ],
   bootstrap: [AppComponent]
