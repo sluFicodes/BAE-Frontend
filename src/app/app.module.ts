@@ -12,6 +12,7 @@ import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
 import { ProductInventoryComponent } from "./pages/product-inventory/product-inventory.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
+import { SellerOfferingsComponent } from "./pages/seller-offerings/seller-offerings.component";
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from "./shared/shared.module";
 import { AppRoutingModule } from './app-routing.module';
@@ -35,6 +36,10 @@ import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 import { CheckoutComponent } from "./pages/checkout/checkout.component";
 import { RequestInterceptor } from './interceptors/requests-interceptor';
 import { MarkdownModule } from 'ngx-markdown';
+import { InventoryProductsComponent } from './pages/product-inventory/inventory-items/inventory-products/inventory-products.component';
+import { UserInfoComponent } from './pages/user-profile/profile-sections/user-info/user-info.component';
+import { BillingInfoComponent } from './pages/user-profile/profile-sections/billing-info/billing-info.component';
+import { OrderInfoComponent } from './pages/user-profile/profile-sections/order-info/order-info.component';
 
 
 @NgModule({
@@ -60,7 +65,12 @@ import { MarkdownModule } from 'ngx-markdown';
     ShoppingCartComponent,
     ProductInventoryComponent,
     BillingAccountFormComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    SellerOfferingsComponent,
+    InventoryProductsComponent,
+    UserInfoComponent,
+    BillingInfoComponent,
+    OrderInfoComponent
   ],
   imports: [
     BrowserModule,

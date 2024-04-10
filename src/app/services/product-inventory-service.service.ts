@@ -37,5 +37,10 @@ export class ProductInventoryServiceService {
     }
     return lastValueFrom(this.http.get<any[]>(url));
   }
+
+  updateProduct(product:any,id:any){
+    let url = `${ProductInventoryServiceService.BASE_URL}:${ProductInventoryServiceService.API_PORT}${ProductInventoryServiceService.API_INVENTORY}/product/${id}`;   
+    return this.http.patch<any>(url, product);
+  }
   
 }

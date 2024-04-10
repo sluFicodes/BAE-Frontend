@@ -4,6 +4,7 @@ import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
 import { initFlowbite } from 'flowbite';
 import { PriceServiceService } from 'src/app/services/price-service.service';
+import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved} from "@fortawesome/pro-solid-svg-icons";
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
@@ -21,10 +22,19 @@ export class ProductDetailsComponent implements OnInit {
   categories: any[] | undefined  = [];
   price: string = '';
   images: AttachmentRefOrValue[]  = [];
+  attatchments: AttachmentRefOrValue[]  = [];
   prodSpec:ProductSpecification = {};
   complianceProf:any[] = [];
   serviceSpecs:any[] = [];
   resourceSpecs:any[]=[];
+  protected readonly faScaleBalanced = faScaleBalanced;
+  protected readonly faArrowProgress = faArrowProgress;
+  protected readonly faArrowRightArrowLeft = faArrowRightArrowLeft;
+  protected readonly faObjectExclude = faObjectExclude;
+  protected readonly faSwap = faSwap;
+  protected readonly faGlobe = faGlobe;
+  protected readonly faBook = faBook;
+  protected readonly faShieldHalved = faShieldHalved;
 
   constructor(
     private route: ActivatedRoute,
@@ -88,6 +98,7 @@ export class ProductDetailsComponent implements OnInit {
           productOfferingPrice: prices,
           productSpecification: prod.productSpecification,
           productOfferingTerm: prod.productOfferingTerm,
+          serviceLevelAgreement: prod.serviceLevelAgreement,
           version: prod.version
         }
         this.category = this.productOff?.category?.at(0)?.name ?? 'none';
@@ -95,6 +106,7 @@ export class ProductDetailsComponent implements OnInit {
         this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
           this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
         this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
+        this.attatchments = this.productOff?.attachment?.filter(item => item.attachmentType != 'Picture') ?? [];
         for(let z=0; z < this.complianceProf.length; z++){
           if(this.prodSpec.productSpecCharacteristic != undefined){
             let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === this.complianceProf[z].id));

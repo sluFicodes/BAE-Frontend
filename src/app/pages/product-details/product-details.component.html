@@ -28,7 +28,7 @@
     <!-- START HEADER CARD -->
     <div class="w-full h-[320px] mb-4 bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-secondary-50 border grid grid-cols-60/40">
 
-        <div class="grid grid-rows-5 p-4 md:p-8 h-[320px]">
+        <div class="grid grid-rows-5 p-4 md:p-8 h-full">
             <div class="mt-2">
                 <a href="#">
                 <h5 class="md:text-3xl lg:text-4xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{productOff?.name}}</h5>
@@ -69,149 +69,279 @@
                 }
             </div>
         </div>
-        <div class="overflow-hidden flex justify-center items-center bg-white">
+        <div class="overflow-hidden flex justify-center items-center bg-white rounded-r-lg h-[318px]">
             <img class="rounded-r-lg h-5/6 w-5/6 object-contain" src="{{getProductImage()}}" alt="product image" />
         </div>
     </div>
 <!-- END HEADER CARD -->
 
-    <div class="w-full h-full bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-secondary-50 border">
-        <div class="w-full bg-secondary-50/95 dark:bg-white/95 rounded-lg">
-            <ul class="hidden text-base font-medium text-center text-gray-500 rounded-lg sm:flex dark:text-gray-400" id="detailsTab" data-tabs-toggle="#detailsTabContent" role="tablist">
-                <li class="w-full">
-                    <button id="info-tab" data-tabs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="true" class="w-full inline-block p-4 text-blue-600 dark:text-blue-500">{{ 'PRODUCT_DETAILS._details' | translate }}</button>
-                </li>
-                <li class="w-full">
-                    <button id="chars-tab" data-tabs-target="#chars" type="button" role="tab" aria-controls="chars" aria-selected="false" class="w-full inline-block p-4 hover:text-gray-600 dark:hover:text-gray-300">{{ 'PRODUCT_DETAILS._chars' | translate }}</button>
-                </li>
-                <li class="w-full">
-                    <button id="attachments-tab" data-tabs-target="#attachments" type="button" role="tab" aria-controls="attachments" aria-selected="false" class="w-full inline-block p-4 hover:text-gray-600 dark:hover:text-gray-300">{{ 'PRODUCT_DETAILS._attach' | translate }}</button>
-                </li>
-                <li class="w-full">
-                    <button id="agreements-tab" data-tabs-target="#agreements" type="button" role="tab" aria-controls="agreements" aria-selected="false" class="w-full inline-block p-4 hover:text-gray-600 dark:hover:text-gray-300">{{ 'PRODUCT_DETAILS._agreements' | translate }}</button>
-                </li>
-                <li class="w-full">
-                    <button id="relationships-tab" data-tabs-target="#relationships" type="button" role="tab" aria-controls="relationships" aria-selected="false" class="w-full inline-block p-4 hover:text-gray-600 dark:hover:text-gray-300">{{ 'PRODUCT_DETAILS._relationships' | translate }}</button>
-                </li>
-            </ul>
-            <div id="detailsTabContent" class="border-t border-gray-300 bg-secondary-50/95 dark:bg-white/95 rounded-lg">
-                <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4 grid grid-cols-2 gap-14" id="info" role="tabpanel" aria-labelledby="info-tab">
-                    <div>
-                        <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'CARD._full_desc' | translate }}:</h5>
-                        <div class="min-h-19 dark:text-gray-600">
-                            <markdown class="pt-2 dark:text-gray-600" [data]="productOff?.description"></markdown>
-                            @if(serviceSpecs.length > 0){
-                                <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PRODUCT_DETAILS._service_spec' | translate }}:</h5>
-                                <ul class="max-w-md space-y-1 list-disc list-inside dark:text-gray-600">
-                                    @for(service of serviceSpecs; track service.id){
-                                        <li><span class="font-bold">{{service.name}}: </span> {{service.description}}</li>
-                                    }
-                                </ul>
-                            }
-                            @if(resourceSpecs.length > 0){
-                                <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PRODUCT_DETAILS._resource_spec' | translate }}:</h5>
-                                <ul class="max-w-md space-y-1 list-disc list-inside dark:text-gray-600">
-                                    @for(resource of resourceSpecs; track resource.id){
-                                        <li><span class="font-bold">{{resource.name}}: </span> {{resource.description}}</li>
-                                    }
-                                </ul>
-                            }
-                        </div>
-                    </div>
-                    <div>
-                        <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'CARD._extra_info' | translate }}:</h5>
-                        <div class="grid grid-cols-2 gap-4">
-                          <ul class="max-w-md space-y-1 list-disc list-inside dark:text-gray-600">
-                            <li>{{ 'CARD._offer_version' | translate }}: v{{productOff?.version}}</li>
-                            <li>{{ 'CARD._product_name' | translate }}: {{prodSpec.name}}</li>
-                            <li>{{ 'CARD._brand' | translate }}: {{prodSpec.brand}}</li>
-                          </ul>
-                          <ul class="max-w-md space-y-1 list-disc list-inside dark:text-gray-600">
-                            <li>{{ 'CARD._last_update' | translate }}: {{productOff?.lastUpdate | date:'dd/MM/yy, HH:mm'}}</li>
-                            <li>{{ 'CARD._product_version' | translate }}: v{{prodSpec.version}}</li>
-                            <li>{{ 'CARD._id_number' | translate }}: XX</li>
-                          </ul>
-                        </div>
-                        <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'CARD._comp_profile' | translate }}:</h5>
-                        <ul class="max-w-md space-y-1 list-disc list-inside dark:text-gray-600">
-                          @for (char of complianceProf; track char.id) {
-                            @if (char.href == '#') {
-                                <li>{{char.name}}: {{char.value}}</li>
-                            } @else {
-                                <li>{{char.name}}: <a href="{{char.href}}">{{char.value}}</a></li>
-                            }
-                          }
-                        </ul>
-                    </div>
-
-                </div>
-                <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4 w-full" id="chars" role="tabpanel" aria-labelledby="chars-tab">
-                    @for (char of prodSpec.productSpecCharacteristic; track char.id) {
-                        <div class="min-h-19 pb-2">
-                            <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{char.name}}:</h5>
-                            @for (val of char?.productSpecCharacteristicValue; track val.value) {
-                                @if (val?.isDefault == true) {
-                                    <div class="flex items-center">
-                                        <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium dark:text-gray-600">{{val.value}}</label>
-                                    </div>
+    <div class="w-full h-full bg-secondary-50 rounded-lg p-12 dark:bg-white dark:border-gray-700 border-secondary-50 border">
+        <div class="min-h-19">
+            <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-4">Description</h2>
+            <markdown [data]="productOff?.description"></markdown>
+            
+            <div class="pb-2">
+                @if(serviceSpecs.length > 0){
+                    <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'PRODUCT_DETAILS._service_spec' | translate }}:</h5>
+                    @for(service of serviceSpecs; track service.id){
+                        <p class="pl-4"><b>{{service.name}}</b>:  {{service.description}}</p>
+                    }
+                }
+            </div>
+            <div class="pb-2">
+                @if(resourceSpecs.length > 0){
+                    <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'PRODUCT_DETAILS._resource_spec' | translate }}:</h5>
+                    @for(resource of resourceSpecs; track resource.id){
+                        <p class="pl-4"><b>{{resource.name}}</b>: {{resource.description}}</p>
+                    }
+                }
+            </div>
+            <div class="pb-2">
+                <!--<h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'CARD._comp_profile' | translate }}:</h5>
+                @for (char of complianceProf; track char.id) {
+                    @if (char.href == '#') {
+                        <p class="pl-4"><b>{{char.name}}</b>: {{char.value}}</p>
+                    } @else {
+                        <p class="pl-4"><b>{{char.name}}</b>: <a href="{{char.href}}">{{char.value}}</a></p>
+                    }
+                }-->
+        </div>
+        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'CARD._comp_profile' | translate }}</h2>
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap -mx-4">
+                @for (char of complianceProf; track char.id) {
+                    <div class="w-1/3 px-4 mb-8">                
+                        <div class="border border-gray-200 rounded-lg shadow bg-white shadow-md p-8 h-full">
+                            <h3 class="text-2xl font-bold mb-4">{{char.name}}</h3>                                
+                            <div class="flex justify-between">
+                                @if (char.href == '#') {
+                                    <p class="mb-2 font-normal pl-4 text-gray-700">{{char.value}}</p>
                                 } @else {
-                                    <div class="flex items-center">
-                                        <input disabled id="disabled-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="disabled-checkbox" class="ms-2 text-sm font-medium dark:text-gray-600">{{val.value}}</label>
-                                    </div>
+                                    <a class="mb-2 font-normal pl-4 text-primary-100" target="_blank" href="{{char.href}}">{{char.value}}</a>
                                 }
-                            }
+                                @if(char.name == 'EU Cloud Rulebook'){
+                                    <fa-icon [icon]="faBook" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                } @else if(char.name == 'EU Cloud Security'){
+                                    <fa-icon [icon]="faShieldHalved" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                } @else {
+                                    <fa-icon [icon]="faGlobe" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                }
+                                
+                            </div>
                         </div>
-                    } @empty {
-                        <div class="min-h-19 dark:text-gray-600 text-center">{{ 'PRODUCT_DETAILS._no_chars' | translate }}.</div>
-                    }
-                </div>
-                <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="attachments" role="tabpanel" aria-labelledby="attachments-tab">
-                    <div class="min-h-19 dark:text-gray-600 text-center">{{ 'PRODUCT_DETAILS._no_attach' | translate }}.</div>
-                </div>
-                <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="agreements" role="tabpanel" aria-labelledby="agreements-tab">
-                    <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PRODUCT_DETAILS._license' | translate }}:</h5>
-                    <p class="mb-2 font-normal text-gray-700">{{productOff?.productOfferingTerm?.at(0)?.name}}</p>
-                    <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PRODUCT_DETAILS._sla' | translate }}:</h5>
-                    <p class="mb-2 font-normal text-gray-700">{{ 'PRODUCT_DETAILS._no_sla' | translate }}.</p>
-                    <div class="grid grid-flow-col auto-cols-auto justify-items-center p-2">
-                    @for (price of productOff?.productOfferingPrice; track price.id) {
-                        @if (price.priceType == 'recurring') {
-                            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
-                                <div class="bg-green-500 rounded-t-lg w-full">
-                                    <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
-                                </div>
-                                <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
-                                <p class="flex justify-center font-normal text-gray-700">/{{price.recurringChargePeriodType}}</p>
-                                <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
-                            </div>
-                        } @else if (price.priceType == 'usage') {
-                            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
-                                <div class="bg-yellow-300 rounded-t-lg w-full">
-                                    <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
-                                </div>
-                                <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
-                                <p class="flex justify-center font-normal text-gray-700">/{{price.unitOfMeasure?.units}}</p>
-                                <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
-                            </div>
-                        } @else {
-                            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
-                                <div class="bg-blue-500 rounded-t-lg w-full">
-                                    <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
-                                </div>
-                                <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
-                                <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
-                            </div>
-                        }
-                    }
-                </div>
-                </div>
-                <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="relationships" role="tabpanel" aria-labelledby="relationships-tab">
-                    <div class="min-h-19 dark:text-gray-600 text-center">{{ 'PRODUCT_DETAILS._no_relatioships' | translate }}.</div>
-                </div>
+                    </div>
+                }
             </div>
         </div>
+
+        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product pricing</h2>
+        <div class="grid grid-flow-col auto-cols-auto justify-items-center p-2">
+        @for (price of productOff?.productOfferingPrice; track price.id) {
+            @if (price.priceType == 'recurring') {
+                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                    <div class="bg-green-500 rounded-t-lg w-full">
+                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
+                    </div>
+                    <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                    <p class="flex justify-center font-normal text-gray-700">/{{price.recurringChargePeriodType}}</p>
+                    <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                </div>
+            } @else if (price.priceType == 'usage') {
+                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                    <div class="bg-yellow-300 rounded-t-lg w-full">
+                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                    </div>
+                    <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                    <p class="flex justify-center font-normal text-gray-700">/{{price.unitOfMeasure?.units}}</p>
+                    <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                </div>
+            } @else {
+                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                    <div class="bg-blue-500 rounded-t-lg w-full">
+                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                    </div>
+                    <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                    <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                </div>
+            }
+        }
+        </div>
+        
+        <!--@if(prodSpec.productSpecCharacteristic != undefined && prodSpec.productSpecCharacteristic.length>0){-->
+            <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product characteristics</h2>
+                <div class="container mx-auto px-4">
+                    <div class="flex flex-wrap -mx-4">
+                        @for (char of prodSpec.productSpecCharacteristic; track char.id; let idx = $index) {
+                            <div class="w-1/3 px-4 mb-8">                
+                                <div class="border border-gray-200 rounded-lg shadow bg-white shadow-md p-8 h-full">
+                                    <h3 class="text-2xl font-bold mb-4">{{char.name}}</h3>
+                                    @for (val of char?.productSpecCharacteristicValue; track val.value) {
+                                        @if (val?.isDefault == true) {
+                                            <div class="flex items-center pl-4">
+                                                <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
+                                                <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium dark:text-gray-600 text-wrap break-all">{{val.value}}</label>
+                                            </div>
+                                        } @else {
+                                            <div class="flex items-center pl-4">
+                                                <input disabled id="disabled-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
+                                                <label for="disabled-checkbox" class="ms-2 text-sm font-medium dark:text-gray-600 text-wrap break-all">{{val.value}}</label>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        } @empty {
+                            <div class="flex justify-center items-center w-full">
+                                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
+                                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                  </svg>
+                                  <span class="sr-only">Info</span>
+                                  <p class="text-center">
+                                    {{ 'PRODUCT_DETAILS._no_chars' | translate }}
+                                  </p>
+                                </div>
+                              </div>
+                        }
+                    </div>
+                </div>
+                <!--}-->
+
+        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product attachments</h2>
+        @if(attatchments.length>0){            
+            @for (att of attatchments; track att.id) {
+                <p class="mb-2 font-normal pl-4 text-gray-700">{{att.name}}: {{att.description}}</p>
+            }
+        } @else {
+            <div class="flex justify-center items-center w-full">
+                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
+                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <p class="text-center">
+                    {{ 'PRODUCT_DETAILS._no_attach' | translate }}
+                  </p>
+                </div>
+              </div>
+        }
+
+        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._license' | translate }}</h2>
+        @if(productOff?.productOfferingTerm?.at(0)?.name){            
+            <div class="container mx-auto px-4">
+                <div class="border border-gray-200 rounded-lg shadow bg-white p-8">
+                    <div class="grid grid-cols-80/20 pb-4 h-1/4">
+                        <div class="flex justify-start">
+                            <h2 class="text-gray-900 text-3xl font-extrabold mb-2">{{productOff?.productOfferingTerm?.at(0)?.name}}</h2>
+                        </div>
+                        <div class="flex justify-end">
+                            <fa-icon [icon]="faScaleBalanced" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                        </div>
+                    </div>
+                    
+                    <p class="h-2/4 text-lg font-normal text-gray-500 mb-4">{{productOff?.productOfferingTerm?.at(0)?.description}}</p>
+                </div>
+            </div>
+
+        } @else {
+            <div class="flex justify-center items-center w-full">
+                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
+                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <p class="text-center">
+                    {{ 'PRODUCT_DETAILS._no_license' | translate }}
+                  </p>
+                </div>
+              </div>
+        }
+
+        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._sla' | translate }}</h2>
+        @if(productOff?.serviceLevelAgreement){            
+            <p class="mb-2 pl-4 font-normal text-gray-700">{{productOff?.serviceLevelAgreement?.name}}.</p>
+        } @else {
+            <div class="flex justify-center items-center w-full">
+                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
+                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <p class="text-center">
+                    {{ 'PRODUCT_DETAILS._no_sla' | translate }}
+                  </p>
+                </div>
+              </div>
+        }
+
+        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product relationships</h2>
+        @if(prodSpec.productSpecificationRelationship != undefined && prodSpec.productSpecificationRelationship.length>0){            
+            <div class="container mx-auto px-4">
+                <div class="flex flex-wrap -mx-4">
+                    @for (rel of prodSpec.productSpecificationRelationship; track rel.id) {
+                        <div class="w-1/3 px-4 mb-8">                
+                            <div class="border border-gray-200 rounded-lg shadow bg-white shadow-md p-8 h-full">
+                                <h3 class="text-2xl font-bold mb-4">{{rel.name}}</h3>                                
+                                <div class="flex justify-between">
+                                    <p class="mb-2 font-normal pl-4 text-gray-700">{{rel.relationshipType}}</p>
+                                    @if(rel.relationshipType == 'dependency'){
+                                        <fa-icon [icon]="faArrowProgress" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                    } @else if(rel.relationshipType == 'migration'){
+                                        <fa-icon [icon]="faArrowRightArrowLeft" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                    } @else if(rel.relationshipType == 'exclusivity'){
+                                        <fa-icon [icon]="faObjectExclude" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                    } @else if(rel.relationshipType == 'substitution'){
+                                        <fa-icon [icon]="faSwap" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                    }
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="w-1/3 px-4 mb-8">                
+                        <div class="border border-gray-200 rounded-lg shadow bg-white shadow-md p-8 h-full">
+                            <h3 class="text-2xl font-bold mb-4">Relación prueba</h3>                                
+                            <div class="flex justify-between">
+                                <p class="mb-2 font-normal pl-4 text-gray-700">Migration</p>
+                                <fa-icon [icon]="faArrowRightArrowLeft" class="fa-2xl text-primary-100 align-middle"></fa-icon>                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-1/3 px-4 mb-8">                
+                        <div class="border border-gray-200 rounded-lg shadow bg-white shadow-md p-8 h-full">
+                            <h3 class="text-2xl font-bold mb-4">Relación prueba 2</h3>                                
+                            <div class="flex justify-between">
+                                <p class="mb-2 font-normal pl-4 text-gray-700">exclusivity</p>
+                                <fa-icon [icon]="faObjectExclude" class="fa-2xl text-primary-100 align-middle"></fa-icon>                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-1/3 px-4 mb-8">                
+                        <div class="border border-gray-200 rounded-lg shadow bg-white shadow-md p-8 h-full">
+                            <h3 class="text-2xl font-bold mb-4">Relación prueba 3</h3>                                
+                            <div class="flex justify-between">
+                                <p class="mb-2 font-normal pl-4 text-gray-700">Substitution</p>
+                                <fa-icon [icon]="faSwap" class="fa-2xl text-primary-100 align-middle"></fa-icon>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        } @else {
+            <div class="flex justify-center items-center w-full">
+                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
+                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                  </svg>
+                  <span class="sr-only">Info</span>
+                  <p class="text-center">
+                    {{ 'PRODUCT_DETAILS._no_relatioships' | translate }}
+                  </p>
+                </div>
+              </div>
+        }
+
+        
 
     </div>
 </div>
