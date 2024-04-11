@@ -75,37 +75,79 @@
     </div>
 <!-- END HEADER CARD -->
 
-    <div class="w-full h-full bg-secondary-50 rounded-lg p-12 dark:bg-white dark:border-gray-700 border-secondary-50 border">
-        <div class="min-h-19">
-            <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-4">Description</h2>
+    <div class="w-full h-full bg-secondary-50 rounded-lg p-4 dark:bg-white dark:border-gray-700 border-secondary-50 border">
+        <div class="text-sm font-medium text-center text-gray-600 border-b border-gray-300 ">
+            <ul class="flex flex-wrap -mb-px">
+                <li class="mr-2">
+                    <button id="details-button" (click)="goToDetails()"
+                        class="inline-block p-4 text-primary-100 border-b-2 border-primary-100 rounded-t-lg hover:text-primary-50 hover:border-primary-50">
+                        {{ 'PRODUCT_DETAILS._details' | translate }}
+                    </button>
+                </li>
+                @if(prodSpec.productSpecCharacteristic != undefined && prodSpec.productSpecCharacteristic.length>0) {
+                    <li class="mr-2">
+                        <button id="chars-button" (click)="goToChars()" class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50"
+                            aria-current="page">
+                            {{ 'PRODUCT_DETAILS._chars' | translate }}
+                        </button>
+                    </li>
+                }
+                @if(attatchments.length>0){ 
+                    <li class="mr-2">
+                        <button id="attach-button" (click)="goToAttach()"
+                            class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50">
+                            {{ 'PRODUCT_DETAILS._attach' | translate }}
+                        </button>
+                    </li>
+                }
+                @if(productOff?.productOfferingTerm?.at(0)?.name || productOff?.serviceLevelAgreement){
+                    <li class="mr-2">
+                        <button id="agreements-button" (click)="goToAgreements()"
+                            class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50">
+                            {{ 'PRODUCT_DETAILS._agreements' | translate }}
+                        </button>
+                    </li>
+                }
+                @if(prodSpec.productSpecificationRelationship != undefined && prodSpec.productSpecificationRelationship.length>0){
+                    <li class="mr-2">
+                        <button id="relationships-button" (click)="goToRelationships()"
+                            class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50">
+                            {{ 'PRODUCT_DETAILS._relationships' | translate }}
+                        </button>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="w-full bg-secondary-50/95 dark:bg-white/95 rounded-lg p-12">
+
+            <h2 #detailsContent class="text-4xl font-extrabold text-primary-100 text-center pb-4">Description</h2>
             <markdown [data]="productOff?.description"></markdown>
-            
-            <div class="pb-2">
-                @if(serviceSpecs.length > 0){
+            @if(serviceSpecs.length > 0){
+                <div class="pb-2">                
                     <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'PRODUCT_DETAILS._service_spec' | translate }}:</h5>
                     @for(service of serviceSpecs; track service.id){
                         <p class="pl-4"><b>{{service.name}}</b>:  {{service.description}}</p>
                     }
-                }
-            </div>
-            <div class="pb-2">
-                @if(resourceSpecs.length > 0){
+                </div>
+             }
+             @if(resourceSpecs.length > 0){
+                <div class="pb-2">                
                     <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'PRODUCT_DETAILS._resource_spec' | translate }}:</h5>
                     @for(resource of resourceSpecs; track resource.id){
                         <p class="pl-4"><b>{{resource.name}}</b>: {{resource.description}}</p>
                     }
-                }
-            </div>
-            <div class="pb-2">
-                <!--<h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'CARD._comp_profile' | translate }}:</h5>
+                </div>
+            }
+            <!--<div class="pb-2">
+                <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'CARD._comp_profile' | translate }}:</h5>
                 @for (char of complianceProf; track char.id) {
                     @if (char.href == '#') {
                         <p class="pl-4"><b>{{char.name}}</b>: {{char.value}}</p>
                     } @else {
                         <p class="pl-4"><b>{{char.name}}</b>: <a href="{{char.href}}">{{char.value}}</a></p>
                     }
-                }-->
-        </div>
+                }
+        </div>-->
         <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'CARD._comp_profile' | translate }}</h2>
         <div class="container mx-auto px-4">
             <div class="flex flex-wrap -mx-4">
@@ -125,8 +167,7 @@
                                     <fa-icon [icon]="faShieldHalved" class="fa-2xl text-primary-100 align-middle"></fa-icon>
                                 } @else {
                                     <fa-icon [icon]="faGlobe" class="fa-2xl text-primary-100 align-middle"></fa-icon>
-                                }
-                                
+                                }                                
                             </div>
                         </div>
                     </div>
@@ -167,8 +208,9 @@
         }
         </div>
         
-        <!--@if(prodSpec.productSpecCharacteristic != undefined && prodSpec.productSpecCharacteristic.length>0){-->
-            <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product characteristics</h2>
+        @if(prodSpec.productSpecCharacteristic != undefined && prodSpec.productSpecCharacteristic.length>0) {
+            <div #charsContent>
+                <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product characteristics</h2>
                 <div class="container mx-auto px-4">
                     <div class="flex flex-wrap -mx-4">
                         @for (char of prodSpec.productSpecCharacteristic; track char.id; let idx = $index) {
@@ -179,12 +221,12 @@
                                         @if (val?.isDefault == true) {
                                             <div class="flex items-center pl-4">
                                                 <input disabled checked id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
-                                                <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium dark:text-gray-600 text-wrap break-all">{{val.value}}</label>
+                                                <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-700 text-wrap break-all">{{val.value}}</label>
                                             </div>
                                         } @else {
                                             <div class="flex items-center pl-4">
                                                 <input disabled id="disabled-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
-                                                <label for="disabled-checkbox" class="ms-2 text-sm font-medium dark:text-gray-600 text-wrap break-all">{{val.value}}</label>
+                                                <label for="disabled-checkbox" class="ms-2 text-sm font-medium text-gray-700 text-wrap break-all">{{val.value}}</label>
                                             </div>
                                         }
                                     }
@@ -205,77 +247,43 @@
                         }
                     </div>
                 </div>
-                <!--}-->
+            </div>
+            
+        }
 
-        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product attachments</h2>
-        @if(attatchments.length>0){            
+        @if(attatchments.length>0){ 
+        <h2 #attachContent class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product attachments</h2>                   
             @for (att of attatchments; track att.id) {
                 <p class="mb-2 font-normal pl-4 text-gray-700">{{att.name}}: {{att.description}}</p>
             }
-        } @else {
-            <div class="flex justify-center items-center w-full">
-                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
-                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                  </svg>
-                  <span class="sr-only">Info</span>
-                  <p class="text-center">
-                    {{ 'PRODUCT_DETAILS._no_attach' | translate }}
-                  </p>
-                </div>
-              </div>
         }
 
-        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._license' | translate }}</h2>
-        @if(productOff?.productOfferingTerm?.at(0)?.name){            
-            <div class="container mx-auto px-4">
-                <div class="border border-gray-200 rounded-lg shadow bg-white p-8">
-                    <div class="grid grid-cols-80/20 pb-4 h-1/4">
-                        <div class="flex justify-start">
-                            <h2 class="text-gray-900 text-3xl font-extrabold mb-2">{{productOff?.productOfferingTerm?.at(0)?.name}}</h2>
+        <div #agreementsContent>
+            @if(productOff?.productOfferingTerm?.at(0)?.name){
+                <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._license' | translate }}</h2>                    
+                <div class="container mx-auto px-4">
+                    <div class="border border-gray-200 rounded-lg shadow bg-white p-8">
+                        <div class="grid grid-cols-80/20 pb-4 h-1/4">
+                            <div class="flex justify-start">
+                                <h2 class="text-gray-900 text-3xl font-extrabold mb-2">{{productOff?.productOfferingTerm?.at(0)?.name}}</h2>
+                            </div>
+                            <div class="flex justify-end">
+                                <fa-icon [icon]="faScaleBalanced" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                            </div>
                         </div>
-                        <div class="flex justify-end">
-                            <fa-icon [icon]="faScaleBalanced" class="fa-2xl text-primary-100 align-middle"></fa-icon>
-                        </div>
+                        
+                        <p class="h-2/4 text-lg font-normal text-gray-700 mb-4">{{productOff?.productOfferingTerm?.at(0)?.description}}</p>
                     </div>
-                    
-                    <p class="h-2/4 text-lg font-normal text-gray-500 mb-4">{{productOff?.productOfferingTerm?.at(0)?.description}}</p>
                 </div>
-            </div>
+            }
+            @if(productOff?.serviceLevelAgreement){ 
+            <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._sla' | translate }}</h2>                   
+                <p class="mb-2 pl-4 font-normal text-gray-700">{{productOff?.serviceLevelAgreement?.name}}.</p>
+            }
+        </div>
 
-        } @else {
-            <div class="flex justify-center items-center w-full">
-                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
-                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                  </svg>
-                  <span class="sr-only">Info</span>
-                  <p class="text-center">
-                    {{ 'PRODUCT_DETAILS._no_license' | translate }}
-                  </p>
-                </div>
-              </div>
-        }
-
-        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._sla' | translate }}</h2>
-        @if(productOff?.serviceLevelAgreement){            
-            <p class="mb-2 pl-4 font-normal text-gray-700">{{productOff?.serviceLevelAgreement?.name}}.</p>
-        } @else {
-            <div class="flex justify-center items-center w-full">
-                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
-                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                  </svg>
-                  <span class="sr-only">Info</span>
-                  <p class="text-center">
-                    {{ 'PRODUCT_DETAILS._no_sla' | translate }}
-                  </p>
-                </div>
-              </div>
-        }
-
-        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product relationships</h2>
-        @if(prodSpec.productSpecificationRelationship != undefined && prodSpec.productSpecificationRelationship.length>0){            
+        @if(prodSpec.productSpecificationRelationship != undefined && prodSpec.productSpecificationRelationship.length>0){
+            <h2 #relationshipsContent class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product relationships</h2>            
             <div class="container mx-auto px-4">
                 <div class="flex flex-wrap -mx-4">
                     @for (rel of prodSpec.productSpecificationRelationship; track rel.id) {
@@ -327,21 +335,7 @@
                     </div>
                 </div>
             </div>
-        } @else {
-            <div class="flex justify-center items-center w-full">
-                <div class="flex items-center w-1/2 p-4 mb-4 text-sm text-primary-100 rounded-lg bg-white border border-gray-200 shadow-md" role="alert">
-                  <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                  </svg>
-                  <span class="sr-only">Info</span>
-                  <p class="text-center">
-                    {{ 'PRODUCT_DETAILS._no_relatioships' | translate }}
-                  </p>
-                </div>
-              </div>
-        }
-
-        
+        }        
 
     </div>
 </div>
