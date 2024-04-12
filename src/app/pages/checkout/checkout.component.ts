@@ -332,4 +332,17 @@ export class CheckoutComponent implements OnInit {
       }
     )
   }
+
+  deleteProduct(product: cartProduct){
+    this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+    this.eventMessage.emitRemovedCartItem(product as cartProduct);
+    this.cartService.getShoppingCart().then(data => {
+      console.log('---CARRITO API---')
+      console.log(data)
+      this.items = data;
+      this.cdr.detectChanges();
+      this.getTotalPrice();
+      console.log('------------------')
+    })
+  }
 }

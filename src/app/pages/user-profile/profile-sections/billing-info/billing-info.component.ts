@@ -160,7 +160,7 @@ export class BillingInfoComponent implements OnInit{
   onDeletedBill(baddr: billingAccountCart) {
     console.log('--- DELETE BILLING ADDRESS ---')
     //this.accountService.deleteBillingAccount(baddr.id).subscribe(() => this.getBilling());
-    
+    this.deleteBill=false;
     this.cdr.detectChanges();
   }
 
