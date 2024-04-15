@@ -40,6 +40,11 @@ import { InventoryProductsComponent } from './pages/product-inventory/inventory-
 import { UserInfoComponent } from './pages/user-profile/profile-sections/user-info/user-info.component';
 import { BillingInfoComponent } from './pages/user-profile/profile-sections/billing-info/billing-info.component';
 import { OrderInfoComponent } from './pages/user-profile/profile-sections/order-info/order-info.component';
+import { SellerCatalogsComponent } from './pages/seller-offerings/offerings/seller-catalogs/seller-catalogs.component';
+import { SellerProductSpecComponent } from './pages/seller-offerings/offerings/seller-product-spec/seller-product-spec.component';
+import { SellerServiceSpecComponent } from './pages/seller-offerings/offerings/seller-service-spec/seller-service-spec.component';
+import { SellerResourceSpecComponent } from './pages/seller-offerings/offerings/seller-resource-spec/seller-resource-spec.component';
+import { SellerOfferComponent } from './pages/seller-offerings/offerings/seller-offer/seller-offer.component';
 
 
 @NgModule({
@@ -70,7 +75,12 @@ import { OrderInfoComponent } from './pages/user-profile/profile-sections/order-
     InventoryProductsComponent,
     UserInfoComponent,
     BillingInfoComponent,
-    OrderInfoComponent
+    OrderInfoComponent,
+    SellerCatalogsComponent,
+    SellerProductSpecComponent,
+    SellerServiceSpecComponent,
+    SellerResourceSpecComponent,
+    SellerOfferComponent
   ],
   imports: [
     BrowserModule,
