@@ -75,6 +75,30 @@ export class ApiServiceService {
     return lastValueFrom(this.http.get<any>(url));
   }
 
+  getProductOfferByOwner(page:any,status:any[],partyId:any,sort:any,isBundle:any) {
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering?limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&relatedParty=${partyId}`;    
+
+    if(sort!=undefined){
+      url=url+'&sort='+sort
+    }
+    if(isBundle!=undefined){
+      url=url+'&isBundle='+isBundle
+    }
+    let lifeStatus=''
+    if(status.length>0){
+      for(let i=0; i < status.length; i++){
+        if(i==status.length-1){
+          lifeStatus=lifeStatus+status[i]
+        } else {
+          lifeStatus=lifeStatus+status[i]+','
+        }    
+      }
+      url=url+'&lifecycleStatus='+lifeStatus;
+    }
+
+    return lastValueFrom(this.http.get<any>(url));
+  }
+
   getProductSpecification(id:any) {
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productSpecification/${id}`;
 
@@ -109,6 +133,15 @@ export class ApiServiceService {
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&lifecycleStatus=Active,Launched`;    
     if(filter!=undefined){
       url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&lifecycleStatus=Active,Launched&body=${filter}`;
+    }
+
+    return lastValueFrom(this.http.get<any>(url));
+  }
+
+  getCatalogsByUser(page:any,filter:any,partyId:any) {
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&lifecycleStatus=Active,Launched&relatedParty.id=${partyId}`;    
+    if(filter!=undefined){
+      url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&lifecycleStatus=Active,Launched&relatedParty.id=${partyId}&body=${filter}`;
     }
 
     return lastValueFrom(this.http.get<any>(url));

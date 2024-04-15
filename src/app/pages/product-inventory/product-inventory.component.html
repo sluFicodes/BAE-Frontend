@@ -4,7 +4,6 @@
 
     <div class="w-full grid grid-cols-20/80">
 
-
         <div class="w-48 h-fit text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             <button id="prod-button" (click)="goToOffers()" aria-current="true" class="block w-full px-4 py-2 text-white bg-primary-100 border-b border-gray-200 rounded-t-lg cursor-pointer dark:border-gray-600 hover:bg-gray-100 hover:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
               {{ 'PRODUCT_INVENTORY._products' | translate }}
@@ -17,169 +16,16 @@
             </button>
         </div>
         <div>
-        @if (loading) {
-            <div role="status" class="w-3/4 md:w-4/5 h-full flex justify-center align-middle">
-              <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                  <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-              </svg>
-              <span class="sr-only">{{ 'PRODUCT_INVENTORY._loading' | translate }}</span>
-            </div>
-          } @else {
-            @if(show_prods){
-              <div class="flex flex-row p-4 justify-end">
-                <!-- HEADER SEARCH BAR -->
-                <form class="max-w-lg w-1/2 pr-4 z-10">
-                      <div class="relative">
-                          <input type="search" id="search" [formControl]="searchField" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                            placeholder="Filter products..." />
-                          <button type="submit" (click)="filterInventoryByKeywords()" class="absolute top-0 end-0 inline-flex items-center p-2.5 text-sm font-medium h-full text-white bg-primary-100 rounded-e-lg border border-blue-700 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300">
-                              <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                              </svg>                  
-                              <span class="ml-2">Search</span>
-                          </button>
-                      </div>
-                </form>
-                <!-- FILTERS -->
-                <div>
-                  <button id="dropdownDefault" data-dropdown-toggle="dropdown"
-                    class="text-black dark:text-white bg-primary-700 border border-gray-200 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                    type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
-                      <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-                    </svg>
-                    Filter by state
-                    <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </button>
-                  
-                  <div id="dropdown" class="z-20 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                    <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
-                      State
-                    </h6>
-                    <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
-                      <li class="flex items-center">
-                        <input id="created" type="checkbox" value="" checked (change)="onStateFilterChange('created')"
-                          class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-
-                        <label for="created" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                          Created
-                        </label>
-                      </li>
-
-                      <li class="flex items-center">
-                        <input id="active" type="checkbox" value="" checked (change)="onStateFilterChange('active')"
-                          class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-
-                        <label for="active" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                          Active
-                        </label>
-                      </li>
-
-                      <li class="flex items-center">
-                        <input id="suspended" type="checkbox" value="" (change)="onStateFilterChange('suspended')"
-                          class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-
-                        <label for="suspended" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                          Suspended
-                        </label>
-                      </li>
-
-                      <li class="flex items-center">
-                        <input id="terminated" type="checkbox" value="" (change)="onStateFilterChange('terminated')"
-                          class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-
-                        <label for="terminated" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-                          Terminated
-                        </label>
-                      </li>
-                    </ul>
-                  </div>
-                </div>  
-              </div>
-                      
-                <!-- END FILTERS -->
-                <div class="pl-5 grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @for (prod of products; track prod.id; let idx = $index) {
-                        <div class="w-full h-full bg-secondary-50 rounded-lg dark:border-gray-700 border-secondary-50 border ">
-    
-                            <div (click)="goToProductDetails(prod)" class="rounded overflow-hidden cursor-pointer">
-                              <div class="relative h-48 flex justify-center items-center">
-                                <!-- Imagen de fondo difuminada -->
-                                <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage(prod)}});filter: blur(20px);"></div>
-                                <!-- Imagen superior -->
-                                <img [id]="'img-'+idx" class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage(prod)}}" alt="Descripción de la imagen">
-                              </div>
-                            </div>
-                          
-                            <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
-                              <div class="px-5 py-5 bg-secondary-50/95 rounded-lg">
-                                <div class="h-[30px] overflow-y-hidden">
-                                @for (cat of prod?.category; track cat.id) {
-                                    <bae-badge class="ml-2" [category]=cat></bae-badge>
-                                }
-                                </div>
-                                <a (click)="goToProductDetails(prod)" class="cursor-pointer">
-                                  <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{prod?.name}}</h5>
-                                </a>
-                                <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600" [data]="prod?.description"></markdown>
-                                <div class="flex w-full justify-between mt-2.5 mb-5 text-gray-500 font-mono">
-                                  <div>V: {{prod?.version || 'latest'}}</div>
-                                  <div class="flex items-center justify-center rounded-lg">
-                                    @if(inventory[idx].status == 'active'){
-                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{inventory[idx].status}}</span>
-                                    } @else if(inventory[idx].status == 'created') {
-                                        <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{inventory[idx].status}}</span>
-                                    } @else if(inventory[idx].status == 'suspended') {
-                                        <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{inventory[idx].status}}</span>
-                                    } @else if(inventory[idx].status == 'terminated') {
-                                        <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{inventory[idx].status}}</span>
-                                    }
-                                </div>
-                                </div>
-                          
-                                <div class="flex place-content-center items-baseline mb-5">
-                                  <span class="text-2xl font-bold text-gray-900 mr-1">{{prices[idx].price}} {{prices[idx].unit}}</span>
-                                  <span class="text-xs font-bold text-gray-900">{{prices[idx].text}}</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                    } @empty {
-                      <div class="min-h-19 dark:text-gray-600 text-center">{{ 'PRODUCT_INVENTORY._not_found' | translate }}.</div>
-                    }
-                </div>
-                @if (!loading_more) {
-                  @if (page_check) {
-                    <div class="flex pt-6 pb-6 justify-center align-middle">
-                      <button (click)="next()" class="flex cursor-pointer items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                        Load more
-                        <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-                        </svg>
-                      </button>
-                    </div>
-                  }
-                } @else {
-                  <div role="status" class="w-full h-full flex justify-center align-middle mt-2">
-                    <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                    </svg>
-                    <span class="sr-only">Loading...</span>
-                  </div>
-                }
-            }
-            @if(show_serv){
-                serv
-            }
-            @if(show_res){
-                res
-            }
+          @if(show_prods){
+            <inventory-products></inventory-products>
+          }
+          @if(show_serv){
+              serv
+          }
+          @if(show_res){
+              res
           }
         </div>
     </div>
+
 </div>

@@ -1,9 +1,8 @@
 <div class="container mx-auto px-4 py-8 lg:py-10 lg:px-8 xl:py-14 xl:px-16 2xl:px-20">
-
-  <div
-    class="m-auto flex w-full max-w-5xl flex-col items-center rtl:space-x-reverse lg:flex-row lg:items-start lg:space-x-8">
-    <div class="w-full space-y-6 lg:max-w-2xl">
-      <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'SHOPPING_CART._checkout' | translate }}</h5>
+  <h1 class="mb-4 pb-2 mt-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white w-full"><span class="underline underline-offset-3 decoration-8 decoration-primary-100 dark:decoration-primary-100">{{ 'SHOPPING_CART._checkout' | translate }}</span></h1>
+  <div class="m-auto flex w-full flex-col items-center rtl:space-x-reverse lg:flex-row lg:items-start lg:space-x-8">
+    
+    <div class="w-full space-y-6 ">      
       <div class="bg-secondary-50 p-5 shadow-700 md:p-8 rounded rounded-lg">
         <div class="mb-5 flex items-center justify-between md:mb-8">
           <div class="flex items-center space-x-3 rtl:space-x-reverse md:space-x-4"><span
@@ -73,20 +72,47 @@
         </div>
       </div>
     </div>
-    <div class="mt-10 mb-10 w-full sm:mb-12 lg:mb-0 lg:w-96 rounded rounded-lg dark:bg-secondary-50 p-4">
+    <div class="w-3/4 rounded rounded-lg bg-secondary-50 p-4">
       <div class="w-full">
-        <div class="mb-4 flex flex-col items-center space-x-4 rtl:space-x-reverse"><span
-          class="text-base font-bold text-heading">Your Order</span></div>
+        <div class="mb-4 flex flex-col items-center space-x-4 rtl:space-x-reverse">
+          <span class="text-2xl text-start font-bold">Your Order</span></div>
         <div class="flex flex-col border-b border-border-200 py-3">
           @for (item of items; track item.id; let idx = $index) {
-          <div class="flex justify-between py-2">
+          <!-- <div class="flex justify-between py-2">
             <div class="flex items-center justify-between text-base">
               <img class="w-10 pr-2" [src]="item.image" alt="{{ item.name }}">
               <span class="text-sm text-body">
                 <span class="text-sm font-bold text-heading">1</span><span class="mx-2">x</span><span>{{item.name}}</span>
               </span>
             </div>
-            <span class="text-sm text-body"> {{ getPrice(item).text }} {{ formatter.format(getPrice(item).price) }}</span></div>
+            <span class="text-sm text-body"> {{ getPrice(item).text }} {{ formatter.format(getPrice(item).price) }}</span></div> -->
+              <div class="flex justify-between w-full mt-2 mb-2 rounded-lg bg-white border-secondary-50 border shadow-lg">
+               <button type="button" (click)="deleteProduct(item)" class="flex p-2 box-decoration-clone">
+                  @if (item.image) {
+                     <img class="rounded-t-lg w-fit h-[100px]" src="{{item.image}}" alt="">
+                  } @else {
+                     <img class="rounded-t-lg w-fit h-[100px]" src="https://placehold.co/600x400/svg" alt="">
+                  }
+               </button>
+               <div class="p-2 flex items-center">
+                  <p class="text-lg text-gray-700">{{item.name}}</p>
+               </div>               
+               <div class="p-2 flex items-center">
+                  @if (item.options.pricing) {
+                     <div class="flex place-content-center flex-col">
+                        <span class="text-3xl font-bold text-primary-100 mr-3">{{getPrice(item).price}} {{getPrice(item).unit}}</span>
+                        <span class="text-xs text-primary-100">{{getPrice(item).text}}</span>
+                      </div>
+                  }
+               </div>
+               <div class="p-2 flex items-center">
+                  <button type="button" (click)="deleteProduct(item)" class="h-fit text-blue-700 hover:bg-gray-300 hover:text-white focus:ring-4 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center">
+                     <svg class="w-[12px] h-[12px] text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                      </svg>
+                  </button>
+               </div>
+            </div>
           }
         </div>
         <div class="mt-4 space-y-2">

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
 import { initFlowbite } from 'flowbite';
 import { PriceServiceService } from 'src/app/services/price-service.service';
+import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved} from "@fortawesome/pro-solid-svg-icons";
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
@@ -15,22 +16,44 @@ type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
   styleUrl: './product-details.component.css'
 })
 export class ProductDetailsComponent implements OnInit {
+
+  @ViewChild('detailsContent')
+  detailsContent: ElementRef | undefined;
+  @ViewChild('charsContent')
+  charsContent: ElementRef | undefined;
+  @ViewChild('attachContent')
+  attachContent: ElementRef | undefined;
+  @ViewChild('agreementsContent')
+  agreementsContent: ElementRef | undefined;
+  @ViewChild('relationshipsContent')
+  relationshipsContent: ElementRef | undefined;
+
   id:any;
   productOff: Product | undefined;
   category: string = 'none';
   categories: any[] | undefined  = [];
   price: string = '';
   images: AttachmentRefOrValue[]  = [];
+  attatchments: AttachmentRefOrValue[]  = [];
   prodSpec:ProductSpecification = {};
   complianceProf:any[] = [];
   serviceSpecs:any[] = [];
   resourceSpecs:any[]=[];
+  protected readonly faScaleBalanced = faScaleBalanced;
+  protected readonly faArrowProgress = faArrowProgress;
+  protected readonly faArrowRightArrowLeft = faArrowRightArrowLeft;
+  protected readonly faObjectExclude = faObjectExclude;
+  protected readonly faSwap = faSwap;
+  protected readonly faGlobe = faGlobe;
+  protected readonly faBook = faBook;
+  protected readonly faShieldHalved = faShieldHalved;
 
   constructor(
     private route: ActivatedRoute,
     private api: ApiServiceService,
     private priceService: PriceServiceService,
-    private router: Router
+    private router: Router,
+    private elementRef: ElementRef
   ) {
     this.complianceProf.push({id: 'cloudRulebook', name: 'EU Cloud Rulebook', value: 'Not achieved yet', href:'#'})
     this.complianceProf.push({id: 'cloudSecurity', name: 'EU Cloud Security', value: 'Not achieved yet', href:'#'})
@@ -41,6 +64,7 @@ export class ProductDetailsComponent implements OnInit {
 
   ngOnInit() {
     initFlowbite();
+    window.scrollTo(0, 0);
     this.id = this.route.snapshot.paramMap.get('id');
     console.log('--- Details ID:')
     console.log(this.id)    
@@ -89,6 +113,7 @@ export class ProductDetailsComponent implements OnInit {
           productOfferingPrice: prices,
           productSpecification: prod.productSpecification,
           productOfferingTerm: prod.productOfferingTerm,
+          serviceLevelAgreement: prod.serviceLevelAgreement,
           version: prod.version
         }
         this.category = this.productOff?.category?.at(0)?.name ?? 'none';
@@ -96,6 +121,7 @@ export class ProductDetailsComponent implements OnInit {
         this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
           this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
         this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
+        this.attatchments = this.productOff?.attachment?.filter(item => item.attachmentType != 'Picture') ?? [];
         for(let z=0; z < this.complianceProf.length; z++){
           if(this.prodSpec.productSpecCharacteristic != undefined){
             let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === this.complianceProf[z].id));
@@ -125,18 +151,126 @@ export class ProductDetailsComponent implements OnInit {
       "priceType": result.priceType,
       "text": result.text
     }
-    /*
-    let priceType = this.productOff?.productOfferingPrice?.at(0)?.priceType
-    if(priceType == 'recurring'){
-      priceType= this.productOff?.productOfferingPrice?.at(0)?.recurringChargePeriodType
-    }
-    if(priceType == 'usage'){
-      priceType= '/ '+this.productOff?.productOfferingPrice?.at(0)?.unitOfMeasure?.units
-    }
-    return {
-      price: this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
-        this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a',
-      priceType: priceType
-    }*/
   }
+
+  removeClass(elem: HTMLElement, cls:string) {
+    var str = " " + elem.className + " ";
+    elem.className = str.replace(" " + cls + " ", " ").replace(/^\s+|\s+$/g, "");
+  }
+
+  addClass(elem: HTMLElement, cls:string) {
+      elem.className += (" " + cls);
+  }
+
+  unselectMenu(elem:HTMLElement | null,cls:string){
+    if(elem != null){
+      if(elem.className.match(cls)){
+        this.removeClass(elem,cls)
+      } else {
+        console.log('already unselected')
+      }
+    }
+  }
+
+  selectMenu(elem:HTMLElement| null,cls:string){
+    if(elem != null){
+      if(elem.className.match(cls)){
+        console.log('already selected')
+      } else {
+        this.addClass(elem,cls)
+      }
+    }
+  }
+
+  goToDetails(){
+    //const targetElement = this.elementRef.nativeElement.querySelector('#detailsContent');
+    if (this.detailsContent!=undefined) {
+      this.detailsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    let details_button = document.getElementById('details-button')
+    let chars_button = document.getElementById('chars-button')
+    let attach_button = document.getElementById('attach-button')
+    let agreements_button = document.getElementById('agreements-button')
+    let relationships_button = document.getElementById('relationships-button')
+
+    this.selectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+  }
+
+  goToChars(){
+    if (this.charsContent != undefined) {
+      this.charsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    let details_button = document.getElementById('details-button')
+    let chars_button = document.getElementById('chars-button')
+    let attach_button = document.getElementById('attach-button')
+    let agreements_button = document.getElementById('agreements-button')
+    let relationships_button = document.getElementById('relationships-button')
+
+    this.unselectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+  }
+
+  goToAttach(){
+    if (this.attachContent != undefined) {
+      this.attachContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    let details_button = document.getElementById('details-button')
+    let chars_button = document.getElementById('chars-button')
+    let attach_button = document.getElementById('attach-button')
+    let agreements_button = document.getElementById('agreements-button')
+    let relationships_button = document.getElementById('relationships-button')
+
+    this.unselectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+  }
+
+  goToAgreements(){
+    if (this.agreementsContent) {
+      this.agreementsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center'});
+    }
+
+    let details_button = document.getElementById('details-button')
+    let chars_button = document.getElementById('chars-button')
+    let attach_button = document.getElementById('attach-button')
+    let agreements_button = document.getElementById('agreements-button')
+    let relationships_button = document.getElementById('relationships-button')
+
+    this.unselectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+  }
+
+  goToRelationships(){
+    if (this.relationshipsContent != undefined) {
+      this.relationshipsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    let details_button = document.getElementById('details-button')
+    let chars_button = document.getElementById('chars-button')
+    let attach_button = document.getElementById('attach-button')
+    let agreements_button = document.getElementById('agreements-button')
+    let relationships_button = document.getElementById('relationships-button')
+
+    this.unselectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+  }
+
 }

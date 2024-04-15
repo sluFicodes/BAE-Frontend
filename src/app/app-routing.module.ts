@@ -9,6 +9,7 @@ import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
 import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.component";
 import {CheckoutComponent} from "./pages/checkout/checkout.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
+import { SellerOfferingsComponent } from "./pages/seller-offerings/seller-offerings.component";
 
 
 const routes: Routes = [
@@ -41,6 +42,9 @@ const routes: Routes = [
   },
   { path: 'profile',
   component: UserProfileComponent
+  },
+  { path: 'my-offerings',
+  component: SellerOfferingsComponent
   }
 ]
 
