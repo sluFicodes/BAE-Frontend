@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
+import {faIdCard, faSort, faSwatchbook, faSparkles} from "@fortawesome/pro-solid-svg-icons";
 import {components} from "src/app/models/product-catalog";
 import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -19,6 +19,7 @@ export class SellerProductSpecComponent implements OnInit{
   protected readonly faIdCard = faIdCard;
   protected readonly faSort = faSort;
   protected readonly faSwatchbook = faSwatchbook;
+  protected readonly faSparkles = faSparkles;
 
   searchField = new FormControl();
 
@@ -31,6 +32,8 @@ export class SellerProductSpecComponent implements OnInit{
   filter:any=undefined;
   status:any[]=['Active','Launched'];
   partyId:any;
+  sort:any=undefined;
+  isBundle:any=undefined;
 
   constructor(
     private router: Router,
@@ -43,6 +46,7 @@ export class SellerProductSpecComponent implements OnInit{
 
   ngOnInit() {
     this.loading=true;
+    this.prodSpecs=[];
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(aux.logged_as==aux.id){
       this.partyId = aux.partyId;
@@ -70,9 +74,8 @@ export class SellerProductSpecComponent implements OnInit{
     initFlowbite();
   }
 
-  getProdSpecs(){
-    this.prodSpecs=[];
-    this.prodSpecService.getProdSpecByUser(this.page,this.status,this.partyId).then(data => {
+  getProdSpecs(){    
+    this.prodSpecService.getProdSpecByUser(this.page,this.status,this.partyId,this.sort,this.isBundle).then(data => {
       if(data.length<this.PROD_SPEC_LIMIT){
         this.page_check=false;
         this.cdr.detectChanges();
@@ -84,9 +87,18 @@ export class SellerProductSpecComponent implements OnInit{
         this.prodSpecs.push(data[i])
       }
       this.loading=false;
+      this.loading_more=false;
       console.log('--- prodSpecs')
       console.log(this.prodSpecs)
     })
+  }
+
+  async next(){
+    this.loading_more=true;
+    this.page=this.page+this.PROD_SPEC_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getProdSpecs();
   }
 
   filterInventoryByKeywords(){
@@ -94,7 +106,45 @@ export class SellerProductSpecComponent implements OnInit{
   }
 
   onStateFilterChange(filter:string){
-
+    const index = this.status.findIndex(item => item === filter);
+    if (index !== -1) {
+      this.status.splice(index, 1);
+      console.log('elimina filtro')
+      console.log(this.status)
+    } else {
+      console.log('añade filtro')
+      console.log(this.status)
+      this.status.push(filter)
+    }
+    this.loading=true;
+    this.page=0;
+    this.prodSpecs=[];
+    this.getProdSpecs();
   }
 
+  onSortChange(event: any) {
+    if(event.target.value=='name'){
+      this.sort='name'
+    }else{
+      this.sort=undefined
+    }
+    this.loading=true;
+    this.page=0;
+    this.prodSpecs=[];
+    this.getProdSpecs();
+  }
+
+  onTypeChange(event: any) {
+    if(event.target.value=='simple'){
+      this.isBundle=false
+    }else if (event.target.value=='bundle'){
+      this.isBundle=true
+    }else{
+      this.isBundle=undefined
+    }
+    this.loading=true;
+    this.page=0;
+    this.prodSpecs=[];
+    this.getProdSpecs();
+  }
 }

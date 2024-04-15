@@ -75,9 +75,15 @@ export class ApiServiceService {
     return lastValueFrom(this.http.get<any>(url));
   }
 
-  getProductOfferByOwner(page:any,status:any[],partyId:any) {
+  getProductOfferByOwner(page:any,status:any[],partyId:any,sort:any,isBundle:any) {
     let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOffering?limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&relatedParty=${partyId}`;    
 
+    if(sort!=undefined){
+      url=url+'&sort='+sort
+    }
+    if(isBundle!=undefined){
+      url=url+'&isBundle='+isBundle
+    }
     let lifeStatus=''
     if(status.length>0){
       for(let i=0; i < status.length; i++){

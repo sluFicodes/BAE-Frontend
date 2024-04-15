@@ -21,9 +21,15 @@ export class ProductSpecServiceService {
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
-  getProdSpecByUser(page:any,status:any[],partyId:any) {
+  getProdSpecByUser(page:any,status:any[],partyId:any,sort:any,isBundle:any) {
     let url = `${ProductSpecServiceService.BASE_URL}:${ProductSpecServiceService.API_PORT}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}?limit=${ProductSpecServiceService.PROD_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
 
+    if(sort!=undefined){
+      url=url+'&sort='+sort
+    }
+    if(isBundle!=undefined){
+      url=url+'&isBundle='+isBundle
+    }
     let lifeStatus=''
     if(status.length>0){
       for(let i=0; i < status.length; i++){

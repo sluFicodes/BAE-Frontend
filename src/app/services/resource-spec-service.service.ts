@@ -21,9 +21,12 @@ export class ResourceSpecServiceService {
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
-  getResourceSpecByUser(page:any,status:any[],partyId:any) {
+  getResourceSpecByUser(page:any,status:any[],partyId:any,sort:any) {
     let url = `${ResourceSpecServiceService.BASE_URL}:${ResourceSpecServiceService.API_PORT}${ResourceSpecServiceService.RESOURCE}${ResourceSpecServiceService.API_RESOURCE_SPEC}?limit=${ResourceSpecServiceService.RES_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
 
+    if(sort!=undefined){
+      url=url+'&sort='+sort
+    }
     let lifeStatus=''
     if(status.length>0){
       for(let i=0; i < status.length; i++){

@@ -21,9 +21,12 @@ export class ServiceSpecServiceService {
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
-  getServiceSpecByUser(page:any,status:any[],partyId:any) {
+  getServiceSpecByUser(page:any,status:any[],partyId:any,sort:any) {
     let url = `${ServiceSpecServiceService.BASE_URL}:${ServiceSpecServiceService.API_PORT}${ServiceSpecServiceService.SERVICE}${ServiceSpecServiceService.API_SERVICE_SPEC}?limit=${ServiceSpecServiceService.SERV_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
 
+    if(sort!=undefined){
+      url=url+'&sort='+sort
+    }
     let lifeStatus=''
     if(status.length>0){
       for(let i=0; i < status.length; i++){

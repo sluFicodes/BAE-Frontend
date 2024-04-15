@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
+import {faIdCard, faSort, faSwatchbook, faSparkles} from "@fortawesome/pro-solid-svg-icons";
 import {components} from "src/app/models/product-catalog";
 import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -18,6 +18,7 @@ export class SellerOfferComponent implements OnInit{
   protected readonly faIdCard = faIdCard;
   protected readonly faSort = faSort;
   protected readonly faSwatchbook = faSwatchbook;
+  protected readonly faSparkles = faSparkles;
 
   searchField = new FormControl();
 
@@ -30,6 +31,8 @@ export class SellerOfferComponent implements OnInit{
   filter:any=undefined;
   status:any[]=['Active','Launched'];
   partyId:any;
+  sort:any=undefined;
+  isBundle:any=undefined;
 
   constructor(
     private router: Router,
@@ -48,7 +51,7 @@ export class SellerOfferComponent implements OnInit{
       let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
       this.partyId = loggedOrg.partyId
     }
-
+    this.offers=[];
     this.getOffers();
     let input = document.querySelector('[type=search]')
     if(input!=undefined){
@@ -69,8 +72,7 @@ export class SellerOfferComponent implements OnInit{
   }
 
   getOffers(){
-    this.offers=[];
-    this.api.getProductOfferByOwner(this.page,this.status,this.partyId).then(data => {
+    this.api.getProductOfferByOwner(this.page,this.status,this.partyId,this.sort,this.isBundle).then(data => {
       if(data.length<this.PROD_SPEC_LIMIT){
         this.page_check=false;
         this.cdr.detectChanges();
@@ -82,16 +84,65 @@ export class SellerOfferComponent implements OnInit{
         this.offers.push(data[i])
       }
       this.loading=false;
+      this.loading_more=false;
       console.log('--- offers')
       console.log(this.offers)
     })
   }
 
-  filterInventoryByKeywords(){
-
+  async next(){
+    this.loading_more=true;
+    this.page=this.page+this.PROD_SPEC_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getOffers();
   }
 
   onStateFilterChange(filter:string){
+    const index = this.status.findIndex(item => item === filter);
+    if (index !== -1) {
+      this.status.splice(index, 1);
+      console.log('elimina filtro')
+      console.log(this.status)
+    } else {
+      console.log('añade filtro')
+      console.log(this.status)
+      this.status.push(filter)
+    }
+    this.loading=true;
+    this.page=0;
+    this.offers=[];
+    this.getOffers();
+  }
+
+  onSortChange(event: any) {
+    if(event.target.value=='name'){
+      this.sort='name'
+    }else{
+      this.sort=undefined
+    }
+    this.loading=true;
+    this.page=0;
+    this.offers=[];
+    this.getOffers();
+  }
+
+  onTypeChange(event: any) {
+    if(event.target.value=='simple'){
+      this.isBundle=false
+    }else if (event.target.value=='bundle'){
+      this.isBundle=true
+    }else{
+      this.isBundle=undefined
+    }
+    this.loading=true;
+    this.page=0;
+    this.offers=[];
+    this.getOffers();
+  }
+
+
+  filterInventoryByKeywords(){
 
   }
 

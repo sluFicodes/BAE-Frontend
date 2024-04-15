@@ -31,6 +31,7 @@ export class SellerResourceSpecComponent implements OnInit {
   filter:any=undefined;
   status:any[]=['Active','Launched'];
   partyId:any;
+  sort:any=undefined;
 
   constructor(
     private router: Router,
@@ -43,6 +44,7 @@ export class SellerResourceSpecComponent implements OnInit {
 
   ngOnInit() {
     this.loading=true;
+    this.resSpecs=[];
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(aux.logged_as==aux.id){
       this.partyId = aux.partyId;
@@ -70,9 +72,8 @@ export class SellerResourceSpecComponent implements OnInit {
     initFlowbite();
   }
 
-  getResSpecs(){
-    this.resSpecs=[];
-    this.resSpecService.getResourceSpecByUser(this.page,this.status,this.partyId).then(data => {
+  getResSpecs(){    
+    this.resSpecService.getResourceSpecByUser(this.page,this.status,this.partyId,this.sort).then(data => {
       if(data.length<this.RES_SPEC_LIMIT){
         this.page_check=false;
         this.cdr.detectChanges();
@@ -84,9 +85,18 @@ export class SellerResourceSpecComponent implements OnInit {
         this.resSpecs.push(data[i])
       }
       this.loading=false;
+      this.loading_more=false;
       console.log('--- resSpecs')
       console.log(this.resSpecs)
     })
+  }
+
+  async next(){
+    this.loading_more=true;
+    this.page=this.page+this.RES_SPEC_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getResSpecs();
   }
 
   filterInventoryByKeywords(){
@@ -94,6 +104,31 @@ export class SellerResourceSpecComponent implements OnInit {
   }
 
   onStateFilterChange(filter:string){
+    const index = this.status.findIndex(item => item === filter);
+    if (index !== -1) {
+      this.status.splice(index, 1);
+      console.log('elimina filtro')
+      console.log(this.status)
+    } else {
+      console.log('añade filtro')
+      console.log(this.status)
+      this.status.push(filter)
+    }
+    this.loading=true;
+    this.page=0;
+    this.resSpecs=[];
+    this.getResSpecs();
+  }
 
+  onSortChange(event: any) {
+    if(event.target.value=='name'){
+      this.sort='name'
+    }else{
+      this.sort=undefined
+    }
+    this.loading=true;
+    this.page=0;
+    this.resSpecs=[];
+    this.getResSpecs();
   }
 }

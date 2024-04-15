@@ -41,6 +41,7 @@ export class SellerCatalogsComponent {
 
   ngOnInit() {
     this.loading=true;
+    this.catalogs=[];
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(aux.logged_as==aux.id){
       this.partyId = aux.partyId;
@@ -68,8 +69,7 @@ export class SellerCatalogsComponent {
     initFlowbite();
   }
 
-  getCatalogs(){
-    this.catalogs=[];
+  getCatalogs(){    
     this.api.getCatalogsByUser(this.page,this.filter,this.partyId).then(data => {
       if(data.length<this.CATALOG_LIMIT){
         this.page_check=false;
@@ -82,9 +82,18 @@ export class SellerCatalogsComponent {
         this.catalogs.push(data[i])
       }
       this.loading=false;
+      this.loading_more=false;
       console.log('--- CATALOGS')
       console.log(this.catalogs)
     })
+  }
+
+  async next(){
+    this.loading_more=true;
+    this.page=this.page+this.CATALOG_LIMIT;
+    this.cdr.detectChanges;
+    console.log(this.page)
+    await this.getCatalogs();
   }
 
   filterInventoryByKeywords(){
