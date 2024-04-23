@@ -54,6 +54,12 @@ export class DashboardComponent implements OnInit {
           "roles": data.roles,
           "organizations": data.organizations,
           "logged_as": data.id } as LoginInfo;
+
+        // Using organization session by default if provided
+        if (info.organizations != null && info.organizations.length > 0) {
+          info.logged_as = info.organizations[0].id
+        }
+
         this.localStorage.addLoginInfo(info);
         this.eventMessage.emitLogin(info);
         console.log('----')
@@ -65,7 +71,7 @@ export class DashboardComponent implements OnInit {
     } else {
       console.log('sin token')
       //this.localStorage.clear()
-      let aux =this.localStorage.getObject('login_items') as LoginInfo;
+      let aux = this.localStorage.getObject('login_items') as LoginInfo;
       if (JSON.stringify(aux) != '{}') {
         console.log(aux)
         console.log('moment')
@@ -81,5 +87,4 @@ export class DashboardComponent implements OnInit {
       console.log(data)
     })*/
   }
-
 }

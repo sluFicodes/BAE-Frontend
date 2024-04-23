@@ -130,6 +130,10 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
     initFlowbite();
   }
 
+  goTo(path:string) {
+    this.router.navigate([path]);
+  }
+
   getPrice(item:any){
     return {
       'priceType': item.options.pricing.priceType,

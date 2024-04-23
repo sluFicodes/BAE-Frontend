@@ -1,8 +1,8 @@
 export const environment = {
-    BASE_URL: 'http://localhost',
-    //API_PORT: 8632,
+    //BASE_URL: 'https://dome-marketplace.org',
+    BASE_URL: 'http://proxy.docker',
     API_PORT: 8004,
-    //API ENDPOINTS
+    //API_PORT: 443,
     PRODUCT_CATALOG: '/catalog',
     SERVICE: '/service',
     RESOURCE: '/resource',
@@ -21,6 +21,7 @@ export const environment = {
     SERV_SPEC_LIMIT: 6,
     RES_SPEC_LIMIT: 6,
     ORDER_LIMIT: 6,
+    //SIOP: true,
     SIOP: false,
     TAX_RATE: 20
 };

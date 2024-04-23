@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
 import { initFlowbite } from 'flowbite';
@@ -52,6 +52,7 @@ export class ProductDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private api: ApiServiceService,
     private priceService: PriceServiceService,
+    private router: Router,
     private elementRef: ElementRef
   ) {
     this.complianceProf.push({id: 'cloudRulebook', name: 'EU Cloud Rulebook', value: 'Not achieved yet', href:'#'})
@@ -133,6 +134,10 @@ export class ProductDetailsComponent implements OnInit {
       })
     })
 
+  }
+
+  goTo(path:string) {
+    this.router.navigate([path]);
   }
 
   getProductImage() {
