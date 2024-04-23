@@ -8,27 +8,27 @@
     </div>
   } @else {
     <div class="w-full h-fit bg-secondary-50 rounded-lg dark:border-gray-700 border-secondary-50 border">
-        <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._account' | translate }}:</h5>
+        <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._account' | translate }}</h5>
         <hr class="h-px mr-4 ml-4 bg-primary-100 border-0">
         <div class="m-4 grid grid-cols-2 gap-4">
             <div>
-                <span class="font-bold">{{ 'PROFILE._user_id' | translate }}:</span>
+                <span class="font-bold">{{ 'PROFILE._user_id' | translate }}</span>
                 <input type="text" id="username" class="mb-2 bg-gray-300 border border-gray-400  text-primary-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value="{{profile.externalReference[0].name}}" disabled readonly>
-                <span class="font-bold">{{ 'PROFILE._email' | translate }}:</span>
+                <span class="font-bold">{{ 'PROFILE._email' | translate }}</span>
                 <input type="text" id="email" class="mb-2 bg-gray-300 border border-gray-400  text-primary-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value="{{email}}" disabled readonly>
             </div>
             <div>
-                <span class="font-bold">{{ 'PROFILE._token' | translate }}:</span>
+                <span class="font-bold">{{ 'PROFILE._token' | translate }}</span>
                 <input type="text" id="token" class="mb-2 bg-gray-300 border border-gray-400  text-primary-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value="{{token}}" disabled readonly>
             </div>
         </div>
-        <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._profile' | translate }}:</h5>
+        <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._profile' | translate }}</h5>
         <hr class="h-px mr-4 ml-4 bg-primary-100 border-0">
         <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="userProfileForm">
             <div>
-                <label for="user-name" class="font-bold">{{ 'PROFILE._name' | translate }}:</label>
+                <label for="user-name" class="font-bold">{{ 'PROFILE._name' | translate }}</label>
                 <input formControlName="name" type="text" id="user-name" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                <label for="treatment" class="font-bold">{{ 'PROFILE._treatment' | translate }}:</label>
+                <label for="treatment" class="font-bold">{{ 'PROFILE._treatment' | translate }}</label>
                 <select id="treatment" formControlName="treatment" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option value="">I'd rather not say</option>
                     <option value="Miss">Miss</option>
@@ -36,7 +36,7 @@
                     <option value="Mr">Mr</option>
                     <option value="Ms">Ms</option>
                 </select>
-                <label for="gender" class="font-bold">{{ 'PROFILE._gender' | translate }}:</label>
+                <label for="gender" class="font-bold">{{ 'PROFILE._gender' | translate }}</label>
                 <select id="gender" formControlName="gender" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option value="">I'd rather not say</option>
                     <option value="Female">Female</option>
@@ -45,9 +45,9 @@
                 </select>
             </div>
             <div>
-                <label for="lastname" class="font-bold">{{ 'PROFILE._lastname' | translate }}:</label>
+                <label for="lastname" class="font-bold">{{ 'PROFILE._lastname' | translate }}</label>
                 <input type="text" formControlName="lastname" id="lastname" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                <label for="marital-status" class="font-bold">{{ 'PROFILE._marital_status' | translate }}:</label>
+                <label for="marital-status" class="font-bold">{{ 'PROFILE._marital_status' | translate }}</label>
                 <select id="marital-status" formControlName="maritalstatus" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option value="">I'd rather not say</option>
                     <option value="Divorced">Divorced</option>
@@ -56,22 +56,22 @@
                     <option value="Single">Single</option>
                     <option value="Widowed">Widowed</option>
                 </select>
-                <label for="nacionality" class="font-bold">{{ 'PROFILE._nacionality' | translate }}:</label>
+                <label for="nacionality" class="font-bold">{{ 'PROFILE._nacionality' | translate }}</label>
                 <input type="text" formControlName="nacionality" id="nacionality" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
             </div>
         </form>
-        <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._birthdate' | translate }}:</h5>
+        <h5 class="md:text-3xl lg:text-4xl m-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'PROFILE._birthdate' | translate }}</h5>
         <hr class="h-px mr-4 ml-4 bg-primary-100 border-0">
         <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="userProfileForm">
             <div>
-                <label for="birthdate" class="font-bold">{{ 'PROFILE._date' | translate }}:</label>
+                <label for="birthdate" class="font-bold">{{ 'PROFILE._date' | translate }}</label>
                 <input datepicker type="date" placeholder="Select date"  formControlName="birthdate" id="birthdate" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
 
-                <label for="city" class="font-bold">{{ 'PROFILE._city' | translate }}:</label>
+                <label for="city" class="font-bold">{{ 'PROFILE._city' | translate }}</label>
                 <input type="text" formControlName="city" id="city" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
             </div>
             <div class="align-items-bottom align-bottom">
-                <label for="country" class="font-bold">{{ 'PROFILE._country' | translate }}:</label>
+                <label for="country" class="font-bold">{{ 'PROFILE._country' | translate }}</label>
                 <select id="country" formControlName="country" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                     <option value="">Select country</option>
                     @for(country of countries; track country.code){

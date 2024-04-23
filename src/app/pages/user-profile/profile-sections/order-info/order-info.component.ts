@@ -21,7 +21,7 @@ import { environment } from 'src/environments/environment';
   styleUrl: './order-info.component.css'
 })
 
-export class OrderInfoComponent implements OnInit{
+export class OrderInfoComponent implements OnInit, AfterViewInit{
   loading: boolean = false;
   orders:any[]=[];
   profile:any;
@@ -69,6 +69,10 @@ export class OrderInfoComponent implements OnInit{
       this.filters=[];
       this.getOrders(0);
     }
+    initFlowbite();
+  }
+
+  ngAfterViewInit(){
     initFlowbite();
   }
 
@@ -120,12 +124,13 @@ export class OrderInfoComponent implements OnInit{
                       })
                       this.loading=false;
                       this.loading_more=false;
+                      initFlowbite();
                   })
                 })
               })
             }
             this.orders[i]['billingAccount']=bill;
-            this.orders[i].productOrderItem=items;
+            this.orders[i].productOrderItem=items;            
           })
           
         }
@@ -137,7 +142,6 @@ export class OrderInfoComponent implements OnInit{
     //this.loading=false;    
     //this.loading_more=false; 
     this.cdr.detectChanges();
-    initFlowbite();
   }
 
   async next(){
@@ -165,6 +169,7 @@ export class OrderInfoComponent implements OnInit{
     this.page=0;
     this.orders=[];
     this.getOrders(0);
+    initFlowbite();
   }
 
   filterOrdersByDate(){
@@ -191,6 +196,7 @@ export class OrderInfoComponent implements OnInit{
     this.page=0;
     this.orders=[];
     this.getOrders(0);
+    initFlowbite();
   }
 
   getTotalPrice(items:any[]){

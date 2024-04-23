@@ -45,7 +45,9 @@ import { SellerProductSpecComponent } from './pages/seller-offerings/offerings/s
 import { SellerServiceSpecComponent } from './pages/seller-offerings/offerings/seller-service-spec/seller-service-spec.component';
 import { SellerResourceSpecComponent } from './pages/seller-offerings/offerings/seller-resource-spec/seller-resource-spec.component';
 import { SellerOfferComponent } from './pages/seller-offerings/offerings/seller-offer/seller-offer.component';
-
+import { CreateProductSpecComponent } from './pages/seller-offerings/offerings/seller-product-spec/create-product-spec/create-product-spec.component';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 @NgModule({
   declarations: [
@@ -80,7 +82,8 @@ import { SellerOfferComponent } from './pages/seller-offerings/offerings/seller-
     SellerProductSpecComponent,
     SellerServiceSpecComponent,
     SellerResourceSpecComponent,
-    SellerOfferComponent
+    SellerOfferComponent,
+    CreateProductSpecComponent,
   ],
   imports: [
     BrowserModule,
@@ -91,6 +94,8 @@ import { SellerOfferComponent } from './pages/seller-offerings/offerings/seller-
     FaIconComponent,
     FormsModule,
     ReactiveFormsModule,
+    PickerComponent,
+    NgxFileDropModule,
     MarkdownModule.forRoot(),
     TranslateModule.forRoot({
       defaultLanguage: 'en',

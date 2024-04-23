@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ProductSpecServiceService } from 'src/app/services/product-spec-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
+import {EventMessageService} from "src/app/services/event-message.service";
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
 
@@ -41,6 +42,7 @@ export class SellerProductSpecComponent implements OnInit{
     private prodSpecService: ProductSpecServiceService,
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
+    private eventMessage: EventMessageService
   ) {
   }
 
@@ -72,6 +74,10 @@ export class SellerProductSpecComponent implements OnInit{
 
   ngAfterViewInit(){
     initFlowbite();
+  }
+
+  goToCreate(){
+    this.eventMessage.emitSellerCreateProductSpec(true);
   }
 
   getProdSpecs(){    
