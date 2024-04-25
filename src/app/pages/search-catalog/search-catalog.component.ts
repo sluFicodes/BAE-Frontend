@@ -9,6 +9,7 @@ import {EventMessageService} from "../../services/event-message.service";
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Category} from "../../models/interfaces";
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-catalog',
@@ -22,7 +23,8 @@ export class SearchCatalogComponent implements OnInit{
     private priceService: PriceServiceService, 
     private cdr: ChangeDetectorRef,
     private eventMessage: EventMessageService,
-    private localStorage: LocalStorageService
+    private localStorage: LocalStorageService,
+    private router: Router
   ) {
   }
 
@@ -51,6 +53,10 @@ export class SearchCatalogComponent implements OnInit{
     })
     console.log('Productos:')
     console.log(this.products)
+  }
+
+  goTo(path:string) {
+    this.router.navigate([path]);
   }
 
   getProducts(filters:Category[]){    

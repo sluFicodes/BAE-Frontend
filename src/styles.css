@@ -9,6 +9,8 @@
   }
 }
 
+@import '@ctrl/ngx-emoji-mart/picker';
+
 /* Default styles for Markdown elements */
 markdown {
   font-family: "Blinker", system-ui, sans-serif;
@@ -59,11 +61,13 @@ markdown ul ol,
 markdown ol ul,
 markdown ol ol {
   margin-top: 0.5em;
+  margin-left: 1.5em;
 }
 
 markdown ul li,
 markdown ol li {
   margin-bottom: 0.5em;
+  margin-left: 1.5em;
 }
 
 markdown ul li {

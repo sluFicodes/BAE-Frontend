@@ -20,9 +20,15 @@ export class LoginServiceService {
   getLogin(token:any){
     let url = `${LoginServiceService.BASE_URL}:${LoginServiceService.API_PORT}/logintoken`;
 
-    var header = {
-      headers: new HttpHeaders()
-        .set('Authorization',  `Bearer `+token)
+    let header = {}
+
+    // Adding the local token options for reading the profile
+    // from session when the portal is served from proxy nodejs
+    if (token != 'local') {
+      header = {
+        headers: new HttpHeaders()
+          .set('Authorization',  `Bearer `+ token)
+      }
     }
 
     return lastValueFrom(this.http.get<any>(url, header));

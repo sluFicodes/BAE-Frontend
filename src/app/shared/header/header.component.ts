@@ -223,7 +223,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       "partyId": this.loginInfo.partyId,
       "roles": this.loginInfo.roles,
       "organizations": this.loginInfo.organizations,
-      "logged_as": this.loginInfo.id };
+      "logged_as": this.loginInfo.id};
       this.localStorage.setObject('login_items',this.loginInfo);
       this.loggedAsOrg=false;
       this.username=this.loginInfo.user;
