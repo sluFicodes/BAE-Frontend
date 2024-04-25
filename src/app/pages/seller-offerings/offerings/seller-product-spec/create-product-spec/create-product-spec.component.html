@@ -364,7 +364,7 @@
                                     @for (iso of availableISOS; track iso;) {
                                         <li>
                                             <div class="flex items-center justify-between">
-                                                <label for="checkbox-item-1" class="ms-2 text-sm font-medium text-gray-900">{{iso}}</label>
+                                                <label for="checkbox-item-1" class="ms-2 text-sm font-medium text-gray-900">{{iso.name}}</label>
                                                 <button (click)="addISO(iso)" type="button" class="text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                                     <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
@@ -394,13 +394,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (sel of selectedISOS; track sel.name;) {
+                                @for (sel of selectedISOS; track sel.name; let idx = $index) {
                                     <tr class="border-b hover:bg-gray-200">
                                         <td class="px-6 py-4">
                                             {{sel.name}}
                                         </td>
                                         <td class="px-6 py-4">
-                                            <input type="text" value="{{sel.url}}" [id]="'iso-'+sel.name" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                                       
+                                            <input type="text" [(ngModel)]="selectedISOS[idx].url" value="{{sel.url}}" [id]="'iso-'+sel.name" class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                                       
                                         </td>
                                         <td class="px-6 py-4">
                                             <button (click)="toggleUploadFile(sel);$event.stopPropagation();" type="button" class="text-white file-select-button mr-4 bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
@@ -565,7 +565,7 @@
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             Value
                                         </span>
-                                        <input #numberValue type="text" id="value" class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input #numberValue type="number" pattern="[0-9]*" id="value" class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
                                     <div class="flex w-full">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
@@ -586,13 +586,13 @@
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             From
                                         </span>
-                                        <input #fromValue type="text" id="value" class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input #fromValue type="number" pattern="[0-9]*" id="value" class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
                                     <div class="flex w-full">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             To
                                         </span>
-                                        <input #toValue type="text" id="value" class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                        <input #toValue type="number" pattern="[0-9]*" id="value" class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
                                     <div class="flex w-full">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">

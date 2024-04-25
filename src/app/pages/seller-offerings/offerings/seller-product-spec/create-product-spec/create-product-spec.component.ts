@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import {faIdCard, faSort, faSwatchbook, faSparkles} from "@fortawesome/pro-solid-svg-icons";
 import {components} from "src/app/models/product-catalog";
 import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -14,6 +13,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -99,7 +99,7 @@ export class CreateProductSpecComponent implements OnInit {
 
   //COMPLIANCE PROFILE INFO:
   buttonISOClicked:boolean=false;
-  availableISOS:string[]=['EU Cloud Security','EU Cloud Rulebook','ISO 27001','ISO 27017','ISO 17025'];
+  availableISOS:any[]=certifications;
   selectedISOS:AttachmentRefOrValue[]=[];
   selectedISO:any;
   showUploadFile:boolean=false;
@@ -304,12 +304,12 @@ export class CreateProductSpecComponent implements OnInit {
     this.showRelationships=false;
   }
 
-  addISO(iso:string){
-    const index = this.availableISOS.findIndex(item => item === iso);
+  addISO(iso:any){
+    const index = this.availableISOS.findIndex(item => item.name === iso.name);
     if (index !== -1) {
       console.log('seleccionar')
       this.availableISOS.splice(index, 1);
-      this.selectedISOS.push({name: iso, url: '', attachmentType: ''});
+      this.selectedISOS.push({name: iso.name, url: '', attachmentType: ''});
     }
     this.buttonISOClicked=!this.buttonISOClicked;
     this.cdr.detectChanges();
@@ -331,7 +331,7 @@ export class CreateProductSpecComponent implements OnInit {
   addISOValue(sel:any){
     const index = this.selectedISOS.findIndex(item => item.name === sel.name);
     const nativeElement = document.getElementById('iso-'+sel.name);
-    console.log(nativeElement)  
+    console.log(sel.url)
     console.log(this.selectedISOS)
   }
 
@@ -436,6 +436,11 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+
+    this.showCreateChar=false;
+    this.stringCharSelected=true;
+    this.numberCharSelected=false;
+    this.rangeCharSelected=false;
   }
 
   toggleResource(){
