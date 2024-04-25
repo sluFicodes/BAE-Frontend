@@ -24,6 +24,7 @@ export class SellerOfferingsComponent implements OnInit {
   show_resource_specs: boolean = false;
   show_offers: boolean = false;
   show_create_prod_spec: boolean = false;
+  show_create_serv_spec: boolean = false;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -36,6 +37,12 @@ export class SellerOfferingsComponent implements OnInit {
       }
       if(ev.type === 'SellerCreateProductSpec' && ev.value == true) {
         this.goToCreateProdSpec();
+      }
+      if(ev.type === 'SellerServiceSpec' && ev.value == true) {        
+        this.goToServiceSpec();
+      }
+      if(ev.type === 'SellerCreateServiceSpec' && ev.value == true) {
+        this.goToCreateServSpec();
       }
     })
   }
@@ -51,6 +58,18 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=false;
     this.show_create_prod_spec=true;
+    this.show_create_serv_spec=false;
+    this.cdr.detectChanges();
+  }
+
+  goToCreateServSpec(){
+    this.show_catalogs=false;
+    this.show_prod_specs=false;
+    this.show_service_specs=false;
+    this.show_resource_specs=false;
+    this.show_offers=false;
+    this.show_create_serv_spec=true;
+    this.show_create_prod_spec=false;
     this.cdr.detectChanges();
   }
 
@@ -62,6 +81,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=false;
     this.show_create_prod_spec=false;
+    this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
 
@@ -87,6 +107,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=false;
     this.show_create_prod_spec=false;
+    this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
 
@@ -112,6 +133,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=false;
     this.show_create_prod_spec=false;
+    this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
 
@@ -137,6 +159,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=true;
     this.show_offers=false;
     this.show_create_prod_spec=false;
+    this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
 
@@ -162,6 +185,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=true;
     this.show_create_prod_spec=false;
+    this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
 
