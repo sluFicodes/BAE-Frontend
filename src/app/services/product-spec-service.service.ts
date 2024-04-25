@@ -44,4 +44,9 @@ export class ProductSpecServiceService {
 
     return lastValueFrom(this.http.get<any>(url));
   }
+
+  postProdSpec(body:any){
+    let url = `${ProductSpecServiceService.BASE_URL}:${ProductSpecServiceService.API_PORT}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}`;
+    return this.http.post<any>(url, body);
+  }
 }

@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChi
 import { Router } from '@angular/router';
 import {faIdCard, faSort, faSwatchbook, faSparkles} from "@fortawesome/pro-solid-svg-icons";
 import {components} from "src/app/models/product-catalog";
-type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ProductSpecServiceService } from 'src/app/services/product-spec-service.service';
@@ -16,6 +15,16 @@ import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import * as moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
+
+type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
+type ProductSpecification_Create = components["schemas"]["ProductSpecification_Create"];
+type BundledProductSpecification = components["schemas"]["BundledProductSpecification"];
+type ProductSpecificationCharacteristic = components["schemas"]["ProductSpecificationCharacteristic"];
+type ServiceSpecificationRef = components["schemas"]["ServiceSpecificationRef"];
+type ResourceSpecificationRef = components["schemas"]["ResourceSpecificationRef"];
+type ProductSpecificationRelationship = components["schemas"]["ProductSpecificationRelationship"];
+type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 
 @Component({
   selector: 'create-product-spec',
@@ -24,19 +33,12 @@ import * as moment from 'moment';
 })
 export class CreateProductSpecComponent implements OnInit {
 
-  generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    brand: new FormControl('', [Validators.required]),
-    version: new FormControl('', [Validators.required]),
-    number: new FormControl(''),
-    description: new FormControl(''),
-  });
+  //PAGE SIZES:
+  PROD_SPEC_LIMIT: number = environment.PROD_SPEC_LIMIT;
+  SERV_SPEC_LIMIT: number = environment.SERV_SPEC_LIMIT;
+  RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
 
-  charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('')
-  });
-
+  //CONTROL VARIABLES:
   showGeneral:boolean=true;
   showBundle:boolean=false;
   showCompliance:boolean=false;
@@ -46,53 +48,79 @@ export class CreateProductSpecComponent implements OnInit {
   showAttach:boolean=false;
   showRelationships:boolean=false;
 
+  //Check if step was done
+  generalDone:boolean=false;
+  bundleDone:boolean=false;
+  complianceDone:boolean=false;
+  charsDone:boolean=false;
+  resourceDone:boolean=false;
+  serviceDone:boolean=false;
+  attachDone:boolean=false;
+  relationshipDone:boolean=false;
+
+  stepsElements:string[]=['general-info','bundle','compliance','chars','resource','service','attach','relationships'];
+  stepsCircles:string[]=['general-circle','bundle-circle','compliance-circle','chars-circle','resource-circle','service-circle','attach-circle','relationships-circle'];
+
   showPreview:boolean=false;
   showEmoji:boolean=false;
   description:string='';  
   partyId:any='';
 
-  PROD_SPEC_LIMIT: number = environment.PROD_SPEC_LIMIT;
-  SERV_SPEC_LIMIT: number = environment.SERV_SPEC_LIMIT;
-  RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
+  //PRODUCT GENERAL INFO:
+  generalForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    brand: new FormControl('', [Validators.required]),
+    version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]),
+    number: new FormControl(''),
+    description: new FormControl(''),
+  });
 
+  //CHARS INFO
+  charsForm = new FormGroup({
+    name: new FormControl('', [Validators.required]),
+    description: new FormControl('')
+  });
+  stringCharSelected:boolean=true;
+  numberCharSelected:boolean=false;
+  rangeCharSelected:boolean=false;
+  prodChars:ProductSpecificationCharacteristic[]=[];
+  creatingChars:CharacteristicValueSpecification[]=[];
+  showCreateChar:boolean=false;
+
+  //BUNDLE INFO:
   bundleChecked:boolean=false;
   bundlePage=0;
   bundlePageCheck:boolean=false;
   loadingBundle:boolean=false;
   loadingBundle_more:boolean=false;
   prodSpecs:any[]=[];
-  prodSpecsBundle:any[]=[];
+  //final selected products inside bundle
+  prodSpecsBundle:BundledProductSpecification[]=[];
 
+  //COMPLIANCE PROFILE INFO:
   buttonISOClicked:boolean=false;
   availableISOS:string[]=['EU Cloud Security','EU Cloud Rulebook','ISO 27001','ISO 27017','ISO 17025'];
-  selectedISOS:any[]=[];
+  selectedISOS:AttachmentRefOrValue[]=[];
   selectedISO:any;
   showUploadFile:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','compliance','chars','resource','service','attach','relationships'];
-  stepsCircles:string[]=['general-circle','bundle-circle','compliance-circle','chars-circle','resource-circle','service-circle','attach-circle','relationships-circle'];
-
-  stringCharSelected:boolean=true;
-  numberCharSelected:boolean=false;
-  rangeCharSelected:boolean=false;
-  prodChars:any[]=[];
-  creatingChars:CharacteristicValueSpecification[]=[];
-  showCreateChar:boolean=false;
-
+  //SERVICE INFO:
   serviceSpecPage=0;
   serviceSpecPageCheck:boolean=false;
   loadingServiceSpec:boolean=false;
   loadingServiceSpec_more:boolean=false;
   serviceSpecs:any[]=[];
-  selectedServiceSpecs:any[]=[];
+  selectedServiceSpecs:ServiceSpecificationRef[]=[];
 
+  //RESOURCE INFO:
   resourceSpecPage=0;
   resourceSpecPageCheck:boolean=false;
   loadingResourceSpec:boolean=false;
   loadingResourceSpec_more:boolean=false;
   resourceSpecs:any[]=[];
-  selectedResourceSpecs:any[]=[];
+  selectedResourceSpecs:ResourceSpecificationRef[]=[];
 
+  //RELATIONSHIPS INFO:
   prodRelationships:any[]=[];
   relToCreate:any;
   showCreateRel:boolean=false;
@@ -101,11 +129,18 @@ export class CreateProductSpecComponent implements OnInit {
   loadingprodSpecRel:boolean=false;
   loadingprodSpecRel_more:boolean=false;
   prodSpecRels:any[]=[];
+  selectedProdSpec:any={id:''};
+  selectedRelType:any='migration';
+
+  //ATTACHMENT INFO
   showImgPreview:boolean=false;
   showNewAtt:boolean=false;
   imgPreview:any;
-  prodAttachments:any[]=[];
-  attachToCreate:any='';
+  prodAttachments:AttachmentRefOrValue[]=[];
+  attachToCreate:AttachmentRefOrValue={url:'',attachmentType:''};
+
+  //FINAL PRODUCT USING API CALL STRUCTURE
+  productSpecToCreate:ProductSpecification_Create | undefined;
 
   constructor(
     private router: Router,
@@ -119,6 +154,7 @@ export class CreateProductSpecComponent implements OnInit {
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
   ) {
+    
   }
 
   @HostListener('document:click')
@@ -191,12 +227,14 @@ export class CreateProductSpecComponent implements OnInit {
   }
 
   toggleBundleCheck(){
+    this.prodSpecs=[];
+    this.bundlePage=0;
     this.bundleChecked=!this.bundleChecked;
     if(this.bundleChecked==true){
       this.loadingBundle=true;
       this.getProdSpecs();
     } else {
-      this.prodSpecs=[];
+      this.prodSpecsBundle=[];
     }
   }
 
@@ -234,10 +272,24 @@ export class CreateProductSpecComponent implements OnInit {
       this.prodSpecsBundle.splice(index, 1);
     } else {
       console.log('añadir')
-      this.prodSpecsBundle.push(prod);
+      this.prodSpecsBundle.push({
+        id: prod.id,
+        href: prod.href,
+        lifecycleStatus: prod.lifecycleStatus,
+        name: prod.name
+      });
     }    
     this.cdr.detectChanges();
     console.log(this.prodSpecsBundle)
+  }
+
+  isProdInBundle(prod:any){
+    const index = this.prodSpecsBundle.findIndex(item => item.id === prod.id);
+    if (index !== -1) {
+      return true
+    } else {
+      return false;
+    } 
   }
 
   toggleCompliance(){
@@ -257,7 +309,7 @@ export class CreateProductSpecComponent implements OnInit {
     if (index !== -1) {
       console.log('seleccionar')
       this.availableISOS.splice(index, 1);
-      this.selectedISOS.push({name: iso, value: ''});
+      this.selectedISOS.push({name: iso, url: '', attachmentType: ''});
     }
     this.buttonISOClicked=!this.buttonISOClicked;
     this.cdr.detectChanges();
@@ -312,7 +364,8 @@ export class CreateProductSpecComponent implements OnInit {
                 this.attachmentService.uploadFile(fileBody).subscribe({
                   next: data => {
                       console.log(data)
-                      this.selectedISOS[index].value=data.content;
+                      this.selectedISOS[index].url=data.content;
+                      this.selectedISOS[index].attachmentType=file.type;
                       this.showUploadFile=false;
                       this.cdr.detectChanges();
                       console.log('uploaded')
@@ -331,7 +384,7 @@ export class CreateProductSpecComponent implements OnInit {
                         this.showImgPreview=true;
                         this.imgPreview=data.content;
                       } else {
-                        this.attachToCreate=data.content;
+                        this.attachToCreate={url:data.content,attachmentType:file.type};
                       }
 
                       this.cdr.detectChanges();
@@ -387,6 +440,8 @@ export class CreateProductSpecComponent implements OnInit {
 
   toggleResource(){
     this.loadingResourceSpec=true;
+    this.resourceSpecs=[];
+    this.resourceSpecPage=0;
     this.getResSpecs();
     this.selectStep('resource','resource-circle');
     this.showBundle=false;
@@ -427,20 +482,35 @@ export class CreateProductSpecComponent implements OnInit {
   }
 
   addResToSelected(res:any){
-    const index = this.selectedServiceSpecs.findIndex(item => item.id === res.id);
+    const index = this.selectedResourceSpecs.findIndex(item => item.id === res.id);
     if (index !== -1) {
       console.log('eliminar')
       this.selectedResourceSpecs.splice(index, 1);
     } else {
       console.log('añadir')
-      this.selectedResourceSpecs.push(res);
+      this.selectedResourceSpecs.push({
+        id: res.id,
+        href: res.href,
+        name: res.name
+      });
     }    
     this.cdr.detectChanges();
     console.log(this.selectedResourceSpecs)
   }
 
+  isResSelected(res:any){
+    const index = this.selectedResourceSpecs.findIndex(item => item.id === res.id);
+    if (index !== -1) {
+      return true
+    } else {
+      return false;
+    } 
+  }
+
   toggleService(){
     this.loadingServiceSpec=true;
+    this.serviceSpecs=[];
+    this.serviceSpecPage=0;
     this.getServSpecs();
     this.selectStep('service','service-circle');
     this.showBundle=false;
@@ -487,10 +557,23 @@ export class CreateProductSpecComponent implements OnInit {
       this.selectedServiceSpecs.splice(index, 1);
     } else {
       console.log('añadir')
-      this.selectedServiceSpecs.push(serv);
+      this.selectedServiceSpecs.push({
+        id: serv.id,
+        href: serv.href,
+        name: serv.name
+      });
     }    
     this.cdr.detectChanges();
     console.log(this.selectedServiceSpecs)
+  }
+
+  isServSelected(serv:any){
+    const index = this.selectedServiceSpecs.findIndex(item => item.id === serv.id);
+    if (index !== -1) {
+      return true
+    } else {
+      return false;
+    } 
   }
 
   toggleAttach(){
@@ -512,7 +595,7 @@ export class CreateProductSpecComponent implements OnInit {
   }
 
   removeAtt(att:any){
-    const index = this.prodAttachments.findIndex(item => item.value === att.value);
+    const index = this.prodAttachments.findIndex(item => item.url === att.url);
     if (index !== -1) {
       console.log('eliminar')
       this.prodAttachments.splice(index, 1);
@@ -524,15 +607,16 @@ export class CreateProductSpecComponent implements OnInit {
     console.log('saving')
     this.prodAttachments.push({
       name: this.attachName.nativeElement.value,
-      value: this.attachToCreate
+      url: this.attachToCreate.url,
+      attachmentType: this.attachToCreate.attachmentType
     })
     this.attachName.nativeElement.value='';
-    this.attachToCreate='';
+    this.attachToCreate={url:'',attachmentType:''};
     this.showNewAtt=false;
   }
 
   clearAtt(){
-    this.attachToCreate='';
+    this.attachToCreate={url:'',attachmentType:''};
   }
 
   toggleRelationship(){
@@ -568,6 +652,10 @@ export class CreateProductSpecComponent implements OnInit {
     })
   }
 
+  selectRelationship(rel:any){
+    this.selectedProdSpec=rel;
+  }
+
   async nextProdSpecsRel(){
     this.loadingprodSpecRel_more=true;
     this.prodSpecRelPage=this.prodSpecRelPage+this.SERV_SPEC_LIMIT;
@@ -578,10 +666,18 @@ export class CreateProductSpecComponent implements OnInit {
 
   onRelChange(event: any) {
     console.log('relation type changed')
+    this.selectedRelType=event.target.value
   }
 
   saveRel(){
     this.showCreateRel=false;
+    this.prodRelationships.push({
+      id: this.selectedProdSpec.id,
+      href: this.selectedProdSpec.href,
+      relationshipType: this.selectedRelType,
+      productSpec: this.selectedProdSpec      
+    });
+    console.log(this.prodRelationships)
   }
 
   removeClass(elem: HTMLElement, cls:string) {
@@ -658,37 +754,132 @@ export class CreateProductSpecComponent implements OnInit {
     if(this.stringCharSelected){
       console.log('string')
       if(this.creatingChars.length==0){
-        this.creatingChars.push({isDefault:true,valueType:'string',value:this.charStringValue.nativeElement.value})
+        this.creatingChars.push({
+          isDefault:true,
+          value:this.charStringValue.nativeElement.value
+        })
       } else{
-        this.creatingChars.push({isDefault:false,valueType:'string',value:this.charStringValue.nativeElement.value})
+        this.creatingChars.push({
+          isDefault:false,
+          value:this.charStringValue.nativeElement.value
+        })
       }      
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
-        this.creatingChars.push({isDefault:true,valueType:'number',value:this.charNumberValue.nativeElement.value,unitOfMeasure:this.charNumberUnit.nativeElement.value})
+        this.creatingChars.push({
+          isDefault:true,
+          value:this.charNumberValue.nativeElement.value,
+          unitOfMeasure:this.charNumberUnit.nativeElement.value
+        })
       } else{
-        this.creatingChars.push({isDefault:false,valueType:'number',value:this.charNumberValue.nativeElement.value,unitOfMeasure:this.charNumberUnit.nativeElement.value})
+        this.creatingChars.push({
+          isDefault:false,
+          value:this.charNumberValue.nativeElement.value,
+          unitOfMeasure:this.charNumberUnit.nativeElement.value
+        })
       } 
     }else{
       console.log('range')
       if(this.creatingChars.length==0){
-        this.creatingChars.push({isDefault:true,valueType:'range',valueFrom:this.charFromValue.nativeElement.value,valueTo:this.charToValue.nativeElement.value,unitOfMeasure:this.charRangeUnit.nativeElement.value})
+        this.creatingChars.push({
+          isDefault:true,
+          valueFrom:this.charFromValue.nativeElement.value,
+          valueTo:this.charToValue.nativeElement.value,
+          unitOfMeasure:this.charRangeUnit.nativeElement.value
+        })
       } else{
-        this.creatingChars.push({isDefault:false,valueType:'range',valueFrom:this.charFromValue.nativeElement.value,valueTo:this.charToValue.nativeElement.value,unitOfMeasure:this.charRangeUnit.nativeElement.value})
+        this.creatingChars.push({
+          isDefault:false,
+          valueFrom:this.charFromValue.nativeElement.value,
+          valueTo:this.charToValue.nativeElement.value,
+          unitOfMeasure:this.charRangeUnit.nativeElement.value})
       } 
     }
   }
 
+  selectDefaultChar(char:any,idx:any){
+    for(let i=0;i<this.creatingChars.length;i++){
+      if(i==idx){
+        this.creatingChars[i].isDefault=true;
+      } else {
+        this.creatingChars[i].isDefault=false;
+      }
+    }
+  }
+
   saveChar(){
-    this.prodChars.push({
-      name: this.charsForm.value.name,
-      description: this.charsForm.value.description,
-      values: this.creatingChars
-    })
+    if(this.charsForm.value.name!=null){
+      this.prodChars.push({
+        id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
+        name: this.charsForm.value.name,
+        description: this.charsForm.value.description != null ? this.charsForm.value.description : '',
+        productSpecCharacteristicValue: this.creatingChars
+      })
+    }
+
     this.charsForm.reset();
     this.creatingChars=[];
     this.showCreateChar=false;
     this.cdr.detectChanges();
+  }
+
+  deleteChar(char:any){
+    const index = this.prodChars.findIndex(item => item.id === char.id);
+    if (index !== -1) {
+      console.log('eliminar')
+      this.prodChars.splice(index, 1);
+    }   
+    this.cdr.detectChanges();
+    console.log(this.prodChars)    
+  }
+
+  showFinish(){
+    for(let i=0; i<this.selectedISOS.length;i++){
+      this.prodAttachments.push({
+        id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
+        name: this.selectedISOS[i].name,
+        url: this.selectedISOS[i].url,
+        attachmentType: this.selectedISOS[i].attachmentType
+      })
+    }
+    if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){
+      this.productSpecToCreate={
+        name: this.generalForm.value.name,
+        description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
+        version: this.generalForm.value.version,
+        brand: this.generalForm.value.brand,
+        productNumber: this.generalForm.value.number != null ? this.generalForm.value.number : '',
+        lifecycleStatus: "Active",
+        isBundle: this.bundleChecked,
+        bundledProductSpecification: this.prodSpecsBundle,
+        productSpecCharacteristic: this.prodChars,
+        productSpecificationRelationship: this.prodRelationships,
+        attachment: this.prodAttachments,
+        relatedParty: [
+          {
+              id: this.partyId,
+              //href: "http://proxy.docker:8004/party/individual/urn:ngsi-ld:individual:803ee97b-1671-4526-ba3f-74681b22ccf3",
+              role: "Owner",
+              "@referredType": ''
+          }
+        ],
+        resourceSpecification: this.selectedResourceSpecs,
+        serviceSpecification: this.selectedServiceSpecs  
+      }
+    }
+    console.log('PRODUCTO A CREAR:')
+    console.log(this.productSpecToCreate)
+    this.prodSpecService.postProdSpec(this.productSpecToCreate).subscribe({
+      next: data => {
+        this.goBack();
+        console.log('creado producto')
+      },
+      error: error => {
+        console.error('There was an error while updating!', error);
+      }
+    });
+
   }
 
   //Markdown actions:
