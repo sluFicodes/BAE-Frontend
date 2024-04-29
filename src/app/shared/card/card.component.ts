@@ -106,7 +106,12 @@ export class CardComponent implements OnInit, AfterViewInit {
     this.categories = this.productOff?.category;
     //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
     //  this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
-    this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
+    let profile = this.productOff?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
+    if(profile.length==0){
+      this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
+    } else {
+      this.images = profile;
+    }
     let specId:any|undefined=this.productOff?.productSpecification?.id;
     if(specId != undefined){
       this.api.getProductSpecification(specId).then(spec => {

@@ -120,8 +120,16 @@ export class ProductDetailsComponent implements OnInit {
         this.categories = this.productOff?.category;
         this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
           this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
-        this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
-        this.attatchments = this.productOff?.attachment?.filter(item => item.attachmentType != 'Picture') ?? [];
+        let profile = this.productOff?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
+        console.log('profile...')
+        console.log(profile)
+        if(profile.length==0){
+          this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
+          this.attatchments = this.productOff?.attachment?.filter(item => item.attachmentType != 'Picture') ?? [];
+        } else {
+          this.images = profile;
+          this.attatchments = this.productOff?.attachment?.filter(item => item.name != 'Profile Picture') ?? [];
+        }
         for(let z=0; z < this.complianceProf.length; z++){
           if(this.prodSpec.productSpecCharacteristic != undefined){
             let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === this.complianceProf[z].id));

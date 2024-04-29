@@ -354,7 +354,7 @@ export class CreateProductSpecComponent implements OnInit {
               console.log(base64String); // You can use this base64 string as needed
               let fileBody = {
                 content: {
-                  name: file.name,
+                  name: this.generalForm.value.name+'_'+file.name,
                   data: base64String
                 },
                 contentType: file.type,
@@ -385,9 +385,9 @@ export class CreateProductSpecComponent implements OnInit {
                         this.showImgPreview=true;
                         this.imgPreview=data.content;
                         this.prodAttachments.push({
-                          name: 'Profile Image',
+                          name: 'Profile Picture',
                           url: this.imgPreview,
-                          attachmentType: 'Picture'
+                          attachmentType: file.type
                         })
                       } else {
                         this.attachToCreate={url:data.content,attachmentType:file.type};

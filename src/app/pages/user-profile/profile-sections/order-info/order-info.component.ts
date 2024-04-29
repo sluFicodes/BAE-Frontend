@@ -77,7 +77,11 @@ export class OrderInfoComponent implements OnInit, AfterViewInit{
   }
 
   getProductImage(prod:ProductOffering) {
+    let profile = prod?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
     let images = prod.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
+    if(profile.length!=0){
+      images = profile;
+    } 
     return images.length > 0 ? images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
