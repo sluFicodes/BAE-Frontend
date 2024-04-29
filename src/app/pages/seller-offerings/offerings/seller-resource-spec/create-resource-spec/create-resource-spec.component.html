@@ -17,7 +17,7 @@
                 <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                 </svg>
-                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">Create service specification</span>
+                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">Create resource specification</span>
                 </div>
             </li>
             </ol>
@@ -26,7 +26,7 @@
   <!-- End Breadcrumb -->
 
   <div class="bg-secondary-50 dark:bg-white mt-4 p-8 rounded-lg">
-    <h2 class="text-3xl font-bold text-primary-100 ml-4">New service</h2>
+    <h2 class="text-3xl font-bold text-primary-100 ml-4">New resource</h2>
     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
     <div class="grid grid-cols-20/80">
         <div class="flex flex-col mr-4">
@@ -37,7 +37,7 @@
                 </span>
                 <span>
                     <h3 class="flex leading-tight justify-start">General</h3>
-                    <p class="flex text-xs justify-start">Service's general information</p>
+                    <p class="flex text-xs justify-start">Resource's general information</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
@@ -47,7 +47,7 @@
                 </span>
                 <span>
                     <h3 class="flex leading-tight justify-start">Characteristics</h3>
-                    <p class="flex text-xs justify-start">Services's characteristics</p>
+                    <p class="flex text-xs justify-start">Resource's characteristics</p>
                 </span>
             </button>
         </div>
@@ -208,7 +208,7 @@
                                             {{prod.description}}                                       
                                         </td>
                                         <td class="px-6 py-4">
-                                            @for (char of prod.characteristicValueSpecification; track char;) {
+                                            @for (char of prod.resourceSpecCharacteristicValue; track char;) {
                                                 @if(char.value){
                                                     {{char.value}} {{char?.unitOfMeasure}},
                                                 } @else {

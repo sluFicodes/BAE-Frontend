@@ -100,7 +100,7 @@ export class CreateProductSpecComponent implements OnInit {
   //COMPLIANCE PROFILE INFO:
   buttonISOClicked:boolean=false;
   availableISOS:any[]=certifications;
-  selectedISOS:AttachmentRefOrValue[]=[];
+  selectedISOS:any[]=[];
   selectedISO:any;
   showUploadFile:boolean=false;
 
@@ -176,6 +176,7 @@ export class CreateProductSpecComponent implements OnInit {
   @ViewChild('toValue') charToValue!: ElementRef;
   @ViewChild('rangeUnit') charRangeUnit!: ElementRef;
   @ViewChild('attachName') attachName!: ElementRef;
+  @ViewChild('imgURL') imgURL!: ElementRef;
   
 
   public files: NgxFileDropEntry[] = [];
@@ -309,7 +310,7 @@ export class CreateProductSpecComponent implements OnInit {
     if (index !== -1) {
       console.log('seleccionar')
       this.availableISOS.splice(index, 1);
-      this.selectedISOS.push({name: iso.name, url: '', attachmentType: ''});
+      this.selectedISOS.push({name: iso.name, url: ''});
     }
     this.buttonISOClicked=!this.buttonISOClicked;
     this.cdr.detectChanges();
@@ -365,7 +366,7 @@ export class CreateProductSpecComponent implements OnInit {
                   next: data => {
                       console.log(data)
                       this.selectedISOS[index].url=data.content;
-                      this.selectedISOS[index].attachmentType=file.type;
+                      //this.selectedISOS[index].attachmentType=file.type;
                       this.showUploadFile=false;
                       this.cdr.detectChanges();
                       console.log('uploaded')
@@ -383,6 +384,11 @@ export class CreateProductSpecComponent implements OnInit {
                       if(sel=='img'){
                         this.showImgPreview=true;
                         this.imgPreview=data.content;
+                        this.prodAttachments.push({
+                          name: 'Profile Image',
+                          url: this.imgPreview,
+                          attachmentType: 'Picture'
+                        })
                       } else {
                         this.attachToCreate={url:data.content,attachmentType:file.type};
                       }
@@ -595,7 +601,23 @@ export class CreateProductSpecComponent implements OnInit {
 
   removeImg(){    
     this.showImgPreview=false;
+    const index = this.prodAttachments.findIndex(item => item.url === this.imgPreview);
+    if (index !== -1) {
+      console.log('eliminar')
+      this.prodAttachments.splice(index, 1);
+    }
     this.imgPreview='';
+    this.cdr.detectChanges();
+  }
+
+  saveImgFromURL(){
+    this.showImgPreview=true;
+    this.imgPreview=this.imgURL.nativeElement.value;
+    this.prodAttachments.push({
+      name: 'Profile Picture',
+      url: this.imgPreview,
+      attachmentType: 'Picture'
+    })
     this.cdr.detectChanges();
   }
 
@@ -625,6 +647,9 @@ export class CreateProductSpecComponent implements OnInit {
   }
 
   toggleRelationship(){
+    this.prodSpecRels=[];
+    this.prodSpecRelPage=0;
+    this.showCreateRel=false;
     this.loadingprodSpecRel=true;
     this.getProdSpecsRel();
     this.selectStep('relationships','relationships-circle');
@@ -803,6 +828,12 @@ export class CreateProductSpecComponent implements OnInit {
     }
   }
 
+  removeCharValue(char:any,idx:any){
+    console.log(this.creatingChars)
+    this.creatingChars.splice(idx, 1);
+    console.log(this.creatingChars)
+  }
+
   selectDefaultChar(char:any,idx:any){
     for(let i=0;i<this.creatingChars.length;i++){
       if(i==idx){
@@ -839,13 +870,19 @@ export class CreateProductSpecComponent implements OnInit {
     console.log(this.prodChars)    
   }
 
+  checkInput(value: string): boolean {
+    return value.trim().length === 0;
+  }
+
   showFinish(){
     for(let i=0; i<this.selectedISOS.length;i++){
-      this.prodAttachments.push({
+      this.prodChars.push({
         id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
         name: this.selectedISOS[i].name,
-        url: this.selectedISOS[i].url,
-        attachmentType: this.selectedISOS[i].attachmentType
+        productSpecCharacteristicValue: [{
+          isDefault: true,
+          value: this.selectedISOS[i].url
+        }]
       })
     }
     if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){

@@ -8,6 +8,7 @@ import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ResourceSpecServiceService } from 'src/app/services/resource-spec-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import { LoginInfo } from 'src/app/models/interfaces';
+import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
 
 @Component({
@@ -39,6 +40,7 @@ export class SellerResourceSpecComponent implements OnInit {
     private resSpecService: ResourceSpecServiceService,
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
+    private eventMessage: EventMessageService
   ) {
   }
 
@@ -70,6 +72,11 @@ export class SellerResourceSpecComponent implements OnInit {
 
   ngAfterViewInit(){
     initFlowbite();
+  }
+
+
+  goToCreate(){
+    this.eventMessage.emitSellerCreateResourceSpec(true);
   }
 
   getResSpecs(){    

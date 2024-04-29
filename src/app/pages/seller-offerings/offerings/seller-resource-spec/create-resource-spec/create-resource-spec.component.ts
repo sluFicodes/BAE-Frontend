@@ -16,21 +16,21 @@ import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
-import {components} from "src/app/models/service-catalog";
-type ServiceSpecification_Create = components["schemas"]["ServiceSpecification_Create"];
-type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
-type ProductSpecificationCharacteristic = components["schemas"]["CharacteristicSpecification"];
+import {components} from "src/app/models/resource-catalog";
+type ResourceSpecification_Create = components["schemas"]["ResourceSpecification_Create"];
+type CharacteristicValueSpecification = components["schemas"]["ResourceSpecificationCharacteristicValue"];
+type ResourceSpecificationCharacteristic = components["schemas"]["ResourceSpecificationCharacteristic"];
 
 @Component({
-  selector: 'create-service-spec',
-  templateUrl: './create-service-spec.component.html',
-  styleUrl: './create-service-spec.component.css'
+  selector: 'create-resource-spec',
+  templateUrl: './create-resource-spec.component.html',
+  styleUrl: './create-resource-spec.component.css'
 })
-export class CreateServiceSpecComponent implements OnInit {
+export class CreateResourceSpecComponent implements OnInit {
 
   partyId:any='';
 
-  serviceToCreate:ServiceSpecification_Create | undefined;
+  resourceToCreate:ResourceSpecification_Create | undefined;
 
   stepsElements:string[]=['general-info','chars'];
   stepsCircles:string[]=['general-circle','chars-circle'];
@@ -61,7 +61,7 @@ export class CreateServiceSpecComponent implements OnInit {
   stringCharSelected:boolean=true;
   numberCharSelected:boolean=false;
   rangeCharSelected:boolean=false;
-  prodChars:ProductSpecificationCharacteristic[]=[];
+  prodChars:ResourceSpecificationCharacteristic[]=[];
   creatingChars:CharacteristicValueSpecification[]=[];
   showCreateChar:boolean=false;
 
@@ -71,7 +71,7 @@ export class CreateServiceSpecComponent implements OnInit {
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
     private elementRef: ElementRef,
-    private servSpecService: ServiceSpecServiceService,
+    private resSpecService: ResourceSpecServiceService,
   ) {
     
   }
@@ -104,7 +104,7 @@ export class CreateServiceSpecComponent implements OnInit {
   }
 
   goBack() {
-    this.eventMessage.emitSellerServiceSpec(true);
+    this.eventMessage.emitSellerResourceSpec(true);
   }
 
   toggleGeneral(){
@@ -200,7 +200,7 @@ export class CreateServiceSpecComponent implements OnInit {
         id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
         name: this.charsForm.value.name,
         description: this.charsForm.value.description != null ? this.charsForm.value.description : '',
-        characteristicValueSpecification: this.creatingChars
+        resourceSpecCharacteristicValue: this.creatingChars
       })
     }
 
@@ -228,11 +228,11 @@ export class CreateServiceSpecComponent implements OnInit {
 
   showFinish(){
     if(this.generalForm.value.name!=null){
-      this.serviceToCreate={
+      this.resourceToCreate={
         name: this.generalForm.value.name,
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
         lifecycleStatus: "Active",
-        specCharacteristic: this.prodChars,
+        resourceSpecCharacteristic: this.prodChars,
         relatedParty: [
           {
               id: this.partyId,
@@ -243,8 +243,8 @@ export class CreateServiceSpecComponent implements OnInit {
         ],
       }
       console.log('SERVICE TO CREATE:')
-      console.log(this.serviceToCreate)
-      this.servSpecService.postServSpec(this.serviceToCreate).subscribe({
+      console.log(this.resourceToCreate)
+      this.resSpecService.postResSpec(this.resourceToCreate).subscribe({
         next: data => {
           this.goBack();
           console.log('serv created')
@@ -388,5 +388,4 @@ export class CreateServiceSpecComponent implements OnInit {
       this.description=this.generalForm.value.description;
     }    
   }
-
 }

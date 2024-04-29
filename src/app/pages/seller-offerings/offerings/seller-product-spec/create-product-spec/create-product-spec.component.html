@@ -534,16 +534,30 @@
                                 <div class="flex flex-col items-start pl-4  shadow-md sm:rounded-lg w-full bg-white border border-gray-300 mb-2">
                                     @if(rangeCharSelected){
                                         @for (char of creatingChars; track char; let idx = $index) {
-                                            <div>
-                                                <input [checked]="char?.isDefault" (click)="selectDefaultChar(char,idx)" id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
-                                                <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-700 text-wrap break-all">{{char.valueFrom}} - {{char.valueTo}} {{char.unitOfMeasure}}</label>
+                                            <div class="flex w-full justify-between">
+                                                <div class="align-items-middle align-middle">
+                                                    <input [checked]="char?.isDefault" (click)="selectDefaultChar(char,idx)" id="disabled-checked-checkbox" type="checkbox" value="" class="align-middle w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
+                                                    <label for="disabled-checked-checkbox" class="ms-2 align-middle text-sm font-medium text-gray-700 text-wrap break-all">{{char.valueFrom}} - {{char.valueTo}} {{char.unitOfMeasure}}</label>    
+                                                </div>
+                                                <button (click)="removeCharValue(char,idx)" class="m-2 text-white bg-red-500 rounded-3xl">
+                                                    <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                                    </svg>                                  
+                                                </button>
                                             </div>
                                         }
                                     } @else {
                                         @for (char of creatingChars; track char; let idx = $index) {
-                                            <div>
-                                                <input [checked]="char?.isDefault" (click)="selectDefaultChar(char,idx)" id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
-                                                <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-700 text-wrap break-all">{{char.value}} {{char?.unitOfMeasure}}</label>
+                                            <div class="flex w-full justify-between">
+                                                <div class="align-items-middle align-middle">
+                                                    <input [checked]="char?.isDefault" (click)="selectDefaultChar(char,idx)" id="disabled-checked-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
+                                                    <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-700 text-wrap break-all">{{char.value}} {{char?.unitOfMeasure}}</label>    
+                                                </div>
+                                                <button (click)="removeCharValue(char,idx)" class="m-2 text-white bg-red-500 rounded-3xl">
+                                                    <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                                    </svg>                                  
+                                                </button>
                                             </div>
                                         }
                                     }
@@ -829,7 +843,16 @@
                                         </div>
                                     </div>
                                 </ng-template>
-                            </ngx-file-drop> 
+                            </ngx-file-drop>
+                        </div>
+                        <label class="font-bold ml-6">Add product image using URL</label>
+                        <div class="flex h-fit ml-6 mt-2 mb-2 w-full justify-between align-items-middle align-middle">
+                            <input #imgURL type="text" id="att-name" class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                            <button (click)="saveImgFromURL()" class="flex align-items-middle text-white bg-primary-100 rounded-3xl p-1 ml-2 h-fit">
+                                <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>                                    
+                                </svg>                                  
+                            </button>
                         </div>
                     }
                     <h4 class="text-lg font-bold ml-4">Add attachments</h4>

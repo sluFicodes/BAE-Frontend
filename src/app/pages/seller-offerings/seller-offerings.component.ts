@@ -24,6 +24,7 @@ export class SellerOfferingsComponent implements OnInit {
   show_resource_specs: boolean = false;
   show_offers: boolean = false;
   show_create_prod_spec: boolean = false;
+  show_create_res_spec: boolean = false;
   show_create_serv_spec: boolean = false;
 
   constructor(
@@ -44,6 +45,12 @@ export class SellerOfferingsComponent implements OnInit {
       if(ev.type === 'SellerCreateServiceSpec' && ev.value == true) {
         this.goToCreateServSpec();
       }
+      if(ev.type === 'SellerResourceSpec' && ev.value == true) {        
+        this.goToResourceSpec();
+      }
+      if(ev.type === 'SellerCreateResourceSpec' && ev.value == true) {
+        this.goToCreateResSpec();
+      }
     })
   }
 
@@ -59,6 +66,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_offers=false;
     this.show_create_prod_spec=true;
     this.show_create_serv_spec=false;
+    this.show_create_res_spec=false;
     this.cdr.detectChanges();
   }
 
@@ -70,6 +78,19 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_offers=false;
     this.show_create_serv_spec=true;
     this.show_create_prod_spec=false;
+    this.show_create_res_spec=false;
+    this.cdr.detectChanges();
+  }
+
+  goToCreateResSpec(){
+    this.show_catalogs=false;
+    this.show_prod_specs=false;
+    this.show_service_specs=false;
+    this.show_resource_specs=false;
+    this.show_offers=false;
+    this.show_create_serv_spec=false;
+    this.show_create_prod_spec=false;
+    this.show_create_res_spec=true;
     this.cdr.detectChanges();
   }
 
@@ -81,6 +102,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=false;
     this.show_create_prod_spec=false;
+    this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
@@ -107,6 +129,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=false;
     this.show_create_prod_spec=false;
+    this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
@@ -133,6 +156,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=false;
     this.show_create_prod_spec=false;
+    this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
@@ -159,6 +183,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=true;
     this.show_offers=false;
     this.show_create_prod_spec=false;
+    this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
@@ -185,6 +210,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_resource_specs=false;
     this.show_offers=true;
     this.show_create_prod_spec=false;
+    this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
     this.cdr.detectChanges();
   }
