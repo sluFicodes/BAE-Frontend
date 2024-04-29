@@ -9,6 +9,7 @@ type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 //type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
+import { certifications } from 'src/app/models/certification-standards.const'
 
 @Component({
   selector: 'app-product-details',

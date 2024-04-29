@@ -328,7 +328,10 @@
         "_relationship_type": "Relationship type",
         "_add_relationship": "Add new relationship",
         "_save_relationship": "Save relationship",
-        "_finish": "Finish"
+        "_profile_pic": "Profile picture",
+        "_finish": "Finish",
+        "_summary": "Product's summary",
+        "_create_prod": "Create product"
     },
     "CREATE_RES_SPEC": {
         "_back": "Back",
@@ -355,7 +358,8 @@
         "_name": "Name",
         "_description": "Description",
         "_next": "Next",
-        "_finish": "Finish"
+        "_finish": "Finish",
+        "_create_res": "Create resource"
     },
     "CREATE_SERV_SPEC": {
         "_back": "Back",
@@ -382,6 +386,7 @@
         "_name": "Name",
         "_description": "Description",
         "_next": "Next",
-        "_finish": "Finish"
+        "_finish": "Finish",
+        "_create_serv": "Create service"
     }
 }

@@ -32,8 +32,8 @@ export class CreateServiceSpecComponent implements OnInit {
 
   serviceToCreate:ServiceSpecification_Create | undefined;
 
-  stepsElements:string[]=['general-info','chars'];
-  stepsCircles:string[]=['general-circle','chars-circle'];
+  stepsElements:string[]=['general-info','chars','summary'];
+  stepsCircles:string[]=['general-circle','chars-circle','summary-circle'];
 
   //markdown variables:
   showPreview:boolean=false;
@@ -43,6 +43,7 @@ export class CreateServiceSpecComponent implements OnInit {
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
   showChars:boolean=false;
+  showSummary:boolean=false;
   //Check if step was done
   generalDone:boolean=false;
   charsDone:boolean=false;
@@ -244,16 +245,23 @@ export class CreateServiceSpecComponent implements OnInit {
       }
       console.log('SERVICE TO CREATE:')
       console.log(this.serviceToCreate)
-      this.servSpecService.postServSpec(this.serviceToCreate).subscribe({
-        next: data => {
-          this.goBack();
-          console.log('serv created')
-        },
-        error: error => {
-          console.error('There was an error while updating!', error);
-        }
-      });
+      this.showChars=false;
+      this.showGeneral=false;
+      this.showSummary=true;
+      this.selectStep('summary','summary-circle');
     }
+  }
+
+  createService(){
+    this.servSpecService.postServSpec(this.serviceToCreate).subscribe({
+      next: data => {
+        this.goBack();
+        console.log('serv created')
+      },
+      error: error => {
+        console.error('There was an error while updating!', error);
+      }
+    });
   }
 
   //STEPS METHODS

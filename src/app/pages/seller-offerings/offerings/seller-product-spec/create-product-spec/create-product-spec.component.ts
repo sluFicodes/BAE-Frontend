@@ -47,6 +47,7 @@ export class CreateProductSpecComponent implements OnInit {
   showService:boolean=false;
   showAttach:boolean=false;
   showRelationships:boolean=false;
+  showSummary:boolean=false;
 
   //Check if step was done
   generalDone:boolean=false;
@@ -58,8 +59,8 @@ export class CreateProductSpecComponent implements OnInit {
   attachDone:boolean=false;
   relationshipDone:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','compliance','chars','resource','service','attach','relationships'];
-  stepsCircles:string[]=['general-circle','bundle-circle','compliance-circle','chars-circle','resource-circle','service-circle','attach-circle','relationships-circle'];
+  stepsElements:string[]=['general-info','bundle','compliance','chars','resource','service','attach','relationships','summary'];
+  stepsCircles:string[]=['general-circle','bundle-circle','compliance-circle','chars-circle','resource-circle','service-circle','attach-circle','relationships-circle','summary-circle'];
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
@@ -213,6 +214,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   toggleBundle(){
@@ -225,6 +227,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   toggleBundleCheck(){
@@ -303,6 +306,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   addISO(iso:any){
@@ -442,6 +446,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
 
     this.showCreateChar=false;
     this.stringCharSelected=true;
@@ -463,6 +468,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   getResSpecs(){    
@@ -532,6 +538,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=true;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   getServSpecs(){    
@@ -597,6 +604,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=true;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   removeImg(){    
@@ -661,6 +669,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=true;
+    this.showSummary=false;
   }
 
   getProdSpecsRel(){
@@ -912,6 +921,31 @@ export class CreateProductSpecComponent implements OnInit {
     }
     console.log('PRODUCTO A CREAR:')
     console.log(this.productSpecToCreate)
+    console.log(this.imgPreview)
+    this.selectStep('summary','summary-circle');
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showCompliance=false;
+    this.showChars=false;
+    this.showResource=false;
+    this.showService=false;
+    this.showAttach=false;
+    this.showRelationships=false;
+    this.showSummary=true;
+    /*
+    this.prodSpecService.postProdSpec(this.productSpecToCreate).subscribe({
+      next: data => {
+        this.goBack();
+        console.log('creado producto')
+      },
+      error: error => {
+        console.error('There was an error while updating!', error);
+      }
+    });*/
+
+  }
+
+  createProduct(){
     this.prodSpecService.postProdSpec(this.productSpecToCreate).subscribe({
       next: data => {
         this.goBack();
@@ -921,7 +955,6 @@ export class CreateProductSpecComponent implements OnInit {
         console.error('There was an error while updating!', error);
       }
     });
-
   }
 
   //Markdown actions:

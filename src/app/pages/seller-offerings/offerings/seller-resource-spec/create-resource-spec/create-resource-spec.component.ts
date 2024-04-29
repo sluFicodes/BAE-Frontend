@@ -32,8 +32,8 @@ export class CreateResourceSpecComponent implements OnInit {
 
   resourceToCreate:ResourceSpecification_Create | undefined;
 
-  stepsElements:string[]=['general-info','chars'];
-  stepsCircles:string[]=['general-circle','chars-circle'];
+  stepsElements:string[]=['general-info','chars','summary'];
+  stepsCircles:string[]=['general-circle','chars-circle','summary-circle'];
 
   //markdown variables:
   showPreview:boolean=false;
@@ -43,6 +43,7 @@ export class CreateResourceSpecComponent implements OnInit {
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
   showChars:boolean=false;
+  showSummary:boolean=false;
   //Check if step was done
   generalDone:boolean=false;
   charsDone:boolean=false;
@@ -111,12 +112,14 @@ export class CreateResourceSpecComponent implements OnInit {
     this.selectStep('general-info','general-circle');
     this.showGeneral=true;
     this.showChars=false;
+    this.showSummary=false;
   }
 
   toggleChars(){
     this.selectStep('chars','chars-circle');
     this.showGeneral=false;
     this.showChars=true;
+    this.showSummary=false;
   }
 
   onTypeChange(event: any) {
@@ -244,7 +247,11 @@ export class CreateResourceSpecComponent implements OnInit {
       }
       console.log('SERVICE TO CREATE:')
       console.log(this.resourceToCreate)
-      this.resSpecService.postResSpec(this.resourceToCreate).subscribe({
+      this.showChars=false;
+      this.showGeneral=false;
+      this.showSummary=true;
+      this.selectStep('summary','summary-circle');
+      /*this.resSpecService.postResSpec(this.resourceToCreate).subscribe({
         next: data => {
           this.goBack();
           console.log('serv created')
@@ -252,8 +259,20 @@ export class CreateResourceSpecComponent implements OnInit {
         error: error => {
           console.error('There was an error while updating!', error);
         }
-      });
+      });*/
     }
+  }
+
+  createResource(){
+    this.resSpecService.postResSpec(this.resourceToCreate).subscribe({
+      next: data => {
+        this.goBack();
+        console.log('serv created')
+      },
+      error: error => {
+        console.error('There was an error while updating!', error);
+      }
+    })
   }
 
   //STEPS METHODS
