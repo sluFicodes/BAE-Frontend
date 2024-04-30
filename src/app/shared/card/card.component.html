@@ -1,0 +1,363 @@
+<div class="w-full h-full bg-secondary-50 rounded-lg dark:border-gray-700 border-secondary-50 border">
+
+
+  <div (click)="goToProductDetails(productOff)" class="rounded overflow-hidden cursor-pointer">
+    <div class="relative h-48 flex justify-center items-center">
+      <!-- Imagen de fondo difuminada -->
+      <!--<div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-color: {{bgColor}};"></div>-->
+      <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage()}});filter: blur(20px);"></div>
+      <!-- Imagen superior -->
+      <!-- <img crossorigin="anonymous" #myProdImage class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="Descripción de la imagen">-->
+      <img class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="Descripción de la imagen">
+    </div>
+  </div>
+
+  <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
+    <div class="px-5 py-5 bg-secondary-50/95 rounded-lg">
+      <div class="h-[30px] overflow-y-hidden">
+      @for (cat of categories; track cat.id) {
+        <bae-badge class="ml-2" [category]=cat></bae-badge>
+      }
+      </div>
+      <a (click)="goToProductDetails(productOff)" class="cursor-pointer">
+        <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{productOff?.name}}</h5>
+      </a>
+      <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600" [data]="productOff?.description"></markdown>
+      <div class="flex w-full justify-between mt-2.5 mb-5 text-gray-500 font-mono">
+        <div>V: {{productOff?.version || 'latest'}}</div>
+        <div class="flex items-center">
+          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <svg class="w-4 h-4 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+          </svg>
+          <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3">5.0</span>
+        </div>
+      </div>
+
+      <div class="flex place-content-start items-baseline mb-5">
+        <span class="text-2xl font-bold text-gray-900 mr-1">{{ 'CARD._from' | translate }} {{price.price}} {{price.unit}}</span>
+        <span class="text-xs font-bold text-gray-900">{{price.text}}</span>
+      </div>
+
+      <div class="flex items-center justify-center rounded-lg">
+
+        <button (click)="toggleDetailsModal();$event.stopPropagation();"  type="button" class="flex items-center text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-100 dark:hover:bg-primary-50 dark:focus:ring-primary-100 mr-1">
+          <svg class="w-[18px] h-[18px] text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
+            <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+              <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+              <path d="M10 13c4.97 0 9-2.686 9-6s-4.03-6-9-6-9 2.686-9 6 4.03 6 9 6Z"/>
+            </g>
+          </svg>
+          {{ 'CARD._details' | translate }}
+        </button>
+        @if(check_logged){
+          <a id="add-to-cart" (click)="toggleCartSelection(productOff);$event.stopPropagation();" class="text-white cursor-pointer bg-green-700 hover:bg-green-900 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{ 'CARD._add_cart' | translate }}</a>
+        }
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main modal -->
+@if (showModal){
+  <div id="details-modal" [ngClass]="showModal ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full rounded-lg shadow-2xl">
+    <div class="relative w-full max-w-7xl max-h-full rounded-t-lg">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom rounded-lg" (click)="$event.stopPropagation();">
+            <!--
+            <div class="flex items-center justify-between pr-2 pt-2 bg-secondary-50 rounded-t-lg dark:bg-white dark:border-gray-700 border-secondary-50">
+              <button (click)="hideModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="details-modal">
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                  </svg>
+                  <span class="sr-only">{{ 'CARD._close' | translate }}</span>
+              </button>
+            </div>Modal header -->
+            <!-- Modal body -->
+
+            <!-- START HEADER CARD -->
+            <div class="w-full h-[200px] mb-4 rounded-t-lg grid grid-cols-60/40">
+
+              <div class="grid grid-rows-4 p-4 h-[200px]">
+                  <h5 class="md:text-3xl lg:text-4xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{productOff?.name}}</h5>
+                  <div class="grid grid-cols-2">
+                      <div class="min-h-19 pt-2 text-gray-500 dark:text-gray-400">V: {{productOff?.version || 'latest'}}</div>
+                      <div class="flex items-center justify-end">
+                          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                          </svg>
+                          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                          </svg>
+                          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                          </svg>
+                          <svg class="w-4 h-4 text-yellow-300 mr-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                          </svg>
+                          <svg class="w-4 h-4 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                            <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                          </svg>
+                          <span class="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-3">5.0</span>
+                      </div>
+                  </div>
+                  <div>
+                      <div class="flex place-content-start items-baseline mb-5">
+                        <span class="text-2xl font-bold text-primary-100 dark:text-white mr-1">{{ 'CARD._from' | translate }} {{price.price}} {{price.unit}}</span>
+                        <span class="text-xs font-bold text-primary-100 dark:text-white">{{price.text}}</span>
+                      </div>
+
+                  </div>
+                  <div>
+                      @for (cat of categories; track cat.id) {
+                          <bae-badge class="mr-2" [category]=cat></bae-badge>
+                      }
+                  </div>
+              </div>
+              <div class="overflow-hidden flex justify-center items-center bg-white dark:bg-primary-50">
+                <img class="rounded-r-lg h-5/6 w-5/6 object-contain mix-blend-multiply saturate-200" src="{{getProductImage()}}" alt="product image" />
+              </div>
+              <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
+          </div>
+
+        <!-- END HEADER CARD -->
+
+
+            <div class="p-4 md:p-5 grid grid-cols-3 gap-4">
+              <div class="justify-start">
+                  <h5 class="font-semibold tracking-tight text-lg text-primary-100 dark:text-primary-50">{{ 'CARD._prod_details' | translate }}:</h5>
+                  <markdown class="min-h-19 h-19 dark:text-secondary-50 line-clamp-6" [data]="productOff?.description"></markdown>
+              </div>
+              <div class="justify-start">
+                <h5 class="font-semibold tracking-tight text-lg text-primary-100 dark:text-primary-50">{{ 'CARD._comp_profile' | translate }}:</h5>
+                <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
+                  @for (char of complianceProf; track char.id) {
+                    @if (char.href == '#') {
+                        <li>{{char.name}}: {{char.value}}</li>
+                    } @else {
+                        <li>{{char.name}}: <a href="{{char.href}}">{{char.value}}</a></li>
+                    }
+                  }
+                </ul>
+              </div>
+              <div class="justify-start">
+                  <h5 class="font-semibold tracking-tight text-lg text-primary-100 dark:text-primary-50">{{ 'CARD._extra_info' | translate }}:</h5>
+                    <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
+                      <li>{{ 'CARD._offer_version' | translate }}: v{{productOff?.version}}</li>
+                      <li>{{ 'CARD._product_name' | translate }}: {{prodSpec.name}}</li>
+                      <li>{{ 'CARD._brand' | translate }}: {{prodSpec.brand}}</li>
+                      <li>{{ 'CARD._last_update' | translate }}: {{productOff?.lastUpdate | date:'dd/MM/yy, HH:mm'}}</li>
+                      <li>{{ 'CARD._product_version' | translate }}: v{{prodSpec.version}}</li>
+                      <li>{{ 'CARD._id_number' | translate }}: XX</li>
+                    </ul>
+              </div>
+            </div>
+            <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
+            <div class="flex">
+              @if(check_logged){
+              <button (click)="toggleCartSelection(productOff);$event.stopPropagation();" type="button" class="m-4 w-fit flex items-center justify-start text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                </svg>
+                {{ 'CARD._add_cart' | translate }}
+              </button>
+              }
+              <button type="button" (click)="goToProductDetails(productOff)" class="m-4 w-fit flex items-center justify-start text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                {{ 'CARD._details' | translate }}
+                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+  </div>
+}
+
+
+<!-- ADD TO CART TOAST -->
+@if (toastVisibility) {
+<div id="toast-add-cart" class="flex grid grid-flow-row mr-2 items-center w-auto max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 fixed top-1/2 right-0 z-50 justify-center" role="alert">
+  <div class="flex items-center justify-center">
+    <svg class="w-[18px] h-[18px] text-gray-800 dark:text-white mr-2 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0h8m-8 0-1-4m9 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-9-4h10l2-7H3m2 7L3 4m0 0-.792-3H1"/>
+    </svg>
+    <div class="text-sm font-normal">
+      {{ 'CARD._added_card' | translate }}.
+    </div>
+    <div class="flex items-center ms-auto space-x-2 rtl:space-x-reverse p-1.5">
+        <button type="button" (click)="deleteProduct(lastAddedProd)" class="px-3 py-2 text-xs font-medium text-center text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">{{ 'CARD._undo' | translate }}</button>
+        <button type="button" (click)="toastVisibility=false" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-add-cart" aria-label="Close">
+        <span class="sr-only">{{ 'CARD._close_toast' | translate }}</span>
+        <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="flex w-full mt-2 rounded-full h-2.5 dark:bg-gray-700">
+    <div id="progress-bar" class="flex bg-green-600 h-2.5 rounded-full dark:bg-green-500 transition-width delay-200 duration-3000 ease-out" style="width: 0px;"></div>
+  </div>
+</div>
+}
+
+<!-- CART SELECTION modal -->
+@if (cartSelection){
+  <div id="cart-selection-modal" [ngClass]="cartSelection ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+    <div class="relative w-full max-w-7xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
+              <button (click)="hideCartSelection()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cart-selection-modal">
+                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                  </svg>
+                  <span class="sr-only">{{ 'CARD._close' | translate }}</span>
+              </button>
+            </div>
+            <!-- Modal body -->
+            <div class="w-full h-full p-8">
+              <div class="flex">
+                @if(check_prices){
+                  <button id="button-price" type="button" (click)="clickShowPrice()" class="h-fit ml-4 w-fit text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                    {{ 'CARD._price_plans' | translate }}
+                  </button>
+                }
+                @if(check_char){
+                  <button id="button-char" type="button" (click)="clickShowChar()" class="h-fit w-fit ml-4 text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                    {{ 'CARD._chars' | translate }}
+                  </button>
+                }
+                @if(check_terms){
+                  <button id="button-terms" type="button" (click)="clickShowTerms()" class="h-fit w-fit ml-4 text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                    {{ 'CARD._terms' | translate }}
+                  </button>
+                  }
+              </div>
+              <hr class="h-px ml-4 mr-4 mb-2 bg-gray-300 border-0">
+              <div class="border border-gray-300 bg-secondary-50/95 rounded-lg">
+                @if(check_prices){
+                  <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="price">
+                      <h5 class="text-3xl font-semibold tracking-tight text-primary-100 ">{{ 'CARD._select_price' | translate }}:</h5>
+                      <div class="grid grid-flow-col gap-8 p-4">
+                      @for (price of productOff?.productOfferingPrice; track price.id; let idx = $index) {
+                        @if (price.priceType == 'recurring') {
+                          <div class="flex items-center">
+                            <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 ">
+                            <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 peer-checked:border  rounded-lg cursor-pointer peer-checked:border-primary-100">
+                              <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                                <div class="bg-green-500 rounded-t-lg w-full">
+                                    <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
+                                </div>
+                                <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                <p class="flex justify-center font-normal text-gray-700">/{{price.recurringChargePeriodType}}</p>
+                                <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                              </div>
+
+                            </label>
+                            </div>
+
+                        } @else if (price.priceType == 'usage') {
+                          <div class="flex items-center">
+                            <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer items-center w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                            <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 peer-checked:border  rounded-lg cursor-pointer peer-checked:border-primary-100">
+
+                              <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                                  <div class="bg-yellow-300 rounded-t-lg w-full">
+                                      <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                                  </div>
+                                  <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                  <p class="flex justify-center font-normal text-gray-700">/{{price.unitOfMeasure?.units}}</p>
+                                  <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                              </div>
+                            </label>
+                          </div>
+                        } @else {
+                          <div class="flex items-center">
+                            <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                            <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 peer-checked:border rounded-lg cursor-pointer peer-checked:border-primary-100">
+
+                            <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full justify-center">
+                                <div class="bg-blue-500 rounded-t-lg w-full">
+                                    <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                                </div>
+                                <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                            </div>
+                          </label>
+                        </div>
+                        }
+                    }
+                  </div>
+                  </div>
+                  }
+                  @if(check_char){
+                    <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="char">
+                      <h5 class="text-3xl font-semibold tracking-tight text-primary-100">{{ 'CARD._select_char' | translate }}:</h5>
+                      @for(char of prodSpec.productSpecCharacteristic; track char.id; let charidx = $index){
+                        <div class="min-h-19 pb-2">
+                          <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{char.name}}:</h5>
+                          @for (val of char?.productSpecCharacteristicValue; track val.value; let validx = $index) {
+                            <div class="flex">
+                            @if (val?.isDefault == true) {
+                            <div class="flex items-center mb-4">
+                              <input checked [id]="'char-radio-'+charidx+validx" (change)="onCharChange(charidx,validx,val)" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                              <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900">{{val.value}}</label>
+                            </div>
+                            } @else {
+                              <div class="flex items-center mb-4">
+                                <input [id]="'char-radio-'+charidx+validx" (change)="onCharChange(charidx,validx,val)" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900">{{val.value}}</label>
+                              </div>
+                            }
+                          </div>
+                        }
+                        </div>
+                      }
+                    </div>
+                    }
+                    @if(check_terms){
+                      <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="terms">
+                        <h5 class="text-3xl font-semibold tracking-tight text-primary-100">{{ 'CARD._terms' | translate }}:</h5>
+                        @for (term of productOff?.productOfferingTerm; track term.name){
+                          <p class="text-gray-900 text-bold"> <span class="font-bold">{{term.name}}:</span> {{term.description}}</p>
+                        }
+                        <div class="flex items-center mb-4">
+                          <input id="terms-checkbox" type="checkbox" (change)="selected_terms=!selected_terms" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                          <label for="terms-checkbox" class="ms-2 text-sm font-medium text-gray-900">{{ 'CARD._accept_terms' | translate }}</label>
+                      </div>
+                      </div>
+                    }
+                  </div>
+                    @if(check_terms == true && selected_terms == false){
+                      <button disabled (click)="addProductToCart(productOff,true)" type="button" class="cursor-not-allowed mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                        <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                        </svg>
+                        {{ 'CARD._add_cart' | translate }}
+                      </button>
+                    } @else {
+                      <button (click)="addProductToCart(productOff,true)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                        <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                        </svg>
+                        {{ 'CARD._add_cart' | translate }}
+                      </button>
+                    }
+            </div>
+        </div>
+    </div>
+  </div>
+}

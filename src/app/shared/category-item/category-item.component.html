@@ -1,0 +1,7 @@
+<input [(ngModel)]="checked" type="checkbox" [id]="option" value="" class="hidden peer" #optioninput>
+<label [for]="option" [ngClass]="labelClass" (click)="onClick(optioninput.checked)">
+  <div class="flex w-full justify-between items-center">
+    <div class="w-full text-base text-left font-semibold">{{ data?.name }}</div>
+    <fa-icon [icon]="checked ? faCircleCheck : faCircle" class="mr-2 text-2xl"></fa-icon>
+  </div>
+</label>

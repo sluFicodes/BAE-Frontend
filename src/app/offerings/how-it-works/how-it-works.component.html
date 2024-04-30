@@ -1,0 +1,82 @@
+<div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16">
+    <h2 class="pb-2 text-4xl font-extrabold text-primary-100 mb-4 text-center dark:text-primary-50">{{ 'HOWITWORKS._title' | translate }}</h2>
+    <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-secondary-50 text-center">{{ 'HOWITWORKS._subtitle' | translate }}</p>
+
+    <div class="grid grid-cols-2 gap-8">
+        <!-- CUSTOMERS -->
+        <div class="border border-primary-100 dark:border-primary-50 rounded-lg p-8 md:p-12">
+            <div class="grid grid-cols-80/20 pb-4 h-1/4 mb-2">
+                <div class="flex justify-start grid grid-rows-20/80">
+                    <h2 class="text-gray-900 dark:text-white text-xl font-normal mb-2">{{ 'HOWITWORKS.CUSTOMERS._title' | translate }}</h2>
+                    <h2 class="text-gray-900 dark:text-white text-3xl font-extrabold">{{ 'HOWITWORKS.CUSTOMERS._subtitle' | translate }}</h2>
+                </div>
+                <div class="flex justify-end">
+                    <fa-icon [icon]="faCloudArrowDown" class="fa-2xl text-primary-100 dark:text-primary-50 align-middle"></fa-icon>
+                </div>
+            </div>
+            
+            <div class="h-2/4 text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">
+                <ol class="max-w-md space-y-1 list-decimal list-inside mb-4">
+                    <li>
+                        <span class="font-semibold text-primary-100 dark:text-primary-50">{{ 'HOWITWORKS.CUSTOMERS._search_title' | translate }}:</span> {{ 'HOWITWORKS.CUSTOMERS._search_desc' | translate }}
+                    </li>
+                    <li>
+                        <span class="font-semibold text-primary-100 dark:text-primary-50">{{ 'HOWITWORKS.CUSTOMERS._compare_title' | translate }}:</span> {{ 'HOWITWORKS.CUSTOMERS._compare_desc' | translate }}
+                    </li>
+                    <li>
+                        <span class="font-semibold text-primary-100 dark:text-primary-50">{{ 'HOWITWORKS.CUSTOMERS._seamless_title' | translate }}:</span> {{ 'HOWITWORKS.CUSTOMERS._seamless_desc' | translate }}
+                    </li>
+                </ol>
+                  
+            </div>
+
+            <div class="flex h-1/4 items-end">
+
+                <button type="button" class="h-fit text-blue-600 dark:text-blue-500 hover:text-white border border-primary-100 dark:border-primary-50 hover:bg-primary-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:text-primary-50 dark:hover:text-white dark:hover:bg-primary-50 dark:focus:ring-blue-800">
+                    <svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                    </svg>
+                    {{ 'HOWITWORKS.CUSTOMERS._join' | translate }}
+                </button>
+            </div>
+        </div>
+        <!-- PROVIDERS -->
+        <div class="border border-primary-100 dark:border-primary-50 rounded-lg p-8 md:p-12">
+            <div class="grid grid-cols-80/20 pb-4 h-1/4 mb-2">
+                <div class="flex justify-start grid grid-rows-20/80">
+                    <h2 class="text-gray-900 dark:text-white text-xl font-normal mb-2">{{ 'HOWITWORKS.PROVIDERS._title' | translate }}</h2>
+                    <h2 class="text-gray-900 dark:text-white text-3xl font-extrabold">{{ 'HOWITWORKS.PROVIDERS._subtitle' | translate }}</h2>
+                </div>
+                <div class="flex justify-end">
+                    <fa-icon [icon]="faCircleNodes" class="fa-2xl text-primary-100 dark:text-primary-50 align-middle"></fa-icon>
+                </div>
+            </div>
+            
+            <div class="h-2/4 text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">
+                <ol class="max-w-md space-y-1 list-decimal list-inside mb-4">
+                    <li>
+                        <span class="font-semibold text-primary-100 dark:text-primary-50">{{ 'HOWITWORKS.PROVIDERS._register_title' | translate }}:</span> {{ 'HOWITWORKS.PROVIDERS._register_desc' | translate }}
+                    </li>
+                    <li>
+                        <span class="font-semibold text-primary-100 dark:text-primary-50">{{ 'HOWITWORKS.PROVIDERS._verified_title' | translate }}:</span> {{ 'HOWITWORKS.PROVIDERS._verified_desc' | translate }}
+                    </li>
+                    <li>
+                        <span class="font-semibold text-primary-100 dark:text-primary-50">{{ 'HOWITWORKS.PROVIDERS._reach_title' | translate }}:</span> {{ 'HOWITWORKS.PROVIDERS._reach_desc' | translate }}
+                    </li>
+                </ol>
+                  
+            </div>
+
+            <div class="flex h-1/4 items-end">
+
+                <button type="button" class="h-fit text-blue-600 dark:text-blue-500 hover:text-white border border-primary-100 dark:border-primary-50 hover:bg-primary-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:text-primary-50 dark:hover:text-white dark:hover:bg-primary-50 dark:focus:ring-blue-800">
+                    <svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                    </svg>
+                    {{ 'HOWITWORKS.PROVIDERS._join' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,245 @@
+<div class="flex flex-row p-4 justify-end">
+    <!-- HEADER SEARCH BAR -->
+    <form class="max-w-lg w-1/2 pr-4 z-10">
+            <div class="relative">
+                <input type="search" id="search" [formControl]="searchField" class="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+                placeholder="Filter products..." />
+                <button type="submit" (click)="filterInventoryByKeywords()" class="absolute top-0 end-0 inline-flex items-center p-2.5 text-sm font-medium h-full text-white bg-primary-100 rounded-e-lg border border-blue-700 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                    </svg>                  
+                    <span class="ml-2">Search</span>
+                </button>
+            </div>
+    </form>
+    <!-- FILTERS -->
+    <div>
+        <button id="dropdownDefault" data-dropdown-toggle="dropdown"
+        class="text-black dark:text-white bg-primary-700 border border-gray-200 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+        type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+        </svg>
+        Filter by state
+        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+        </button>
+        
+        <div id="dropdown" class="z-20 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
+            State
+        </h6>
+        <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
+            <li class="flex items-center">
+            <input id="created" type="checkbox" value="" checked (change)="onStateFilterChange('created')"
+                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+            <label for="created" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                Created
+            </label>
+            </li>
+
+            <li class="flex items-center">
+            <input id="active" type="checkbox" value="" checked (change)="onStateFilterChange('active')"
+                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+            <label for="active" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                Active
+            </label>
+            </li>
+
+            <li class="flex items-center">
+            <input id="suspended" type="checkbox" value="" (change)="onStateFilterChange('suspended')"
+                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+            <label for="suspended" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                Suspended
+            </label>
+            </li>
+
+            <li class="flex items-center">
+            <input id="terminated" type="checkbox" value="" (change)="onStateFilterChange('terminated')"
+                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+
+            <label for="terminated" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                Terminated
+            </label>
+            </li>
+        </ul>
+        </div>
+    </div>  
+    </div>
+            
+    <!-- END FILTERS -->
+    @if(loading){
+        <div role="status" class="w-full h-full flex justify-center align-middle">
+            <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+            </svg>
+            <span class="sr-only">Loading...</span>
+          </div>
+    } @else {
+        <div class="pl-5 grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            @for (inv of inventory; track inv.id; let idx = $index) {
+                <div class="w-full h-full bg-secondary-50 rounded-lg dark:border-gray-700 border-secondary-50 border ">
+
+                    <div (click)="goToProductDetails(inv.product)" class="rounded overflow-hidden cursor-pointer">
+                        <div class="relative h-48 flex justify-center items-center">
+                        <!-- Imagen de fondo difuminada -->
+                        <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage(inv.product)}});filter: blur(20px);"></div>
+                        <!-- Imagen superior -->
+                        <img [id]="'img-'+idx" class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage(inv.product)}}" alt="Descripción de la imagen">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
+                        <div class="px-5 py-5 bg-secondary-50/95 rounded-lg">
+                        <div class="h-[30px] overflow-y-hidden">
+                        @for (cat of inv.product?.category; track cat.id) {
+                            <bae-badge class="ml-2" [category]=cat></bae-badge>
+                        }
+                        </div>
+                        <div class="flex flex-row justify-between">
+                            <a (click)="goToProductDetails(inv.product)" class="flex cursor-pointer">
+                            <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{inv.product?.name}}</h5>
+                            </a>
+                            @if(inv.status == 'active'){
+                            <button type="button" data-tooltip-target="unsubscribe-default" (click)="showUnsubscribeModal(inv);$event.stopPropagation();" class="flex text-red-600 border border-red-600 hover:bg-red-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-full text-sm p-2 text-center inline-flex items-center">
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                </svg>                                    
+                                <span class="sr-only">Unsubscribe</span>
+                            </button>
+                            <div id="unsubscribe-default" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 rounded-lg shadow-sm opacity-0 tooltip bg-primary-100">
+                                Unsubscribe
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                            }
+                            @if(inv.status == 'suspended'){
+                            <button type="button" data-tooltip-target="renew-default" (click)="showRenewModal(inv);$event.stopPropagation();" class="flex text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-400 font-medium rounded-full text-sm p-2 text-center inline-flex items-center">
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 10 3-3m0 0-3-3m3 3H5v3m3 4-3 3m0 0 3 3m-3-3h14v-3"/>
+                                </svg>                                                                        
+                                <span class="sr-only">Renew</span>
+                            </button>
+                            <div id="renew-default" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 rounded-lg shadow-sm opacity-0 tooltip bg-primary-100">
+                                Renew
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                            }
+                        </div>
+
+                        <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600" [data]="inv.product?.description"></markdown>
+                        <div class="flex w-full justify-between mt-2.5 mb-5 text-gray-500 font-mono">
+                            <div>V: {{inv.product?.version || 'latest'}}</div>
+                            <div class="flex items-center justify-center rounded-lg">
+                            @if(inv.status == 'active'){
+                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{inv.status}}</span>
+                            } @else if(inv.status == 'created') {
+                                <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{inv.status}}</span>
+                            } @else if(inv.status == 'suspended') {
+                                <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{inv.status}}</span>
+                            } @else if(inv.status == 'terminated') {
+                                <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{inv.status}}</span>
+                            }
+                        </div>
+                        </div>
+                    
+                        <div class="flex flex-col place-content-center items-baseline mb-5 w-full">
+                            <div class="flex place-content-center items-baseline w-full">
+                            <span class="text-2xl font-bold text-gray-900 mr-1">{{inv.price?.price}} {{inv.price.unit}}</span>
+                            <span class="text-xs font-bold text-gray-900">{{inv.price.text}}</span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+            } @empty {
+                <div class="min-h-19 dark:text-gray-600 text-center">{{ 'PRODUCT_INVENTORY._not_found' | translate }}.</div>
+            }
+        </div>
+        @if (!loading_more) {
+            @if (page_check) {
+            <div class="flex pt-6 pb-6 justify-center align-middle">
+                <button (click)="next()" class="flex cursor-pointer items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                Load more
+                <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                </svg>
+                </button>
+            </div>
+            }
+        } @else {
+            <div role="status" class="w-full h-full flex justify-center align-middle mt-2">
+            <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+            </svg>
+            <span class="sr-only">Loading...</span>
+            </div>
+        }
+    }
+
+@if(unsubscribeModal){
+    <!-- UNSUBSCRIBE modal -->
+    <div [ngClass]="unsubscribeModal ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" 
+    class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full shadow-2xl">
+      <div class="relative p-4 w-full max-w-md h-full md:h-auto" (click)="$event.stopPropagation();">
+          <!-- Modal content -->
+          <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+              <button type="button" (click)="unsubscribeModal=false;$event.stopPropagation();" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span class="sr-only">Close modal</span>
+              </button>
+
+              <svg class="text-gray-400 dark:text-gray-500 w-12 h-12 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z" clip-rule="evenodd"/>
+              </svg>                
+              
+              <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to cancel this subscription? ({{prodToUnsubscribe.product.name}})</p>
+              <div class="flex justify-center items-center space-x-4">
+                  <button (click)="unsubscribeModal=false;$event.stopPropagation();" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                      No, cancel
+                  </button>
+                  <button (click)="unsubscribeProduct(prodToUnsubscribe.id)" type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-900">
+                      Yes, I'm sure
+                  </button>
+              </div>
+          </div>
+      </div>
+    </div>
+  }
+
+  @if(renewModal){
+    <!-- RENEW modal -->
+    <div [ngClass]="renewModal ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" 
+    class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full shadow-2xl">
+      <div class="relative p-4 w-full max-w-md h-full md:h-auto" (click)="$event.stopPropagation();">
+          <!-- Modal content -->
+          <div class="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+              <button type="button" (click)="renewModal=false;$event.stopPropagation();" class="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                  <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                  <span class="sr-only">Close modal</span>
+              </button>
+              <svg class="text-gray-400 dark:text-gray-500 w-12 h-12 mb-3.5 mx-auto" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m16 10 3-3m0 0-3-3m3 3H5v3m3 4-3 3m0 0 3 3m-3-3h14v-3"/>                    
+              </svg>
+              
+              <p class="mb-4 text-gray-500 dark:text-gray-300">Are you sure you want to renew this subscription? ({{prodToRenew.product.name}})</p>
+              <div class="flex justify-center items-center space-x-4">
+                  <button (click)="renewModal=false;$event.stopPropagation();" type="button" class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                      No, cancel
+                  </button>
+                  <button (click)="renewProduct(prodToRenew.id)" type="submit" class="py-2 px-3 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-900">
+                      Yes, I'm sure
+                  </button>
+              </div>
+          </div>
+      </div>
+    </div>
+  }

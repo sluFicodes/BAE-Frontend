@@ -1,0 +1,38 @@
+<h2 class="text-2xl dark:text-secondary-50 p-2">Categories</h2>
+<div id="accordion-collapse" data-accordion="open" >
+@for(category of categories; track category.id; let idx = $index) {
+
+    <h2 [id]="'accordion-heading-'+idx">
+      @if (category.children) {
+        @if (category.children.length != 0) {
+          <button type="button" [ngClass]="$first ? classListFirst : $last ? classListLast : classList" [attr.data-accordion-target]="'#accordion-body-'+idx" aria-expanded="false" [attr.aria-controls]="'accordion-body-'+idx">
+            <span class="text-left">{{ category?.name }}</span>
+            <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
+            </svg>
+          </button>
+        }
+      } @else {
+        <bae-category-item [data]="category" [isParent]="true" [isFirst]="$first" [isLast]="$last"></bae-category-item>
+      }
+    </h2>
+  @if (category.children) {
+    @if (category.children.length != 0) {
+      <div [id]="'accordion-body-'+idx" class="hidden" [attr.aria-labelledby]="'accordion-heading-'+idx">
+        <div class="p-2 border border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+            <ul class="grid w-full gap-2">
+              @for(child of category.children; track child.id) {
+                <li>
+                  <bae-category-item [data]="child"></bae-category-item>
+                </li>
+              }
+            </ul>
+        </div>
+      </div>
+    }
+  }
+} @empty {
+
+}
+</div>
+

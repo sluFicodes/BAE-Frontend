@@ -8,3 +8,122 @@
     font-family: "Blinker", system-ui, sans-serif;
   }
 }
+
+@import '@ctrl/ngx-emoji-mart/picker';
+
+/* Default styles for Markdown elements */
+markdown {
+  font-family: "Blinker", system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+markdown h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+
+markdown h2 {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+markdown h3 {
+  font-size: 1.17em;
+  margin-bottom: 0.5em;
+}
+
+markdown h4 {
+  font-size: 1em;
+  margin-bottom: 0.5em;
+}
+
+markdown h5 {
+  font-size: 0.83em;
+  margin-bottom: 0.5em;
+}
+
+markdown h6 {
+  font-size: 0.67em;
+  margin-bottom: 0.5em;
+}
+
+markdown p {
+  margin-bottom: 1em;
+}
+
+markdown ul,
+markdown ol {
+  margin-bottom: 1em;
+}
+
+markdown ul ul,
+markdown ul ol,
+markdown ol ul,
+markdown ol ol {
+  margin-top: 0.5em;
+  margin-left: 1.5em;
+}
+
+markdown ul li,
+markdown ol li {
+  margin-bottom: 0.5em;
+  margin-left: 1.5em;
+}
+
+markdown ul li {
+  list-style-type: disc;
+}
+
+markdown ol li {
+  list-style-type: decimal;
+}
+
+markdown blockquote {
+  margin-left: 0;
+  padding-left: 1em;
+  border-left: 2px solid #ccc;
+}
+
+markdown code {
+  font-family: monospace;
+  background-color: #f4f4f4;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+markdown pre {
+  font-family: monospace;
+  background-color: #f4f4f4;
+  padding: 0.5em;
+  border-radius: 3px;
+  overflow: auto;
+}
+
+markdown table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+markdown table th,
+markdown table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+markdown table th {
+  background-color: #f2f2f2;
+}
+
+markdown img {
+  max-width: 100%;
+  height: auto;
+}
+
+markdown a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+markdown a:hover {
+  text-decoration: underline;
+}
