@@ -41,4 +41,9 @@ export class ResourceSpecServiceService {
 
     return lastValueFrom(this.http.get<any>(url));
   }
+
+  postResSpec(body:any){
+    let url = `${ResourceSpecServiceService.BASE_URL}:${ResourceSpecServiceService.API_PORT}${ResourceSpecServiceService.RESOURCE}${ResourceSpecServiceService.API_RESOURCE_SPEC}`;
+    return this.http.post<any>(url, body);
+  }
 }

@@ -41,4 +41,9 @@ export class ServiceSpecServiceService {
 
     return lastValueFrom(this.http.get<any>(url));
   }
+
+  postServSpec(body:any){
+    let url = `${ServiceSpecServiceService.BASE_URL}:${ServiceSpecServiceService.API_PORT}${ServiceSpecServiceService.SERVICE}${ServiceSpecServiceService.API_SERVICE_SPEC}`;
+    return this.http.post<any>(url, body);
+  }
 }

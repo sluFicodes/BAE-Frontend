@@ -3,7 +3,7 @@
     <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-gray-300 border-secondary-50 border flex flex-col shadow-lg">
       <div class="flex w-full flex-col items-center md:flex-row justify-between">
         <div class="mb-4 md:mb-0 md:w-1/4 p-8">
-            <h2 class="text-2xl font-bold mb-4">Service Specifications</h2>  
+            <h2 class="text-2xl font-bold mb-4">{{ 'OFFERINGS._serv_spec' | translate }}</h2>  
         </div>
 
         <div class="flex flex-row w-full justify-end">
@@ -15,12 +15,12 @@
                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                         </svg>                  
-                        <span class="ml-2">Search</span>
+                        <span class="ml-2">{{ 'OFFERINGS._search' | translate }}</span>
                     </button>
                 </div>
               </form>
-            <button type="button" class="ml-2 mr-8 mb-4 text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center align-middle me-2">
-                <p class="pl-2 pr-2">Add new service specification</p>
+            <button type="button" (click)="goToCreate()" class="ml-2 mr-8 mb-4 text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center align-middle me-2">
+                <p class="pl-2 pr-2">{{ 'OFFERINGS._add_new_serv' | translate }}</p>
                 <svg class="w-[18px] h-[18px] text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                 </svg>
@@ -33,12 +33,12 @@
         <div class="p-8 w-full">
           <div class="flex flex-row mb-1">
             <fa-icon [icon]="faSwatchbook" class="fa-base text-primary-100 align-middle mr-2"></fa-icon>
-            <h2 class="text-base font-bold">Filter by state</h2>
+            <h2 class="text-base font-bold">{{ 'OFFERINGS._filter_state' | translate }}</h2>
             </div>
             <button id="dropdownDefault" data-dropdown-toggle="dropdown"
             class="text-black w-full justify-between shadow bg-white border border-gray-300 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center"
             type="button">
-            Filter by state
+            {{ 'OFFERINGS._filter_state' | translate }}
             <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -47,7 +47,7 @@
             
             <div id="dropdown" class="z-20 hidden w-1/5 p-3 bg-white rounded-lg shadow">
             <h6 class="mb-3 text-sm font-medium text-gray-900">
-                State
+                {{ 'OFFERINGS._state' | translate }}
             </h6>
             <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
   
@@ -56,7 +56,7 @@
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
                 <label for="active" class="ml-2 text-sm font-medium text-gray-900">
-                    Active
+                    {{ 'OFFERINGS._active' | translate }}
                 </label>
                 </li>
     
@@ -65,7 +65,7 @@
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
                 <label for="launched" class="ml-2 text-sm font-medium text-gray-900">
-                    Launched
+                    {{ 'OFFERINGS._launched' | translate }}
                 </label>
                 </li>
     
@@ -74,7 +74,7 @@
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
                 <label for="retired" class="ml-2 text-sm font-medium text-gray-900">
-                    Retired
+                    {{ 'OFFERINGS._retired' | translate }}
                 </label>
                 </li>
 
@@ -83,7 +83,7 @@
                       class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
       
                   <label for="obsolete" class="ml-2 text-sm font-medium text-gray-900">
-                      Obsolete
+                    {{ 'OFFERINGS._obsolete' | translate }}
                   </label>
                 </li>
             </ul>
@@ -93,12 +93,12 @@
       <div class="p-8 w-full">
         <div class="flex flex-row mb-1">
           <fa-icon [icon]="faSort" class="fa-base text-primary-100 align-middle mr-2"></fa-icon>
-          <h2 class="text-base font-bold">Order by...</h2>
+          <h2 class="text-base font-bold">{{ 'OFFERINGS._order_by' | translate }}</h2>
         </div>
         <select id="sort" (change)="onSortChange($event)" class="shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-          <option selected>Order by...</option>
-          <option value="update">Last update</option>
-          <option value="name">Name</option>
+          <option selected>{{ 'OFFERINGS._order_by' | translate }}</option>
+          <option value="update">{{ 'OFFERINGS._last_update' | translate }}</option>
+          <option value="name">{{ 'OFFERINGS._name' | translate }}</option>
         </select>
       </div>
 
@@ -121,16 +121,16 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
                 <tr>
                     <th scope="col" class="px-6 py-3">
-                        Name
+                        {{ 'OFFERINGS._name' | translate }}
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Status
+                        {{ 'OFFERINGS._status' | translate }}
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Last update
+                        {{ 'OFFERINGS._last_update' | translate }}
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Actions
+                        {{ 'OFFERINGS._actions' | translate }}
                     </th>
                 </tr>
             </thead>
@@ -176,7 +176,7 @@
         @if (page_check) {
         <div class="flex pt-6 pb-2 justify-center align-middle">
             <button (click)="next()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
-            Load more
+            {{ 'OFFERINGS._load_more' | translate }}
             <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
             </svg>

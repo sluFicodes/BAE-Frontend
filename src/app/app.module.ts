@@ -48,6 +48,8 @@ import { SellerOfferComponent } from './pages/seller-offerings/offerings/seller-
 import { CreateProductSpecComponent } from './pages/seller-offerings/offerings/seller-product-spec/create-product-spec/create-product-spec.component';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { CreateServiceSpecComponent } from './pages/seller-offerings/offerings/seller-service-spec/create-service-spec/create-service-spec.component';
+import { CreateResourceSpecComponent } from './pages/seller-offerings/offerings/seller-resource-spec/create-resource-spec/create-resource-spec.component';
 
 @NgModule({
   declarations: [
@@ -84,6 +86,8 @@ import { NgxFileDropModule } from 'ngx-file-drop';
     SellerResourceSpecComponent,
     SellerOfferComponent,
     CreateProductSpecComponent,
+    CreateServiceSpecComponent,
+    CreateResourceSpecComponent,
   ],
   imports: [
     BrowserModule,

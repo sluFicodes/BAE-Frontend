@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import {faIdCard, faSort, faSwatchbook, faSparkles} from "@fortawesome/pro-solid-svg-icons";
+
 import {components} from "src/app/models/product-catalog";
 import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -14,6 +14,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -47,6 +48,7 @@ export class CreateProductSpecComponent implements OnInit {
   showService:boolean=false;
   showAttach:boolean=false;
   showRelationships:boolean=false;
+  showSummary:boolean=false;
 
   //Check if step was done
   generalDone:boolean=false;
@@ -58,8 +60,8 @@ export class CreateProductSpecComponent implements OnInit {
   attachDone:boolean=false;
   relationshipDone:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','compliance','chars','resource','service','attach','relationships'];
-  stepsCircles:string[]=['general-circle','bundle-circle','compliance-circle','chars-circle','resource-circle','service-circle','attach-circle','relationships-circle'];
+  stepsElements:string[]=['general-info','bundle','compliance','chars','resource','service','attach','relationships','summary'];
+  stepsCircles:string[]=['general-circle','bundle-circle','compliance-circle','chars-circle','resource-circle','service-circle','attach-circle','relationships-circle','summary-circle'];
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
@@ -99,8 +101,9 @@ export class CreateProductSpecComponent implements OnInit {
 
   //COMPLIANCE PROFILE INFO:
   buttonISOClicked:boolean=false;
-  availableISOS:string[]=['EU Cloud Security','EU Cloud Rulebook','ISO 27001','ISO 27017','ISO 17025'];
-  selectedISOS:AttachmentRefOrValue[]=[];
+
+  availableISOS:any[]=certifications;
+  selectedISOS:any[]=[];
   selectedISO:any;
   showUploadFile:boolean=false;
 
@@ -135,7 +138,7 @@ export class CreateProductSpecComponent implements OnInit {
   //ATTACHMENT INFO
   showImgPreview:boolean=false;
   showNewAtt:boolean=false;
-  imgPreview:any;
+  imgPreview:any='';
   prodAttachments:AttachmentRefOrValue[]=[];
   attachToCreate:AttachmentRefOrValue={url:'',attachmentType:''};
 
@@ -176,6 +179,7 @@ export class CreateProductSpecComponent implements OnInit {
   @ViewChild('toValue') charToValue!: ElementRef;
   @ViewChild('rangeUnit') charRangeUnit!: ElementRef;
   @ViewChild('attachName') attachName!: ElementRef;
+  @ViewChild('imgURL') imgURL!: ElementRef;
   
 
   public files: NgxFileDropEntry[] = [];
@@ -212,6 +216,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   toggleBundle(){
@@ -224,6 +229,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   toggleBundleCheck(){
@@ -302,14 +308,15 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
-  addISO(iso:string){
-    const index = this.availableISOS.findIndex(item => item === iso);
+  addISO(iso:any){
+    const index = this.availableISOS.findIndex(item => item.name === iso.name);
     if (index !== -1) {
       console.log('seleccionar')
       this.availableISOS.splice(index, 1);
-      this.selectedISOS.push({name: iso, url: '', attachmentType: ''});
+      this.selectedISOS.push({name: iso.name, url: ''});
     }
     this.buttonISOClicked=!this.buttonISOClicked;
     this.cdr.detectChanges();
@@ -331,7 +338,7 @@ export class CreateProductSpecComponent implements OnInit {
   addISOValue(sel:any){
     const index = this.selectedISOS.findIndex(item => item.name === sel.name);
     const nativeElement = document.getElementById('iso-'+sel.name);
-    console.log(nativeElement)  
+    console.log(sel.url)
     console.log(this.selectedISOS)
   }
 
@@ -351,9 +358,13 @@ export class CreateProductSpecComponent implements OnInit {
               const base64String: string = e.target.result.split(',')[1];
               console.log('BASE 64....')
               console.log(base64String); // You can use this base64 string as needed
+              let prod_name='';
+              if(this.generalForm.value.name!=null){
+                prod_name=this.generalForm.value.name.replaceAll(/\s/g,'')+'_';
+              }
               let fileBody = {
                 content: {
-                  name: file.name,
+                  name: prod_name+file.name,
                   data: base64String
                 },
                 contentType: file.type,
@@ -365,7 +376,7 @@ export class CreateProductSpecComponent implements OnInit {
                   next: data => {
                       console.log(data)
                       this.selectedISOS[index].url=data.content;
-                      this.selectedISOS[index].attachmentType=file.type;
+                      //this.selectedISOS[index].attachmentType=file.type;
                       this.showUploadFile=false;
                       this.cdr.detectChanges();
                       console.log('uploaded')
@@ -383,6 +394,11 @@ export class CreateProductSpecComponent implements OnInit {
                       if(sel=='img'){
                         this.showImgPreview=true;
                         this.imgPreview=data.content;
+                        this.prodAttachments.push({
+                          name: 'Profile Picture',
+                          url: this.imgPreview,
+                          attachmentType: file.type
+                        })
                       } else {
                         this.attachToCreate={url:data.content,attachmentType:file.type};
                       }
@@ -436,6 +452,12 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
+
+    this.showCreateChar=false;
+    this.stringCharSelected=true;
+    this.numberCharSelected=false;
+    this.rangeCharSelected=false;
   }
 
   toggleResource(){
@@ -452,6 +474,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   getResSpecs(){    
@@ -521,6 +544,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=true;
     this.showAttach=false;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   getServSpecs(){    
@@ -586,11 +610,28 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=true;
     this.showRelationships=false;
+    this.showSummary=false;
   }
 
   removeImg(){    
     this.showImgPreview=false;
+    const index = this.prodAttachments.findIndex(item => item.url === this.imgPreview);
+    if (index !== -1) {
+      console.log('eliminar')
+      this.prodAttachments.splice(index, 1);
+    }
     this.imgPreview='';
+    this.cdr.detectChanges();
+  }
+
+  saveImgFromURL(){
+    this.showImgPreview=true;
+    this.imgPreview=this.imgURL.nativeElement.value;
+    this.prodAttachments.push({
+      name: 'Profile Picture',
+      url: this.imgPreview,
+      attachmentType: 'Picture'
+    })
     this.cdr.detectChanges();
   }
 
@@ -620,6 +661,9 @@ export class CreateProductSpecComponent implements OnInit {
   }
 
   toggleRelationship(){
+    this.prodSpecRels=[];
+    this.prodSpecRelPage=0;
+    this.showCreateRel=false;
     this.loadingprodSpecRel=true;
     this.getProdSpecsRel();
     this.selectStep('relationships','relationships-circle');
@@ -631,6 +675,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showService=false;
     this.showAttach=false;
     this.showRelationships=true;
+    this.showSummary=false;
   }
 
   getProdSpecsRel(){
@@ -798,6 +843,12 @@ export class CreateProductSpecComponent implements OnInit {
     }
   }
 
+  removeCharValue(char:any,idx:any){
+    console.log(this.creatingChars)
+    this.creatingChars.splice(idx, 1);
+    console.log(this.creatingChars)
+  }
+
   selectDefaultChar(char:any,idx:any){
     for(let i=0;i<this.creatingChars.length;i++){
       if(i==idx){
@@ -834,13 +885,19 @@ export class CreateProductSpecComponent implements OnInit {
     console.log(this.prodChars)    
   }
 
+  checkInput(value: string): boolean {
+    return value.trim().length === 0;
+  }
+
   showFinish(){
     for(let i=0; i<this.selectedISOS.length;i++){
-      this.prodAttachments.push({
+      this.prodChars.push({
         id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
         name: this.selectedISOS[i].name,
-        url: this.selectedISOS[i].url,
-        attachmentType: this.selectedISOS[i].attachmentType
+        productSpecCharacteristicValue: [{
+          isDefault: true,
+          value: this.selectedISOS[i].url
+        }]
       })
     }
     if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){
@@ -870,6 +927,31 @@ export class CreateProductSpecComponent implements OnInit {
     }
     console.log('PRODUCTO A CREAR:')
     console.log(this.productSpecToCreate)
+    console.log(this.imgPreview)
+    this.selectStep('summary','summary-circle');
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showCompliance=false;
+    this.showChars=false;
+    this.showResource=false;
+    this.showService=false;
+    this.showAttach=false;
+    this.showRelationships=false;
+    this.showSummary=true;
+    /*
+    this.prodSpecService.postProdSpec(this.productSpecToCreate).subscribe({
+      next: data => {
+        this.goBack();
+        console.log('creado producto')
+      },
+      error: error => {
+        console.error('There was an error while updating!', error);
+      }
+    });*/
+
+  }
+
+  createProduct(){
     this.prodSpecService.postProdSpec(this.productSpecToCreate).subscribe({
       next: data => {
         this.goBack();
@@ -879,7 +961,6 @@ export class CreateProductSpecComponent implements OnInit {
         console.error('There was an error while updating!', error);
       }
     });
-
   }
 
   //Markdown actions:
