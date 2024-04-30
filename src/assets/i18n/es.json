@@ -278,6 +278,7 @@
         "_bundle_info": "Product's blundle information",
         "_comp_profile": "Compliance profile",
         "_comp_profile_info": "Product's compliance profile",
+        "_no_comp_profile": "No compliance profile included.",
         "_chars": "Characteristics",
         "_chars_info": "Product's characteristics",
         "_resource": "Resource Specs",

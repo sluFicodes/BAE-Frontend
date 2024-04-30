@@ -278,6 +278,7 @@
         "_bundle_info": "Product's blundle information",
         "_comp_profile": "Compliance profile",
         "_comp_profile_info": "Product's compliance profile",
+        "_no_comp_profile": "No compliance profile included.",
         "_chars": "Characteristics",
         "_chars_info": "Product's characteristics",
         "_resource": "Resource Specs",
@@ -408,6 +409,20 @@
         "_obsolete": "Obsolete",
         "_status": "Status",
         "_actions": "Actions",
-        "_load_more": "Load more"
+        "_load_more": "Load more",
+        "_add_new_res": "Add new resource specification",
+        "_add_new_prod": "Add new product specification",
+        "_filter_type": "Filter by type",
+        "_all": "All",
+        "_simple": "Simple",
+        "_bundle": "Bundle",
+        "_type": "Type",
+        "_prod_offer": "Product offer",
+        "_add_new_offer": "Add new product offer",
+        "_add_new_catalog": "Add new catalog",
+        "_filter_role": "Filter by role",
+        "_seller": "Seller",
+        "_owner": "Owner",
+        "_role": "Role"
     }
 }

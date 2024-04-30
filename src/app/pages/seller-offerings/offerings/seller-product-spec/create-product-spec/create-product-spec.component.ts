@@ -136,7 +136,7 @@ export class CreateProductSpecComponent implements OnInit {
   //ATTACHMENT INFO
   showImgPreview:boolean=false;
   showNewAtt:boolean=false;
-  imgPreview:any;
+  imgPreview:any='';
   prodAttachments:AttachmentRefOrValue[]=[];
   attachToCreate:AttachmentRefOrValue={url:'',attachmentType:''};
 
@@ -356,9 +356,13 @@ export class CreateProductSpecComponent implements OnInit {
               const base64String: string = e.target.result.split(',')[1];
               console.log('BASE 64....')
               console.log(base64String); // You can use this base64 string as needed
+              let prod_name='';
+              if(this.generalForm.value.name!=null){
+                prod_name=this.generalForm.value.name.replaceAll(/\s/g,'')+'_';
+              }
               let fileBody = {
                 content: {
-                  name: this.generalForm.value.name+'_'+file.name,
+                  name: prod_name+file.name,
                   data: base64String
                 },
                 contentType: file.type,
