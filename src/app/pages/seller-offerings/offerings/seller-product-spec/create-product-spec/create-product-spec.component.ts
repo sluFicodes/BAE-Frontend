@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+
 import {components} from "src/app/models/product-catalog";
 import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -100,6 +101,7 @@ export class CreateProductSpecComponent implements OnInit {
 
   //COMPLIANCE PROFILE INFO:
   buttonISOClicked:boolean=false;
+
   availableISOS:any[]=certifications;
   selectedISOS:any[]=[];
   selectedISO:any;
