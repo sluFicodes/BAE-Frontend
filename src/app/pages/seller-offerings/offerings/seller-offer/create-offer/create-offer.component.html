@@ -1,0 +1,1363 @@
+<div>
+    <!-- Breadcrumb -->
+    <div class="pb-4">
+        <nav class="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-secondary-50 dark:bg-white" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+            <li class="inline-flex items-center">
+                <button (click)="goBack()" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
+                <svg class="w-3 h-3 mr-2 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 1 1 5l4 4m6-8L7 5l4 4"/>
+                </svg>
+                {{ 'CREATE_OFFER._back' | translate }}
+                </button>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                </svg>
+                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">{{ 'CREATE_OFFER._create' | translate }}</span>
+                </div>
+            </li>
+            </ol>
+        </nav>
+    </div>
+  <!-- End Breadcrumb -->
+  <div class="bg-secondary-50 dark:bg-white mt-4 p-8 rounded-lg">
+    <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._new' | translate }}</h2>
+    <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
+    <div class="grid grid-cols-20/80">
+        <div class="flex flex-col mr-4">
+            <h2 class="text-xl font-bold text-black mb-4">{{ 'CREATE_OFFER._steps' | translate }}</h2>
+            <button id="general-info" (click)="toggleGeneral()" [disabled]="!generalDone"  class="grid grid-cols-20/80 mb-2 text-primary-100">
+                <span id="general-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-primary-100 rounded-full shrink-0">
+                    1
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._general' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._general_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone" class="grid grid-cols-20/80 mb-2">
+                <span id="bundle-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    2
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._bundle' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._bundle_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="prodspec" (click)="toggleProdSpec()" [disabled]="!prodSpecDone" class="grid grid-cols-20/80 mb-2">
+                <span id="prodspec-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    3
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._prod_spec' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._prod_spec_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="catalog" (click)="toggleCatalogs()" [disabled]="!catalogsDone" class="grid grid-cols-20/80 mb-2">
+                <span id="catalog-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    4
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._catalog' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._catalog_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="category" (click)="toggleCategories()" [disabled]="!categoriesDone" class="grid grid-cols-20/80 mb-2">
+                <span id="category-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    5
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._category' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._category_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="license" (click)="toggleLicense()" [disabled]="!licenseDone" class="grid grid-cols-20/80 mb-2">
+                <span id="license-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    6
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._license' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._license_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="sla" (click)="toggleSLA()" [disabled]="!slaDone" class="grid grid-cols-20/80 mb-2">
+                <span id="sla-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    7
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._sla' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._sla_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="price" (click)="togglePrice()" [disabled]="!priceDone" class="grid grid-cols-20/80 mb-2">
+                <span id="price-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    8
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._price_plans' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._price_plans_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="summary" [disabled]="true" class="grid grid-cols-20/80 mb-2">
+                <span id="summary-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    9
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._finish' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._summary' | translate }}</p>
+                </span>
+            </button>
+            
+        </div>
+
+
+        <div>
+
+            @if(showGeneral){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._general' | translate }}</h2>
+                <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="generalForm">
+                    <div>
+                        <label for="prod-name" class="font-bold text-lg">{{ 'CREATE_OFFER._name' | translate }}</label>
+                        <input formControlName="name" type="text" id="prod-name"
+                        [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
+                        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                    
+                    </div>
+                    <div>
+                        <label for="prod-version" class="font-bold text-lg">{{ 'CREATE_OFFER._version' | translate }}</label>
+                        <input formControlName="version" type="text" id="prod-version"
+                        [ngClass]="generalForm.get('version')?.invalid == true ? 'border-red-600' : 'border-gray-300'"
+                        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    </div>
+                    <label for="prod-name" class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._description' | translate }}</label>
+                    <div class="w-full col-span-2 mb-4 border border-gray-200 rounded-lg bg-gray-50">
+                        <div class="flex items-center justify-between px-3 py-2 border-b">
+                            <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse">
+                                <div class="flex items-center space-x-1 rtl:space-x-reverse sm:pe-4">
+                                    <button (click)="addBold()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h4.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0-7H6m2 7h6.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0 0H6"/>
+                                        </svg>                                          
+                                        <span class="sr-only">Bold</span>
+                                    </button>
+                                    <button (click)="addItalic()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.874 19 6.143-14M6 19h6.33m-.66-14H18"/>
+                                        </svg>                                                                                 
+                                        <span class="sr-only">Italic</span>
+                                    </button>
+                                    <button (click)="addList()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
+                                        </svg>                                          
+                                        <span class="sr-only">Add list</span>
+                                    </button>
+                                    <button (click)="addOrderedList()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
+                                        </svg>                                          
+                                        <span class="sr-only">Add ordered list</span>
+                                    </button>
+                                    <button (click)="addBlockquote()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+                                        </svg>                                         
+                                        <span class="sr-only">Add blockquote</span>
+                                    </button>
+                                    <button (click)="addTable()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
+                                        </svg>                                         
+                                        <span class="sr-only">Add table</span>
+                                    </button>                                 
+                                    <button (click)="addCode()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
+                                        </svg>                                        
+                                        <span class="sr-only">Add code</span>
+                                    </button>
+                                    <button (click)="addCodeBlock()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+                                          </svg>                                                                                  
+                                        <span class="sr-only">Add code block</span>
+                                    </button>
+                                    <button (click)="addLink()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
+                                        </svg>                                                                                
+                                        <span class="sr-only">Add link</span>
+                                    </button>
+                                    <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
+                                        </svg>
+                                        <span class="sr-only">Add emoji</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" (click)="showPreview=!showPreview;togglePreview()" data-tooltip-target="tooltip-fullscreen" class="text-gray-500 rounded cursor-pointer sm:ms-auto hover:text-gray-900 hover:bg-gray-100">
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
+                                    <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                  </svg>
+                                  
+                                <span class="sr-only">{{ 'CREATE_OFFER._preview' | translate }}</span>
+                            </button>
+                            <div id="tooltip-fullscreen" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                                {{ 'CREATE_OFFER._show_preview' | translate }}
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2 bg-white rounded-b-lg">
+                            <label for="editor" class="sr-only">Publish post</label>
+                            @if(showPreview){
+                                    <markdown [data]="description"></markdown>
+                                
+                            }@else{
+                                <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 bg-white border-0" placeholder="Add product description..." ></textarea>
+                            }
+                            @if(showEmoji){
+                                <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
+                            }                    
+                            
+                        </div>
+                    </div>
+
+                </form>
+                <div class="flex w-full justify-items-end justify-end ml-4">
+                    <button type="button" (click)="toggleBundle();generalDone=true;" [disabled]="!generalForm.valid" [ngClass]="!generalForm.valid ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end align-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'CREATE_OFFER._next' | translate }}
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </div>
+            }
+            @if(showBundle){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._bundle' | translate }}</h2>
+                <div class="col-span-2 flex align-items-middle h-fit m-4">
+                    <label for="prod-brand" class="font-bold text-lg">{{ 'CREATE_OFFER._is_bundled' | translate }}</label>
+                    <label class="inline-flex items-center me-5 cursor-pointer ml-4">
+                        <input type="checkbox" (change)="toggleBundleCheck()" value="" class="sr-only peer">
+                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
+                    </label>
+                </div>
+                @if(bundleChecked){
+                    @if(loadingBundle){
+                        <div role="status" class="w-full h-fit flex justify-center align-middle">
+                            <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                            </svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    } @else {
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._name' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._status' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._type' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._last_update' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._select' | translate }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (prod of bundledOffers; track prod.id) {
+                                    <tr class="border-b hover:bg-gray-200">
+                                        <td class="px-6 py-4">
+                                            {{prod.name}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            @if(prod.lifecycleStatus == 'Active'){
+                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
+                                            } @else if(prod.lifecycleStatus == 'Launched') {
+                                                <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{prod.lifecycleStatus}}</span>
+                                            } @else if(prod.lifecycleStatus == 'Retired') {
+                                                <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{prod.lifecycleStatus}}</span>
+                                            } @else if(prod.lifecycleStatus == 'Obsolete') {
+                                                <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
+                                            }
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            @if(prod.isBundle == false){
+                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'CREATE_OFFER._simple' | translate }}</span>
+                                            } @else {
+                                                <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'CREATE_OFFER._bundle' | translate }}</span>
+                                            }
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <input id="select-checkbox" [checked]="isProdInBundle(prod)" type="checkbox" value="" (click)="addProdToBundle(prod)" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        </div>
+                    }
+                    @if (!loadingBundle_more) {
+                        @if (bundlePageCheck) {
+                        <div class="flex pt-6 pb-2 justify-center align-middle">
+                            <button (click)="nextBundle()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+                                {{ 'CREATE_OFFER._load_more' | translate }}
+                            <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                            </svg>
+                            </button>
+                        </div>
+                        }
+                    } @else {
+                        <div role="status" class="w-full h-full flex justify-center align-middle mt-2">
+                        <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                        </svg>
+                        <span class="sr-only">Loading...</span>
+                        </div>
+                    }
+                }
+                <div class="flex w-full justify-items-end justify-end ml-4">
+                    <button type="button" (click)="toggleProdSpec();bundleDone=true;" [disabled]="offersBundle.length<2 && bundleChecked" [ngClass]="(offersBundle.length<2 && bundleChecked) ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'CREATE_OFFER._next' | translate }}
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </div>
+            }
+            @if(showProdSpec){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'OFFERINGS._prod_spec' | translate }}</h2>
+                <div class="m-4">
+                @if(bundleChecked){
+                    <div class="flex justify-center w-full m-4">
+                        <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                          <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                          </svg>
+                          <span class="sr-only">Info</span>
+                          <div>
+                              {{ 'CREATE_OFFER._no_prod_spec' | translate }}
+                          </div>
+                        </div>
+                    </div>                    
+                } @else{
+                    @if(loadingProdSpec){
+                        <div role="status" class="w-full h-fit flex justify-center align-middle">
+                            <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                            </svg>
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    } @else {
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">                        
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'OFFERINGS._name' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'OFFERINGS._status' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'OFFERINGS._type' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'OFFERINGS._last_update' | translate }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (prod of prodSpecs; track prod) {
+                                        <tr class="border-b hover:bg-gray-200" (click)="selectProdSpec(prod)" 
+                                            [ngClass]="prod.id == selectedProdSpec.id ? 'bg-gray-300' : 'bg-white'">
+                                            <td class="px-6 py-4">
+                                                {{prod.name}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @if(prod.lifecycleStatus == 'Active'){
+                                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
+                                                } @else if(prod.lifecycleStatus == 'Launched') {
+                                                    <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{prod.lifecycleStatus}}</span>
+                                                } @else if(prod.lifecycleStatus == 'Retired') {
+                                                    <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{prod.lifecycleStatus}}</span>
+                                                } @else if(prod.lifecycleStatus == 'Obsolete') {
+                                                    <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
+                                                }
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @if(prod.isBundle == false){
+                                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
+                                                } @else {
+                                                    <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
+                                                }
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        @if (!loadingProdSpec_more) {
+                            @if (prodSpecPageCheck) {
+                            <div class="flex pt-6 pb-2 justify-center align-middle">
+                                <button (click)="nextProdSpec()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+                                    {{ 'CREATE_PROD_SPEC._load_more' | translate }}
+                                <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                                </svg>
+                                </button>
+                            </div>
+                            }
+                        } @else {
+                            <div role="status" class="w-full h-full flex justify-center align-middle mt-2">
+                            <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                            </svg>
+                            <span class="sr-only">Loading...</span>
+                            </div>
+                        }
+                    }
+                }
+                <div class="flex w-full justify-items-end justify-end ml-4">
+                    <button type="button" (click)="toggleCatalogs();prodSpecDone=true;" [disabled]="selectedProdSpec.id=='' && !bundleChecked" [ngClass]="selectedProdSpec.id=='' && !bundleChecked ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'CREATE_OFFER._next' | translate }}
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </div>
+                </div>
+            }
+            @if(showCatalog){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._catalog' | translate }}</h2>
+                <div class="m-4">
+                @if(loadingCatalog){
+                    <div role="status" class="w-full h-fit flex justify-center align-middle">
+                        <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                        </svg>
+                        <span class="sr-only">Loading...</span>
+                        </div>
+                } @else {
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">                        
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'OFFERINGS._name' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'OFFERINGS._status' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'OFFERINGS._role' | translate }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (cat of catalogs; track cat) {
+                                    <tr class="border-b hover:bg-gray-200" (click)="selectCatalog(cat)" 
+                                        [ngClass]="cat.id == selectedCatalog.id ? 'bg-gray-300' : 'bg-white'">
+                                        <td class="px-6 py-4">
+                                            {{cat.name}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            @if(cat.lifecycleStatus == 'active'){
+                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{cat.lifecycleStatus}}</span>
+                                            } @else if(cat.lifecycleStatus == 'Launched') {
+                                                <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{cat.lifecycleStatus}}</span>
+                                            } @else if(cat.lifecycleStatus == 'suspended') {
+                                                <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{cat.lifecycleStatus}}</span>
+                                            } @else if(cat.lifecycleStatus == 'terminated') {
+                                                <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{cat.lifecycleStatus}}</span>
+                                            }
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{cat.relatedParty?.at(0)?.role}}
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @if (!loadingCatalog_more) {
+                        @if (catalogPageCheck) {
+                        <div class="flex pt-6 pb-2 justify-center align-middle">
+                            <button (click)="nextProdSpec()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+                                {{ 'CREATE_PROD_SPEC._load_more' | translate }}
+                            <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                            </svg>
+                            </button>
+                        </div>
+                        }
+                    } @else {
+                        <div role="status" class="w-full h-full flex justify-center align-middle mt-2">
+                        <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                        </svg>
+                        <span class="sr-only">Loading...</span>
+                        </div>
+                    }
+                }
+                <div class="flex w-full justify-items-end justify-end m-4">
+                    <button type="button" (click)="toggleCategories();catalogsDone=true;" [disabled]="selectedCatalog.id==''" [ngClass]="selectedCatalog.id=='' ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'CREATE_OFFER._next' | translate }}
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </div>
+                </div>                
+            }
+            @if(showCategory){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._category' | translate }}</h2>
+                <div class="m-4">
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._name' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._last_update' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._select' | translate }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (cat of categories; track cat.id) {
+                                    <tr class="border-b hover:bg-gray-200">
+                                        <td class="px-6 py-4">
+                                            {{cat.name}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{cat.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <input id="select-checkbox" [checked]="isCategorySelected(cat)" type="checkbox" value="" (click)="addCategory(cat)" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        </div>
+                        <div class="flex w-full justify-items-end justify-end ml-4">
+                            <button type="button" (click)="toggleLicense();categoriesDone=true;"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                {{ 'CREATE_OFFER._next' | translate }}
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                </svg>
+                            </button>
+                        </div>                  
+                </div>
+            }
+            @if(showLicense){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._license' | translate }}</h2>
+                <div class="m-4">
+                    @if(!freeLicenseSelected){
+                        <div class="mt-4">
+                            <form [formGroup]="licenseForm">
+                                <label for="treatment" class="font-bold text-lg">{{ 'CREATE_OFFER._treatment' | translate }}</label>
+                                <input formControlName="treatment" type="text" id="treatment"
+                                [ngClass]="licenseForm.get('treatment')?.invalid == true && licenseForm.value.treatment!='' ? 'border-red-600' : 'border-gray-300'"
+                                class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+
+                                <label for="description" class="font-bold text-lg">{{ 'CREATE_OFFER._description' | translate }}</label>
+                                <textarea id="description" formControlName="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+
+                            </form>
+                        </div>
+                    } @else {
+                        <div class="flex w-full justify-items-center justify-center ml-4">
+                            <button type="button" (click)="freeLicenseSelected=!freeLicenseSelected" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                {{ 'CREATE_OFFER._create_license' | translate }}
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                                </svg>                         
+                            </button>
+                        </div>
+                    }
+                    <div class="flex w-full justify-items-end justify-end m-4">
+                        <button type="button" (click)="toggleSLA();licenseDone=true;" [disabled]="!licenseForm.valid && !freeLicenseSelected" [ngClass]="!licenseForm.valid && !freeLicenseSelected ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            {{ 'CREATE_OFFER._next' | translate }}
+                            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            }
+            @if(showSLA){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._sla' | translate }}</h2>
+                    @if (createdSLAs.length === 0){
+                        <div class="flex justify-center w-full m-4">
+                          <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                            <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                            </svg>
+                            <span class="sr-only">Info</span>
+                            <div>
+                                {{ 'CREATE_OFFER._no_sla' | translate }}
+                            </div>
+                          </div>
+                        </div>
+                    } @else {
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'CREATE_OFFER._name' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'CREATE_OFFER._description' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'CREATE_OFFER._threshold' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'CREATE_OFFER._unit' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'CREATE_OFFER._actions' | translate }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (sla of createdSLAs; track sla) {
+                                        <tr class="border-b hover:bg-gray-200">
+                                            <td class="px-6 py-4">
+                                                {{sla.type}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{sla.description}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{sla.threshold}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                {{sla.unitMeasure}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <button (click)="removeSLA(sla)" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                                    <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                                    </svg>                                                                                                
+                                                </button>  
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    @if(availableSLAs.length!=0){
+                        <div class="flex w-full justify-items-center justify-center ml-4">
+                            <button type="button" (click)="showCreateSLAMetric()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                {{ 'CREATE_OFFER._new_metric' | translate }}
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                                </svg>                         
+                            </button>
+                        </div>
+                    }
+                    @if(showCreateSLA){
+                        <select id="type" (change)="onSLAChange($event)" class="ml-4 mt-4 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            @for(avSLA of availableSLAs; track avSLA){
+                                <option value="{{avSLA}}">{{avSLA}}</option>  
+                            }                              
+                        </select>
+                        @if(updatesSelected){
+                            <div class="flex m-4">
+                                <div class="flex flex-row w-full ml-4">
+                                    <input type="number" pattern="[0-9]*"  #updatemetric class="block p-2.5 w-3/4 z-20 text-sm text-gray-900 bg-white rounded-l-lg rounded-s-gray-100 rounded-s-2 border-l border-gray-300 focus:ring-blue-500 focus:border-blue-500" required />
+
+                                    <select id="type" (change)="onSLAMetricChange($event)" class="bg-white border-r border-gray-300 0text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                                        <option value="day">Day</option>
+                                        <option value="week">Week</option>
+                                        <option value="month">Month</option>                             
+                                    </select>
+                                </div>
+                            </div>                            
+                        }
+                        @if(responseSelected){
+                            <div class="flex m-4">
+                                <div class="flex flex-row w-full ml-4">
+                                    <input type="number" pattern="[0-9]*"  #responsemetric class="block p-2.5 w-3/4 z-20 text-sm text-gray-900 bg-white rounded-l-lg rounded-s-gray-100 rounded-s-2 border-l border-gray-300 focus:ring-blue-500 focus:border-blue-500" required />
+
+                                    <select id="type" (change)="onSLAMetricChange($event)" class="bg-white border-r border-gray-300 0text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                                        <option value="ms">Ms</option>
+                                        <option value="s">S</option>
+                                        <option value="min">Min</option>                             
+                                    </select>
+                                </div>
+                            </div>
+                        }
+                        @if(delaySelected){
+                            <div class="flex m-4">
+                                <div class="flex flex-row w-full ml-4">
+                                    <input type="number" pattern="[0-9]*" #delaymetric class="block p-2.5 w-3/4 z-20 text-sm text-gray-900 bg-white rounded-l-lg rounded-s-gray-100 rounded-s-2 border-l border-gray-300 focus:ring-blue-500 focus:border-blue-500" required />
+
+                                    <select id="type" (change)="onSLAMetricChange($event)" class="bg-white border-r border-gray-300 0text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                                        <option value="ms">Ms</option>
+                                        <option value="s">S</option>
+                                        <option value="min">Min</option>                             
+                                    </select>
+                                </div>
+                            </div>                            
+                        }
+                        <div class="flex w-full justify-items-center justify-center ml-4">
+                            <button type="button" (click)="addSLA()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                {{ 'CREATE_OFFER._add_metric' | translate }}
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
+                                </svg>                         
+                            </button> 
+                        </div>
+                    }
+                <div class="flex w-full justify-items-end justify-end m-4">
+                    <button type="button" (click)="togglePrice();slaDone=true;"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'CREATE_OFFER._next' | translate }}
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </div>
+            }
+            @if(showPrice){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._price_plans' | translate }}</h2>
+                @if(createdPrices.length==0){
+                    <div class="flex justify-center w-full m-4">
+                        <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                          <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                          </svg>
+                          <span class="sr-only">Info</span>
+                          <div>
+                              {{ 'CREATE_OFFER._no_prices' | translate }}
+                          </div>
+                        </div>
+                    </div>                    
+                }@else{
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._name' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._description' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._type' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._price' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._unit' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._actions' | translate }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (price of createdPrices; track price.id) {
+                                    <tr class="border-b hover:bg-gray-200">
+                                        <td class="px-6 py-4">
+                                            {{price.name}}
+                                        </td>
+                                        <td class="px-6 py-4 line-clamp-1">
+                                            {{price.description}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{price.priceType}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{price.price?.taxIncludedAmount?.value}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{price.price?.taxIncludedAmount?.unit}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button (click)="removePrice(price)" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                                <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                                </svg>                                                                                                
+                                            </button>  
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                <div class="col-span-2 flex align-items-middle h-fit m-4">
+                    <label for="prod-brand" class="font-bold text-lg">{{ 'CREATE_OFFER._is_free_price' | translate }}</label>
+                    <label class="inline-flex items-center me-5 cursor-pointer ml-4">
+                        <input type="checkbox" (change)="toggleFreePrice=!toggleFreePrice" value="" class="sr-only peer">
+                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
+                    </label>
+                </div>
+                @if(!showCreatePrice){
+                    <div class="flex w-full justify-items-center justify-center ml-4">
+                        <button type="button" (click)="showCreatePrice=!showCreatePrice" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            {{ 'CREATE_OFFER._new_price' | translate }}
+                            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                            </svg>                         
+                        </button>
+                    </div>
+                }@else{
+                    <label class="font-bold text-xl ml-4">{{ 'CREATE_OFFER._new_price' | translate }}</label>
+                    <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
+                        <form class="grid grid-cols-80/20 gap-4 m-4" [formGroup]="priceForm">
+                            <div>
+                                <label class="font-bold text-lg">{{ 'CREATE_OFFER._name' | translate }}</label>
+                                <input formControlName="name" type="text" id="name"
+                                    [ngClass]="priceForm.get('name')?.invalid == true && priceForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
+                                    class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                <label class="font-bold text-lg">{{ 'CREATE_OFFER._price' | translate }}</label>
+                                <div class="flex flex-row w-full">
+                                    <input type="number" pattern="[0-9]*" formControlName="price"
+                                    [ngClass]="priceForm.get('price')?.invalid == true && priceForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
+                                    class="bg-gray-50 border-l border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+    
+                                    <select id="type" (change)="onPriceUnitChange($event)" class="bg-white border-r border-gray-300 text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                                        @for(curr of currencies; track curr.code){
+                                            <option value="{{curr.code}}">({{curr.code}}) {{curr.name}}</option>  
+                                        }                            
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="font-bold text-lg">{{ 'CREATE_OFFER._choose_type' | translate }}</label>
+                                <select id="type" (change)="onPriceTypeSelected($event)" class="mb-2 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    <option value="ONE TIME">ONE TIME</option>
+                                    <option value="RECURRING">RECURRING</option>
+                                    <option value="USAGE">USAGE</option>
+                                    <option value="CUSTOM">CUSTOM</option>           
+                                </select>
+                                @if(recurringSelected){
+                                    <label class="font-bold text-lg">{{ 'CREATE_OFFER._choose_period' | translate }}</label>
+                                    <select id="type" (change)="onPricePeriodChange($event)" class="shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        <option value="DAILY">DAILY</option>
+                                        <option value="WEEKLY">WEEKLY</option>
+                                        <option value="MONTHLY">MONTHLY</option>
+                                        <option value="QUARTERLY">QUARTERLY</option>
+                                        <option value="YEARLY">YEARLY</option>
+                                        <option value="QUINQUENNIAL">QUINQUENNIAL</option>                
+                                    </select>
+                                } @else if(usageSelected){
+                                    <label class="font-bold text-lg">{{ 'CREATE_OFFER._unit' | translate }}</label>
+                                    <input #usageUnit type="text"
+                                    class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                }
+
+                            </div>
+                            <label for="description" class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._description' | translate }}</label>
+                            @if(!customSelected){
+                                <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            
+                            } @else {
+                                <div class="w-full col-span-2 mb-4 border border-gray-200 rounded-lg bg-gray-50">
+                                    <div class="flex items-center justify-between px-3 py-2 border-b">
+                                        <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse">
+                                            <div class="flex items-center space-x-1 rtl:space-x-reverse sm:pe-4">
+                                                <button (click)="addBold()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h4.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0-7H6m2 7h6.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0 0H6"/>
+                                                    </svg>                                          
+                                                    <span class="sr-only">Bold</span>
+                                                </button>
+                                                <button (click)="addItalic()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.874 19 6.143-14M6 19h6.33m-.66-14H18"/>
+                                                    </svg>                                                                                 
+                                                    <span class="sr-only">Italic</span>
+                                                </button>
+                                                <button (click)="addList()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
+                                                    </svg>                                          
+                                                    <span class="sr-only">Add list</span>
+                                                </button>
+                                                <button (click)="addOrderedList()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
+                                                    </svg>                                          
+                                                    <span class="sr-only">Add ordered list</span>
+                                                </button>
+                                                <button (click)="addBlockquote()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                        <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+                                                    </svg>                                         
+                                                    <span class="sr-only">Add blockquote</span>
+                                                </button>
+                                                <button (click)="addTable()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
+                                                    </svg>                                         
+                                                    <span class="sr-only">Add table</span>
+                                                </button>                                 
+                                                <button (click)="addCode()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
+                                                    </svg>                                        
+                                                    <span class="sr-only">Add code</span>
+                                                </button>
+                                                <button (click)="addCodeBlock()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+                                                      </svg>                                                                                  
+                                                    <span class="sr-only">Add code block</span>
+                                                </button>
+                                                <button (click)="addLink()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
+                                                    </svg>                                                                                
+                                                    <span class="sr-only">Add link</span>
+                                                </button>
+                                                <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
+                                                    </svg>
+                                                    <span class="sr-only">Add emoji</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" (click)="showPreview=!showPreview;togglePreview()" data-tooltip-target="tooltip-fullscreen" class="text-gray-500 rounded cursor-pointer sm:ms-auto hover:text-gray-900 hover:bg-gray-100">
+                                            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
+                                                <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                              </svg>
+                                              
+                                            <span class="sr-only">{{ 'CREATE_PROD_SPEC._preview' | translate }}</span>
+                                        </button>
+                                        <div id="tooltip-fullscreen" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                                            {{ 'CREATE_PROD_SPEC._show_preview' | translate }}
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
+                                    </div>
+                                    <div class="px-4 py-2 bg-white rounded-b-lg">
+                                        <label for="editor" class="sr-only">Publish post</label>
+                                        @if(showPreview){
+                                                <markdown [data]="priceDescription"></markdown>
+                                            
+                                        }@else{
+                                            <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 bg-white border-0" placeholder="Add product description..." ></textarea>
+                                        }
+                                        @if(showEmoji){
+                                            <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
+                                        }                    
+                                        
+                                    </div>
+                                </div>
+                            }
+                        </form>
+                        <form [formGroup]="priceAlterForm">
+                            <div class="m-4">
+                                <label class="font-bold text-lg">{{ 'CREATE_OFFER._price_alter' | translate }}</label>
+                                <select id="type" (change)="onPriceAlterSelected($event)" class="w-1/3 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                                    <option value="none">None</option>
+                                    <option value="price">Price component</option>
+                                    <option value="discount">Discount or fee</option>
+                                </select>
+                            </div>
+                            @if(priceComponentSelected){
+                                <div class="ml-4 mb-4 grid grid-cols-80/20 gap-4">
+                                    <label class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._choose_type' | translate }}</label>
+                                    <select id="type" (change)="onPriceTypeAlterSelected($event)" class="mb-2 col-span-2 w-1/3 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                        <option value="ONE TIME">ONE TIME</option>
+                                        <option value="RECURRING">RECURRING</option>
+                                        <option value="USAGE">USAGE</option>          
+                                    </select>
+                                    <div>
+                                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._price_alter' | translate }}</label>
+                                        <input formControlName="price" type="number" pattern="[0-9]*"
+                                        [ngClass]="priceAlterForm.get('price')?.invalid == true && priceAlterForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
+                                        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                    </div>
+                                    <div>
+                                        @if(priceTypeAlter=='RECURRING'){
+                                            <label class="font-bold text-lg">{{ 'CREATE_OFFER._choose_period' | translate }}</label>
+                                            <select id="type" (change)="onPricePeriodAlterChange($event)" class="shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                                <option value="DAILY">DAILY</option>
+                                                <option value="WEEKLY">WEEKLY</option>
+                                                <option value="MONTHLY">MONTHLY</option>
+                                                <option value="QUARTERLY">QUARTERLY</option>
+                                                <option value="YEARLY">YEARLY</option>
+                                                <option value="QUINQUENNIAL">QUINQUENNIAL</option>                
+                                            </select>
+                                        }
+                                        @if(priceTypeAlter=='USAGE'){
+                                            <label class="font-bold text-lg">{{ 'CREATE_OFFER._unit' | translate }}</label>
+                                            <input #usageUnitAlter type="text"
+                                            class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                                            
+                                        }
+                                    </div>
+
+                                    <label for="description" class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._description' | translate }}</label>
+                                    <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                            
+                                </div>
+                            } @else if(discountSelected){
+                                <div class="ml-4 mb-4 grid grid-cols-20/80">
+                                    <div>
+                                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._choose_type' | translate }}</label>
+                                        <select id="type" #discountfee class="shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                                            <option value="discount">Discount</option>
+                                            <option value="fee">Fee</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._enter_value' | translate }}</label>
+                                        <div class="flex flex-row w-full">
+                                            <input formControlName="price" type="number" pattern="[0-9]*"
+                                            [ngClass]="priceAlterForm.get('price')?.invalid == true && priceAlterForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
+                                            class="bg-gray-50 border-l border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+            
+                                            <select id="type" class="bg-white border-r border-gray-300 text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                                                <option value="percentage">%</option>
+                                                <option value="AUD">(AUD) Australia Dollar</option>                            
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-2">
+                                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._add_condition' | translate }}</label>
+                                        <div class="flex flex-row w-full">
+                                            <select id="type"  class="bg-white border-l border-gray-300 text-gray-90 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                                                <option value="EQ">(EQ) Equal</option>
+                                                <option value="LT">(LT) Less than</option>
+                                                <option value="LE">(LE) Less than or equal</option>
+                                                <option value="GT">(GT) Greater than</option>
+                                                <option value="GT">(GE) Greater than or equal</option>                  
+                                            </select>
+                                            <input type="number" pattern="[0-9]*"
+                                            [ngClass]="priceAlterForm.get('condition')?.invalid == true && priceAlterForm.value.condition!='' ? 'border-red-600' : 'border-gray-300'"
+                                            class="bg-gray-50 border-r border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+                                        </div>
+                                        <label for="description" class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._description' | translate }}</label>
+                                        <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>    
+                                    </div>                                    
+                                </div>
+                            }
+                        </form>
+                        <div class="flex w-full justify-items-center justify-center ml-4">
+                            <button type="button" (click)="savePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                {{ 'CREATE_OFFER._save_price' | translate }}
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
+                                </svg>                         
+                            </button> 
+                        </div>
+
+                }
+                <div class="flex w-full justify-items-end justify-end m-4">
+                    <button type="button" (click)="showFinish();" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'CREATE_OFFER._next' | translate }}
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </div>
+
+            }
+            @if(showSummary){
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._finish' | translate }}</h2>
+                <div class="m-8">
+                    <div class="mb-4 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="font-bold text-lg">{{ 'CREATE_OFFER._name' | translate }}</label>
+                            <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                {{offerToCreate?.name}}
+                            </label>
+
+                        </div>
+                        <div>
+                            <label for="prod-version" class="font-bold text-lg">{{ 'CREATE_OFFER._version' | translate }}</label>
+                            <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                {{offerToCreate?.version}}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="font-bold text-lg mr-4">{{ 'CREATE_OFFER._status' | translate }}</label>
+                        @if(offerToCreate?.lifecycleStatus == 'Active'){
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{offerToCreate?.lifecycleStatus}}</span>
+                        } @else if(offerToCreate?.lifecycleStatus == 'Launched') {
+                            <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{offerToCreate?.lifecycleStatus}}</span>
+                        } @else if(offerToCreate?.lifecycleStatus == 'Retired') {
+                            <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{offerToCreate?.lifecycleStatus}}</span>
+                        } @else if(offerToCreate?.lifecycleStatus == 'Obsolete') {
+                            <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{offerToCreate?.lifecycleStatus}}</span>
+                        }
+                    </div>
+
+                    @if(offerToCreate?.description !=''){
+                        <div class="py-2 bg-white rounded-b-lg">
+                            <label class="font-bold text-lg">{{ 'CREATE_OFFER._description' | translate }}</label>
+                            <markdown [data]="offerToCreate?.description"></markdown>
+                        </div>
+                    }
+                    @if(offersBundle.length>0){
+                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._bundle' | translate }}</label>
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'CREATE_OFFER._name' | translate }}
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'CREATE_OFFER._status' | translate }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (bun of offersBundle; track bun) {
+                                        <tr class="border-b hover:bg-gray-200">
+                                            <tr class="border-b hover:bg-gray-200">
+                                            <td class="px-6 py-4">
+                                                {{bun.name}}
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                @if(bun.lifecycleStatus == 'Active'){
+                                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{bun.lifecycleStatus}}</span>
+                                                } @else if(bun.lifecycleStatus == 'Launched') {
+                                                    <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{bun.lifecycleStatus}}</span>
+                                                } @else if(bun.lifecycleStatus == 'Retired') {
+                                                    <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{bun.lifecycleStatus}}</span>
+                                                } @else if(bun.lifecycleStatus == 'Obsolete') {
+                                                    <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{bun.lifecycleStatus}}</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>  
+                    }
+                
+                    <label class="font-bold text-lg">{{ 'CREATE_OFFER._catalog' | translate }}</label>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    {{ 'OFFERINGS._name' | translate }}
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    {{ 'OFFERINGS._status' | translate }}
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    {{ 'OFFERINGS._role' | translate }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>                       
+                            <tr class="border-b hover:bg-gray-200">
+                                <td class="px-6 py-4">
+                                    {{selectedCatalog.name}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if(selectedCatalog.lifecycleStatus == 'active'){
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{selectedCatalog.lifecycleStatus}}</span>
+                                    } @else if(selectedCatalog.lifecycleStatus == 'Launched') {
+                                        <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{selectedCatalog.lifecycleStatus}}</span>
+                                    } @else if(selectedCatalog.lifecycleStatus == 'suspended') {
+                                        <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{selectedCatalog.lifecycleStatus}}</span>
+                                    } @else if(selectedCatalog.lifecycleStatus == 'terminated') {
+                                        <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{selectedCatalog.lifecycleStatus}}</span>
+                                    }
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{selectedCatalog.relatedParty?.at(0)?.role}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                @if(selectedCategories.length>0){
+                    <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._category' | translate }}</h2>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">   
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._name' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._last_update' | translate }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (cat of selectedCategories; track cat.id) {
+                                    <tr class="border-b hover:bg-gray-200">
+                                        <td class="px-6 py-4">
+                                            {{cat.name}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{cat.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>                
+                }
+                @if(createdPrices.length>0){
+                    <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._price_plans' | translate }}</h2>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._name' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._description' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._type' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._price' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._unit' | translate }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (price of createdPrices; track price.id) {
+                                    <tr class="border-b hover:bg-gray-200">
+                                        <td class="px-6 py-4">
+                                            {{price.name}}
+                                        </td>
+                                        <td class="px-6 py-4 line-clamp-1">
+                                            {{price.description}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{price.priceType}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{price.price?.taxIncludedAmount?.value}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{price.price?.taxIncludedAmount?.unit}}
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                @if(createdSLAs.length>0){
+                    <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._sla' | translate }}</h2>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._name' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._description' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._threshold' | translate }}
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ 'CREATE_OFFER._unit' | translate }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (sla of createdSLAs; track sla) {
+                                    <tr class="border-b hover:bg-gray-200">
+                                        <td class="px-6 py-4">
+                                            {{sla.type}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{sla.description}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{sla.threshold}}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{sla.unitMeasure}}
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                @if(!freeLicenseSelected){
+                    <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._license' | translate }}</h2>
+                    <div>
+                        <label for="treatment" class="font-bold text-base">{{ 'CREATE_OFFER._treatment' | translate }}</label>
+                        <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            {{createdLicense.treatment}}
+                        </label>
+                        <div class="py-2 bg-white rounded-b-lg">
+                            <label class="font-bold text-base">{{ 'CREATE_OFFER._description' | translate }}</label>
+                            <markdown [data]="createdLicense.description"></markdown>
+                        </div>
+                    </div>
+                }
+                <div class="flex w-full justify-items-end justify-end m-4">
+                    <button type="button" (click)="createOffer();" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'CREATE_OFFER._finish' | translate }}
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>

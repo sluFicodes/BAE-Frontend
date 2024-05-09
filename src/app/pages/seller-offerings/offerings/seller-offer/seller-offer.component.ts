@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import { LoginInfo } from 'src/app/models/interfaces';
+import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
 
 @Component({
@@ -39,6 +40,7 @@ export class SellerOfferComponent implements OnInit{
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
+    private eventMessage: EventMessageService
   ) {
   }
 
@@ -69,6 +71,10 @@ export class SellerOfferComponent implements OnInit{
 
   ngAfterViewInit(){
     initFlowbite();
+  }
+
+  goToCreate(){
+    this.eventMessage.emitSellerCreateOffer(true);
   }
 
   getOffers(){
