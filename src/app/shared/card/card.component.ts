@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {components} from "../../models/product-catalog";
 import { FastAverageColor } from 'fast-average-color';
-
+import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved, faAtom} from "@fortawesome/pro-solid-svg-icons";
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
@@ -43,6 +43,7 @@ export class CardComponent implements OnInit, AfterViewInit {
   modal: Modal;
   prodSpec:ProductSpecification = {};
   complianceProf:any[] = [];
+  complianceLevel:number=1;
   showModal:boolean=false;
   cartSelection:boolean=false;
   check_prices:boolean=false;
@@ -54,6 +55,7 @@ export class CardComponent implements OnInit, AfterViewInit {
   formattedPrices:any[]=[];
   @ViewChild('myProdImage') myProdImage!: ElementRef<HTMLImageElement>;
   check_logged:boolean=false;
+  protected readonly faAtom = faAtom;
 
   constructor(
     private cdr: ChangeDetectorRef,

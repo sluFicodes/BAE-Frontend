@@ -22,6 +22,7 @@ import { currencies } from 'currencies.json';
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type BundledProductOffering = components["schemas"]["BundledProductOffering"];
 type ProductOfferingPriceRefOrValue = components["schemas"]["ProductOfferingPriceRefOrValue"];
+type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
 
 
 @Component({
@@ -112,7 +113,10 @@ export class CreateOfferComponent implements OnInit {
     treatment: new FormControl('', [Validators.required]),
     description: new FormControl(''),
   });
-  createdLicense:any;
+  createdLicense:any={
+    treatment: '',
+    description: ''
+  };
 
   //SLA
   createdSLAs:any[]=[];
@@ -126,6 +130,7 @@ export class CreateOfferComponent implements OnInit {
   //PRICE
   currencies=currencies;
   createdPrices:ProductOfferingPriceRefOrValue[]=[];
+  postedPrices:any[]=[];
   creatingPrice:any;
   priceDescription:string='';
   showCreatePrice:boolean=false;
@@ -337,28 +342,6 @@ export class CreateOfferComponent implements OnInit {
 
   }
 
-  onSLAChange(event: any) {
-    if(event.target.value=='UPDATES RATE'){
-      this.updatesSelected=true;
-      this.responseSelected=false;
-      this.delaySelected=false;
-      this.creatingSLA.type='UPDATES RATE';
-      this.creatingSLA.description='Expected number of updates in the given period.';
-    }else if (event.target.value=='RESPONSE TIME'){
-      this.updatesSelected=false;
-      this.responseSelected=true;
-      this.delaySelected=false;
-      this.creatingSLA.type='RESPONSE TIME';
-      this.creatingSLA.description='Total amount of time to respond to a data request (GET).';
-    }else if (event.target.value=='DELAY'){
-      this.updatesSelected=false;
-      this.responseSelected=false;
-      this.delaySelected=true;
-      this.creatingSLA.type='DELAY';
-      this.creatingSLA.description='Total amount of time to deliver a new update (SUBSCRIPTION).';
-    }
-  }
-
   onPriceTypeSelected(event: any){
     if(event.target.value=='ONE TIME'){
       this.oneTimeSelected=true;
@@ -438,9 +421,11 @@ export class CreateOfferComponent implements OnInit {
         }
       }
       if(this.recurringSelected){
+        console.log('recurring')
         priceToCreate.recurringChargePeriod=this.selectedPeriod;
       }
       if(this.usageSelected){
+        console.log('usage')
         priceToCreate.unitOfMeasure= {
           amount: 1,
           units: this.usageUnit.nativeElement.value
@@ -498,6 +483,31 @@ export class CreateOfferComponent implements OnInit {
 
   onSLAMetricChange(event: any) {
     this.creatingSLA.unitMeasure=event.target.value;
+  }
+
+  onSLAChange(event: any) {
+    if(event.target.value=='UPDATES RATE'){
+      this.updatesSelected=true;
+      this.responseSelected=false;
+      this.delaySelected=false;
+      this.creatingSLA.type='UPDATES RATE';
+      this.creatingSLA.description='Expected number of updates in the given period.';
+      this.creatingSLA.unitMeasure='day';
+    }else if (event.target.value=='RESPONSE TIME'){
+      this.updatesSelected=false;
+      this.responseSelected=true;
+      this.delaySelected=false;
+      this.creatingSLA.type='RESPONSE TIME';
+      this.creatingSLA.description='Total amount of time to respond to a data request (GET).';
+      this.creatingSLA.unitMeasure='ms';
+    }else if (event.target.value=='DELAY'){
+      this.updatesSelected=false;
+      this.responseSelected=false;
+      this.delaySelected=true;
+      this.creatingSLA.type='DELAY';
+      this.creatingSLA.description='Total amount of time to deliver a new update (SUBSCRIPTION).';
+      this.creatingSLA.unitMeasure='ms';
+    }
   }
 
   showCreateSLAMetric(){
@@ -583,12 +593,74 @@ export class CreateOfferComponent implements OnInit {
   }
 
   getCategories(){
-    this.api.getCategories().then(data => {
-      for(let i=0; i < data.length; i++){
-        this.categories.push(data[i])
+    this.api.getCatalog(this.selectedCatalog.id).then(data => {
+      if(data.category){
+        for (let i=0; i<data.category.length; i++){
+          this.api.getCategoryById(data.category[i].id).then(categoryInfo => {
+            this.findChildrenByParent(categoryInfo);
+          })
+        }
+        initFlowbite();
+      } else {
+        this.api.getCategories().then(data => {
+          for(let i=0; i < data.length; i++){
+            this.findChildren(data[i],data)
+          }
+          this.cdr.detectChanges();
+          initFlowbite();
+        })           
       }
-      this.cdr.detectChanges();
-    })  
+    })
+  }
+
+  findChildren(parent:any,data:any[]){
+    let childs = data.filter((p => p.parentId === parent.id));
+    parent["children"] = childs;
+    if(parent.isRoot == true){
+      this.categories.push(parent)
+    } else {
+      this.saveChildren(this.categories,parent)
+    }
+    if(childs.length != 0){
+      for(let i=0; i < childs.length; i++){
+        this.findChildren(childs[i],data)
+      }
+    }
+  }
+
+  findChildrenByParent(parent:any){
+    let childs: any[] = []
+    this.api.getCategoriesByParentId(parent.id).then(c => {
+      childs=c;
+      parent["children"] = childs;
+      if(parent.isRoot == true){
+        this.categories.push(parent)
+      } else {
+        this.saveChildren(this.categories,parent)
+      }
+      if(childs.length != 0){
+        for(let i=0; i < childs.length; i++){
+          this.findChildrenByParent(childs[i])
+        }
+      }
+      initFlowbite();
+    })
+
+  }
+
+  saveChildren(superCategories:any[],parent:any){
+    for(let i=0; i < superCategories.length; i++){
+      let children = superCategories[i].children;
+      if (children != undefined){
+        let check = children.find((element: { id: any; }) => element.id == parent.id) 
+        if (check != undefined) {
+          let idx = children.findIndex((element: { id: any; }) => element.id == parent.id)
+          children[idx] = parent
+          superCategories[i].children = children         
+        }
+        this.saveChildren(children,parent)
+      }          
+    }
   }
 
   addCategory(cat:any){
@@ -599,7 +671,24 @@ export class CreateOfferComponent implements OnInit {
     } else {
       console.log('añadir')
       this.selectedCategories.push(cat);
-    }    
+    } 
+
+    if(cat.isRoot==false){
+      const parentIdx = this.categories.findIndex(item => item.id === cat.parentId);
+      const parentIdxSelected = this.selectedCategories.findIndex(item => item.id === cat.parentId);
+      /*if (index !== -1) {
+        const stillchilds = this.selectedCategories.findIndex(item => item.parentId === cat.parentId);
+        //No hay ningun otro hijo que tenga al padre como padre se elimina de la seleccion
+        if (stillchilds == -1 && parentIdxSelected != -1) {
+          this.selectedCategories.splice(parentIdxSelected, 1);
+        }
+      } else {*/
+      if (index==-1 && parentIdxSelected == -1) {
+        //Si el padre no está seleccionado se añade a la selección
+        this.selectedCategories.push(this.categories[parentIdx]);       
+      }
+    }
+   
     this.cdr.detectChanges();
     console.log(this.selectedCategories)
   }
@@ -615,6 +704,7 @@ export class CreateOfferComponent implements OnInit {
 
   selectCatalog(cat:any){
     this.selectedCatalog=cat;
+    this.selectedCategories=[];
   }
 
   getSellerCatalogs(){
@@ -753,9 +843,10 @@ export class CreateOfferComponent implements OnInit {
   }
 
   async createOffer(){
+    this.postedPrices=[];
     if(this.createdPrices.length>0){
       for(let i=0; i < this.createdPrices.length; i++){
-        let priceToCreate = {
+        let priceToCreate: ProductOfferingPrice = {
           description: this.createdPrices[i].description,
           lifecycleStatus: this.createdPrices[i].lifecycleStatus,
           name: this.createdPrices[i].name,
@@ -766,15 +857,28 @@ export class CreateOfferComponent implements OnInit {
               value: this.createdPrices[i].price?.taxIncludedAmount?.value
           }
         }
+        if(this.createdPrices[i].priceType == 'recurring'){
+          console.log('recurring')
+          priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
+        }
+        if(this.createdPrices[i].priceType == 'usage'){
+          console.log('usage')
+          priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
+        }
         await this.api.postOfferingPrice(priceToCreate).subscribe({
           next: data => {
             console.log('precio')
             console.log(data)
-            this.createdPrices[i].id=data.id;
-            this.createdPrices[i].href=data.href;
+            this.postedPrices.push(this.createdPrices[i])
+            if(data.priceType=='recurring'){
+              //this.postedPrices[i]['recurringChargePeriodType']=data.recurringChargePeriodType;
+              this.postedPrices[i]['recurringChargePeriodType']=this.postedPrices[i]['recurringChargePeriod']
+            }
+            this.postedPrices[i].id=data.id;
+            this.postedPrices[i].href=data.href;
             if(i==this.createdPrices.length-1){
               this.saveOfferInfo();
-            }
+            }            
           },
           error: error => {
             console.error('There was an error while updating!', error);
@@ -811,14 +915,7 @@ export class CreateOfferComponent implements OnInit {
         place: [],
         version: this.generalForm.value.version,
         category: offercats,
-        productOfferingTerm: [
-          {
-              name: this.createdLicense.treatment,
-              description: this.createdLicense.description,
-              validFor: {}
-          }
-        ],
-        productOfferingPrice: this.createdPrices,
+        productOfferingPrice: this.postedPrices,
         validFor: {
           startDateTime: (new Date()).toISOString()
         },
@@ -828,6 +925,15 @@ export class CreateOfferComponent implements OnInit {
           id: this.selectedProdSpec.id,
           href: this.selectedProdSpec.id
         }
+      }
+      if(this.createdLicense.treatment!=''){
+        this.offerToCreate.productOfferingTerm= [
+          {
+              name: this.createdLicense.treatment,
+              description: this.createdLicense.description,
+              validFor: {}
+          }
+        ]
       }
     }
 
@@ -843,13 +949,14 @@ export class CreateOfferComponent implements OnInit {
           this.api.postSLA(sla).subscribe({
             next: data => {
               console.log('SLA')
-              console.log(data)
+              console.log(data)              
             },
             error: error => {
               console.error('There was an error while updating!', error);
             }
           });
         }
+        this.goBack();
       },
       error: error => {
         console.error('There was an error while updating!', error);

@@ -314,7 +314,7 @@ export class CreateProductSpecComponent implements OnInit {
     if (index !== -1) {
       console.log('seleccionar')
       this.availableISOS.splice(index, 1);
-      this.selectedISOS.push({name: iso.name, url: ''});
+      this.selectedISOS.push({name: iso.name, url: '', mandatory: iso.mandatory, domesupported: iso.domesupported});
     }
     this.buttonISOClicked=!this.buttonISOClicked;
     this.cdr.detectChanges();
@@ -327,7 +327,7 @@ export class CreateProductSpecComponent implements OnInit {
     if (index !== -1) {
       console.log('seleccionar')
       this.selectedISOS.splice(index, 1);
-      this.availableISOS.push(iso.name);
+      this.availableISOS.push({name: iso.name, mandatory: iso.mandatory, domesupported: iso.domesupported});
     }  
     this.cdr.detectChanges();
     console.log(this.prodSpecsBundle)    

@@ -375,7 +375,9 @@
                                     @for (iso of availableISOS; track iso;) {
                                         <li>
                                             <div class="flex items-center justify-between">
-                                                <label for="checkbox-item-1" class="ms-2 text-sm font-medium text-gray-900">{{iso.name}}</label>
+                                                <label for="checkbox-item-1" class="ms-2 text-sm" [ngClass]="iso.domesupported == true ? 'text-primary-100 font-bold' : 'text-gray-900 font-medium'">
+                                                    {{iso.name}}
+                                                </label>
                                                 <button (click)="addISO(iso)" type="button" class="text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                                     <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>

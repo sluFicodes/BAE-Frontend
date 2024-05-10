@@ -479,7 +479,8 @@
         "_price": "Price",
         "_save_price":"Save price",
         "_save_license": "Save license",
-        "_no_prod_spec": "Bundled offers can't include product specifications."
+        "_no_prod_spec": "Bundled offers can't include product specifications.",
+        "_cancel": "Cancel"
     },
     "OFFERINGS": {
         "_catalogs": "Catalogs",
