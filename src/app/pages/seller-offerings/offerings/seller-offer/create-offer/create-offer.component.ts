@@ -593,7 +593,7 @@ export class CreateOfferComponent implements OnInit {
   }
 
   getCategories(){
-    this.api.getCatalog(this.selectedCatalog.id).then(data => {
+    /*this.api.getCatalog(this.selectedCatalog.id).then(data => {
       if(data.category){
         for (let i=0; i<data.category.length; i++){
           this.api.getCategoryById(data.category[i].id).then(categoryInfo => {
@@ -610,7 +610,14 @@ export class CreateOfferComponent implements OnInit {
           initFlowbite();
         })           
       }
-    })
+    })*/
+    this.api.getCategories().then(data => {
+      for(let i=0; i < data.length; i++){
+        this.findChildren(data[i],data)
+      }
+      this.cdr.detectChanges();
+      initFlowbite();
+    }) 
   }
 
   findChildren(parent:any,data:any[]){
