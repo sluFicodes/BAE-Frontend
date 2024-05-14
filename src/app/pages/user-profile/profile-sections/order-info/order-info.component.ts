@@ -21,7 +21,7 @@ import { environment } from 'src/environments/environment';
   styleUrl: './order-info.component.css'
 })
 
-export class OrderInfoComponent implements OnInit, AfterViewInit{
+export class OrderInfoComponent implements OnInit {
   loading: boolean = false;
   orders:any[]=[];
   profile:any;
@@ -54,9 +54,10 @@ export class OrderInfoComponent implements OnInit, AfterViewInit{
       this.showOrderDetails=false;
       this.cdr.detectChanges();
     }
+    initFlowbite();  
   }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.loading=true;
     let today = new Date();
     today.setMonth(today.getMonth()-1);
@@ -66,7 +67,6 @@ export class OrderInfoComponent implements OnInit, AfterViewInit{
       this.partyId = aux.partyId;
       this.page=0;
       this.orders=[];
-      this.filters=[];
       this.getOrders(0);
     }
     initFlowbite();
@@ -128,13 +128,12 @@ export class OrderInfoComponent implements OnInit, AfterViewInit{
                       })
                       this.loading=false;
                       this.loading_more=false;
-                      initFlowbite();
                   })
                 })
               })
             }
             this.orders[i]['billingAccount']=bill;
-            this.orders[i].productOrderItem=items;            
+            this.orders[i].productOrderItem=items;
           })
           
         }
@@ -159,7 +158,6 @@ export class OrderInfoComponent implements OnInit, AfterViewInit{
   }
 
   onStateFilterChange(filter:string){
-    this.loading=true;
     const index = this.filters.findIndex(item => item === filter);
     if (index !== -1) {
       this.filters.splice(index, 1);
@@ -167,13 +165,22 @@ export class OrderInfoComponent implements OnInit, AfterViewInit{
       console.log(this.filters)
     } else {
       console.log('añade filtro')
-      console.log(this.filters)
       this.filters.push(filter)
+      console.log(this.filters)
     }
+    this.loading=true;
     this.page=0;
     this.orders=[];
     this.getOrders(0);
-    initFlowbite();
+  }
+
+  isFilterSelected(filter:any){
+    const index = this.filters.findIndex(item => item === filter);
+    if (index !== -1) {
+      return true
+    } else {
+      return false;
+    } 
   }
 
   filterOrdersByDate(){
@@ -200,7 +207,6 @@ export class OrderInfoComponent implements OnInit, AfterViewInit{
     this.page=0;
     this.orders=[];
     this.getOrders(0);
-    initFlowbite();
   }
 
   getTotalPrice(items:any[]){

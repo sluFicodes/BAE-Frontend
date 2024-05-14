@@ -15,7 +15,7 @@
             <option value="year">Last year</option>
             <option value="all">All</option>
         </select>
-        <button id="dropdownDefault" data-dropdown-toggle="dropdown"
+        <button id="dropdownStateButton" data-dropdown-toggle="dropdownState"
             class="text-black border border-gray-200 dark:text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
             type="button">
             <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
@@ -28,13 +28,13 @@
             </svg>
         </button>
         
-        <div id="dropdown" class="z-20 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+        <div id="dropdownState" class="z-20 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
             <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
             State
             </h6>
-            <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
+            <ul class="space-y-2 text-sm" aria-labelledby="dropdownStateButton">
             <li class="flex items-center">
-                <input id="acknowledged" type="checkbox" value="" (change)="onStateFilterChange('acknowledged')"
+                <input id="acknowledged" type="checkbox" value="" [checked]="isFilterSelected('acknowledged')" (change)="onStateFilterChange('acknowledged')"
                 class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
         
                 <label for="acknowledged" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -43,7 +43,7 @@
             </li>
         
             <li class="flex items-center">
-                <input id="inProgress" type="checkbox" value="" (change)="onStateFilterChange('inProgress')"
+                <input id="inProgress" type="checkbox" value="" [checked]="isFilterSelected('inProgress')" (change)="onStateFilterChange('inProgress')"
                 class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
         
                 <label for="inProgress" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -52,7 +52,7 @@
             </li>
         
             <li class="flex items-center">
-                <input id="completed" type="checkbox" value="" (change)="onStateFilterChange('completed')"
+                <input id="completed" type="checkbox" value="" [checked]="isFilterSelected('completed')" (change)="onStateFilterChange('completed')"
                 class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
         
                 <label for="completed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -61,7 +61,7 @@
             </li>
         
             <li class="flex items-center">
-                <input id="failed" type="checkbox" value="" (change)="onStateFilterChange('failed')"
+                <input id="failed" type="checkbox" value="" [checked]="isFilterSelected('failed')" (change)="onStateFilterChange('failed')"
                 class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
         
                 <label for="failed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -70,7 +70,7 @@
             </li>
 
             <li class="flex items-center">
-                <input id="pending" type="checkbox" value="" (change)="onStateFilterChange('pending')"
+                <input id="pending" type="checkbox" value="" [checked]="isFilterSelected('pending')" (change)="onStateFilterChange('pending')"
                 class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
         
                 <label for="pending" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -79,7 +79,7 @@
             </li>
 
             <li class="flex items-center">
-                <input id="cancelled" type="checkbox" value="" (change)="onStateFilterChange('cancelled')"
+                <input id="cancelled" type="checkbox" value="" [checked]="isFilterSelected('cancelled')" (change)="onStateFilterChange('cancelled')"
                 class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
         
                 <label for="cancelled" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
