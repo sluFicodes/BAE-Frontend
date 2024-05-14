@@ -4,6 +4,7 @@ import { ProductInventoryServiceService } from 'src/app/services/product-invento
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ProductOrderService } from 'src/app/services/product-order-service.service';
 import { PriceServiceService } from 'src/app/services/price-service.service';
+import {EventMessageService} from "src/app/services/event-message.service";
 import { FastAverageColor } from 'fast-average-color';
 import {components} from "src/app/models/product-catalog";
 import { Router } from '@angular/router';
@@ -45,10 +46,21 @@ export class InventoryProductsComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private priceService: PriceServiceService,
     private router: Router,
-    private orderService: ProductOrderService
-  ) {}
+    private orderService: ProductOrderService,
+    private eventMessage: EventMessageService,
+  ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initInventory();
+      }
+    })
+  }
 
   ngOnInit() {
+    this.initInventory();
+  }
+
+  initInventory(){
     this.loading=true;
 
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
@@ -169,8 +181,8 @@ export class InventoryProductsComponent implements OnInit {
       this.getOffers(existingInventorySize);
       this.cdr.detectChanges();
 
-      //this.loading=false;
       //this.loading_more=false;
+      this.loading=false;
       this.cdr.detectChanges();
     })
   }

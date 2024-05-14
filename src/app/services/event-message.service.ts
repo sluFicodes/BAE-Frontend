@@ -5,7 +5,8 @@ import { LoginInfo } from 'src/app/models/interfaces';
 
 export interface EventMessage {
   type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess' | 'BillAccChanged' |
-  'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec';
+  'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
+  'SellerOffer' | 'SellerCreateOffer' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession';
   text?: string,
   value?: object | boolean
 }
@@ -78,5 +79,25 @@ export class EventMessageService {
 
   emitSellerCreateResourceSpec(show:boolean){
     this.eventMessageSubject.next({ type: 'SellerCreateResourceSpec', value: show });
+  }
+
+  emitSellerOffer(show:boolean){
+    this.eventMessageSubject.next({ type: 'SellerOffer', value: show });
+  }
+
+  emitSellerCreateOffer(show:boolean){
+    this.eventMessageSubject.next({ type: 'SellerCreateOffer', value: show });
+  }
+
+  emitCategoryAdded(cat:Category){
+    console.log('event emitter category')
+    console.log(cat)
+    this.eventMessageSubject.next({ type: 'CategoryAdded', value: cat });
+  }
+
+  emitChangedSession(session:any){
+    console.log('event eChangedSession')
+    console.log(session)
+    this.eventMessageSubject.next({ type: 'ChangedSession', value: session });
   }
 }

@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import { LoginInfo } from 'src/app/models/interfaces';
+import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
 
 @Component({
@@ -39,10 +40,20 @@ export class SellerOfferComponent implements OnInit{
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
+    private eventMessage: EventMessageService
   ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initOffers();
+      }
+    })
   }
 
   ngOnInit() {
+    this.initOffers();
+  }
+
+  initOffers(){
     this.loading=true;
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(aux.logged_as==aux.id){
@@ -69,6 +80,10 @@ export class SellerOfferComponent implements OnInit{
 
   ngAfterViewInit(){
     initFlowbite();
+  }
+
+  goToCreate(){
+    this.eventMessage.emitSellerCreateOffer(true);
   }
 
   getOffers(){

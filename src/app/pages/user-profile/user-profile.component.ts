@@ -30,14 +30,23 @@ export class UserProfileComponent implements OnInit{
 
   constructor(
     private localStorage: LocalStorageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private eventMessage: EventMessageService
   ) {
-
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initPartyInfo();
+      }
+    })
   }
 
   ngOnInit() {
     let today = new Date();
     today.setMonth(today.getMonth()-1);
+    this.initPartyInfo();
+  }
+
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.token=aux.token;

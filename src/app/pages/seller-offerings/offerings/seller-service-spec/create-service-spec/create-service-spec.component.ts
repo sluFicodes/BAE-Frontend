@@ -74,7 +74,11 @@ export class CreateServiceSpecComponent implements OnInit {
     private elementRef: ElementRef,
     private servSpecService: ServiceSpecServiceService,
   ) {
-    
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initPartyInfo();
+      }
+    })
   }
 
   @HostListener('document:click')
@@ -93,6 +97,10 @@ export class CreateServiceSpecComponent implements OnInit {
   @ViewChild('rangeUnit') charRangeUnit!: ElementRef;
 
   ngOnInit() {
+    this.initPartyInfo();
+  }
+
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       if(aux.logged_as==aux.id){

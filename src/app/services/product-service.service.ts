@@ -164,4 +164,22 @@ export class ApiServiceService {
  
     return lastValueFrom(this.http.get<any>(url));
   }
+
+  postOfferingPrice(price:any){
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/productOfferingPrice`;
+    return this.http.post<any>(url, price);
+  }
+
+  postProductOffering(prod:any,catalogId:any){
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}${ApiServiceService.API_PRODUCT}/catalog/${catalogId}/productOffering`;
+    return this.http.post<any>(url, prod);
+  }
+
+  postSLA(sla:any){
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}:${ApiServiceService.API_PORT}/SLAManagement/sla`;
+    return this.http.post<any>(url, sla);
+  }
 }

@@ -44,9 +44,18 @@ export class SellerProductSpecComponent implements OnInit{
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService
   ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initProdSpecs();
+      }
+    })
   }
 
   ngOnInit() {
+    this.initProdSpecs();
+  }
+
+  initProdSpecs(){
     this.loading=true;
     this.prodSpecs=[];
     let aux = this.localStorage.getObject('login_items') as LoginInfo;

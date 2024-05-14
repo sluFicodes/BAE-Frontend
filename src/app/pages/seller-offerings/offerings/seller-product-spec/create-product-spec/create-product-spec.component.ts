@@ -157,7 +157,11 @@ export class CreateProductSpecComponent implements OnInit {
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
   ) {
-    
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initPartyInfo();
+      }
+    })
   }
 
   @HostListener('document:click')
@@ -185,6 +189,10 @@ export class CreateProductSpecComponent implements OnInit {
   public files: NgxFileDropEntry[] = [];
 
   ngOnInit() {
+    this.initPartyInfo();
+  }
+
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       if(aux.logged_as==aux.id){
@@ -316,7 +324,7 @@ export class CreateProductSpecComponent implements OnInit {
     if (index !== -1) {
       console.log('seleccionar')
       this.availableISOS.splice(index, 1);
-      this.selectedISOS.push({name: iso.name, url: ''});
+      this.selectedISOS.push({name: iso.name, url: '', mandatory: iso.mandatory, domesupported: iso.domesupported});
     }
     this.buttonISOClicked=!this.buttonISOClicked;
     this.cdr.detectChanges();
@@ -329,7 +337,7 @@ export class CreateProductSpecComponent implements OnInit {
     if (index !== -1) {
       console.log('seleccionar')
       this.selectedISOS.splice(index, 1);
-      this.availableISOS.push(iso.name);
+      this.availableISOS.push({name: iso.name, mandatory: iso.mandatory, domesupported: iso.domesupported});
     }  
     this.cdr.detectChanges();
     console.log(this.prodSpecsBundle)    

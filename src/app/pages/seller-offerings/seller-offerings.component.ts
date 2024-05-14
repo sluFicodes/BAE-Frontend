@@ -26,6 +26,7 @@ export class SellerOfferingsComponent implements OnInit {
   show_create_prod_spec: boolean = false;
   show_create_res_spec: boolean = false;
   show_create_serv_spec: boolean = false;
+  show_create_offer: boolean = false;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -51,6 +52,12 @@ export class SellerOfferingsComponent implements OnInit {
       if(ev.type === 'SellerCreateResourceSpec' && ev.value == true) {
         this.goToCreateResSpec();
       }
+      if(ev.type === 'SellerOffer' && ev.value == true) {        
+        this.goToOffers();
+      }
+      if(ev.type === 'SellerCreateOffer' && ev.value == true) {
+        this.goToCreateOffer();
+      }
     })
   }
 
@@ -67,6 +74,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_create_prod_spec=true;
     this.show_create_serv_spec=false;
     this.show_create_res_spec=false;
+    this.show_create_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -79,6 +87,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_create_serv_spec=true;
     this.show_create_prod_spec=false;
     this.show_create_res_spec=false;
+    this.show_create_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -91,6 +100,20 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_create_serv_spec=false;
     this.show_create_prod_spec=false;
     this.show_create_res_spec=true;
+    this.show_create_offer=false;
+    this.cdr.detectChanges();
+  }
+
+  goToCreateOffer(){
+    this.show_catalogs=false;
+    this.show_prod_specs=false;
+    this.show_service_specs=false;
+    this.show_resource_specs=false;
+    this.show_offers=false;
+    this.show_create_serv_spec=false;
+    this.show_create_prod_spec=false;
+    this.show_create_res_spec=false;
+    this.show_create_offer=true;
     this.cdr.detectChanges();
   }
 
@@ -104,6 +127,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_create_prod_spec=false;
     this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
+    this.show_create_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -131,6 +155,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_create_prod_spec=false;
     this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
+    this.show_create_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -158,6 +183,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_create_prod_spec=false;
     this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
+    this.show_create_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -185,6 +211,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_create_prod_spec=false;
     this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
+    this.show_create_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -212,6 +239,7 @@ export class SellerOfferingsComponent implements OnInit {
     this.show_create_prod_spec=false;
     this.show_create_res_spec=false;
     this.show_create_serv_spec=false;
+    this.show_create_offer=false;
     this.cdr.detectChanges();
   }
 

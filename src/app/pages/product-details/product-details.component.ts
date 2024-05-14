@@ -4,7 +4,7 @@ import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
 import { initFlowbite } from 'flowbite';
 import { PriceServiceService } from 'src/app/services/price-service.service';
-import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved} from "@fortawesome/pro-solid-svg-icons";
+import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved, faAtom} from "@fortawesome/pro-solid-svg-icons";
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
@@ -37,7 +37,8 @@ export class ProductDetailsComponent implements OnInit {
   images: AttachmentRefOrValue[]  = [];
   attatchments: AttachmentRefOrValue[]  = [];
   prodSpec:ProductSpecification = {};
-  complianceProf:any[] = [];
+  complianceProf:any[] = certifications;
+  complianceLevel:number=1;
   serviceSpecs:any[] = [];
   resourceSpecs:any[]=[];
   protected readonly faScaleBalanced = faScaleBalanced;
@@ -48,6 +49,7 @@ export class ProductDetailsComponent implements OnInit {
   protected readonly faGlobe = faGlobe;
   protected readonly faBook = faBook;
   protected readonly faShieldHalved = faShieldHalved;
+  protected readonly faAtom = faAtom;
 
   constructor(
     private route: ActivatedRoute,
@@ -56,11 +58,6 @@ export class ProductDetailsComponent implements OnInit {
     private router: Router,
     private elementRef: ElementRef
   ) {
-    this.complianceProf.push({id: 'cloudRulebook', name: 'EU Cloud Rulebook', value: 'Not achieved yet', href:'#'})
-    this.complianceProf.push({id: 'cloudSecurity', name: 'EU Cloud Security', value: 'Not achieved yet', href:'#'})
-    this.complianceProf.push({id: 'iso27001', name: 'ISO 27001', value: 'Not achieved yet', href:'#'})
-    this.complianceProf.push({id: 'iso27017', name: 'ISO 27017', value: 'Not achieved yet', href:'#'})
-    this.complianceProf.push({id: 'iso17025', name: 'ISO 17025', value: 'Not achieved yet', href:'#'})
   }
 
   ngOnInit() {
@@ -133,10 +130,13 @@ export class ProductDetailsComponent implements OnInit {
         }
         for(let z=0; z < this.complianceProf.length; z++){
           if(this.prodSpec.productSpecCharacteristic != undefined){
-            let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === this.complianceProf[z].id));
+            let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === this.complianceProf[z].name));
             if(compProf != undefined){
               this.complianceProf[z].href = compProf.productSpecCharacteristicValue?.at(0)?.value
-              this.complianceProf[z].value = 'Yes'
+              this.complianceProf[z].value = 'Certification included'
+            } else {
+              this.complianceProf[z].href = '#'
+              this.complianceProf[z].value = 'Not provided yet'
             }
           }
         }

@@ -5,6 +5,7 @@ import { AccountServiceService } from 'src/app/services/account-service.service'
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { phoneNumbers, countries } from 'src/app/models/country.const'
+import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
 
@@ -41,8 +42,13 @@ export class UserInfoComponent implements OnInit {
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private accountService: AccountServiceService,
+    private eventMessage: EventMessageService
   ) {
-
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initPartyInfo();
+      }
+    })
   }
 
   ngOnInit() {
@@ -50,6 +56,10 @@ export class UserInfoComponent implements OnInit {
     let today = new Date();
     today.setMonth(today.getMonth()-1);
     this.selectedDate = today.toISOString();
+    this.initPartyInfo();
+  }
+
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.token=aux.token;
