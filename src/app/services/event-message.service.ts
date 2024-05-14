@@ -6,7 +6,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 export interface EventMessage {
   type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess' | 'BillAccChanged' |
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
-  'SellerOffer' | 'SellerCreateOffer' | 'CategoryAdded' | 'CategoryRemoved';
+  'SellerOffer' | 'SellerCreateOffer' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession';
   text?: string,
   value?: object | boolean
 }
@@ -93,5 +93,11 @@ export class EventMessageService {
     console.log('event emitter category')
     console.log(cat)
     this.eventMessageSubject.next({ type: 'CategoryAdded', value: cat });
+  }
+
+  emitChangedSession(session:any){
+    console.log('event eChangedSession')
+    console.log(session)
+    this.eventMessageSubject.next({ type: 'ChangedSession', value: session });
   }
 }

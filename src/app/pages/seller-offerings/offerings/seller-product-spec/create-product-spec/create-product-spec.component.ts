@@ -155,7 +155,11 @@ export class CreateProductSpecComponent implements OnInit {
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
   ) {
-    
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initPartyInfo();
+      }
+    })
   }
 
   @HostListener('document:click')
@@ -183,6 +187,10 @@ export class CreateProductSpecComponent implements OnInit {
   public files: NgxFileDropEntry[] = [];
 
   ngOnInit() {
+    this.initPartyInfo();
+  }
+
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       if(aux.logged_as==aux.id){

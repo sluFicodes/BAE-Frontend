@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import { LoginInfo } from 'src/app/models/interfaces';
+import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
 
 @Component({
@@ -36,10 +37,20 @@ export class SellerCatalogsComponent {
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
+    private eventMessage: EventMessageService,
   ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initCatalogs();
+      }
+    })
   }
 
   ngOnInit() {
+    this.initCatalogs();
+  }
+
+  initCatalogs(){
     this.loading=true;
     this.catalogs=[];
     let aux = this.localStorage.getObject('login_items') as LoginInfo;

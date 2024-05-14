@@ -59,6 +59,9 @@ export class CheckoutComponent implements OnInit {
         if(ev.value == true){
           this.addBill=false;
         }
+        if(ev.type === 'ChangedSession') {
+          this.initCheckoutData();
+        }
       })
   }
 
@@ -132,7 +135,7 @@ export class CheckoutComponent implements OnInit {
           })
         }
       }
-
+      
       products.push({
         "id": this.items[i].id,
         "action": "add",
@@ -167,6 +170,7 @@ export class CheckoutComponent implements OnInit {
         }
       })
     }
+    console.log(this.selectedBillingAddress.id)
     let productOrder = {
       "state": "acknowledged",
       "productOrderItem": products,
@@ -186,6 +190,7 @@ export class CheckoutComponent implements OnInit {
       "orderDate": moment().utc(),
       "notificationContact": this.selectedBillingAddress.email,
     }
+    console.log(productOrder)
     await this.orderService.postProductOrder(productOrder).subscribe({
       next: data => {
         console.log(data)
@@ -220,7 +225,11 @@ export class CheckoutComponent implements OnInit {
       //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
     });
 
+    this.initCheckoutData();
 
+  }
+
+  initCheckoutData(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if (aux) {
       this.contact.email = aux.email;
@@ -249,7 +258,6 @@ export class CheckoutComponent implements OnInit {
 
     this.loading_baddrs = true;
     this.getBilling();
-
   }
 
   getBilling(){

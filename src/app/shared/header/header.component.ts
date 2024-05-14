@@ -233,6 +233,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       for(let i=0;i<this.loginInfo.roles.length;i++){
         this.roles.push(this.loginInfo.roles[i].name)
       }
+      this.eventMessage.emitChangedSession(this.loginInfo)
       this.cdr.detectChanges();
     } else {
       this.loginInfo = {"id": this.loginInfo.id,
@@ -253,6 +254,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       for(let i=0;i<this.orgs[idx].roles.length;i++){
         this.roles.push(this.orgs[idx].roles[i].name)
       }
+      this.eventMessage.emitChangedSession(this.loginInfo)
       this.cdr.detectChanges();
     }
     initFlowbite();

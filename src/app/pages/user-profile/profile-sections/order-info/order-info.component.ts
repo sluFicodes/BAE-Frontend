@@ -43,9 +43,14 @@ export class OrderInfoComponent implements OnInit {
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private accountService: AccountServiceService,
-    private orderService: ProductOrderService
+    private orderService: ProductOrderService,
+    private eventMessage: EventMessageService
   ) {
-
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initPartyInfo();
+      }
+    })
   }
 
   @HostListener('document:click')
@@ -62,6 +67,10 @@ export class OrderInfoComponent implements OnInit {
     let today = new Date();
     today.setMonth(today.getMonth()-1);
     this.selectedDate = today.toISOString();
+    this.initPartyInfo();
+  }
+
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.partyId = aux.partyId;

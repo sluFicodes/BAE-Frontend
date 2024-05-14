@@ -42,9 +42,18 @@ export class SellerOfferComponent implements OnInit{
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService
   ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initOffers();
+      }
+    })
   }
 
   ngOnInit() {
+    this.initOffers();
+  }
+
+  initOffers(){
     this.loading=true;
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(aux.logged_as==aux.id){

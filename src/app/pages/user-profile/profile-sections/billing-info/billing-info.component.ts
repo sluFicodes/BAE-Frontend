@@ -53,6 +53,9 @@ export class BillingInfoComponent implements OnInit{
       if(ev.value == false){
         this.editBill=false;
       }
+      if(ev.type === 'ChangedSession') {
+        this.initPartyInfo();
+      }
     })
   }
 
@@ -77,6 +80,10 @@ export class BillingInfoComponent implements OnInit{
     let today = new Date();
     today.setMonth(today.getMonth()-1);
     this.selectedDate = today.toISOString();
+    this.initPartyInfo();
+  }
+
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.partyId = aux.partyId;

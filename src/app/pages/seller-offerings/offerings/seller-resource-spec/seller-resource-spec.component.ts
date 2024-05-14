@@ -42,9 +42,18 @@ export class SellerResourceSpecComponent implements OnInit {
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService
   ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initResources();
+      }
+    })
   }
 
   ngOnInit() {
+    this.initResources();
+  }
+
+  initResources(){
     this.loading=true;
     this.resSpecs=[];
     let aux = this.localStorage.getObject('login_items') as LoginInfo;

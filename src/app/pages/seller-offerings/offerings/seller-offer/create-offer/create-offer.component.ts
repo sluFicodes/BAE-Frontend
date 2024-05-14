@@ -182,6 +182,9 @@ export class CreateOfferComponent implements OnInit {
       if(ev.type === 'CategoryAdded') {
         this.addCategory(ev.value);
       }
+      if(ev.type === 'ChangedSession') {
+        this.initPartyInfo();
+      }
     })
   }
 
@@ -194,6 +197,10 @@ export class CreateOfferComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initPartyInfo();
+  }
+
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       if(aux.logged_as==aux.id){
