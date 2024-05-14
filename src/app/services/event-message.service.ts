@@ -6,7 +6,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 export interface EventMessage {
   type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess' | 'BillAccChanged' |
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
-  'SellerOffer' | 'SellerCreateOffer';
+  'SellerOffer' | 'SellerCreateOffer' | 'CategoryAdded' | 'CategoryRemoved';
   text?: string,
   value?: object | boolean
 }
@@ -87,5 +87,11 @@ export class EventMessageService {
 
   emitSellerCreateOffer(show:boolean){
     this.eventMessageSubject.next({ type: 'SellerCreateOffer', value: show });
+  }
+
+  emitCategoryAdded(cat:Category){
+    console.log('event emitter category')
+    console.log(cat)
+    this.eventMessageSubject.next({ type: 'CategoryAdded', value: cat });
   }
 }

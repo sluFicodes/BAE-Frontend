@@ -51,6 +51,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { CreateServiceSpecComponent } from './pages/seller-offerings/offerings/seller-service-spec/create-service-spec/create-service-spec.component';
 import { CreateResourceSpecComponent } from './pages/seller-offerings/offerings/seller-resource-spec/create-resource-spec/create-resource-spec.component';
 import { CreateOfferComponent } from './pages/seller-offerings/offerings/seller-offer/create-offer/create-offer.component';
+import {CategoriesRecursionComponent} from "./shared/categories-recursion/categories-recursion.component";
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { CreateOfferComponent } from './pages/seller-offerings/offerings/seller-
     CreateProductSpecComponent,
     CreateServiceSpecComponent,
     CreateResourceSpecComponent,
-    CreateOfferComponent
+    CreateOfferComponent,
+    CategoriesRecursionComponent
   ],
   imports: [
     BrowserModule,

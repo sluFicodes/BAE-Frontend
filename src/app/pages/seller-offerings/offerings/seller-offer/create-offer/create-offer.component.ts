@@ -178,7 +178,11 @@ export class CreateOfferComponent implements OnInit {
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
   ) {
-    
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'CategoryAdded') {
+        this.addCategory(ev.value);
+      }
+    })
   }
 
   @HostListener('document:click')
@@ -279,7 +283,10 @@ export class CreateOfferComponent implements OnInit {
 
   toggleCategories(){
     this.categories=[];
+    this.loadingCategory=true;
     this.getCategories();
+    console.log('CATEGORIES FORMATTED')
+    console.log(this.categories)
     this.selectStep('category','category-circle');
     this.showBundle=false;
     this.showGeneral=false;
@@ -611,10 +618,12 @@ export class CreateOfferComponent implements OnInit {
         })           
       }
     })*/
+    console.log('Getting categories...')
     this.api.getCategories().then(data => {
       for(let i=0; i < data.length; i++){
         this.findChildren(data[i],data)
       }
+      this.loadingCategory=false;
       this.cdr.detectChanges();
       initFlowbite();
     }) 
@@ -670,6 +679,18 @@ export class CreateOfferComponent implements OnInit {
     }
   }
 
+  addParent(parentId:any){
+    this.api.getCategoryById(parentId).then(categoryInfo => {
+      console.log('añadir padre')
+      //Si el padre no está seleccionado se añade a la selección      
+      if(categoryInfo.isRoot==false){
+        this.addCategory(categoryInfo)
+      } else {
+        this.selectedCategories.push(categoryInfo);
+      }
+    })
+  }
+
   addCategory(cat:any){
     const index = this.selectedCategories.findIndex(item => item.id === cat.id);
     if (index !== -1) {
@@ -681,8 +702,8 @@ export class CreateOfferComponent implements OnInit {
     } 
 
     if(cat.isRoot==false){
-      const parentIdx = this.categories.findIndex(item => item.id === cat.parentId);
-      const parentIdxSelected = this.selectedCategories.findIndex(item => item.id === cat.parentId);
+      //const parentIdx = this.categories.findIndex(item => item.id === cat.parentId);
+      const parentIdxSelected = this.selectedCategories.findIndex(item => item.id === cat.parentId);      
       /*if (index !== -1) {
         const stillchilds = this.selectedCategories.findIndex(item => item.parentId === cat.parentId);
         //No hay ningun otro hijo que tenga al padre como padre se elimina de la seleccion
@@ -691,11 +712,10 @@ export class CreateOfferComponent implements OnInit {
         }
       } else {*/
       if (index==-1 && parentIdxSelected == -1) {
-        //Si el padre no está seleccionado se añade a la selección
-        this.selectedCategories.push(this.categories[parentIdx]);       
+        this.addParent(cat.parentId);     
       }
     }
-   
+   console.log(this.selectedCategories)
     this.cdr.detectChanges();
     console.log(this.selectedCategories)
   }
