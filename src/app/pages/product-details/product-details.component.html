@@ -169,9 +169,23 @@
                             <h3 class="text-2xl font-bold mb-4">{{char.name}}</h3>            
                             <div class="flex justify-between">
                                 @if (char.href == '#') {
-                                    <p class="mb-2 font-normal pl-4 text-gray-700">{{char.value}}</p>
+
+                                    <a class="text-xs ml-4 font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-red-200 text-red-700">
+                                        Not achieved yet
+                                    </a>
                                 } @else {
-                                    <a class="mb-2 font-normal pl-4 text-primary-100" target="_blank" href="{{char.href}}">{{char.value}}</a>
+                                    <a class="mb-2 font-normal pl-4 text-primary-100" target="_blank" href="{{char.href}}">
+                                        {{char.value}}
+                                    </a>
+                                    @if(char.domesupported==true){
+                                        <a class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-gray-400 text-gray-900">
+                                            Under evaluation
+                                        </a>
+                                    } @else {
+                                        <a class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-green-200 text-green-700">
+                                            Self declared
+                                        </a>
+                                    }
                                 }
                                 @if(char.domesupported == true){
                                     <fa-icon [icon]="faAtom" class="fa-2xl text-primary-100 align-middle"></fa-icon>
