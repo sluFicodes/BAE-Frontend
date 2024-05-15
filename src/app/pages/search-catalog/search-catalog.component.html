@@ -26,7 +26,7 @@
   <!-- End Breadcrumb -->
   <section class="flex p-5">
     <bae-categories-filter [catalogId]="catalog.id" class="w-1/4 md:w-1/5"></bae-categories-filter>
-    <div class="w-3/4 md:w-4/5 pl-5 grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3">
+    <div class="w-3/4 md:w-4/5 pl-5 grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 h-full">
       @for (prod of products; track prod.id) {
         <bae-off-card [productOff]=prod class="w-full h-full p-2"></bae-off-card>
       }
