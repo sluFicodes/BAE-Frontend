@@ -3,6 +3,7 @@ export const environment = {
     BASE_URL: 'http://proxy.docker:8004',
     //API_PORT: 8004,
     //API_PORT: 443,
+    LEGACY_PREFIX: '',
     PRODUCT_CATALOG: '/catalog',
     SERVICE: '/service',
     RESOURCE: '/resource',

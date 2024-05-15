@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   email:string='';
   usercharacters:string='';
   loginSubscription: Subscription = new Subscription();
-  loginUrl:string = `${environment.BASE_URL}` + (environment.SIOP ? '/login/vc' : '/login');
+  loginUrl:string = `${environment.BASE_URL}` + (environment.SIOP ? `${environment.LEGACY_PREFIX}/login/vc` : '/login');
   roles:string[]=[];
   public static BASE_URL: String = environment.BASE_URL;
 
