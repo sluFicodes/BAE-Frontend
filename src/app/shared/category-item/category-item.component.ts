@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ChangeDetectorRef} from '@angular/core';
 import {faCircleCheck} from "@fortawesome/pro-solid-svg-icons";
 import {faCircle} from "@fortawesome/pro-regular-svg-icons";
 import {Category} from "../../models/interfaces";
@@ -29,13 +29,24 @@ export class CategoryItemComponent implements OnInit {
   @Input() isFirst = false;
   @Input() isLast = false;
 
-  constructor(private localStorage: LocalStorageService, private eventMessage: EventMessageService) {
+  constructor(private localStorage: LocalStorageService, private eventMessage: EventMessageService, private cdr: ChangeDetectorRef) {
     this.eventMessage.messages$.subscribe(ev => {
-      const cat = ev.value as Category;
+      const cat = ev.value as Category;      
       if(ev.type === 'AddedFilter' && cat?.id === this.data?.id) {
           this.checked = true;
       } else if(ev.type === 'RemovedFilter' && cat?.id === this.data?.id) {
         this.checked = false;
+      }
+      if(ev.type === 'AddedFilter' && !this.isCheckedCategory(cat)){
+        this.checkedCategories.push(cat.id);
+        this.cdr.detectChanges();
+      } else if(ev.type === 'RemovedFilter' && this.isCheckedCategory(cat)){
+        const index = this.checkedCategories.findIndex(item => item === cat.id);
+        if (index !== -1) {
+          this.checkedCategories.splice(index, 1);
+          this.cdr.detectChanges();
+        }
+        console.log(this.isCheckedCategory(cat))
       }
     })
   }

@@ -38,6 +38,20 @@ export class CategoriesFilterComponent implements OnInit {
     private cdr: ChangeDetectorRef
     ) {
       this.categories = [];
+      this.eventMessage.messages$.subscribe(ev => {
+        const cat = ev.value as Category;      
+        if(ev.type === 'AddedFilter' && !this.isCheckedCategory(cat)){
+          this.checkedCategories.push(cat.id);
+          this.cdr.detectChanges();
+        } else if(ev.type === 'RemovedFilter' && this.isCheckedCategory(cat)){
+          const index = this.checkedCategories.findIndex(item => item === cat.id);
+          if (index !== -1) {
+            this.checkedCategories.splice(index, 1);
+            this.cdr.detectChanges();
+          }
+          console.log(this.isCheckedCategory(cat))
+        }
+      })
     }
 
   async ngOnInit() {
