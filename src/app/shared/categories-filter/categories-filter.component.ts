@@ -5,6 +5,8 @@ import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { initFlowbite } from 'flowbite';
+import {faCircleCheck} from "@fortawesome/pro-solid-svg-icons";
+import {faCircle} from "@fortawesome/pro-regular-svg-icons";
 
 @Component({
   selector: 'bae-categories-filter',
@@ -16,12 +18,18 @@ export class CategoriesFilterComponent implements OnInit {
   classListFirst = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   classListLast  = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   classList      = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  labelClass: string = "text-gray-500 bg-white border-2 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-primary-50 hover:text-gray-600 dark:peer-checked:bg-primary-50 dark:peer-checked:text-secondary-100 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-primary-50";
   categories: Category[] = [];
+  checkedCategories: any[] = [];
   selected: Category[] = [];
   dismissSubject: Subject<any> = new Subject();
   catalog:any;
+  cs: Category[] = [];
   @Output() selectedCategories = new EventEmitter<Category[]>();
   @Input() catalogId: any = undefined;
+
+  protected readonly faCircleCheck = faCircleCheck;
+  protected readonly faCircle = faCircle;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -156,6 +164,30 @@ export class CategoriesFilterComponent implements OnInit {
       return []
     }
 
+  }
+
+  onClick(cat:Category){
+    if(!this.isCheckedCategory(cat)) {
+      this.checkedCategories.push(cat.id);
+      this.localStorage.addCategoryFilter(cat);
+      this.eventMessage.emitAddedFilter(cat);
+    } else {
+      this.localStorage.removeCategoryFilter(cat);
+      this.eventMessage.emitRemovedFilter(cat);
+      const index = this.checkedCategories.findIndex(item => item === cat.id);
+      if (index !== -1) {
+        this.checkedCategories.splice(index, 1);
+      }      
+    }
+  }
+
+  isCheckedCategory(cat:Category){
+    const index = this.checkedCategories.findIndex(item => item === cat.id);
+    if (index !== -1) {
+      return true
+    } else {
+      return false
+    }
   }
 
 }

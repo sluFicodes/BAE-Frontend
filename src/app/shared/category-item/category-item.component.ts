@@ -17,7 +17,13 @@ export class CategoryItemComponent implements OnInit {
   protected readonly faCircle = faCircle;
   checked: boolean = false;
   option: String | undefined;
+  checkedCategories: any[] = [];
+  simplifiedId:any;
   labelClass: string = "inline-flex items-center justify-between w-full px-5 py-3 text-gray-500 bg-white border-2 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-primary-50 hover:text-gray-600 dark:peer-checked:bg-primary-50 dark:peer-checked:text-secondary-100 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-primary-50";
+  classListFirst = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  classListLast  = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  classList      = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  
   @Input() data: Category | undefined;
   @Input() isParent = false;
   @Input() isFirst = false;
@@ -35,7 +41,10 @@ export class CategoryItemComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    if(this.data?.id){
+      this.simplifiedId=this.data.id.split(':').pop()
+    }
+    
     const categories = this.localStorage.getObject('selected_categories') as Category[] || [] ;
     if(categories.length >0){
       const index = categories.findIndex((item:Category) => item.id === this.data?.id);
@@ -52,12 +61,41 @@ export class CategoryItemComponent implements OnInit {
 
   onClick(checked:boolean){
     if(!checked) {
+      this.checkedCategories.push((this.data as Category).id);
       this.localStorage.addCategoryFilter(this.data as Category);
       this.eventMessage.emitAddedFilter(this.data as Category);
     } else {
       this.localStorage.removeCategoryFilter(this.data as Category);
       this.eventMessage.emitRemovedFilter(this.data as Category);
+      const index = this.checkedCategories.findIndex(item => item === (this.data as Category).id);
+      if (index !== -1) {
+        this.checkedCategories.splice(index, 1);
+      } 
     }
     this.checked = !this.checked;
+  }
+
+  onClickCategory(cat:Category){
+    if(!this.isCheckedCategory(cat)) {
+      this.checkedCategories.push(cat.id);
+      this.localStorage.addCategoryFilter(cat);
+      this.eventMessage.emitAddedFilter(cat);
+    } else {
+      this.localStorage.removeCategoryFilter(cat);
+      this.eventMessage.emitRemovedFilter(cat);
+      const index = this.checkedCategories.findIndex(item => item === cat.id);
+      if (index !== -1) {
+        this.checkedCategories.splice(index, 1);
+      }      
+    }
+  }
+
+  isCheckedCategory(cat:Category){
+    const index = this.checkedCategories.findIndex(item => item === cat.id);
+    if (index !== -1) {
+      return true
+    } else {
+      return false
+    }
   }
 }
