@@ -11,7 +11,7 @@
   } @else {
       <div class="w-3/4 md:w-4/5 pl-5 grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3">
         @for (prod of products; track prod.id) {
-          <bae-off-card [productOff]=prod class="w-full p-2"></bae-off-card>
+          <bae-off-card [productOff]=prod class="w-full h-full p-2"></bae-off-card>
         } @empty {
           <div class="min-h-19 dark:text-gray-600 text-center">No se han encontrado ofertas.</div>
         } 

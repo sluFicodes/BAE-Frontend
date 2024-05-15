@@ -13,7 +13,6 @@ import * as moment from 'moment';
 })
 export class ProductOrderService {
   public static BASE_URL: String = environment.BASE_URL;
-  public static API_PORT: Number = environment.API_PORT;
   public static API_ORDERING: String = environment.PRODUCT_ORDER;
   public static ORDER_LIMIT: Number = environment.ORDER_LIMIT;
 
@@ -21,12 +20,12 @@ export class ProductOrderService {
 
   postProductOrder(prod:any){
     //POST - El item va en el body de la petición
-    let url = `${ProductOrderService.BASE_URL}:${ProductOrderService.API_PORT}${ProductOrderService.API_ORDERING}/productOrder`;
+    let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder`;
     return this.http.post<any>(url, prod);
   }
 
   getProductOrders(partyId:any,page:any,filters:any[],date:any){
-    let url = `${ProductOrderService.BASE_URL}:${ProductOrderService.API_PORT}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Customer`;
+    let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Customer`;
     let status=''
     if(filters.length>0){
       for(let i=0; i < filters.length; i++){

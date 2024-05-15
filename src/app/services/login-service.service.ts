@@ -13,12 +13,11 @@ import * as moment from 'moment';
 })
 export class LoginServiceService {
   public static BASE_URL: String = environment.BASE_URL;
-  public static API_PORT: Number = environment.API_PORT;
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
   getLogin(token:any){
-    let url = `${LoginServiceService.BASE_URL}:${LoginServiceService.API_PORT}/logintoken`;
+    let url = `${LoginServiceService.BASE_URL}/logintoken`;
 
     let header = {}
 
@@ -35,7 +34,7 @@ export class LoginServiceService {
   }
 
   doLogin(){
-    let url = `${LoginServiceService.BASE_URL}:${LoginServiceService.API_PORT}/login`;
+    let url = `${LoginServiceService.BASE_URL}/login`;
     console.log('-- login --')
     this.http
     .get<any>(url,{observe:"response"})

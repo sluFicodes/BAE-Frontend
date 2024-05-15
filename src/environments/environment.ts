@@ -1,7 +1,7 @@
 export const environment = {
-    BASE_URL: 'http://localhost',
+    BASE_URL: 'http://localhost:8004',
     //API_PORT: 8632,
-    API_PORT: 8004,
+    //API_PORT: 8004,
     //API ENDPOINTS
     PRODUCT_CATALOG: '/catalog',
     SERVICE: '/service',

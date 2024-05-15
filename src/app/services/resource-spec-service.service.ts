@@ -14,7 +14,6 @@ import * as moment from 'moment';
 export class ResourceSpecServiceService {
 
   public static BASE_URL: String = environment.BASE_URL;
-  public static API_PORT: Number = environment.API_PORT;
   public static RESOURCE: String = environment.RESOURCE;
   public static API_RESOURCE_SPEC: String = environment.RESOURCE_SPEC;
   public static RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
@@ -22,7 +21,7 @@ export class ResourceSpecServiceService {
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
   getResourceSpecByUser(page:any,status:any[],partyId:any,sort:any) {
-    let url = `${ResourceSpecServiceService.BASE_URL}:${ResourceSpecServiceService.API_PORT}${ResourceSpecServiceService.RESOURCE}${ResourceSpecServiceService.API_RESOURCE_SPEC}?limit=${ResourceSpecServiceService.RES_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
+    let url = `${ResourceSpecServiceService.BASE_URL}${ResourceSpecServiceService.RESOURCE}${ResourceSpecServiceService.API_RESOURCE_SPEC}?limit=${ResourceSpecServiceService.RES_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
 
     if(sort!=undefined){
       url=url+'&sort='+sort
@@ -43,7 +42,7 @@ export class ResourceSpecServiceService {
   }
 
   postResSpec(body:any){
-    let url = `${ResourceSpecServiceService.BASE_URL}:${ResourceSpecServiceService.API_PORT}${ResourceSpecServiceService.RESOURCE}${ResourceSpecServiceService.API_RESOURCE_SPEC}`;
+    let url = `${ResourceSpecServiceService.BASE_URL}${ResourceSpecServiceService.RESOURCE}${ResourceSpecServiceService.API_RESOURCE_SPEC}`;
     return this.http.post<any>(url, body);
   }
 }

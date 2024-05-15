@@ -58,10 +58,9 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   email:string='';
   usercharacters:string='';
   loginSubscription: Subscription = new Subscription();
-  loginUrl:string = `${environment.BASE_URL}:${environment.API_PORT}` + (environment.SIOP ? '/login/vc' : '/login');
+  loginUrl:string = `${environment.BASE_URL}` + (environment.SIOP ? '/login/vc' : '/login');
   roles:string[]=[];
   public static BASE_URL: String = environment.BASE_URL;
-  public static API_PORT: Number = environment.API_PORT;
 
   @HostListener('document:click')
   onClick() {
@@ -191,7 +190,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   }
 
   goToMyOfferings(){
-    window.location.href=`${HeaderComponent.BASE_URL}:${HeaderComponent.API_PORT}/#/stock/offering?status=Active,Launched`;
+    window.location.href=`${HeaderComponent.BASE_URL}/#/stock/offering?status=Active,Launched`;
   }
 
   async toggleLogin(){

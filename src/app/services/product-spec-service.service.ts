@@ -14,7 +14,6 @@ import * as moment from 'moment';
 export class ProductSpecServiceService {
 
   public static BASE_URL: String = environment.BASE_URL;
-  public static API_PORT: Number = environment.API_PORT;
   public static API_PRODUCT_CATALOG: String = environment.PRODUCT_CATALOG;
   public static API_PRODUCT_SPEC: String = environment.PRODUCT_SPEC;
   public static PROD_SPEC_LIMIT: number = environment.PROD_SPEC_LIMIT;
@@ -22,7 +21,7 @@ export class ProductSpecServiceService {
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
   getProdSpecByUser(page:any,status:any[],partyId:any,sort:any,isBundle:any) {
-    let url = `${ProductSpecServiceService.BASE_URL}:${ProductSpecServiceService.API_PORT}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}?limit=${ProductSpecServiceService.PROD_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
+    let url = `${ProductSpecServiceService.BASE_URL}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}?limit=${ProductSpecServiceService.PROD_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
 
     if(sort!=undefined){
       url=url+'&sort='+sort
@@ -46,7 +45,7 @@ export class ProductSpecServiceService {
   }
 
   postProdSpec(body:any){
-    let url = `${ProductSpecServiceService.BASE_URL}:${ProductSpecServiceService.API_PORT}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}`;
+    let url = `${ProductSpecServiceService.BASE_URL}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}`;
     return this.http.post<any>(url, body);
   }
 }

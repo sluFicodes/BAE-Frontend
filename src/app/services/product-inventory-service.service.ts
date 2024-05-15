@@ -13,14 +13,13 @@ import * as moment from 'moment';
 })
 export class ProductInventoryServiceService {
   public static BASE_URL: String = environment.BASE_URL;
-  public static API_PORT: Number = environment.API_PORT;
   public static API_INVENTORY: String = environment.INVENTORY;
   public static INVENTORY_LIMIT: number = environment.INVENTORY_LIMIT;
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
   getInventory(page:any,id:any,filters:any[],keywords:any) {
-    let url = `${ProductInventoryServiceService.BASE_URL}:${ProductInventoryServiceService.API_PORT}${ProductInventoryServiceService.API_INVENTORY}/product?limit=${ProductInventoryServiceService.INVENTORY_LIMIT}&offset=${page}&relatedParty.id=${id}`
+    let url = `${ProductInventoryServiceService.BASE_URL}${ProductInventoryServiceService.API_INVENTORY}/product?limit=${ProductInventoryServiceService.INVENTORY_LIMIT}&offset=${page}&relatedParty.id=${id}`
     let status=''
     if(filters.length>0){
       for(let i=0; i < filters.length; i++){
@@ -39,7 +38,7 @@ export class ProductInventoryServiceService {
   }
 
   updateProduct(product:any,id:any){
-    let url = `${ProductInventoryServiceService.BASE_URL}:${ProductInventoryServiceService.API_PORT}${ProductInventoryServiceService.API_INVENTORY}/product/${id}`;   
+    let url = `${ProductInventoryServiceService.BASE_URL}${ProductInventoryServiceService.API_INVENTORY}/product/${id}`;   
     return this.http.patch<any>(url, product);
   }
   
