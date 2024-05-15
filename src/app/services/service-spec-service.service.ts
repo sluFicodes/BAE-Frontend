@@ -14,7 +14,6 @@ import * as moment from 'moment';
 export class ServiceSpecServiceService {
 
   public static BASE_URL: String = environment.BASE_URL;
-  public static API_PORT: Number = environment.API_PORT;
   public static SERVICE: String = environment.SERVICE;
   public static API_SERVICE_SPEC: String = environment.SERVICE_SPEC;
   public static SERV_SPEC_LIMIT: number = environment.SERV_SPEC_LIMIT;
@@ -22,7 +21,7 @@ export class ServiceSpecServiceService {
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
   getServiceSpecByUser(page:any,status:any[],partyId:any,sort:any) {
-    let url = `${ServiceSpecServiceService.BASE_URL}:${ServiceSpecServiceService.API_PORT}${ServiceSpecServiceService.SERVICE}${ServiceSpecServiceService.API_SERVICE_SPEC}?limit=${ServiceSpecServiceService.SERV_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
+    let url = `${ServiceSpecServiceService.BASE_URL}${ServiceSpecServiceService.SERVICE}${ServiceSpecServiceService.API_SERVICE_SPEC}?limit=${ServiceSpecServiceService.SERV_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;    
 
     if(sort!=undefined){
       url=url+'&sort='+sort
@@ -43,7 +42,7 @@ export class ServiceSpecServiceService {
   }
 
   postServSpec(body:any){
-    let url = `${ServiceSpecServiceService.BASE_URL}:${ServiceSpecServiceService.API_PORT}${ServiceSpecServiceService.SERVICE}${ServiceSpecServiceService.API_SERVICE_SPEC}`;
+    let url = `${ServiceSpecServiceService.BASE_URL}${ServiceSpecServiceService.SERVICE}${ServiceSpecServiceService.API_SERVICE_SPEC}`;
     return this.http.post<any>(url, body);
   }
 }

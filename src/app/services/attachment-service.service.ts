@@ -13,13 +13,12 @@ import * as moment from 'moment';
 })
 export class AttachmentServiceService {
   public static BASE_URL: String = environment.BASE_URL;
-  public static API_PORT: Number = environment.API_PORT;
 
   constructor(private http: HttpClient) { }
 
   uploadFile(file:any){
     //POST - El file va en el body de la petición
-    let url = `${AttachmentServiceService.BASE_URL}:${AttachmentServiceService.API_PORT}/charging/api/assetManagement/assets/uploadJob`;
+    let url = `${AttachmentServiceService.BASE_URL}/charging/api/assetManagement/assets/uploadJob`;
     return this.http.post<any>(url, file);
   }
 }

@@ -1,8 +1,8 @@
 export const environment = {
-    BASE_URL: 'https://dome-marketplace.org',
+    BASE_URL: 'https://dome-marketplace.org:443',
     //BASE_URL: 'http://proxy.docker',
     //API_PORT: 8004,
-    API_PORT: 443,
+    //API_PORT: 443,
     PRODUCT_CATALOG: '/catalog',
     SERVICE: '/service',
     RESOURCE: '/resource',
