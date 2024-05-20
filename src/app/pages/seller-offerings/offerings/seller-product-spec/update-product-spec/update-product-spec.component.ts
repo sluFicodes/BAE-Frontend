@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import {components} from "src/app/models/product-catalog";
 import { environment } from 'src/environments/environment';
@@ -27,11 +27,12 @@ type ProductSpecificationRelationship = components["schemas"]["ProductSpecificat
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 
 @Component({
-  selector: 'create-product-spec',
-  templateUrl: './create-product-spec.component.html',
-  styleUrl: './create-product-spec.component.css'
+  selector: 'update-product-spec',
+  templateUrl: './update-product-spec.component.html',
+  styleUrl: './update-product-spec.component.css'
 })
-export class CreateProductSpecComponent implements OnInit {
+export class UpdateProductSpecComponent implements OnInit{
+  @Input() prod: any;
 
   //PAGE SIZES:
   PROD_SPEC_LIMIT: number = environment.PROD_SPEC_LIMIT;
@@ -48,16 +49,6 @@ export class CreateProductSpecComponent implements OnInit {
   showAttach:boolean=false;
   showRelationships:boolean=false;
   showSummary:boolean=false;
-
-  //Check if step was done
-  generalDone:boolean=false;
-  bundleDone:boolean=false;
-  complianceDone:boolean=false;
-  charsDone:boolean=false;
-  resourceDone:boolean=false;
-  serviceDone:boolean=false;
-  attachDone:boolean=false;
-  relationshipDone:boolean=false;
 
   stepsElements:string[]=['general-info','bundle','compliance','chars','resource','service','attach','relationships','summary'];
   stepsCircles:string[]=['general-circle','bundle-circle','compliance-circle','chars-circle','resource-circle','service-circle','attach-circle','relationships-circle','summary-circle'];
@@ -121,8 +112,7 @@ export class CreateProductSpecComponent implements OnInit {
   resourceSpecs:any[]=[];
   selectedResourceSpecs:ResourceSpecificationRef[]=[];
 
-  //RELATIONSHIPS INFO:
-  prodRelationships:any[]=[];
+  //RELATIONSHIPS INFO:  
   relToCreate:any;
   showCreateRel:boolean=false;
   prodSpecRelPage=0;
@@ -132,6 +122,8 @@ export class CreateProductSpecComponent implements OnInit {
   prodSpecRels:any[]=[];
   selectedProdSpec:any={id:''};
   selectedRelType:any='migration';
+  //Final relationships
+  prodRelationships:any[]=[];
 
   //ATTACHMENT INFO
   showImgPreview:boolean=false;
@@ -141,7 +133,7 @@ export class CreateProductSpecComponent implements OnInit {
   attachToCreate:AttachmentRefOrValue={url:'',attachmentType:''};
 
   //FINAL PRODUCT USING API CALL STRUCTURE
-  productSpecToCreate:ProductSpecification_Create | undefined;
+  productSpecToUpdate:ProductSpecification_Create | undefined;
 
   constructor(
     private router: Router,
@@ -188,6 +180,8 @@ export class CreateProductSpecComponent implements OnInit {
 
   ngOnInit() {
     this.initPartyInfo();
+    console.log(this.prod)
+    this.populateProductInfo();
   }
 
   initPartyInfo(){
@@ -200,6 +194,87 @@ export class CreateProductSpecComponent implements OnInit {
         this.partyId = loggedOrg.partyId
       }
     }
+  }
+
+  populateProductInfo(){
+    //GENERAL INFORMATION
+    this.generalForm.controls['name'].setValue(this.prod.name);
+    this.generalForm.controls['description'].setValue(this.prod.description);
+    this.generalForm.controls['brand'].setValue(this.prod.brand ? this.prod.brand : '');
+    this.generalForm.controls['version'].setValue(this.prod.version ? this.prod.version : '');
+    this.generalForm.controls['number'].setValue(this.prod.productNumber ? this.prod.productNumber : '');
+
+    //BUNDLE
+    if(this.prod.isBundle==true){
+      //this.bundleChecked=true;
+      this.toggleBundleCheck();
+      //Ver como añadir los productos al bundle
+      this.prodSpecsBundle=this.prod.bundledProductSpecification;
+      //prod.bundledProductSpecification
+
+      console.log('is bundle')
+    }
+
+    //COMPLIANCE PROFILE
+    for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
+      const index = this.availableISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
+      if (index !== -1) {
+        this.selectedISOS.push({
+          name: this.prod.productSpecCharacteristic[i].name,
+          url: this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value,
+          mandatory: this.availableISOS[index].mandatory,
+          domesupported: this.availableISOS[index].domesupported
+        });
+        this.availableISOS.splice(index, 1);
+      }
+    }
+
+    //CHARS
+    for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
+      const index = this.selectedISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
+      if (index == -1) {
+        this.prodChars.push({
+          id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
+          name: this.prod.productSpecCharacteristic[i].name,
+          description: this.prod.productSpecCharacteristic[i].description ? this.prod.productSpecCharacteristic[i].description : '',
+          productSpecCharacteristicValue: this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue
+        });
+      }
+    }
+
+    //RESOURCE
+    if(this.prod.resourceSpecification){
+      this.selectedResourceSpecs=this.prod.resourceSpecification;
+    }
+
+    //SERVICE
+    if(this.prod.serviceSpecification){
+      this.selectedServiceSpecs=this.prod.serviceSpecification;
+    }
+
+    //ATTACHMENTS
+    this.prodAttachments=this.prod.attachment;
+    const index = this.prodAttachments.findIndex(item => item.name === 'Profile Picture');
+    if (index !== -1) {
+      this.imgPreview=this.prodAttachments[index].url;
+      this.showImgPreview=true;
+    }
+
+    //RELATIONSHIPS
+    if(this.prod.productSpecificationRelationship){
+      for(let i=0; i< this.prod.productSpecificationRelationship.length; i++){
+        this.prodSpecService.getResSpecById(this.prod.productSpecificationRelationship[i].id).then(data => {
+          this.prodRelationships.push({
+            id: this.prod.productSpecificationRelationship[i].id,
+            href: this.prod.productSpecificationRelationship[i].id,
+            //Que tipo de relacion le pongo? no viene en el prodspec
+            relationshipType: this.selectedRelType,
+            productSpec: data    
+          });
+        })
+      }
+    }
+
   }
 
   goBack() {
@@ -339,6 +414,18 @@ export class CreateProductSpecComponent implements OnInit {
     }  
     this.cdr.detectChanges();
     console.log(this.prodSpecsBundle)    
+  }
+
+  addISOValue(sel:any){
+    const index = this.selectedISOS.findIndex(item => item.name === sel.name);
+    const nativeElement = document.getElementById('iso-'+sel.name);
+    console.log(sel.url)
+    console.log(this.selectedISOS)
+  }
+
+  verifyCredential(sel:any){
+    console.log('verifing credential')
+    console.log(sel)
   }
 
   public dropped(files: NgxFileDropEntry[],sel:any) {
@@ -900,32 +987,24 @@ export class CreateProductSpecComponent implements OnInit {
       })
     }
     if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){
-      this.productSpecToCreate={
+      this.productSpecToUpdate={
         name: this.generalForm.value.name,
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
         version: this.generalForm.value.version,
         brand: this.generalForm.value.brand,
         productNumber: this.generalForm.value.number != null ? this.generalForm.value.number : '',
         lifecycleStatus: "Active",
-        isBundle: this.bundleChecked,
-        bundledProductSpecification: this.prodSpecsBundle,
+        //isBundle: this.bundleChecked,
+        //bundledProductSpecification: this.prodSpecsBundle,
         productSpecCharacteristic: this.prodChars,
         productSpecificationRelationship: this.prodRelationships,
         attachment: this.prodAttachments,
-        relatedParty: [
-          {
-              id: this.partyId,
-              //href: "http://proxy.docker:8004/party/individual/urn:ngsi-ld:individual:803ee97b-1671-4526-ba3f-74681b22ccf3",
-              role: "Owner",
-              "@referredType": ''
-          }
-        ],
         resourceSpecification: this.selectedResourceSpecs,
         serviceSpecification: this.selectedServiceSpecs  
       }
     }
     console.log('PRODUCTO A CREAR:')
-    console.log(this.productSpecToCreate)
+    console.log(this.productSpecToUpdate)
     console.log(this.imgPreview)
     this.selectStep('summary','summary-circle');
     this.showBundle=false;
@@ -937,13 +1016,24 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=true;
-  }
-
-  createProduct(){
-    this.prodSpecService.postProdSpec(this.productSpecToCreate).subscribe({
+    /*
+    this.prodSpecService.postProdSpec(this.productSpecToUpdate).subscribe({
       next: data => {
         this.goBack();
         console.log('creado producto')
+      },
+      error: error => {
+        console.error('There was an error while updating!', error);
+      }
+    });*/
+
+  }
+
+  updateProduct(){
+    this.prodSpecService.updateProdSpec(this.productSpecToUpdate,this.prod.id).subscribe({
+      next: data => {
+        this.goBack();
+        console.log('actualiado producto')
       },
       error: error => {
         console.error('There was an error while updating!', error);
