@@ -45,4 +45,9 @@ export class ServiceSpecServiceService {
     let url = `${ServiceSpecServiceService.BASE_URL}${ServiceSpecServiceService.SERVICE}${ServiceSpecServiceService.API_SERVICE_SPEC}`;
     return this.http.post<any>(url, body);
   }
+
+  updateServSpec(body:any,id:any){
+    let url = `${ServiceSpecServiceService.BASE_URL}${ServiceSpecServiceService.SERVICE}${ServiceSpecServiceService.API_SERVICE_SPEC}/${id}`;
+    return this.http.patch<any>(url, body);
+  }
 }

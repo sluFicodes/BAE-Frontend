@@ -51,4 +51,9 @@ export class ResourceSpecServiceService {
     let url = `${ResourceSpecServiceService.BASE_URL}${ResourceSpecServiceService.RESOURCE}${ResourceSpecServiceService.API_RESOURCE_SPEC}`;
     return this.http.post<any>(url, body);
   }
+
+  updateResSpec(body:any,id:any){
+    let url = `${ResourceSpecServiceService.BASE_URL}${ResourceSpecServiceService.RESOURCE}${ResourceSpecServiceService.API_RESOURCE_SPEC}/${id}`;
+    return this.http.patch<any>(url, body);
+  }
 }

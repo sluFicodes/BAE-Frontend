@@ -66,6 +66,7 @@ export class UpdateProductSpecComponent implements OnInit{
     number: new FormControl(''),
     description: new FormControl(''),
   });
+  prodStatus:any;
 
   //CHARS INFO
   charsForm = new FormGroup({
@@ -203,6 +204,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.generalForm.controls['brand'].setValue(this.prod.brand ? this.prod.brand : '');
     this.generalForm.controls['version'].setValue(this.prod.version ? this.prod.version : '');
     this.generalForm.controls['number'].setValue(this.prod.productNumber ? this.prod.productNumber : '');
+    this.prodStatus=this.prod.lifecycleStatus;
 
     //BUNDLE
     if(this.prod.isBundle==true){
@@ -275,6 +277,11 @@ export class UpdateProductSpecComponent implements OnInit{
       }
     }
 
+  }
+
+  setProdStatus(status:any){
+    this.prodStatus=status;
+    this.cdr.detectChanges();
   }
 
   goBack() {
@@ -993,7 +1000,7 @@ export class UpdateProductSpecComponent implements OnInit{
         version: this.generalForm.value.version,
         brand: this.generalForm.value.brand,
         productNumber: this.generalForm.value.number != null ? this.generalForm.value.number : '',
-        lifecycleStatus: "Active",
+        lifecycleStatus: this.prodStatus,
         //isBundle: this.bundleChecked,
         //bundledProductSpecification: this.prodSpecsBundle,
         productSpecCharacteristic: this.prodChars,

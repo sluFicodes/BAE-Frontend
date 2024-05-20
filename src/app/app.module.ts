@@ -53,6 +53,8 @@ import { CreateResourceSpecComponent } from './pages/seller-offerings/offerings/
 import { CreateOfferComponent } from './pages/seller-offerings/offerings/seller-offer/create-offer/create-offer.component';
 import {CategoriesRecursionComponent} from "./shared/categories-recursion/categories-recursion.component";
 import { UpdateProductSpecComponent } from './pages/seller-offerings/offerings/seller-product-spec/update-product-spec/update-product-spec.component';
+import { UpdateResourceSpecComponent } from './pages/seller-offerings/offerings/seller-resource-spec/update-resource-spec/update-resource-spec.component';
+import { UpdateServiceSpecComponent } from './pages/seller-offerings/offerings/seller-service-spec/update-service-spec/update-service-spec.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +95,9 @@ import { UpdateProductSpecComponent } from './pages/seller-offerings/offerings/s
     CreateResourceSpecComponent,
     CreateOfferComponent,
     CategoriesRecursionComponent,
-    UpdateProductSpecComponent
+    UpdateProductSpecComponent,
+    UpdateResourceSpecComponent,
+    UpdateServiceSpecComponent
   ],
   imports: [
     BrowserModule,
