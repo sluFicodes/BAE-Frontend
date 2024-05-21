@@ -17,7 +17,7 @@ import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
 import {components} from "src/app/models/service-catalog";
-type ServiceSpecification_Create = components["schemas"]["ServiceSpecification_Create"];
+type ServiceSpecification_Update = components["schemas"]["ServiceSpecification_Update"];
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 type ProductSpecificationCharacteristic = components["schemas"]["CharacteristicSpecification"];
 
@@ -31,7 +31,7 @@ export class UpdateServiceSpecComponent implements OnInit {
 
   partyId:any='';
 
-  serviceToUpdate:ServiceSpecification_Create | undefined;
+  serviceToUpdate:ServiceSpecification_Update | undefined;
 
   stepsElements:string[]=['general-info','chars','summary'];
   stepsCircles:string[]=['general-circle','chars-circle','summary-circle'];

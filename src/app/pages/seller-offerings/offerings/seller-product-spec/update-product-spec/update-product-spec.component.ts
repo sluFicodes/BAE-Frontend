@@ -18,7 +18,7 @@ import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
-type ProductSpecification_Create = components["schemas"]["ProductSpecification_Create"];
+type ProductSpecification_Update = components["schemas"]["ProductSpecification_Update"];
 type BundledProductSpecification = components["schemas"]["BundledProductSpecification"];
 type ProductSpecificationCharacteristic = components["schemas"]["ProductSpecificationCharacteristic"];
 type ServiceSpecificationRef = components["schemas"]["ServiceSpecificationRef"];
@@ -134,7 +134,7 @@ export class UpdateProductSpecComponent implements OnInit{
   attachToCreate:AttachmentRefOrValue={url:'',attachmentType:''};
 
   //FINAL PRODUCT USING API CALL STRUCTURE
-  productSpecToUpdate:ProductSpecification_Create | undefined;
+  productSpecToUpdate:ProductSpecification_Update | undefined;
 
   constructor(
     private router: Router,
@@ -804,7 +804,8 @@ export class UpdateProductSpecComponent implements OnInit{
 
   onRelChange(event: any) {
     console.log('relation type changed')
-    this.selectedRelType=event.target.value
+    this.selectedRelType=event.target.value;
+    this.cdr.detectChanges();
   }
 
   saveRel(){
@@ -815,7 +816,17 @@ export class UpdateProductSpecComponent implements OnInit{
       relationshipType: this.selectedRelType,
       productSpec: this.selectedProdSpec      
     });
+    this.selectedRelType='migration';
     console.log(this.prodRelationships)
+  }
+
+  deleteRel(rel:any){
+    const index = this.prodRelationships.findIndex(item => item.id === rel.id);
+    if (index !== -1) {
+      console.log('eliminar')
+      this.prodRelationships.splice(index, 1);
+    }   
+    this.cdr.detectChanges(); 
   }
 
   removeClass(elem: HTMLElement, cls:string) {

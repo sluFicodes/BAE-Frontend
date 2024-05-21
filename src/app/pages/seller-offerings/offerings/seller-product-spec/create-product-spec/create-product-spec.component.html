@@ -1023,6 +1023,9 @@
                                             <th scope="col" class="px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._last_update' | translate }}
                                             </th>
+                                            <th scope="col" class="px-6 py-3">
+                                                {{ 'CREATE_PROD_SPEC._actions' | translate }}
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1047,6 +1050,13 @@
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     {{rel.productSpec.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <button (click)="deleteRel(rel)" class="font-bold text-white bg-red-500 rounded-3xl">
+                                                        <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
+                                                        </svg>                                  
+                                                    </button>    
                                                 </td>
                                             </tr>
                                         }
@@ -1199,8 +1209,8 @@
                         </div>
 
                         @if(productSpecToCreate?.description !=''){
-                            <div class="py-2 bg-white rounded-b-lg">
-                                <label class="font-bold text-lg">{{ 'CREATE_PROD_SPEC._product_description' | translate }}</label>
+                            <label class="font-bold text-lg">{{ 'UPDATE_PROD_SPEC._product_description' | translate }}</label>
+                            <div class="px-4 py-2 bg-white rounded-lg p-4"> 
                                 <markdown [data]="productSpecToCreate?.description"></markdown>
                             </div>
                         }
@@ -1374,6 +1384,7 @@
                         }
 
                         @if(prodRelationships.length>0){
+                            <label class="font-bold text-lg">{{ 'CREATE_PROD_SPEC._relationships' | translate }}</label>
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100">

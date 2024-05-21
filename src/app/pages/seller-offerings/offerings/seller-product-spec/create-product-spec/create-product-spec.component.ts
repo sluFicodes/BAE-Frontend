@@ -719,9 +719,19 @@ export class CreateProductSpecComponent implements OnInit {
       id: this.selectedProdSpec.id,
       href: this.selectedProdSpec.href,
       relationshipType: this.selectedRelType,
-      productSpec: this.selectedProdSpec      
+      productSpec: this.selectedProdSpec
     });
+    this.selectedRelType='migration';
     console.log(this.prodRelationships)
+  }
+
+  deleteRel(rel:any){
+    const index = this.prodRelationships.findIndex(item => item.id === rel.id);
+    if (index !== -1) {
+      console.log('eliminar')
+      this.prodRelationships.splice(index, 1);
+    }   
+    this.cdr.detectChanges(); 
   }
 
   removeClass(elem: HTMLElement, cls:string) {
@@ -899,6 +909,17 @@ export class CreateProductSpecComponent implements OnInit {
         }]
       })
     }
+    let rels = [];
+    for(let i=0; i<this.prodRelationships.length;i++){
+      rels.push({
+        id: this.prodRelationships[i].id,
+        href: this.prodRelationships[i].href,
+        name: this.prodRelationships[i].productSpec.name,
+        relationshipType: this.prodRelationships[i].relationshipType
+      })
+    }
+    console.log('rels')
+    console.log(rels)
     if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){
       this.productSpecToCreate={
         name: this.generalForm.value.name,
@@ -910,7 +931,7 @@ export class CreateProductSpecComponent implements OnInit {
         isBundle: this.bundleChecked,
         bundledProductSpecification: this.prodSpecsBundle,
         productSpecCharacteristic: this.prodChars,
-        productSpecificationRelationship: this.prodRelationships,
+        productSpecificationRelationship: rels,
         attachment: this.prodAttachments,
         relatedParty: [
           {

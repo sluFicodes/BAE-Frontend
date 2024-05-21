@@ -17,7 +17,7 @@ import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
 import {components} from "src/app/models/resource-catalog";
-type ResourceSpecification_Create = components["schemas"]["ResourceSpecification_Create"];
+type ResourceSpecification_Update = components["schemas"]["ResourceSpecification_Update"];
 type CharacteristicValueSpecification = components["schemas"]["ResourceSpecificationCharacteristicValue"];
 type ResourceSpecificationCharacteristic = components["schemas"]["ResourceSpecificationCharacteristic"];
 
@@ -31,7 +31,7 @@ export class UpdateResourceSpecComponent implements OnInit {
 
   partyId:any='';
 
-  resourceToUpdate:ResourceSpecification_Create | undefined;
+  resourceToUpdate:ResourceSpecification_Update | undefined;
 
   stepsElements:string[]=['general-info','chars','summary'];
   stepsCircles:string[]=['general-circle','chars-circle','summary-circle'];
