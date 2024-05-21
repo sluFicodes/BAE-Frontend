@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef } from '@angular/core';
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-chatbot-widget',
   standalone: true,
-  imports: [],
+  imports: [NgClass],
   templateUrl: './chatbot-widget.component.html',
   styleUrl: './chatbot-widget.component.css'
 })
@@ -34,16 +35,19 @@ export class ChatbotWidgetComponent {
 
   toggleState() {
     this.state = !this.state;
-
+    this.cdr.detectChanges();
+    this.chatbox = this.el.nativeElement.querySelector('.chatbox__support')
     // show or hides the box
-    if(this.state) {
+    /*if(this.state) {
       this.chatbox.classList.add('chatbox--active')
     } else {
       this.chatbox.classList.remove('chatbox--active')
-    }
+    }*/
+    
   }
 
   onSendButton() {
+    console.log('sending')
     var textField = this.chatbox.querySelector('input');
     let text1 = textField.value
     if (text1 === "") {
