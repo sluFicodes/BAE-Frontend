@@ -18,10 +18,12 @@ import { Router } from '@angular/router';
 import {EventMessageService} from "../../services/event-message.service";
 import { environment } from 'src/environments/environment';
 import { LoginInfo } from 'src/app/models/interfaces';
-import { interval, Subscription} from 'rxjs';
+import { Subscription} from 'rxjs';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { initFlowbite } from 'flowbite';
+import { QrVerifierService } from 'src/app/services/qr-verifier.service';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'bae-header',
@@ -41,12 +43,14 @@ export class HeaderComponent implements OnInit, AfterViewInit {
               private cdr: ChangeDetectorRef,
               private route: ActivatedRoute,
               private eventMessage: EventMessageService,
-              private router: Router) {
+              private router: Router,
+              private qrVerifier:QrVerifierService) {
 
     this.themeToggleDarkIcon = themeToggleDarkIcon;
     this.themeToggleLightIcon = themeToggleLightIcon;
   }
-
+  qrWindow: Window | null = null;
+  statePair:string
   catalogs: any[] | undefined  = [];
   showCart:boolean=false;
   is_logged:boolean=false;
@@ -58,7 +62,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   email:string='';
   usercharacters:string='';
   loginSubscription: Subscription = new Subscription();
-  loginUrl:string = `${environment.BASE_URL}` + (environment.SIOP ? `${environment.LEGACY_PREFIX}/login/vc` : '/login');
+  loginUrl:string =  `${environment.LEGACY_PREFIX}/login/vc`;
   roles:string[]=[];
   public static BASE_URL: String = environment.BASE_URL;
 
@@ -175,7 +179,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
+  
   goToCatalogSearch(id:any) {
     this.router.navigate(['/search/catalog', id]);
   }
@@ -265,6 +269,46 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       dropdown.classList.add('hidden');
     }
   }
+  private popupCenter = (url:string, title:string, w:number, h:number) => {
+    // Fixes dual-screen position                             Most browsers        Firefox
+    const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+    
+    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+    
+    const systemZoom = width / window.screen.availWidth;
+    const left = (width - w) / 2 / systemZoom + dualScreenLeft
+    const top = (height - h) / 2 / systemZoom + dualScreenTop
+    const newWindow = window.open(url, title,
+      `
+      popup=yes,
+      scrollbars=yes,
+      width=${w / systemZoom},
+      height=${h / systemZoom},
+      top=${top},
+      left=${left}
+      `
+    )
+    newWindow?.focus()
+    return newWindow;
+  }
+  onLoginClick(){
+    this.statePair = uuid.v4()
+    this.qrWindow = this.popupCenter( `${environment.verifierQRCodeURL}?state=${this.statePair}&client_callback=${environment.callbackURLPair}&client_id=${environment.clientIDPair}`,  'Scan QR code',  500, 500);
+    this.initChecking()
+
+  }
+  private initChecking():void {
+    setInterval(this.qrVerifier.pollServer, 1000, this.qrWindow, this.router, this.statePair);
+  }
+
+  // private stopChecking():void{
+    
+  //   if(this.intervalId !=undefined){
+  //     clearInterval(this.intervalId)
+  //   }
+  // }
 
   protected readonly faCartShopping = faCartShopping;
   protected readonly faHandHoldingBox = faHandHoldingBox;
