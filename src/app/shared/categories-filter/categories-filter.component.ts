@@ -66,7 +66,7 @@ export class CategoriesFilterComponent implements OnInit {
           }
           initFlowbite();
         } else {
-          this.api.getCategories().then(data => {
+          this.api.getLaunchedCategories().then(data => {
             for(let i=0; i < data.length; i++){
               this.findChildren(data[i],data)
             }
@@ -76,16 +76,12 @@ export class CategoriesFilterComponent implements OnInit {
         }
       })
     } else {
-      await this.api.getCategories().then(data => {
+      await this.api.getLaunchedCategories().then(data => {
         for(let i=0; i < data.length; i++){
           this.findChildren(data[i],data)
         }
         this.cdr.detectChanges();
         initFlowbite();
-
-        console.log('--- CATEGORIES ---')
-        console.log(this.categories)
-        console.log('------------------')
       }) 
     }
   }

@@ -55,6 +55,7 @@ import {CategoriesRecursionComponent} from "./shared/categories-recursion/catego
 import { UpdateProductSpecComponent } from './pages/seller-offerings/offerings/seller-product-spec/update-product-spec/update-product-spec.component';
 import { UpdateResourceSpecComponent } from './pages/seller-offerings/offerings/seller-resource-spec/update-resource-spec/update-resource-spec.component';
 import { UpdateServiceSpecComponent } from './pages/seller-offerings/offerings/seller-service-spec/update-service-spec/update-service-spec.component';
+import { ChatbotWidgetComponent } from './chatbot-widget/chatbot-widget.component';
 
 @NgModule({
   declarations: [
@@ -110,6 +111,7 @@ import { UpdateServiceSpecComponent } from './pages/seller-offerings/offerings/s
     ReactiveFormsModule,
     PickerComponent,
     NgxFileDropModule,
+    ChatbotWidgetComponent,
     MarkdownModule.forRoot(),
     TranslateModule.forRoot({
       defaultLanguage: 'en',
