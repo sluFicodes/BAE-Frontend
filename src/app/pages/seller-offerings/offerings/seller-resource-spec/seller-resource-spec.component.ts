@@ -88,6 +88,10 @@ export class SellerResourceSpecComponent implements OnInit {
     this.eventMessage.emitSellerCreateResourceSpec(true);
   }
 
+  goToUpdate(res:any){
+    this.eventMessage.emitSellerUpdateResourceSpec(res);
+  }
+
   getResSpecs(){    
     this.resSpecService.getResourceSpecByUser(this.page,this.status,this.partyId,this.sort).then(data => {
       if(data.length<this.RES_SPEC_LIMIT){

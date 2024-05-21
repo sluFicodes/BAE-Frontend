@@ -44,8 +44,19 @@ export class ProductSpecServiceService {
     return lastValueFrom(this.http.get<any>(url));
   }
 
+  getResSpecById(id:any){
+    let url = `${ProductSpecServiceService.BASE_URL}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}/${id}`;
+ 
+    return lastValueFrom(this.http.get<any>(url));
+  }
+
   postProdSpec(body:any){
     let url = `${ProductSpecServiceService.BASE_URL}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}`;
     return this.http.post<any>(url, body);
+  }
+
+  updateProdSpec(body:any,id:any){
+    let url = `${ProductSpecServiceService.BASE_URL}${ProductSpecServiceService.API_PRODUCT_CATALOG}${ProductSpecServiceService.API_PRODUCT_SPEC}/${id}`;
+    return this.http.patch<any>(url, body);
   }
 }

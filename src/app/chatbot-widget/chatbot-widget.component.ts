@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewEncapsulation } from '@angular/core';
+import {NgClass} from "@angular/common";
 import { LocalStorageService } from '../services/local-storage.service';
 import { LoginInfo } from '../models/interfaces';
 import { environment } from 'src/environments/environment';
@@ -6,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-chatbot-widget',
   standalone: true,
-  imports: [],
+  imports: [NgClass],
   templateUrl: './chatbot-widget.component.html',
   styleUrl: './chatbot-widget.component.css',
   encapsulation: ViewEncapsulation.None
@@ -39,13 +40,15 @@ export class ChatbotWidgetComponent {
 
   toggleState() {
     this.state = !this.state;
-
+    this.cdr.detectChanges();
+    this.chatbox = this.el.nativeElement.querySelector('.chatbox__support')
     // show or hides the box
-    if(this.state) {
+    /*if(this.state) {
       this.chatbox.classList.add('chatbox--active')
     } else {
       this.chatbox.classList.remove('chatbox--active')
-    }
+    }*/
+    
   }
 
   onSendButton() {

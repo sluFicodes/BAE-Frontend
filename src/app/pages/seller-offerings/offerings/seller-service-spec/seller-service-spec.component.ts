@@ -87,6 +87,10 @@ export class SellerServiceSpecComponent implements OnInit {
     this.eventMessage.emitSellerCreateServiceSpec(true);
   }
 
+  goToUpdate(serv:any){
+    this.eventMessage.emitSellerUpdateServiceSpec(serv);
+  }
+
   getServSpecs(){    
     this.servSpecService.getServiceSpecByUser(this.page,this.status,this.partyId,this.sort).then(data => {
       if(data.length<this.SERV_SPEC_LIMIT){

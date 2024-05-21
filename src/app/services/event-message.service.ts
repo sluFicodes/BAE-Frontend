@@ -6,7 +6,8 @@ import { LoginInfo } from 'src/app/models/interfaces';
 export interface EventMessage {
   type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess' | 'BillAccChanged' |
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
-  'SellerOffer' | 'SellerCreateOffer' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession';
+  'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'CategoryAdded' | 
+  'CategoryRemoved' | 'ChangedSession';
   text?: string,
   value?: object | boolean
 }
@@ -65,6 +66,10 @@ export class EventMessageService {
     this.eventMessageSubject.next({ type: 'SellerCreateProductSpec', value: show });
   }
 
+  emitSellerUpdateProductSpec(prod:any){
+    this.eventMessageSubject.next({ type: 'SellerUpdateProductSpec', value: prod });
+  }
+
   emitSellerServiceSpec(show:boolean){
     this.eventMessageSubject.next({ type: 'SellerServiceSpec', value: show });
   }
@@ -73,12 +78,20 @@ export class EventMessageService {
     this.eventMessageSubject.next({ type: 'SellerCreateServiceSpec', value: show });
   }
 
+  emitSellerUpdateServiceSpec(serv:any){
+    this.eventMessageSubject.next({ type: 'SellerUpdateServiceSpec', value: serv });
+  }
+
   emitSellerResourceSpec(show:boolean){
     this.eventMessageSubject.next({ type: 'SellerResourceSpec', value: show });
   }
 
   emitSellerCreateResourceSpec(show:boolean){
     this.eventMessageSubject.next({ type: 'SellerCreateResourceSpec', value: show });
+  }
+
+  emitSellerUpdateResourceSpec(res:any){
+    this.eventMessageSubject.next({ type: 'SellerUpdateResourceSpec', value: res });
   }
 
   emitSellerOffer(show:boolean){
@@ -100,4 +113,5 @@ export class EventMessageService {
     console.log(session)
     this.eventMessageSubject.next({ type: 'ChangedSession', value: session });
   }
+
 }

@@ -89,6 +89,10 @@ export class SellerProductSpecComponent implements OnInit{
     this.eventMessage.emitSellerCreateProductSpec(true);
   }
 
+  goToUpdate(prod:any){
+    this.eventMessage.emitSellerUpdateProductSpec(prod);
+  }
+
   getProdSpecs(){    
     this.prodSpecService.getProdSpecByUser(this.page,this.status,this.partyId,this.sort,this.isBundle).then(data => {
       if(data.length<this.PROD_SPEC_LIMIT){
