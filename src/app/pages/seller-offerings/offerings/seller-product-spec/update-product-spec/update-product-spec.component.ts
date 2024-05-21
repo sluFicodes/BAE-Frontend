@@ -218,29 +218,33 @@ export class UpdateProductSpecComponent implements OnInit{
     }
 
     //COMPLIANCE PROFILE
-    for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
-      const index = this.availableISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
-      if (index !== -1) {
-        this.selectedISOS.push({
-          name: this.prod.productSpecCharacteristic[i].name,
-          url: this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value,
-          mandatory: this.availableISOS[index].mandatory,
-          domesupported: this.availableISOS[index].domesupported
-        });
-        this.availableISOS.splice(index, 1);
+    if(this.prod.productSpecCharacteristic){
+      for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
+        const index = this.availableISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
+        if (index !== -1) {
+          this.selectedISOS.push({
+            name: this.prod.productSpecCharacteristic[i].name,
+            url: this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value,
+            mandatory: this.availableISOS[index].mandatory,
+            domesupported: this.availableISOS[index].domesupported
+          });
+          this.availableISOS.splice(index, 1);
+        }
       }
     }
 
     //CHARS
-    for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
-      const index = this.selectedISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
-      if (index == -1) {
-        this.prodChars.push({
-          id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
-          name: this.prod.productSpecCharacteristic[i].name,
-          description: this.prod.productSpecCharacteristic[i].description ? this.prod.productSpecCharacteristic[i].description : '',
-          productSpecCharacteristicValue: this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue
-        });
+    if(this.prod.productSpecCharacteristic){
+      for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
+        const index = this.selectedISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
+        if (index == -1) {
+          this.prodChars.push({
+            id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
+            name: this.prod.productSpecCharacteristic[i].name,
+            description: this.prod.productSpecCharacteristic[i].description ? this.prod.productSpecCharacteristic[i].description : '',
+            productSpecCharacteristicValue: this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue
+          });
+        }
       }
     }
 
@@ -255,11 +259,13 @@ export class UpdateProductSpecComponent implements OnInit{
     }
 
     //ATTACHMENTS
-    this.prodAttachments=this.prod.attachment;
-    const index = this.prodAttachments.findIndex(item => item.name === 'Profile Picture');
-    if (index !== -1) {
-      this.imgPreview=this.prodAttachments[index].url;
-      this.showImgPreview=true;
+    if(this.prod.attachment){
+      this.prodAttachments=this.prod.attachment;
+      const index = this.prodAttachments.findIndex(item => item.name === 'Profile Picture');
+      if (index !== -1) {
+        this.imgPreview=this.prodAttachments[index].url;
+        this.showImgPreview=true;
+      }
     }
 
     //RELATIONSHIPS
@@ -1021,9 +1027,6 @@ export class UpdateProductSpecComponent implements OnInit{
         serviceSpecification: this.selectedServiceSpecs  
       }
     }
-    console.log('PRODUCTO A CREAR:')
-    console.log(this.productSpecToUpdate)
-    console.log(this.imgPreview)
     this.selectStep('summary','summary-circle');
     this.showBundle=false;
     this.showGeneral=false;
@@ -1034,17 +1037,22 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=true;
-    /*
-    this.prodSpecService.postProdSpec(this.productSpecToUpdate).subscribe({
-      next: data => {
-        this.goBack();
-        console.log('creado producto')
-      },
-      error: error => {
-        console.error('There was an error while updating!', error);
-      }
-    });*/
+  }
 
+  isProdValid(){
+    if(this.generalForm.valid){
+      if(this.bundleChecked){
+        if(this.prodSpecsBundle.length<2){
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
   }
 
   updateProduct(){
