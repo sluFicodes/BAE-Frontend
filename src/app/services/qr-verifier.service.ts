@@ -20,12 +20,12 @@ export class QrVerifierService {
             (response) =>{
             
               if (response.status === 400 || response.status === 500) {
+                thePopup.close()
                 window.location.replace('/')
                 return
               } else if (response.status === 401) {
                 return
               }
-              this.stopChecking()
               thePopup.close()
               window.location.replace('/dashboard?token=local')
             }
@@ -36,11 +36,13 @@ export class QrVerifierService {
     if (qrWindow ==null)
       return
     this.intervalId = window.setInterval(this.fetchServer, 1000, qrWindow, state);
-    window.setTimeout(this.stopChecking, 450000)
+    window.setTimeout((popup:Window)=>{this.stopChecking(popup)}, 45000, qrWindow)
   }
-  private stopChecking(){
-    
+  stopChecking(thePopup:Window){
     if(this.intervalId !=undefined){
+      if(!thePopup.closed){
+        thePopup.close()
+      }
       clearInterval(this.intervalId)
       this.intervalId=undefined
     }

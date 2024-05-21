@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, HostListener} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, HostListener, DoCheck} from '@angular/core';
 import {
   faCartShopping,
   faHandHoldingBox,
@@ -30,7 +30,7 @@ import * as uuid from 'uuid';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent implements OnInit, AfterViewInit, DoCheck{
 
   @ViewChild('theme_toggle_dark_icon') themeToggleDarkIcon: ElementRef;
   @ViewChild('theme_toggle_light_icon') themeToggleLightIcon: ElementRef;
@@ -65,7 +65,13 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   loginUrl:string =  `${environment.LEGACY_PREFIX}/login/vc`;
   roles:string[]=[];
   public static BASE_URL: String = environment.BASE_URL;
-
+  
+  ngDoCheck(): void {
+    if(this.qrWindow!=null && this.qrWindow.closed){
+      this.qrVerifier.stopChecking(this.qrWindow)
+      this.qrWindow=null
+    }
+  }
   @HostListener('document:click')
   onClick() {
     if(this.showCart==true){
