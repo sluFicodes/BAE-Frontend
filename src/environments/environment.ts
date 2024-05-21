@@ -23,5 +23,6 @@ export const environment = {
     RES_SPEC_LIMIT: 6,
     ORDER_LIMIT: 6,
     SIOP: false,
-    TAX_RATE: 20
+    TAX_RATE: 20,
+    CHAT_API: 'http://85.215.243.214:5000/predict'
 };

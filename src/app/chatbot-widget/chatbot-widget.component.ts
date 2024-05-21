@@ -1,11 +1,15 @@
-import { ChangeDetectorRef, Component, ElementRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewEncapsulation } from '@angular/core';
+import { LocalStorageService } from '../services/local-storage.service';
+import { LoginInfo } from '../models/interfaces';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-chatbot-widget',
   standalone: true,
   imports: [],
   templateUrl: './chatbot-widget.component.html',
-  styleUrl: './chatbot-widget.component.css'
+  styleUrl: './chatbot-widget.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class ChatbotWidgetComponent {
 
@@ -16,7 +20,8 @@ export class ChatbotWidgetComponent {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private el: ElementRef
+    private el: ElementRef,
+    private localStorage: LocalStorageService
   ){}
 
   ngOnInit() {
@@ -44,18 +49,48 @@ export class ChatbotWidgetComponent {
   }
 
   onSendButton() {
-    var textField = this.chatbox.querySelector('input');
+    const textField = this.chatbox.querySelector('input');
     let text1 = textField.value
+
     if (text1 === "") {
       return;
     }
 
-    let msg1 = { name: "User", message: text1 }
+    // Build the message depending on the user role
+    let name = "guest"
+    let role = "Customer" // FIXME: Default role must be guest when supported
+
+    const userInfo = this.localStorage.getObject('login_items') as LoginInfo;
+
+    // The user is logged in
+    if (userInfo.id) {
+      let roles = []
+      role = "Customer"
+      name = userInfo.username
+
+      if (userInfo.logged_as !== userInfo.id) {
+        let loggedOrg = userInfo.organizations.find((element: { id: any; }) => element.id == userInfo.logged_as)
+        roles = loggedOrg.roles.map((elem: any) => {
+          return elem.name
+        })
+      } else {
+        roles = userInfo.roles.map((elem: any) => {
+          return elem.name
+        })
+      }
+
+      if (roles.includes("seller")) {
+        role = "Provider"
+      }
+    }
+
+    let msg1 = { name: name, message: text1, role: role }
     this.messages.push(msg1);
 
-    fetch('http://85.215.243.214:5000/predict', {
+    environment
+    fetch(environment.CHAT_API, {
       method: 'POST',
-      body: JSON.stringify({ message: text1 }),
+      body: JSON.stringify({ message: text1, role: role }),
       mode: 'cors',
       headers: {
         'Content-Type': 'application/json'
