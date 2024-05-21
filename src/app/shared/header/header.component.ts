@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 import {EventMessageService} from "../../services/event-message.service";
 import { environment } from 'src/environments/environment';
 import { LoginInfo } from 'src/app/models/interfaces';
-import { Subscription} from 'rxjs';
+import { Subscription, timer} from 'rxjs';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { initFlowbite } from 'flowbite';
@@ -294,21 +294,15 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     return newWindow;
   }
   onLoginClick(){
-    this.statePair = uuid.v4()
-    this.qrWindow = this.popupCenter( `${environment.verifierQRCodeURL}?state=${this.statePair}&client_callback=${environment.callbackURLPair}&client_id=${environment.clientIDPair}`,  'Scan QR code',  500, 500);
-    this.initChecking()
-
+    if (this.qrVerifier.intervalId === undefined){
+      this.statePair = uuid.v4()
+      this.qrWindow = this.popupCenter( `${environment.verifierQRCodeURL}?state=${this.statePair}&client_callback=${environment.callbackURLPair}&client_id=${environment.clientIDPair}`,  'Scan QR code',  500, 500);
+      this.initChecking()
+    }
   }
   private initChecking():void {
-    setInterval(this.qrVerifier.pollServer, 1000, this.qrWindow, this.router, this.statePair);
+    this.qrVerifier.pollServer(this.qrWindow, this.statePair); 
   }
-
-  // private stopChecking():void{
-    
-  //   if(this.intervalId !=undefined){
-  //     clearInterval(this.intervalId)
-  //   }
-  // }
 
   protected readonly faCartShopping = faCartShopping;
   protected readonly faHandHoldingBox = faHandHoldingBox;
