@@ -199,7 +199,7 @@ export class UpdateOfferComponent implements OnInit{
       this.cdr.detectChanges();
     }
     if(this.editPrice==true){
-      this.editPrice=false;
+      this.closeEditPrice();
       this.cdr.detectChanges();
     }
   }
@@ -667,8 +667,11 @@ export class UpdateOfferComponent implements OnInit{
       console.log('--- price ---')
       console.log(this.createdPrices)      
     }
-    this.priceForm.reset();
+    this.closeEditPrice();
+  }
 
+  closeEditPrice(){
+    this.priceForm.reset();
     this.selectedPeriod='DAILY';
     this.selectedPeriodAlter='DAILY';
     this.selectedPriceUnit=currencies[0].code;
