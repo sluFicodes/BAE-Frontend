@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, HostListener, DoCheck} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, HostListener, DoCheck, OnDestroy} from '@angular/core';
 import {
   faCartShopping,
   faHandHoldingBox,
@@ -30,7 +30,7 @@ import * as uuid from 'uuid';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit, AfterViewInit, DoCheck{
+export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestroy{
 
   @ViewChild('theme_toggle_dark_icon') themeToggleDarkIcon: ElementRef;
   @ViewChild('theme_toggle_light_icon') themeToggleLightIcon: ElementRef;
@@ -62,10 +62,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck{
   email:string='';
   usercharacters:string='';
   loginSubscription: Subscription = new Subscription();
-  loginUrl:string =  `${environment.LEGACY_PREFIX}/login/vc`;
   roles:string[]=[];
   public static BASE_URL: String = environment.BASE_URL;
   
+  ngOnDestroy(): void {
+      this.qrWindow?.close()
+      this.qrWindow=null
+  }
+
   ngDoCheck(): void {
     if(this.qrWindow!=null && this.qrWindow.closed){
       this.qrVerifier.stopChecking(this.qrWindow)
@@ -300,10 +304,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck{
     return newWindow;
   }
   onLoginClick(){
-    if (this.qrVerifier.intervalId === undefined){
+    if (environment.SIOP === true && this.qrVerifier.intervalId === undefined){
       this.statePair = uuid.v4()
       this.qrWindow = this.popupCenter( `${environment.verifierQRCodeURL}?state=${this.statePair}&client_callback=${environment.callbackURLPair}&client_id=${environment.clientIDPair}`,  'Scan QR code',  500, 500);
       this.initChecking()
+    }
+    else if (environment.SIOP === false){
+      window.location.replace(`${environment.BASE_URL}` +  '/login')
     }
   }
   private initChecking():void {
