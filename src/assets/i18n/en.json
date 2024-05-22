@@ -610,7 +610,7 @@
     "UPDATE_OFFER":{
         "_back": "Back",
         "_create": "Create product offer",
-        "_new": "New product offer",
+        "_update": "Update product offer",
         "_steps": "Steps",
         "_general": "General",
         "_general_info": "Offer's general information",
@@ -667,7 +667,7 @@
         "_add_relationship": "Add new relationship",
         "_save_relationship": "Save relationship",
         "_profile_pic": "Profile picture",
-        "_finish": "Finish",        
+        "_finish": "Update product",        
         "_summary": "Product's summary",
         "_create_prod": "Create product",
         "_choose_license": "Choose a license",

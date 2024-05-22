@@ -176,15 +176,39 @@ export class ApiServiceService {
     return this.http.post<any>(url, price);
   }
 
+  updateOfferingPrice(price:any){
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOfferingPrice/${price.id}`;
+    return this.http.patch<any>(url, price);
+  }
+
+  getOfferingPrice(id:any){
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOfferingPrice/${id}`;
+    return lastValueFrom(this.http.get<any>(url));
+  }
+
   postProductOffering(prod:any,catalogId:any){
     //POST - El item va en el body de la petición
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/${catalogId}/productOffering`;
     return this.http.post<any>(url, prod);
   }
 
+  updateProductOffering(prod:any,id:any){
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/productOffering/${id}`;
+    return this.http.patch<any>(url, prod);
+  }
+
   postSLA(sla:any){
     //POST - El item va en el body de la petición
     let url = `${ApiServiceService.BASE_URL}/SLAManagement/sla`;
     return this.http.post<any>(url, sla);
+  }
+
+  getSLA(id:any){
+    //POST - El item va en el body de la petición
+    let url = `${ApiServiceService.BASE_URL}/SLAManagement/sla/${id}`;
+    return lastValueFrom(this.http.get<any>(url));
   }
 }

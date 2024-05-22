@@ -86,6 +86,10 @@ export class SellerOfferComponent implements OnInit{
     this.eventMessage.emitSellerCreateOffer(true);
   }
 
+  goToUpdate(offer:any){
+    this.eventMessage.emitSellerUpdateOffer(offer);
+  }
+
   getOffers(){
     this.api.getProductOfferByOwner(this.page,this.status,this.partyId,this.sort,this.isBundle).then(data => {
       if(data.length<this.PROD_SPEC_LIMIT){

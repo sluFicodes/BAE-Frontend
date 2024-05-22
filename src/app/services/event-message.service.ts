@@ -6,8 +6,8 @@ import { LoginInfo } from 'src/app/models/interfaces';
 export interface EventMessage {
   type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess' | 'BillAccChanged' |
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
-  'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'CategoryAdded' | 
-  'CategoryRemoved' | 'ChangedSession';
+  'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
+  'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession';
   text?: string,
   value?: object | boolean
 }
@@ -100,6 +100,10 @@ export class EventMessageService {
 
   emitSellerCreateOffer(show:boolean){
     this.eventMessageSubject.next({ type: 'SellerCreateOffer', value: show });
+  }
+
+  emitSellerUpdateOffer(offer:any){
+    this.eventMessageSubject.next({ type: 'SellerUpdateOffer', value: offer });
   }
 
   emitCategoryAdded(cat:Category){
