@@ -56,6 +56,9 @@ import { UpdateProductSpecComponent } from './pages/seller-offerings/offerings/s
 import { UpdateResourceSpecComponent } from './pages/seller-offerings/offerings/seller-resource-spec/update-resource-spec/update-resource-spec.component';
 import { UpdateServiceSpecComponent } from './pages/seller-offerings/offerings/seller-service-spec/update-service-spec/update-service-spec.component';
 import { ChatbotWidgetComponent } from './chatbot-widget/chatbot-widget.component';
+import { UpdateOfferComponent } from './pages/seller-offerings/offerings/seller-offer/update-offer/update-offer.component';
+import { CreateCatalogComponent } from './pages/seller-offerings/offerings/seller-catalogs/create-catalog/create-catalog.component';
+import { UpdateCatalogComponent } from './pages/seller-offerings/offerings/seller-catalogs/update-catalog/update-catalog.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +101,10 @@ import { ChatbotWidgetComponent } from './chatbot-widget/chatbot-widget.componen
     CategoriesRecursionComponent,
     UpdateProductSpecComponent,
     UpdateResourceSpecComponent,
-    UpdateServiceSpecComponent
+    UpdateServiceSpecComponent,
+    UpdateOfferComponent,
+    CreateCatalogComponent,
+    UpdateCatalogComponent
   ],
   imports: [
     BrowserModule,

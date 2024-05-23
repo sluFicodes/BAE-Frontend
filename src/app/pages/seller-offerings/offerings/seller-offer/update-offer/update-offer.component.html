@@ -8,7 +8,7 @@
                 <svg class="w-3 h-3 mr-2 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 1 1 5l4 4m6-8L7 5l4 4"/>
                 </svg>
-                {{ 'CREATE_OFFER._back' | translate }}
+                {{ 'UPDATE_OFFER._back' | translate }}
                 </button>
             </li>
             <li aria-current="page">
@@ -16,7 +16,7 @@
                 <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                 </svg>
-                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">{{ 'CREATE_OFFER._create' | translate }}</span>
+                <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 ">{{ 'UPDATE_OFFER._update' | translate }}</span>
                 </div>
             </li>
             </ol>
@@ -24,98 +24,98 @@
     </div>
   <!-- End Breadcrumb -->
   <div class="bg-secondary-50 dark:bg-white mt-4 p-8 rounded-lg">
-    <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._new' | translate }}</h2>
+    <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._update' | translate }}</h2>
     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
     <div class="grid grid-cols-20/80">
         <div class="flex flex-col mr-4">
-            <h2 class="text-xl font-bold text-black mb-4">{{ 'CREATE_OFFER._steps' | translate }}</h2>
-            <button id="general-info" (click)="toggleGeneral()" [disabled]="!generalDone"  class="grid grid-cols-20/80 mb-2 text-primary-100">
+            <h2 class="text-xl font-bold text-black mb-4">{{ 'UPDATE_OFFER._steps' | translate }}</h2>
+            <button id="general-info" (click)="toggleGeneral()"  class="grid grid-cols-20/80 mb-2 text-primary-100">
                 <span id="general-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-primary-100 rounded-full shrink-0">
                     1
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._general' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._general_info' | translate }}</p>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._general' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._general_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone" class="grid grid-cols-20/80 mb-2">
+            <button id="bundle" (click)="toggleBundle()" class="grid grid-cols-20/80 mb-2">
                 <span id="bundle-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     2
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._bundle' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._bundle_info' | translate }}</p>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._bundle' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._bundle_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="prodspec" (click)="toggleProdSpec()" [disabled]="!prodSpecDone" class="grid grid-cols-20/80 mb-2">
+            <button id="prodspec" (click)="toggleProdSpec()" class="grid grid-cols-20/80 mb-2">
                 <span id="prodspec-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     3
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._prod_spec' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._prod_spec_info' | translate }}</p>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._prod_spec' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._prod_spec_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="catalog" (click)="toggleCatalogs()" [disabled]="!catalogsDone" class="grid grid-cols-20/80 mb-2">
+            <!--<button id="catalog" (click)="toggleCatalogs()" class="grid grid-cols-20/80 mb-2">
                 <span id="catalog-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     4
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._catalog' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._catalog_info' | translate }}</p>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._catalog' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._catalog_info' | translate }}</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">-->
+            <button id="category" (click)="toggleCategories()" class="grid grid-cols-20/80 mb-2">
+                <span id="category-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    4
+                </span>
+                <span>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._category' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._category_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="category" (click)="toggleCategories()" [disabled]="!categoriesDone" class="grid grid-cols-20/80 mb-2">
-                <span id="category-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="license" (click)="toggleLicense()" class="grid grid-cols-20/80 mb-2">
+                <span id="license-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     5
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._category' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._category_info' | translate }}</p>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._license' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._license_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="license" (click)="toggleLicense()" [disabled]="!licenseDone" class="grid grid-cols-20/80 mb-2">
-                <span id="license-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                    6
-                </span>
-                <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._license' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._license_info' | translate }}</p>
-                </span>
-            </button>
-            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <!--<button id="sla" (click)="toggleSLA()" [disabled]="!slaDone" class="grid grid-cols-20/80 mb-2">
+            <!--<button id="sla" (click)="toggleSLA()" class="grid grid-cols-20/80 mb-2">
                 <span id="sla-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     7
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._sla' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._sla_info' | translate }}</p>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._sla' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._sla_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">-->
-            <button id="price" (click)="togglePrice()" [disabled]="!priceDone" class="grid grid-cols-20/80 mb-2">
+            <button id="price" (click)="togglePrice()" class="grid grid-cols-20/80 mb-2">
                 <span id="price-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                    7
+                    6
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._price_plans' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._price_plans_info' | translate }}</p>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._price_plans' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._price_plans_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="summary" [disabled]="true" class="grid grid-cols-20/80 mb-2">
+            <button id="summary" (click)="showFinish()" class="grid grid-cols-20/80 mb-2">
                 <span id="summary-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                    8
+                    7
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._finish' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._summary' | translate }}</p>
+                    <h3 class="flex leading-tight justify-start">{{ 'UPDATE_OFFER._finish' | translate }}</h3>
+                    <p class="flex text-xs justify-start">{{ 'UPDATE_OFFER._summary' | translate }}</p>
                 </span>
             </button>
             
@@ -125,21 +125,92 @@
         <div>
 
             @if(showGeneral){
-                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._general' | translate }}</h2>
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._general' | translate }}</h2>
                 <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="generalForm">
                     <div>
-                        <label for="prod-name" class="font-bold text-lg">{{ 'CREATE_OFFER._name' | translate }}</label>
+                        <label for="prod-name" class="font-bold text-lg">{{ 'UPDATE_OFFER._name' | translate }}</label>
                         <input formControlName="name" type="text" id="prod-name"
                         [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
                         class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                    
                     </div>
+                    <label class="font-bold text-lg col-span-2">{{ 'UPDATE_RES_SPEC._status' | translate }}</label>
+                        <div class="mb-2 col-span-2">
+
+                            <ol class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
+                                @if(offerStatus=='Active'){
+                                    <li (click)="setOfferStatus('Active')" class="cursor-pointer flex w-full items-center text-blue-500 after:w-full after:h-1 after:border-b after:border-gray-700 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+                                        <span class="flex items-center">
+                                            <svg class="w-6 h-6 text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M8.737 8.737a21.49 21.49 0 0 1 3.308-2.724m0 0c3.063-2.026 5.99-2.641 7.331-1.3 1.827 1.828.026 6.591-4.023 10.64-4.049 4.049-8.812 5.85-10.64 4.023-1.33-1.33-.736-4.218 1.249-7.253m6.083-6.11c-3.063-2.026-5.99-2.641-7.331-1.3-1.827 1.828-.026 6.591 4.023 10.64m3.308-9.34a21.497 21.497 0 0 1 3.308 2.724m2.775 3.386c1.985 3.035 2.579 5.923 1.248 7.253-1.336 1.337-4.245.732-7.295-1.275M14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+                                            </svg>                                     
+                                            Active
+                                        </span>
+                                    </li>
+                                }@else{
+                                    <li (click)="setOfferStatus('Active')" class="cursor-pointer flex w-full items-center text-gray-800 after:w-full after:h-1 after:border-b after:border-gray-700 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+                                        <span class="flex items-center">                                    
+                                            Active
+                                        </span>
+                                    </li>
+                                }
+                                @if(offerStatus=='Launched'){
+                                    <li (click)="setOfferStatus('Launched')" class="cursor-pointer flex md:w-full items-center text-green-700 after:w-full after:h-1 after:border-b after:border-gray-700 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+                                        <span class="flex items-center">
+                                            <svg class="w-6 h-6 text-green-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M8.737 8.737a21.49 21.49 0 0 1 3.308-2.724m0 0c3.063-2.026 5.99-2.641 7.331-1.3 1.827 1.828.026 6.591-4.023 10.64-4.049 4.049-8.812 5.85-10.64 4.023-1.33-1.33-.736-4.218 1.249-7.253m6.083-6.11c-3.063-2.026-5.99-2.641-7.331-1.3-1.827 1.828-.026 6.591 4.023 10.64m3.308-9.34a21.497 21.497 0 0 1 3.308 2.724m2.775 3.386c1.985 3.035 2.579 5.923 1.248 7.253-1.336 1.337-4.245.732-7.295-1.275M14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+                                            </svg>                                          
+                                            Launched
+                                        </span>
+                                    </li>
+                                }@else{
+                                    <li (click)="setOfferStatus('Launched')" class="cursor-pointer flex md:w-full items-center after:w-full after:h-1 after:border-b after:border-gray-700 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+                                        <span class="flex items-center">                                         
+                                            Launched
+                                        </span>
+                                    </li>
+                                }
+                                @if(offerStatus=='Retired'){
+                                    <li (click)="setOfferStatus('Retired')" class="cursor-pointer flex md:w-full items-center text-yellow-500 after:w-full after:h-1 after:border-b after:border-gray-700 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+                                        <span class="flex items-center">
+                                            <svg class="w-6 h-6 text-yellow-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M8.737 8.737a21.49 21.49 0 0 1 3.308-2.724m0 0c3.063-2.026 5.99-2.641 7.331-1.3 1.827 1.828.026 6.591-4.023 10.64-4.049 4.049-8.812 5.85-10.64 4.023-1.33-1.33-.736-4.218 1.249-7.253m6.083-6.11c-3.063-2.026-5.99-2.641-7.331-1.3-1.827 1.828-.026 6.591 4.023 10.64m3.308-9.34a21.497 21.497 0 0 1 3.308 2.724m2.775 3.386c1.985 3.035 2.579 5.923 1.248 7.253-1.336 1.337-4.245.732-7.295-1.275M14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+                                            </svg>                                          
+                                            Retired
+                                        </span>
+                                    </li>
+                                }@else{
+                                    <li (click)="setOfferStatus('Retired')" class="cursor-pointer flex md:w-full items-center after:w-full after:h-1 after:border-b after:border-gray-700 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+                                        <span class="flex items-center">                                        
+                                            Retired
+                                        </span>
+                                    </li>
+                                }
+                                @if(offerStatus=='Obsolete'){
+                                    <li (click)="setOfferStatus('Obsolete')" class="cursor-pointer flex items-center">
+                                        <span class="flex items-center text-gray-800">
+                                            <svg class="w-6 h-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M8.737 8.737a21.49 21.49 0 0 1 3.308-2.724m0 0c3.063-2.026 5.99-2.641 7.331-1.3 1.827 1.828.026 6.591-4.023 10.64-4.049 4.049-8.812 5.85-10.64 4.023-1.33-1.33-.736-4.218 1.249-7.253m6.083-6.11c-3.063-2.026-5.99-2.641-7.331-1.3-1.827 1.828-.026 6.591 4.023 10.64m3.308-9.34a21.497 21.497 0 0 1 3.308 2.724m2.775 3.386c1.985 3.035 2.579 5.923 1.248 7.253-1.336 1.337-4.245.732-7.295-1.275M14 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+                                            </svg>                                          
+                                            Obsolete
+                                        </span>
+                                    </li>
+                                }@else{
+                                    <li (click)="setOfferStatus('Obsolete')" class="cursor-pointer flex items-center">
+                                        <span class="flex items-center">                                        
+                                            Obsolete
+                                        </span>
+                                    </li>
+                                }
+                            </ol>
+
+                        </div>
                     <div>
-                        <label for="prod-version" class="font-bold text-lg">{{ 'CREATE_OFFER._version' | translate }}</label>
+                        <label for="prod-version" class="font-bold text-lg">{{ 'UPDATE_OFFER._version' | translate }}</label>
                         <input formControlName="version" type="text" id="prod-version"
                         [ngClass]="generalForm.get('version')?.invalid == true ? 'border-red-600' : 'border-gray-300'"
                         class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     </div>
-                    <label for="prod-name" class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._description' | translate }}</label>
+                    <label for="prod-name" class="font-bold text-lg col-span-2">{{ 'UPDATE_OFFER._description' | translate }}</label>
                     <div class="w-full col-span-2 mb-4 border border-gray-200 rounded-lg bg-gray-50">
                         <div class="flex items-center justify-between px-3 py-2 border-b">
                             <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse">
@@ -212,10 +283,10 @@
                                     <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                                   </svg>
                                   
-                                <span class="sr-only">{{ 'CREATE_OFFER._preview' | translate }}</span>
+                                <span class="sr-only">{{ 'UPDATE_OFFER._preview' | translate }}</span>
                             </button>
                             <div id="tooltip-fullscreen" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
-                                {{ 'CREATE_OFFER._show_preview' | translate }}
+                                {{ 'UPDATE_OFFER._show_preview' | translate }}
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
                         </div>
@@ -236,8 +307,8 @@
 
                 </form>
                 <div class="flex w-full justify-items-end justify-end ml-4">
-                    <button type="button" (click)="toggleBundle();generalDone=true;" [disabled]="!generalForm.valid" [ngClass]="!generalForm.valid ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end align-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                        {{ 'CREATE_OFFER._next' | translate }}
+                    <button type="button" (click)="toggleBundle();" [disabled]="!generalForm.valid" [ngClass]="!generalForm.valid ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end align-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'UPDATE_OFFER._next' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
@@ -245,11 +316,11 @@
                 </div>
             }
             @if(showBundle){
-                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._bundle' | translate }}</h2>
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._bundle' | translate }}</h2>
                 <div class="col-span-2 flex align-items-middle h-fit m-4">
-                    <label for="prod-brand" class="font-bold text-lg">{{ 'CREATE_OFFER._is_bundled' | translate }}</label>
-                    <label class="inline-flex items-center me-5 cursor-pointer ml-4">
-                        <input type="checkbox" (change)="toggleBundleCheck()" value="" class="sr-only peer">
+                    <label for="prod-brand" class="font-bold text-lg">{{ 'UPDATE_OFFER._is_bundled' | translate }}</label>
+                    <label class="inline-flex items-center me-5 ml-4">
+                        <input type="checkbox" value="" disabled class="sr-only peer">
                         <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
                     </label>
                 </div>
@@ -268,19 +339,19 @@
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._name' | translate }}
+                                        {{ 'UPDATE_OFFER._name' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._status' | translate }}
+                                        {{ 'UPDATE_OFFER._status' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._type' | translate }}
+                                        {{ 'UPDATE_OFFER._type' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._last_update' | translate }}
+                                        {{ 'UPDATE_OFFER._last_update' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._select' | translate }}
+                                        {{ 'UPDATE_OFFER._select' | translate }}
                                     </th>
                                 </tr>
                             </thead>
@@ -303,16 +374,16 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             @if(prod.isBundle == false){
-                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'CREATE_OFFER._simple' | translate }}</span>
+                                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'UPDATE_OFFER._simple' | translate }}</span>
                                             } @else {
-                                                <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'CREATE_OFFER._bundle' | translate }}</span>
+                                                <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'UPDATE_OFFER._bundle' | translate }}</span>
                                             }
                                         </td>
                                         <td class="px-6 py-4">
                                             {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                         </td>
                                         <td class="px-6 py-4">
-                                            <input id="select-checkbox" [checked]="isProdInBundle(prod)" type="checkbox" value="" (click)="addProdToBundle(prod)" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <input id="select-checkbox" [checked]="isProdInBundle(prod)" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         </td>
                                     </tr>
                                 }
@@ -324,7 +395,7 @@
                         @if (bundlePageCheck) {
                         <div class="flex pt-6 pb-2 justify-center align-middle">
                             <button (click)="nextBundle()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
-                                {{ 'CREATE_OFFER._load_more' | translate }}
+                                {{ 'UPDATE_OFFER._load_more' | translate }}
                             <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                             </svg>
@@ -342,8 +413,8 @@
                     }
                 }
                 <div class="flex w-full justify-items-end justify-end ml-4">
-                    <button type="button" (click)="toggleProdSpec();bundleDone=true;" [disabled]="offersBundle.length<2 && bundleChecked" [ngClass]="(offersBundle.length<2 && bundleChecked) ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                        {{ 'CREATE_OFFER._next' | translate }}
+                    <button type="button" (click)="toggleProdSpec();" [disabled]="offersBundle.length<2 && bundleChecked" [ngClass]="(offersBundle.length<2 && bundleChecked) ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'UPDATE_OFFER._next' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
@@ -361,7 +432,7 @@
                           </svg>
                           <span class="sr-only">Info</span>
                           <div>
-                              {{ 'CREATE_OFFER._no_prod_spec' | translate }}
+                              {{ 'UPDATE_OFFER._no_prod_spec' | translate }}
                           </div>
                         </div>
                     </div>                    
@@ -395,7 +466,7 @@
                                 </thead>
                                 <tbody>
                                     @for (prod of prodSpecs; track prod) {
-                                        <tr class="border-b hover:bg-gray-200" (click)="selectProdSpec(prod)" 
+                                        <tr class="border-b hover:bg-gray-200"
                                             [ngClass]="prod.id == selectedProdSpec.id ? 'bg-gray-300' : 'bg-white'">
                                             <td class="px-6 py-4">
                                                 {{prod.name}}
@@ -449,8 +520,8 @@
                     }
                 }
                 <div class="flex w-full justify-items-end justify-end ml-4">
-                    <button type="button" (click)="toggleCatalogs();prodSpecDone=true;" [disabled]="selectedProdSpec.id=='' && !bundleChecked" [ngClass]="selectedProdSpec.id=='' && !bundleChecked ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                        {{ 'CREATE_OFFER._next' | translate }}
+                    <button type="button" (click)="toggleCategories();" [disabled]="selectedProdSpec.id=='' && !bundleChecked" [ngClass]="selectedProdSpec.id=='' && !bundleChecked ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'UPDATE_OFFER._next' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
@@ -459,7 +530,7 @@
                 </div>
             }
             @if(showCatalog){
-                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._catalog' | translate }}</h2>
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._catalog' | translate }}</h2>
                 <div class="m-4">
                 @if(loadingCatalog){
                     <div role="status" class="w-full h-fit flex justify-center align-middle">
@@ -533,8 +604,8 @@
                     }
                 }
                 <div class="flex w-full justify-items-end justify-end m-4">
-                    <button type="button" (click)="toggleCategories();catalogsDone=true;" [disabled]="selectedCatalog.id==''" [ngClass]="selectedCatalog.id=='' ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                        {{ 'CREATE_OFFER._next' | translate }}
+                    <button type="button" (click)="toggleCategories();" [disabled]="selectedCatalog.id==''" [ngClass]="selectedCatalog.id=='' ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'UPDATE_OFFER._next' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
@@ -543,7 +614,7 @@
                 </div>                
             }
             @if(showCategory){
-                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._category' | translate }}</h2>
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._category' | translate }}</h2>
                 <div class="m-4">
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">
                         @if(loadingCategory){
@@ -559,13 +630,13 @@
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                     <tr class="flex w-full justify-between">
                                         <th scope="col" class="flex px-6 py-3 w-3/5">
-                                            {{ 'CREATE_OFFER._name' | translate }}
+                                            {{ 'UPDATE_OFFER._name' | translate }}
                                         </th>
                                         <th scope="col" class="flex px-6 py-3 w-fit">
-                                            {{ 'CREATE_OFFER._last_update' | translate }}
+                                            {{ 'UPDATE_OFFER._last_update' | translate }}
                                         </th>
                                         <th scope="col" class="flex px-6 py-3 w-fit">
-                                            {{ 'CREATE_OFFER._select' | translate }}
+                                            {{ 'UPDATE_OFFER._select' | translate }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -597,8 +668,8 @@
                         }
                         </div>
                         <div class="flex w-full justify-items-end justify-end ml-4">
-                            <button type="button" (click)="toggleLicense();categoriesDone=true;"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                {{ 'CREATE_OFFER._next' | translate }}
+                            <button type="button" (click)="toggleLicense();"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                {{ 'UPDATE_OFFER._next' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                                 </svg>
@@ -607,17 +678,17 @@
                 </div>
             }
             @if(showLicense){
-                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._license' | translate }}</h2>
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._license' | translate }}</h2>
                 <div class="m-4">
                     @if(!freeLicenseSelected){
                         <div class="mt-4">
                             <form [formGroup]="licenseForm">
-                                <label for="treatment" class="font-bold text-lg">{{ 'CREATE_OFFER._treatment' | translate }}</label>
+                                <label for="treatment" class="font-bold text-lg">{{ 'UPDATE_OFFER._treatment' | translate }}</label>
                                 <input formControlName="treatment" type="text" id="treatment"
                                 [ngClass]="licenseForm.get('treatment')?.invalid == true && licenseForm.value.treatment!='' ? 'border-red-600' : 'border-gray-300'"
                                 class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
 
-                                <label for="description" class="font-bold text-lg">{{ 'CREATE_OFFER._description' | translate }}</label>
+                                <label for="description" class="font-bold text-lg">{{ 'UPDATE_OFFER._description' | translate }}</label>
                                 <div class="w-full col-span-2 mb-4 border border-gray-200 rounded-lg bg-gray-50">
                                     <div class="flex items-center justify-between px-3 py-2 border-b">
                                         <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse">
@@ -711,11 +782,10 @@
                                         
                                     </div>
                                 </div>
-                            
                             </form>
                             <div class="flex w-full justify-items-center justify-center ml-4 mt-4">
                                 <button type="button" (click)="freeLicenseSelected=!freeLicenseSelected" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                    {{ 'CREATE_OFFER._cancel' | translate }}
+                                    {{ 'UPDATE_OFFER._cancel' | translate }}
                                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">                                        
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>  
                                     </svg>                         
@@ -725,7 +795,7 @@
                     } @else {
                         <div class="flex w-full justify-items-center justify-center ml-4">
                             <button type="button" (click)="freeLicenseSelected=!freeLicenseSelected" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                {{ 'CREATE_OFFER._create_license' | translate }}
+                                {{ 'UPDATE_OFFER._create_license' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>  
                                 </svg>                         
@@ -733,8 +803,8 @@
                         </div>
                     }
                     <div class="flex w-full justify-items-end justify-end m-4">
-                        <button type="button" (click)="togglePrice();licenseDone=true;" [disabled]="!licenseForm.valid && !freeLicenseSelected" [ngClass]="!licenseForm.valid && !freeLicenseSelected ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                            {{ 'CREATE_OFFER._next' | translate }}
+                        <button type="button" (click)="togglePrice();" [disabled]="!licenseForm.valid && !freeLicenseSelected" [ngClass]="!licenseForm.valid && !freeLicenseSelected ? 'opacity-50' : 'hover:bg-primary-50'"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            {{ 'UPDATE_OFFER._next' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                             </svg>
@@ -743,7 +813,7 @@
                 </div>
             }
             @if(showSLA){
-                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._sla' | translate }}</h2>
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._sla' | translate }}</h2>
                     @if (createdSLAs.length === 0){
                         <div class="flex justify-center w-full m-4">
                           <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
@@ -752,7 +822,7 @@
                             </svg>
                             <span class="sr-only">Info</span>
                             <div>
-                                {{ 'CREATE_OFFER._no_sla' | translate }}
+                                {{ 'UPDATE_OFFER._no_sla' | translate }}
                             </div>
                           </div>
                         </div>
@@ -762,19 +832,19 @@
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            {{ 'CREATE_OFFER._name' | translate }}
+                                            {{ 'UPDATE_OFFER._name' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            {{ 'CREATE_OFFER._description' | translate }}
+                                            {{ 'UPDATE_OFFER._description' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            {{ 'CREATE_OFFER._threshold' | translate }}
+                                            {{ 'UPDATE_OFFER._threshold' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            {{ 'CREATE_OFFER._unit' | translate }}
+                                            {{ 'UPDATE_OFFER._unit' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            {{ 'CREATE_OFFER._actions' | translate }}
+                                            {{ 'UPDATE_OFFER._actions' | translate }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -809,7 +879,7 @@
                     @if(availableSLAs.length!=0){
                         <div class="flex w-full justify-items-center justify-center ml-4">
                             <button type="button" (click)="showCreateSLAMetric()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                {{ 'CREATE_OFFER._new_metric' | translate }}
+                                {{ 'UPDATE_OFFER._new_metric' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                                 </svg>                         
@@ -863,7 +933,7 @@
                         }
                         <div class="flex w-full justify-items-center justify-center ml-4">
                             <button type="button" (click)="addSLA()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                {{ 'CREATE_OFFER._add_metric' | translate }}
+                                {{ 'UPDATE_OFFER._add_metric' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
                                 </svg>                         
@@ -871,8 +941,8 @@
                         </div>
                     }
                 <div class="flex w-full justify-items-end justify-end m-4">
-                    <button type="button" (click)="togglePrice();slaDone=true;"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                        {{ 'CREATE_OFFER._next' | translate }}
+                    <button type="button" (click)="togglePrice();"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'UPDATE_OFFER._next' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
@@ -880,7 +950,7 @@
                 </div>
             }
             @if(showPrice){
-                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._price_plans' | translate }}</h2>
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._price_plans' | translate }}</h2>
                 @if(createdPrices.length==0){
                     <div class="flex justify-center w-full m-4">
                         <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
@@ -889,7 +959,7 @@
                           </svg>
                           <span class="sr-only">Info</span>
                           <div>
-                              {{ 'CREATE_OFFER._no_prices' | translate }}
+                              {{ 'UPDATE_OFFER._no_prices' | translate }}
                           </div>
                         </div>
                     </div>                    
@@ -899,22 +969,22 @@
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._name' | translate }}
+                                        {{ 'UPDATE_OFFER._name' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._description' | translate }}
+                                        {{ 'UPDATE_OFFER._description' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._type' | translate }}
+                                        {{ 'UPDATE_OFFER._type' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._price' | translate }}
+                                        {{ 'UPDATE_OFFER._price' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._unit' | translate }}
+                                        {{ 'UPDATE_OFFER._unit' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._actions' | translate }}
+                                        {{ 'UPDATE_OFFER._actions' | translate }}
                                     </th>
                                 </tr>
                             </thead>
@@ -941,7 +1011,12 @@
                                                 <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
                                                 </svg>                                                                                                
-                                            </button>  
+                                            </button>
+                                            <button type="button" (click)="showUpdatePrice(price);$event.stopPropagation();" class="ml-2 text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center me-2">
+                                                <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path fill-rule="evenodd" d="M14 4.182A4.136 4.136 0 0 1 16.9 3c1.087 0 2.13.425 2.899 1.182A4.01 4.01 0 0 1 21 7.037c0 1.068-.43 2.092-1.194 2.849L18.5 11.214l-5.8-5.71 1.287-1.31.012-.012Zm-2.717 2.763L6.186 12.13l2.175 2.141 5.063-5.218-2.141-2.108Zm-6.25 6.886-1.98 5.849a.992.992 0 0 0 .245 1.026 1.03 1.03 0 0 0 1.043.242L10.282 19l-5.25-5.168Zm6.954 4.01 5.096-5.186-2.218-2.183-5.063 5.218 2.185 2.15Z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </button>
                                         </td>
                                     </tr>
                                 }
@@ -950,7 +1025,7 @@
                     </div>
                 }
                 <div class="col-span-2 flex align-items-middle h-fit m-4">
-                    <label for="prod-brand" class="font-bold text-lg">{{ 'CREATE_OFFER._is_free_price' | translate }}</label>
+                    <label for="prod-brand" class="font-bold text-lg">{{ 'UPDATE_OFFER._is_free_price' | translate }}</label>
                     <label class="inline-flex items-center me-5 cursor-pointer ml-4">
                         <input type="checkbox" (change)="toggleFreePrice=!toggleFreePrice" value="" class="sr-only peer">
                         <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
@@ -959,22 +1034,22 @@
                 @if(!showCreatePrice){
                     <div class="flex w-full justify-items-center justify-center ml-4">
                         <button type="button" (click)="showCreatePrice=!showCreatePrice" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                            {{ 'CREATE_OFFER._new_price' | translate }}
+                            {{ 'UPDATE_OFFER._new_price' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                             </svg>                         
                         </button>
                     </div>
                 }@else{
-                    <label class="font-bold text-xl ml-4">{{ 'CREATE_OFFER._new_price' | translate }}</label>
+                    <label class="font-bold text-xl ml-4">{{ 'UPDATE_OFFER._new_price' | translate }}</label>
                     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
                         <form class="grid grid-cols-80/20 gap-4 m-4" [formGroup]="priceForm">
                             <div>
-                                <label class="font-bold text-lg">{{ 'CREATE_OFFER._name' | translate }}</label>
+                                <label class="font-bold text-lg">{{ 'UPDATE_OFFER._name' | translate }}</label>
                                 <input formControlName="name" type="text" id="name"
                                     [ngClass]="priceForm.get('name')?.invalid == true && priceForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
                                     class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                                <label class="font-bold text-lg">{{ 'CREATE_OFFER._price' | translate }}</label>
+                                <label class="font-bold text-lg">{{ 'UPDATE_OFFER._price' | translate }}</label>
                                 <div class="flex flex-row w-full">
                                     <input type="number" pattern="[0-9]*.[0-9]*" formControlName="price"
                                     [ngClass]="priceForm.get('price')?.invalid == true && priceForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
@@ -988,7 +1063,7 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="font-bold text-lg">{{ 'CREATE_OFFER._choose_type' | translate }}</label>
+                                <label class="font-bold text-lg">{{ 'UPDATE_OFFER._choose_type' | translate }}</label>
                                 <select id="type" (change)="onPriceTypeSelected($event)" class="mb-2 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     <option value="ONE TIME">ONE TIME</option>
                                     <option value="RECURRING">RECURRING</option>
@@ -996,7 +1071,7 @@
                                     <option value="CUSTOM">CUSTOM</option>           
                                 </select>
                                 @if(recurringSelected){
-                                    <label class="font-bold text-lg">{{ 'CREATE_OFFER._choose_period' | translate }}</label>
+                                    <label class="font-bold text-lg">{{ 'UPDATE_OFFER._choose_period' | translate }}</label>
                                     <select id="type" (change)="onPricePeriodChange($event)" class="shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option value="DAILY">DAILY</option>
                                         <option value="WEEKLY">WEEKLY</option>
@@ -1006,13 +1081,13 @@
                                         <option value="QUINQUENNIAL">QUINQUENNIAL</option>                
                                     </select>
                                 } @else if(usageSelected){
-                                    <label class="font-bold text-lg">{{ 'CREATE_OFFER._unit' | translate }}</label>
+                                    <label class="font-bold text-lg">{{ 'UPDATE_OFFER._unit' | translate }}</label>
                                     <input #usageUnit type="text"
                                     class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 }
 
                             </div>
-                            <label for="description" class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._description' | translate }}</label>
+                            <label for="description" class="font-bold text-lg col-span-2">{{ 'UPDATE_OFFER._description' | translate }}</label>
                             @if(!customSelected){
                                 <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
                             
@@ -1114,7 +1189,7 @@
                         </form>
                         <form [formGroup]="priceAlterForm">
                             <div class="m-4">
-                                <label class="font-bold text-lg">{{ 'CREATE_OFFER._price_alter' | translate }}</label>
+                                <label class="font-bold text-lg">{{ 'UPDATE_OFFER._price_alter' | translate }}</label>
                                 <select id="type" (change)="onPriceAlterSelected($event)" class="w-1/3 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                                     <option value="none">None</option>
                                     <option value="price">Price component</option>
@@ -1123,21 +1198,21 @@
                             </div>
                             @if(priceComponentSelected){
                                 <div class="ml-4 mb-4 grid grid-cols-80/20 gap-4">
-                                    <label class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._choose_type' | translate }}</label>
+                                    <label class="font-bold text-lg col-span-2">{{ 'UPDATE_OFFER._choose_type' | translate }}</label>
                                     <select id="type" (change)="onPriceTypeAlterSelected($event)" class="mb-2 col-span-2 w-1/3 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option value="ONE TIME">ONE TIME</option>
                                         <option value="RECURRING">RECURRING</option>
                                         <option value="USAGE">USAGE</option>          
                                     </select>
                                     <div>
-                                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._price_alter' | translate }}</label>
+                                        <label class="font-bold text-lg">{{ 'UPDATE_OFFER._price_alter' | translate }}</label>
                                         <input formControlName="price" type="number" pattern="[0-9]*.[0-9]*" step="0.1"
                                         [ngClass]="priceAlterForm.get('price')?.invalid == true && priceAlterForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
                                         class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
                                     <div>
                                         @if(priceTypeAlter=='RECURRING'){
-                                            <label class="font-bold text-lg">{{ 'CREATE_OFFER._choose_period' | translate }}</label>
+                                            <label class="font-bold text-lg">{{ 'UPDATE_OFFER._choose_period' | translate }}</label>
                                             <select id="type" (change)="onPricePeriodAlterChange($event)" class="shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                                 <option value="DAILY">DAILY</option>
                                                 <option value="WEEKLY">WEEKLY</option>
@@ -1148,27 +1223,27 @@
                                             </select>
                                         }
                                         @if(priceTypeAlter=='USAGE'){
-                                            <label class="font-bold text-lg">{{ 'CREATE_OFFER._unit' | translate }}</label>
+                                            <label class="font-bold text-lg">{{ 'UPDATE_OFFER._unit' | translate }}</label>
                                             <input #usageUnitAlter type="text"
                                             class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                                            
                                         }
                                     </div>
 
-                                    <label for="description" class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._description' | translate }}</label>
+                                    <label for="description" class="font-bold text-lg col-span-2">{{ 'UPDATE_OFFER._description' | translate }}</label>
                                     <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
                             
                                 </div>
                             } @else if(discountSelected){
                                 <div class="ml-4 mb-4 grid grid-cols-20/80">
                                     <div>
-                                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._choose_type' | translate }}</label>
+                                        <label class="font-bold text-lg">{{ 'UPDATE_OFFER._choose_type' | translate }}</label>
                                         <select id="type" #discountfee class="shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                                             <option value="discount">Discount</option>
                                             <option value="fee">Fee</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._enter_value' | translate }}</label>
+                                        <label class="font-bold text-lg">{{ 'UPDATE_OFFER._enter_value' | translate }}</label>
                                         <div class="flex flex-row w-full">
                                             <input formControlName="price" type="number" pattern="[0-9]*.[0-9]*" step="0.1"
                                             [ngClass]="priceAlterForm.get('price')?.invalid == true && priceAlterForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
@@ -1182,7 +1257,7 @@
                                     </div>
 
                                     <div class="col-span-2">
-                                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._add_condition' | translate }}</label>
+                                        <label class="font-bold text-lg">{{ 'UPDATE_OFFER._add_condition' | translate }}</label>
                                         <div class="flex flex-row w-full">
                                             <select id="type"  class="bg-white border-l border-gray-300 text-gray-90 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
                                                 <option value="EQ">(EQ) Equal</option>
@@ -1195,7 +1270,7 @@
                                             [ngClass]="priceAlterForm.get('condition')?.invalid == true && priceAlterForm.value.condition!='' ? 'border-red-600' : 'border-gray-300'"
                                             class="bg-gray-50 border-r border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
                                         </div>
-                                        <label for="description" class="font-bold text-lg col-span-2">{{ 'CREATE_OFFER._description' | translate }}</label>
+                                        <label for="description" class="font-bold text-lg col-span-2">{{ 'UPDATE_OFFER._description' | translate }}</label>
                                         <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>    
                                     </div>                                    
                                 </div>
@@ -1203,7 +1278,7 @@
                         </form>
                         <div class="flex w-full justify-items-center justify-center ml-4">
                             <button type="button" (click)="savePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                {{ 'CREATE_OFFER._save_price' | translate }}
+                                {{ 'UPDATE_OFFER._save_price' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
                                 </svg>                         
@@ -1213,7 +1288,7 @@
                 }
                 <div class="flex w-full justify-items-end justify-end m-4">
                     <button type="button" (click)="showFinish();" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                        {{ 'CREATE_OFFER._next' | translate }}
+                        {{ 'UPDATE_OFFER._next' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
@@ -1222,55 +1297,55 @@
 
             }
             @if(showSummary){
-                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._finish' | translate }}</h2>
+                <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'UPDATE_OFFER._finish' | translate }}</h2>
                 <div class="m-8">
                     <div class="mb-4 grid grid-cols-2 gap-4">
                         <div>
-                            <label class="font-bold text-lg">{{ 'CREATE_OFFER._name' | translate }}</label>
+                            <label class="font-bold text-lg">{{ 'UPDATE_OFFER._name' | translate }}</label>
                             <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                {{offerToCreate?.name}}
+                                {{offerToUpdate?.name}}
                             </label>
 
                         </div>
                         <div>
-                            <label for="prod-version" class="font-bold text-lg">{{ 'CREATE_OFFER._version' | translate }}</label>
+                            <label for="prod-version" class="font-bold text-lg">{{ 'UPDATE_OFFER._version' | translate }}</label>
                             <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                {{offerToCreate?.version}}
+                                {{offerToUpdate?.version}}
                             </label>
                         </div>
                     </div>
                     
                     <div class="mb-4">
-                        <label class="font-bold text-lg mr-4">{{ 'CREATE_OFFER._status' | translate }}</label>
-                        @if(offerToCreate?.lifecycleStatus == 'Active'){
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{offerToCreate?.lifecycleStatus}}</span>
-                        } @else if(offerToCreate?.lifecycleStatus == 'Launched') {
-                            <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{offerToCreate?.lifecycleStatus}}</span>
-                        } @else if(offerToCreate?.lifecycleStatus == 'Retired') {
-                            <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{offerToCreate?.lifecycleStatus}}</span>
-                        } @else if(offerToCreate?.lifecycleStatus == 'Obsolete') {
-                            <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{offerToCreate?.lifecycleStatus}}</span>
+                        <label class="font-bold text-lg mr-4">{{ 'UPDATE_OFFER._status' | translate }}</label>
+                        @if(offerToUpdate?.lifecycleStatus == 'Active'){
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{offerToUpdate?.lifecycleStatus}}</span>
+                        } @else if(offerToUpdate?.lifecycleStatus == 'Launched') {
+                            <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{offerToUpdate?.lifecycleStatus}}</span>
+                        } @else if(offerToUpdate?.lifecycleStatus == 'Retired') {
+                            <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{offerToUpdate?.lifecycleStatus}}</span>
+                        } @else if(offerToUpdate?.lifecycleStatus == 'Obsolete') {
+                            <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{offerToUpdate?.lifecycleStatus}}</span>
                         }
                     </div>
 
-                    @if(offerToCreate?.description !=''){
-                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._description' | translate }}</label>
+                    @if(offerToUpdate?.description !=''){
+                        <label class="font-bold text-lg">{{ 'UPDATE_OFFER._description' | translate }}</label>
                         <div class="px-4 py-2 bg-white rounded-lg p-4 mb-4">                                
-                            <markdown [data]="offerToCreate?.description"></markdown>
+                            <markdown [data]="offerToUpdate?.description"></markdown>
                         </div>
                     }
 
                     @if(offersBundle.length>0){
-                        <label class="font-bold text-lg">{{ 'CREATE_OFFER._bundle' | translate }}</label>
+                        <label class="font-bold text-lg">{{ 'UPDATE_OFFER._bundle' | translate }}</label>
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            {{ 'CREATE_OFFER._name' | translate }}
+                                            {{ 'UPDATE_OFFER._name' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
-                                            {{ 'CREATE_OFFER._status' | translate }}
+                                            {{ 'UPDATE_OFFER._status' | translate }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -1299,56 +1374,17 @@
                         </div>  
                     }
                 
-                    <label class="font-bold text-lg">{{ 'CREATE_OFFER._catalog' | translate }}</label>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    {{ 'OFFERINGS._name' | translate }}
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    {{ 'OFFERINGS._status' | translate }}
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    {{ 'OFFERINGS._role' | translate }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>                       
-                            <tr class="border-b hover:bg-gray-200">
-                                <td class="px-6 py-4">
-                                    {{selectedCatalog.name}}
-                                </td>
-                                <td class="px-6 py-4">
-                                    @if(selectedCatalog.lifecycleStatus == 'active'){
-                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{selectedCatalog.lifecycleStatus}}</span>
-                                    } @else if(selectedCatalog.lifecycleStatus == 'Launched') {
-                                        <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{selectedCatalog.lifecycleStatus}}</span>
-                                    } @else if(selectedCatalog.lifecycleStatus == 'suspended') {
-                                        <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{selectedCatalog.lifecycleStatus}}</span>
-                                    } @else if(selectedCatalog.lifecycleStatus == 'terminated') {
-                                        <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{selectedCatalog.lifecycleStatus}}</span>
-                                    }
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{selectedCatalog.relatedParty?.at(0)?.role}}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
                 @if(selectedCategories.length>0){
-                    <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._category' | translate }}</h2>
+                    <h2 class="font-bold text-lg">{{ 'UPDATE_OFFER._category' | translate }}</h2>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">   
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._name' | translate }}
+                                        {{ 'UPDATE_OFFER._name' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._last_update' | translate }}
+                                        {{ 'UPDATE_OFFER._last_update' | translate }}
                                     </th>
                                 </tr>
                             </thead>
@@ -1368,25 +1404,25 @@
                     </div>                
                 }
                 @if(createdPrices.length>0){
-                    <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._price_plans' | translate }}</h2>
+                    <h2 class="font-bold text-lg">{{ 'UPDATE_OFFER._price_plans' | translate }}</h2>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._name' | translate }}
+                                        {{ 'UPDATE_OFFER._name' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._description' | translate }}
+                                        {{ 'UPDATE_OFFER._description' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._type' | translate }}
+                                        {{ 'UPDATE_OFFER._type' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._price' | translate }}
+                                        {{ 'UPDATE_OFFER._price' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._unit' | translate }}
+                                        {{ 'UPDATE_OFFER._unit' | translate }}
                                     </th>
                                 </tr>
                             </thead>
@@ -1415,22 +1451,22 @@
                     </div>
                 }
                 @if(createdSLAs.length>0){
-                    <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._sla' | translate }}</h2>
+                    <h2 class="font-bold text-lg">{{ 'UPDATE_OFFER._sla' | translate }}</h2>
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._name' | translate }}
+                                        {{ 'UPDATE_OFFER._name' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._description' | translate }}
+                                        {{ 'UPDATE_OFFER._description' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._threshold' | translate }}
+                                        {{ 'UPDATE_OFFER._threshold' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
-                                        {{ 'CREATE_OFFER._unit' | translate }}
+                                        {{ 'UPDATE_OFFER._unit' | translate }}
                                     </th>
                                 </tr>
                             </thead>
@@ -1456,21 +1492,21 @@
                     </div>
                 }
                 @if(!freeLicenseSelected){
-                    <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._license' | translate }}</h2>
+                    <h2 class="font-bold text-lg">{{ 'UPDATE_OFFER._license' | translate }}</h2>
                     <div>
-                        <label for="treatment" class="font-bold text-base">{{ 'CREATE_OFFER._treatment' | translate }}</label>
+                        <label for="treatment" class="font-bold text-base">{{ 'UPDATE_OFFER._treatment' | translate }}</label>
                         <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             {{createdLicense.treatment}}
                         </label>
-                        <label class="font-bold text-base">{{ 'CREATE_OFFER._description' | translate }}</label>
-                        <div class="px-4 py-2 bg-white rounded-lg p-4"> 
+                        <label class="font-bold text-base">{{ 'UPDATE_OFFER._description' | translate }}</label>
+                        <div class="py-2 bg-white rounded-lg">                            
                             <markdown [data]="createdLicense.description"></markdown>
                         </div>
                     </div>
                 }
                 <div class="flex w-full justify-items-end justify-end m-4">
-                    <button type="button" (click)="createOffer();" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                        {{ 'CREATE_OFFER._finish' | translate }}
+                    <button type="button" (click)="updateOffer();" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'UPDATE_OFFER._finish' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                         </svg>
@@ -1481,3 +1517,177 @@
         </div>
     </div>
 </div>
+
+@if(editPrice){
+    <div id="edit-price-modal" [ngClass]="editPrice ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+        <div class="w-1/2 relative bg-secondary-50 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
+                <h5 class="text-xl ml-4 mr-4 font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{ 'UPDATE_OFFER._update' | translate }}</h5>
+                <button (click)="closeEditPrice();" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-price-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">{{ 'CARD._close' | translate }}</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="w-full h-full">
+            <form class="grid grid-cols-80/20 gap-4 m-4 p-4" [formGroup]="priceForm">
+                <div>
+                    <label class="font-bold text-lg">{{ 'UPDATE_OFFER._name' | translate }}</label>
+                    <input formControlName="name" type="text" id="name"
+                        [ngClass]="priceForm.get('name')?.invalid == true && priceForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
+                        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    <label class="font-bold text-lg">{{ 'UPDATE_OFFER._price' | translate }}</label>
+                    <div class="flex flex-row w-full">
+                        <input type="number" pattern="[0-9]*.[0-9]*" formControlName="price"
+                        [ngClass]="priceForm.get('price')?.invalid == true && priceForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
+                        class="bg-gray-50 border-l border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+
+                        <select id="type" (change)="onPriceUnitChange($event)" value="{{selectedPriceUnit}}" class="bg-white border-r border-gray-300 text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                            @for(curr of currencies; track curr.code){
+                                <option value="{{curr.code}}" [selected]="selectedPriceUnit == curr.code">({{curr.code}}) {{curr.name}}</option>
+                            }           
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="font-bold text-lg">{{ 'UPDATE_OFFER._choose_type' | translate }}</label>
+                    <select id="type" (change)="onPriceTypeSelected($event)" value="{{selectedPriceType}}" class="mb-2 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="ONE TIME">ONE TIME</option>
+                        <option value="RECURRING">RECURRING</option>
+                        <option value="USAGE">USAGE</option>
+                        <option value="CUSTOM">CUSTOM</option>           
+                    </select>
+                    @if(recurringSelected){
+                        <label class="font-bold text-lg">{{ 'UPDATE_OFFER._choose_period' | translate }}</label>
+                        <select id="type" value="{{selectedPeriod}}" (change)="onPricePeriodChange($event)" class="shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="DAILY">DAILY</option>
+                            <option value="WEEKLY">WEEKLY</option>
+                            <option value="MONTHLY">MONTHLY</option>
+                            <option value="QUARTERLY">QUARTERLY</option>
+                            <option value="YEARLY">YEARLY</option>
+                            <option value="QUINQUENNIAL">QUINQUENNIAL</option>                
+                        </select>
+                    } @else if(usageSelected){
+                        <label class="font-bold text-lg">{{ 'UPDATE_OFFER._unit' | translate }}</label>
+                        <input #usageUnitUpdate type="text" value="{{priceToUpdate.unitOfMeasure.units}}"
+                        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    }
+                </div>
+                <label for="description" class="font-bold text-lg col-span-2">{{ 'UPDATE_OFFER._description' | translate }}</label>
+                @if(!customSelected){
+                    <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                
+                } @else {
+                    <div class="w-full col-span-2 mb-4 border border-gray-200 rounded-lg bg-gray-50">
+                        <div class="flex items-center justify-between px-3 py-2 border-b">
+                            <div class="flex flex-wrap items-center divide-gray-200 sm:divide-x sm:rtl:divide-x-reverse">
+                                <div class="flex items-center space-x-1 rtl:space-x-reverse sm:pe-4">
+                                    <button (click)="addBold()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h4.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0-7H6m2 7h6.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0 0H6"/>
+                                        </svg>                                          
+                                        <span class="sr-only">Bold</span>
+                                    </button>
+                                    <button (click)="addItalic()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.874 19 6.143-14M6 19h6.33m-.66-14H18"/>
+                                        </svg>                                                                                 
+                                        <span class="sr-only">Italic</span>
+                                    </button>
+                                    <button (click)="addList()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
+                                        </svg>                                          
+                                        <span class="sr-only">Add list</span>
+                                    </button>
+                                    <button (click)="addOrderedList()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
+                                        </svg>                                          
+                                        <span class="sr-only">Add ordered list</span>
+                                    </button>
+                                    <button (click)="addBlockquote()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+                                        </svg>                                         
+                                        <span class="sr-only">Add blockquote</span>
+                                    </button>
+                                    <button (click)="addTable()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
+                                        </svg>                                         
+                                        <span class="sr-only">Add table</span>
+                                    </button>                                 
+                                    <button (click)="addCode()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
+                                        </svg>                                        
+                                        <span class="sr-only">Add code</span>
+                                    </button>
+                                    <button (click)="addCodeBlock()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+                                        </svg>                                                                                  
+                                        <span class="sr-only">Add code block</span>
+                                    </button>
+                                    <button (click)="addLink()" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
+                                        </svg>                                                                                
+                                        <span class="sr-only">Add link</span>
+                                    </button>
+                                    <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
+                                        </svg>
+                                        <span class="sr-only">Add emoji</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" (click)="showPreview=!showPreview;togglePreview()" data-tooltip-target="tooltip-fullscreen" class="text-gray-500 rounded cursor-pointer sm:ms-auto hover:text-gray-900 hover:bg-gray-100">
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
+                                    <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                                </svg>
+                                
+                                <span class="sr-only">{{ 'CREATE_PROD_SPEC._preview' | translate }}</span>
+                            </button>
+                            <div id="tooltip-fullscreen" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
+                                {{ 'CREATE_PROD_SPEC._show_preview' | translate }}
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2 bg-white rounded-b-lg">
+                            <label for="editor" class="sr-only">Publish post</label>
+                            @if(showPreview){
+                                    <markdown [data]="priceDescription"></markdown>
+                                
+                            }@else{
+                                <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 bg-white border-0" placeholder="Add product description..." ></textarea>
+                            }
+                            @if(showEmoji){
+                                <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
+                            }                    
+                            
+                        </div>
+                    </div>
+                }
+            </form>
+            <div class="flex w-full justify-items-center justify-center m-2 p-2">
+                <button type="button" (click)="updatePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                    {{ 'UPDATE_OFFER._save_price' | translate }}
+                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
+                    </svg>                         
+                </button> 
+            </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
