@@ -907,7 +907,7 @@ export class UpdateOfferComponent implements OnInit{
   }
 
   getSellerCatalogs(){
-    this.api.getCatalogsByUser(this.catalogPage,undefined,this.partyId).then(data => {
+    this.api.getCatalogsByUser(this.catalogPage,undefined,this.partyId,['Active','Launched']).then(data => {
       if(data.length<this.CATALOG_LIMIT){
         this.catalogPageCheck=false;
         this.cdr.detectChanges();

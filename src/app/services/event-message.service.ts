@@ -7,7 +7,7 @@ export interface EventMessage {
   type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess' | 'BillAccChanged' |
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
   'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
-  'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession';
+  'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession';
   text?: string,
   value?: object | boolean
 }
@@ -104,6 +104,18 @@ export class EventMessageService {
 
   emitSellerUpdateOffer(offer:any){
     this.eventMessageSubject.next({ type: 'SellerUpdateOffer', value: offer });
+  }
+
+  emitSellerCatalog(show:boolean){    
+    this.eventMessageSubject.next({ type: 'SellerCatalog', value: show });
+  }
+
+  emitSellerUpdateCatalog(cat:any){
+    this.eventMessageSubject.next({ type: 'SellerCatalogUpdate', value: cat });
+  }
+
+  emitSellerCreateCatalog(show:boolean){
+    this.eventMessageSubject.next({ type: 'SellerCatalogCreate', value: show });
   }
 
   emitCategoryAdded(cat:Category){

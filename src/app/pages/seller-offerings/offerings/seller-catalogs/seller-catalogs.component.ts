@@ -31,6 +31,7 @@ export class SellerCatalogsComponent {
   page_check:boolean = true;
   filter:any=undefined;
   partyId:any;
+  status:any[]=['Active','Launched'];
 
   constructor(
     private router: Router,
@@ -48,6 +49,14 @@ export class SellerCatalogsComponent {
 
   ngOnInit() {
     this.initCatalogs();
+  }
+
+  goToCreate(){
+    this.eventMessage.emitSellerCreateCatalog(true);
+  }
+
+  goToUpdate(cat:any){
+    this.eventMessage.emitSellerUpdateCatalog(cat);
   }
 
   initCatalogs(){
@@ -81,7 +90,7 @@ export class SellerCatalogsComponent {
   }
 
   getCatalogs(){    
-    this.api.getCatalogsByUser(this.page,this.filter,this.partyId).then(data => {
+    this.api.getCatalogsByUser(this.page,this.filter,this.partyId,this.status).then(data => {
       if(data.length<this.CATALOG_LIMIT){
         this.page_check=false;
         this.cdr.detectChanges();
@@ -112,6 +121,19 @@ export class SellerCatalogsComponent {
   }
 
   onStateFilterChange(filter:string){
-
+    const index = this.status.findIndex(item => item === filter);
+    if (index !== -1) {
+      this.status.splice(index, 1);
+      console.log('elimina filtro')
+      console.log(this.status)
+    } else {
+      console.log('añade filtro')
+      console.log(this.status)
+      this.status.push(filter)
+    }
+    this.loading=true;
+    this.page=0;
+    this.catalogs=[];
+    this.getCatalogs();
   }
 }

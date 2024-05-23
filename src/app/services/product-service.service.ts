@@ -143,10 +143,22 @@ export class ApiServiceService {
     return lastValueFrom(this.http.get<any>(url));
   }
 
-  getCatalogsByUser(page:any,filter:any,partyId:any) {
-    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&lifecycleStatus=Active,Launched&relatedParty.id=${partyId}`;    
+  getCatalogsByUser(page:any,filter:any,partyId:any,status:any[]) {
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;
+    let lifeStatus=''
+    if(status.length>0){
+      for(let i=0; i < status.length; i++){
+        if(i==status.length-1){
+          lifeStatus=lifeStatus+status[i]
+        } else {
+          lifeStatus=lifeStatus+status[i]+','
+        }    
+      }
+      url=url+'&lifecycleStatus='+lifeStatus;
+    }
+        
     if(filter!=undefined){
-      url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&lifecycleStatus=Active,Launched&relatedParty.id=${partyId}&body=${filter}`;
+      url = url+`&body=${filter}`;
     }
 
     return lastValueFrom(this.http.get<any>(url));
@@ -156,6 +168,18 @@ export class ApiServiceService {
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/${id}`;
  
     return lastValueFrom(this.http.get<any>(url));
+  }
+
+  postCatalog(catalog:any){
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog`;
+ 
+    return this.http.post<any>(url, catalog);
+  }
+
+  updateCatalog(catalog:any,id:any){
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/${id}`;
+ 
+    return this.http.patch<any>(url, catalog);
   }
 
   getServiceSpec(id:any){    

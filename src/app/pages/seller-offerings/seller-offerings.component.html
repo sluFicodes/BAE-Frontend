@@ -53,6 +53,9 @@
         @if(show_create_offer){
           <create-offer></create-offer>
         }
+        @if(show_create_catalog){
+          <create-catalog></create-catalog>
+        }
         @if(show_update_prod_spec){
           <update-product-spec [prod]="prod_to_update"></update-product-spec>
         }
@@ -64,6 +67,9 @@
         }
         @if(show_update_offer){
           <update-offer [offer]="offer_to_update"></update-offer>
+        }
+        @if(show_update_catalog){
+          <update-catalog [cat]="catalog_to_update"></update-catalog>
         }
     </div>
 </div>
