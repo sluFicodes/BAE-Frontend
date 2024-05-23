@@ -173,7 +173,7 @@ export class BillingAccountFormComponent implements OnInit {
         relatedParty: [{
           href: aux.partyId,
           id: aux.partyId,
-          role: "bill receiver"
+          role: "Owner"
         }],
         state: "Defined"
       }
@@ -257,7 +257,7 @@ export class BillingAccountFormComponent implements OnInit {
           relatedParty: [{
             href: aux.partyId,
             id: aux.partyId,
-            role: "bill receiver"
+            role: "Owner"
           }],
           state: "Defined"
         }

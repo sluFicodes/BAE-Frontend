@@ -324,7 +324,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   onDeleted(baddr: billingAccountCart) {
-    console.log('holi')
     this.account.deleteBillingAccount(baddr.id).subscribe({
         next: result => {
           console.log('--- DELETE BILLING ADDRESS ---')
