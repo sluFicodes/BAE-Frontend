@@ -25,11 +25,12 @@ export class QrVerifierService {
               } else if (response.status === 401) {
                 return
               }
-
               thePopup.close()
               window.location.replace('/dashboard?token=local')
             }
-          ).catch((error) => {alert(error)})
+          ).catch((error) => {
+            alert(error)
+            this.stopChecking(thePopup)})
   }
 
   pollServer(qrWindow: Window | null, state:string):void {
