@@ -1547,8 +1547,8 @@
 
                         <select id="type" (change)="onPriceUnitChange($event)" value="{{selectedPriceUnit}}" class="bg-white border-r border-gray-300 text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
                             @for(curr of currencies; track curr.code){
-                                <option value="{{curr.code}}">({{curr.code}}) {{curr.name}}</option>  
-                            }                            
+                                <option value="{{curr.code}}" [selected]="selectedPriceUnit == curr.code">({{curr.code}}) {{curr.name}}</option>
+                            }           
                         </select>
                     </div>
                 </div>
@@ -1575,7 +1575,6 @@
                         <input #usageUnitUpdate type="text" value="{{priceToUpdate.unitOfMeasure.units}}"
                         class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     }
-
                 </div>
                 <label for="description" class="font-bold text-lg col-span-2">{{ 'UPDATE_OFFER._description' | translate }}</label>
                 @if(!customSelected){

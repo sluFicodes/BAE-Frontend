@@ -1046,58 +1046,29 @@ export class UpdateOfferComponent implements OnInit{
     if(this.createdPrices.length>0){
       let lastIndex=this.createdPrices.length-1;
       let checkCreate=false;
+      let checkChanged=false;
       for(let i=0; i < this.createdPrices.length; i++){
         const index = this.oldPrices.findIndex(item => item.id === this.createdPrices[i].id);
         if (index == -1) {
           checkCreate=true;
+          checkChanged=true;
         } else {
           if(this.oldPrices[index]!=this.createdPrices[i]){
             lastIndex=i;
             checkCreate=false;
+            checkChanged=true;
           }
         }
       }
-      //TODO CAMBIAR A UPDATE O SOLO POST SI ES UN PRECIO NUEVO
-      for(let i=0; i < this.createdPrices.length; i++){
-        const index = this.oldPrices.findIndex(item => item.id === this.createdPrices[i].id);
-        if (index == -1) {
-          //Crear el precio porque es nuevo
-          let priceToCreate: ProductOfferingPrice = {
-            description: this.createdPrices[i].description,
-            lifecycleStatus: this.createdPrices[i].lifecycleStatus,
-            name: this.createdPrices[i].name,
-            priceType: this.createdPrices[i].priceType,
-            price: {
-                unit: this.createdPrices[i].price?.taxIncludedAmount?.unit,
-                value: this.createdPrices[i].price?.taxIncludedAmount?.value
-            }
-          }
-          if(this.createdPrices[i].priceType == 'recurring'){
-            console.log('recurring')
-            priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
-          }
-          if(this.createdPrices[i].priceType == 'usage'){
-            console.log('usage')
-            priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
-          }
-          await this.api.postOfferingPrice(priceToCreate).subscribe({
-            next: data => {
-              console.log('precio')
-              console.log(data)
-              this.createdPrices[i].id=data.id;
-              if(checkCreate){
-                this.saveOfferInfo();
-              }            
-            },
-            error: error => {
-              console.error('There was an error while updating!', error);
-            }
-          });
-        } else {
-          //Ver si se ha modificado y modificarlo si es necesario
-          if(this.oldPrices[index]!=this.createdPrices[i]){
-            console.log('diferentes')
-            let priceToUpdate: ProductOfferingPrice = {
+      if(checkChanged==false){
+        this.saveOfferInfo();
+      } else {
+        //TODO CAMBIAR A UPDATE O SOLO POST SI ES UN PRECIO NUEVO
+        for(let i=0; i < this.createdPrices.length; i++){
+          const index = this.oldPrices.findIndex(item => item.id === this.createdPrices[i].id);
+          if (index == -1) {
+            //Crear el precio porque es nuevo
+            let priceToCreate: ProductOfferingPrice = {
               description: this.createdPrices[i].description,
               lifecycleStatus: this.createdPrices[i].lifecycleStatus,
               name: this.createdPrices[i].name,
@@ -1109,18 +1080,18 @@ export class UpdateOfferComponent implements OnInit{
             }
             if(this.createdPrices[i].priceType == 'recurring'){
               console.log('recurring')
-              priceToUpdate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
+              priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
             }
             if(this.createdPrices[i].priceType == 'usage'){
               console.log('usage')
-              priceToUpdate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
+              priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
             }
-            await this.api.updateOfferingPrice(priceToUpdate).subscribe({
+            await this.api.postOfferingPrice(priceToCreate).subscribe({
               next: data => {
                 console.log('precio')
                 console.log(data)
                 this.createdPrices[i].id=data.id;
-                if(checkCreate==false && i==lastIndex){
+                if(checkCreate){
                   this.saveOfferInfo();
                 }            
               },
@@ -1128,9 +1099,45 @@ export class UpdateOfferComponent implements OnInit{
                 console.error('There was an error while updating!', error);
               }
             });
+          } else {
+            //Ver si se ha modificado y modificarlo si es necesario
+            if(this.oldPrices[index]!=this.createdPrices[i]){
+              console.log('diferentes')
+              let priceToUpdate: ProductOfferingPrice = {
+                description: this.createdPrices[i].description,
+                lifecycleStatus: this.createdPrices[i].lifecycleStatus,
+                name: this.createdPrices[i].name,
+                priceType: this.createdPrices[i].priceType,
+                price: {
+                    unit: this.createdPrices[i].price?.taxIncludedAmount?.unit,
+                    value: this.createdPrices[i].price?.taxIncludedAmount?.value
+                }
+              }
+              if(this.createdPrices[i].priceType == 'recurring'){
+                console.log('recurring')
+                priceToUpdate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
+              }
+              if(this.createdPrices[i].priceType == 'usage'){
+                console.log('usage')
+                priceToUpdate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
+              }
+              await this.api.updateOfferingPrice(priceToUpdate).subscribe({
+                next: data => {
+                  console.log('precio')
+                  console.log(data)
+                  this.createdPrices[i].id=data.id;
+                  if(checkCreate==false && i==lastIndex){
+                    this.saveOfferInfo();
+                  }            
+                },
+                error: error => {
+                  console.error('There was an error while updating!', error);
+                }
+              });
+            }
           }
         }
-      }
+      }      
     } else {
       this.createdPrices.push({
         name: 'Open',

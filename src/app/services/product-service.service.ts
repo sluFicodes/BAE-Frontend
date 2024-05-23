@@ -196,7 +196,7 @@ export class ApiServiceService {
 
   updateProductOffering(prod:any,id:any){
     //POST - El item va en el body de la petición
-    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/productOffering/${id}`;
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOffering/${id}`;
     return this.http.patch<any>(url, prod);
   }
 
