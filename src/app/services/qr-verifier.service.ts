@@ -29,7 +29,6 @@ export class QrVerifierService {
               window.location.replace('/dashboard?token=local')
             }
           ).catch((error) => {
-            alert(error)
             this.stopChecking(thePopup)})
   }
 
