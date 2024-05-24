@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, HostListener} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, HostListener, DoCheck, OnDestroy} from '@angular/core';
 import {
   faCartShopping,
   faHandHoldingBox,
@@ -18,17 +18,19 @@ import { Router } from '@angular/router';
 import {EventMessageService} from "../../services/event-message.service";
 import { environment } from 'src/environments/environment';
 import { LoginInfo } from 'src/app/models/interfaces';
-import { interval, Subscription} from 'rxjs';
+import { Subscription, timer} from 'rxjs';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
 import { initFlowbite } from 'flowbite';
+import { QrVerifierService } from 'src/app/services/qr-verifier.service';
+import * as uuid from 'uuid';
 
 @Component({
   selector: 'bae-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestroy{
 
   @ViewChild('theme_toggle_dark_icon') themeToggleDarkIcon: ElementRef;
   @ViewChild('theme_toggle_light_icon') themeToggleLightIcon: ElementRef;
@@ -41,12 +43,14 @@ export class HeaderComponent implements OnInit, AfterViewInit {
               private cdr: ChangeDetectorRef,
               private route: ActivatedRoute,
               private eventMessage: EventMessageService,
-              private router: Router) {
+              private router: Router,
+              private qrVerifier:QrVerifierService) {
 
     this.themeToggleDarkIcon = themeToggleDarkIcon;
     this.themeToggleLightIcon = themeToggleLightIcon;
   }
-
+  qrWindow: Window | null = null;
+  statePair:string
   catalogs: any[] | undefined  = [];
   showCart:boolean=false;
   is_logged:boolean=false;
@@ -58,10 +62,20 @@ export class HeaderComponent implements OnInit, AfterViewInit {
   email:string='';
   usercharacters:string='';
   loginSubscription: Subscription = new Subscription();
-  loginUrl:string = `${environment.BASE_URL}` + (environment.SIOP ? `${environment.LEGACY_PREFIX}/login/vc` : '/login');
   roles:string[]=[];
   public static BASE_URL: String = environment.BASE_URL;
+  
+  ngOnDestroy(): void {
+      this.qrWindow?.close()
+      this.qrWindow=null
+  }
 
+  ngDoCheck(): void {
+    if(this.qrWindow!=null && this.qrWindow.closed){
+      this.qrVerifier.stopChecking(this.qrWindow)
+      this.qrWindow=null
+    }
+  }
   @HostListener('document:click')
   onClick() {
     if(this.showCart==true){
@@ -175,7 +189,7 @@ export class HeaderComponent implements OnInit, AfterViewInit {
       }
     }
   }
-
+  
   goToCatalogSearch(id:any) {
     this.router.navigate(['/search/catalog', id]);
   }
@@ -264,6 +278,43 @@ export class HeaderComponent implements OnInit, AfterViewInit {
     if (dropdown) {
       dropdown.classList.add('hidden');
     }
+  }
+  private popupCenter = (url:string, title:string, w:number, h:number) => {
+    // Fixes dual-screen position                             Most browsers        Firefox
+    const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+    const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+    
+    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+    
+    const systemZoom = width / window.screen.availWidth;
+    const left = (width - w) / 2 / systemZoom + dualScreenLeft
+    const top = (height - h) / 2 / systemZoom + dualScreenTop
+    const newWindow = window.open(url, title,
+      `
+      popup=yes,
+      scrollbars=yes,
+      width=${w / systemZoom},
+      height=${h / systemZoom},
+      top=${top},
+      left=${left}
+      `
+    )
+    newWindow?.focus()
+    return newWindow;
+  }
+  onLoginClick(){
+    if (environment.SIOP === true && this.qrVerifier.intervalId === undefined){
+      this.statePair = uuid.v4()
+      this.qrWindow = this.popupCenter( `${environment.verifierQRCodeURL}?state=${this.statePair}&client_callback=${environment.callbackURLPair}&client_id=${environment.clientIDPair}`,  'Scan QR code',  500, 500);
+      this.initChecking()
+    }
+    else if (environment.SIOP === false){
+      window.location.replace(`${environment.BASE_URL}` +  '/login')
+    }
+  }
+  private initChecking():void {
+    this.qrVerifier.pollServer(this.qrWindow, this.statePair); 
   }
 
   protected readonly faCartShopping = faCartShopping;
