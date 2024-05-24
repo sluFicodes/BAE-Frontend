@@ -415,16 +415,27 @@ export class CreateOfferComponent implements OnInit {
     this.selectedPriceUnit=event.target.value;
   }
 
+  checkValidPrice(){
+    if(this.customSelected && this.priceForm.value.name != ''){
+      return false
+    } else if(!this.priceForm.invalid){
+      return false
+    } else {
+      return true
+    }
+  }
+
   savePrice(){
-    if(this.priceForm.value.name && this.priceForm.value.price){
+    if(this.priceForm.value.name){
       let priceToCreate: ProductOfferingPriceRefOrValue = {
         id: uuidv4(),
         name: this.priceForm.value.name,
         description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",    
-        //percentage: 0,
+        lifecycleStatus: "Active",
         priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-        price: {
+      }
+      if(!this.customSelected && this.priceForm.value.price){
+        priceToCreate.price = {
           percentage: 0,
           taxRate: 20,
           dutyFreeAmount: {
@@ -478,7 +489,7 @@ export class CreateOfferComponent implements OnInit {
       console.log('--- price ---')
       console.log(this.createdPrices)      
     }
-    this.priceAlterForm.reset();
+    this.priceAlterForm.reset()
     this.priceForm.reset();
 
     this.selectedPeriod='DAILY';
@@ -489,6 +500,10 @@ export class CreateOfferComponent implements OnInit {
     this.discountSelected=false;
     this.noAlterSelected=true;
     this.showCreatePrice=false;    
+    this.usageSelected=false;
+    this.recurringSelected=false;
+    this.customSelected=false;
+    this.oneTimeSelected=true;
   }
 
   removePrice(price:any){
@@ -847,6 +862,21 @@ export class CreateOfferComponent implements OnInit {
   }
 
   showFinish(){
+    this.priceAlterForm.reset()
+    this.priceForm.reset();
+
+    this.selectedPeriod='DAILY';
+    this.selectedPeriodAlter='DAILY';
+    this.selectedPriceUnit=currencies[0].code;
+    this.priceTypeAlter='ONE TIME';
+    this.priceComponentSelected=false;
+    this.discountSelected=false;
+    this.noAlterSelected=true;
+    this.showCreatePrice=false;    
+    this.usageSelected=false;
+    this.recurringSelected=false;
+    this.customSelected=false;
+    this.oneTimeSelected=true;
     if(this.generalForm.value.name && this.generalForm.value.version){
       this.offerToCreate={
         name: this.generalForm.value.name,
