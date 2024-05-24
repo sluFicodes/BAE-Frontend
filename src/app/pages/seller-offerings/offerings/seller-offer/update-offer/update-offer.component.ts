@@ -584,9 +584,17 @@ export class UpdateOfferComponent implements OnInit{
       console.log(this.createdPrices)      
     }
     this.priceAlterForm.reset();
-    this.priceAlterForm.clearValidators();
+    this.priceAlterForm.controls['condition'].setValue('');
+    this.priceAlterForm.controls['price'].setValue('');
     this.priceForm.reset();
-    this.priceForm.clearValidators();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
+    // Explicitly mark all controls as pristine and untouched
+    Object.keys(this.priceForm.controls).forEach(key => {
+      this.priceForm.get(key)?.markAsPristine();
+      this.priceForm.get(key)?.markAsUntouched();
+      this.priceForm.get(key)?.updateValueAndValidity();
+    });
 
     this.selectedPeriod='DAILY';
     this.selectedPeriodAlter='DAILY';
@@ -691,6 +699,8 @@ export class UpdateOfferComponent implements OnInit{
 
   closeEditPrice(){
     this.priceForm.reset();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
     this.selectedPeriod='DAILY';
     this.selectedPeriodAlter='DAILY';
     this.selectedPriceUnit=currencies[0].code;
@@ -698,6 +708,10 @@ export class UpdateOfferComponent implements OnInit{
     this.priceComponentSelected=false;
     this.discountSelected=false;
     this.noAlterSelected=true;
+    this.usageSelected=false;
+    this.recurringSelected=false;
+    this.customSelected=false;
+    this.oneTimeSelected=true;
     this.editPrice=false;
   }
 
@@ -1039,8 +1053,12 @@ export class UpdateOfferComponent implements OnInit{
   }
 
   showFinish(){
-    this.priceAlterForm.reset()
+    this.priceAlterForm.reset();
+    this.priceAlterForm.controls['condition'].setValue('');
+    this.priceAlterForm.controls['price'].setValue('');
     this.priceForm.reset();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
 
     this.selectedPeriod='DAILY';
     this.selectedPeriodAlter='DAILY';

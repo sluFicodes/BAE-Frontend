@@ -490,7 +490,12 @@ export class CreateOfferComponent implements OnInit {
       console.log(this.createdPrices)      
     }
     this.priceAlterForm.reset()
+    this.priceAlterForm.controls['condition'].setValue('');
+    this.priceAlterForm.controls['price'].setValue('');
     this.priceForm.reset();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
+    this.cdr.detectChanges();
 
     this.selectedPeriod='DAILY';
     this.selectedPeriodAlter='DAILY';
@@ -863,7 +868,11 @@ export class CreateOfferComponent implements OnInit {
 
   showFinish(){
     this.priceAlterForm.reset()
+    this.priceAlterForm.controls['condition'].setValue('');
+    this.priceAlterForm.controls['price'].setValue('');
     this.priceForm.reset();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
 
     this.selectedPeriod='DAILY';
     this.selectedPeriodAlter='DAILY';
