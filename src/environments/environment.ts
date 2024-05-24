@@ -24,5 +24,9 @@ export const environment = {
     ORDER_LIMIT: 6,
     SIOP: false,
     TAX_RATE: 20,
-    CHAT_API: 'http://85.215.243.214:5000/predict'
+    CHAT_API: 'http://85.215.243.214:5000/predict',
+    verifierQRCodeURL: '/login',
+    callbackURLPair: '1223',
+    clientIDPair: '3344',
+    pollURL: '/poll'
 };
