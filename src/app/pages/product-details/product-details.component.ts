@@ -152,15 +152,6 @@ export class ProductDetailsComponent implements OnInit {
   getProductImage() {
     return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
-  getPrice() {
-    let result:any= this.priceService.formatCheapestPricePlan(this.productOff);
-    return {
-      "price": result.price,
-      "unit": result.unit,
-      "priceType": result.priceType,
-      "text": result.text
-    }
-  }
 
   removeClass(elem: HTMLElement, cls:string) {
     var str = " " + elem.className + " ";

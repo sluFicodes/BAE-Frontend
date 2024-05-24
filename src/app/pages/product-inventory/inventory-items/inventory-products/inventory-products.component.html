@@ -147,13 +147,20 @@
                             }
                         </div>
                         </div>
-                    
-                        <div class="flex flex-col place-content-center items-baseline mb-5 w-full">
-                            <div class="flex place-content-center items-baseline w-full">
-                            <span class="text-2xl font-bold text-gray-900 mr-1">{{inv.price?.price}} {{inv.price.unit}}</span>
-                            <span class="text-xs font-bold text-gray-900">{{inv.price.text}}</span>
+                        @if(inv.price){
+                            <div class="flex flex-col place-content-center items-baseline mb-5 w-full">
+                                <div class="flex place-content-center items-baseline w-full">
+                                <span class="text-2xl font-bold text-gray-900 mr-1">{{inv.price?.price}} {{inv.price?.unit}}</span>
+                                <span class="text-xs font-bold text-gray-900">{{inv.price?.text}}</span>
+                                </div>
                             </div>
-                        </div>
+                        } @else {
+                            <div class="flex flex-col place-content-center items-baseline mb-5 w-full">
+                                <div class="flex place-content-center items-baseline w-full">
+                                <span class="text-2xl font-bold text-gray-900 mr-1">{{ 'SHOPPING_CART._free' | translate }}</span>
+                                </div>
+                            </div>
+                        }
                         </div>
                     </div>
                     </div>

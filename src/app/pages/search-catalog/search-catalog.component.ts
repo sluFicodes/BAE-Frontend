@@ -78,29 +78,60 @@ export class SearchCatalogComponent implements OnInit{
               attachment = spec.attachment
               let prodPrices: any[] | undefined= data[i].productOfferingPrice;
               let prices: any[]=[];
-              if(prodPrices!== undefined){            
-                for(let j=0; j < prodPrices.length; j++){
-                  this.api.getProductPrice(prodPrices[j].id).then(price => {
-                    prices.push(price);
-                    if(j+1==prodPrices?.length){
-                      this.products.push(
-                        {
-                          id: data[i].id,
-                          name: data[i].name,
-                          category: data[i].category,
-                          description: data[i].description,
-                          lastUpdate: data[i].lastUpdate,
-                          attachment: attachment,
-                          productOfferingPrice: prices,
-                          productSpecification: data[i].productSpecification,
-                          productOfferingTerm: data[i].productOfferingTerm,
-                          version: data[i].version
-                        }
-                      )
-                      this.cdr.detectChanges();
-                    }                
-                  })
+              if(prodPrices!== undefined){
+                if(prodPrices.length>0){          
+                  for(let j=0; j < prodPrices.length; j++){
+                    this.api.getProductPrice(prodPrices[j].id).then(price => {
+                      prices.push(price);
+                      if(j+1==prodPrices?.length){
+                        this.products.push(
+                          {
+                            id: data[i].id,
+                            name: data[i].name,
+                            category: data[i].category,
+                            description: data[i].description,
+                            lastUpdate: data[i].lastUpdate,
+                            attachment: attachment,
+                            productOfferingPrice: prices,
+                            productSpecification: data[i].productSpecification,
+                            productOfferingTerm: data[i].productOfferingTerm,
+                            version: data[i].version
+                          }
+                        )
+                        this.cdr.detectChanges();
+                      }                
+                    })
+                  }
+                } else {
+                  this.products.push(
+                    {
+                      id: data[i].id,
+                      name: data[i].name,
+                      category: data[i].category,
+                      description: data[i].description,
+                      lastUpdate: data[i].lastUpdate,
+                      attachment: attachment,
+                      productOfferingPrice: prices,
+                      productSpecification: data[i].productSpecification,
+                      productOfferingTerm: data[i].productOfferingTerm,
+                      version: data[i].version
+                    })                    
                 }
+              } else {
+                this.products.push(
+                  {
+                    id: data[i].id,
+                    name: data[i].name,
+                    category: data[i].category,
+                    description: data[i].description,
+                    lastUpdate: data[i].lastUpdate,
+                    attachment: attachment,
+                    productOfferingPrice: prices,
+                    productSpecification: data[i].productSpecification,
+                    productOfferingTerm: data[i].productOfferingTerm,
+                    version: data[i].version
+                  }
+                )
               }
             })
         }
@@ -122,29 +153,61 @@ export class SearchCatalogComponent implements OnInit{
               attachment = spec.attachment
               let prodPrices: any[] | undefined= data[i].productOfferingPrice;
               let prices: any[]=[];
-              if(prodPrices!== undefined){            
-                for(let j=0; j < prodPrices.length; j++){
-                  this.api.getProductPrice(prodPrices[j].id).then(price => {
-                    prices.push(price);
-                    if(j+1==prodPrices?.length){
-                      this.products.push(
-                        {
-                          id: data[i].id,
-                          name: data[i].name,
-                          category: data[i].category,
-                          description: data[i].description,
-                          lastUpdate: data[i].lastUpdate,
-                          attachment: attachment,
-                          productOfferingPrice: prices,
-                          productSpecification: data[i].productSpecification,
-                          productOfferingTerm: data[i].productOfferingTerm,
-                          version: data[i].version
-                        }
-                      )
-                      this.cdr.detectChanges();
+              if(prodPrices!== undefined){   
+                if(prodPrices.length>0){         
+                  for(let j=0; j < prodPrices.length; j++){
+                    this.api.getProductPrice(prodPrices[j].id).then(price => {
+                      prices.push(price);
+                      if(j+1==prodPrices?.length){
+                        this.products.push(
+                          {
+                            id: data[i].id,
+                            name: data[i].name,
+                            category: data[i].category,
+                            description: data[i].description,
+                            lastUpdate: data[i].lastUpdate,
+                            attachment: attachment,
+                            productOfferingPrice: prices,
+                            productSpecification: data[i].productSpecification,
+                            productOfferingTerm: data[i].productOfferingTerm,
+                            version: data[i].version
+                          }
+                        )
+                        this.cdr.detectChanges();
+                      }
+                    })
+                  }
+                } else {
+                  this.products.push(
+                    {
+                      id: data[i].id,
+                      name: data[i].name,
+                      category: data[i].category,
+                      description: data[i].description,
+                      lastUpdate: data[i].lastUpdate,
+                      attachment: attachment,
+                      productOfferingPrice: prices,
+                      productSpecification: data[i].productSpecification,
+                      productOfferingTerm: data[i].productOfferingTerm,
+                      version: data[i].version
                     }
-                  })
+                  )                  
                 }
+              } else {
+                this.products.push(
+                  {
+                    id: data[i].id,
+                    name: data[i].name,
+                    category: data[i].category,
+                    description: data[i].description,
+                    lastUpdate: data[i].lastUpdate,
+                    attachment: attachment,
+                    productOfferingPrice: prices,
+                    productSpecification: data[i].productSpecification,
+                    productOfferingTerm: data[i].productOfferingTerm,
+                    version: data[i].version
+                  }
+                )
               }
             })
         }

@@ -117,7 +117,26 @@ export class OrderInfoComponent implements OnInit {
             for(let j=0;j<this.orders[i].productOrderItem.length;j++){
               this.api.getProductById(this.orders[i].productOrderItem[j].id).then(item => {
                 this.api.getProductSpecification(item.productSpecification.id).then(spec => {
-                  this.api.getProductPrice(item.productOfferingPrice[0].id).then(prodprice => {
+                  if(item.productOfferingPrice == undefined ||  item.productOfferingPrice.length == 0){
+                    items.push({
+                      id: item.id,
+                      name: item.name,
+                      category: item.category,
+                      description: item.description,
+                      lastUpdate: item.lastUpdate,
+                      attachment: spec.attachment,
+                      /*productOfferingPrice: {
+                        "price": prodprice.price.value,
+                        "unit": prodprice.price.unit,
+                        "priceType": prodprice.priceType,
+                        "text": prodprice.unitOfMeasure != undefined ? '/'+prodprice.unitOfMeasure.units : prodprice.recurringChargePeriodType
+                      },*/
+                      productSpecification: item.productSpecification,
+                      productOfferingTerm: item.productOfferingTerm,
+                      version: item.version
+                    })
+                  } else {
+                    this.api.getProductPrice(item.productOfferingPrice[0].id).then(prodprice => {
                       items.push({
                         id: item.id,
                         name: item.name,
@@ -137,7 +156,8 @@ export class OrderInfoComponent implements OnInit {
                       })
                       this.loading=false;
                       this.loading_more=false;
-                  })
+                    })
+                  }
                 })
               })
             }
@@ -223,18 +243,22 @@ export class OrderInfoComponent implements OnInit {
     let insertCheck = false;
     for(let i=0; i<items.length; i++){
       insertCheck = false;
-      if(totalPrice.length == 0){
+      if(totalPrice.length == 0 && items[i].productOfferingPrice != undefined){
         totalPrice.push(items[i].productOfferingPrice);
       } else {
         for(let j=0; j<totalPrice.length; j++){
-          if(items[i].productOfferingPrice.priceType == totalPrice[j].priceType && items[i].productOfferingPrice.unit == totalPrice[j].unit && items[i].productOfferingPrice.text == totalPrice[j].text){
-            totalPrice[j].price=totalPrice[j].price+items[i].productOfferingPrice.price;
-            insertCheck=true;
+          if(items[i].productOfferingPrice != undefined){
+            if(items[i].productOfferingPrice.priceType == totalPrice[j].priceType && items[i].productOfferingPrice.unit == totalPrice[j].unit && items[i].productOfferingPrice.text == totalPrice[j].text){
+              totalPrice[j].price=totalPrice[j].price+items[i].productOfferingPrice.price;
+              insertCheck=true;
+            }
           }
         }
         if(insertCheck==false){
-          totalPrice.push(items[i].productOfferingPrice);
-          insertCheck=true;
+          if(items[i].productOfferingPrice != undefined){
+            totalPrice.push(items[i].productOfferingPrice);
+            insertCheck=true;
+          }
         }
       }
     }

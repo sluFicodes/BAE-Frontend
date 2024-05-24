@@ -100,8 +100,8 @@
                <div class="p-2 flex items-center">
                   @if (item.options.pricing) {
                      <div class="flex place-content-center flex-col">
-                        <span class="text-3xl font-bold text-primary-100 mr-3">{{getPrice(item).price}} {{getPrice(item).unit}}</span>
-                        <span class="text-xs text-primary-100">{{getPrice(item).text}}</span>
+                        <span class="text-3xl font-bold text-primary-100 mr-3">{{getPrice(item)?.price}} {{getPrice(item)?.unit}}</span>
+                        <span class="text-xs text-primary-100">{{getPrice(item)?.text}}</span>
                       </div>
                   }
                </div>
@@ -122,7 +122,7 @@
             @for (price of totalPrice; track price) {
               <p class="text-sm text-body">{{ formatter.format(price.price)}} {{price.text ? price.text : 'single'}}</p>
             } @empty {
-              <span class="text-sm text-body">{{ formatter.format(0) }}</span>
+              <span class="text-sm text-body">{{ 'SHOPPING_CART._free' | translate }}</span>
             }
             </div>
           </div>

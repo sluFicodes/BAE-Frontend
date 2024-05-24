@@ -136,7 +136,7 @@ export class CreateOfferComponent implements OnInit {
   creatingPrice:any;
   priceDescription:string='';
   showCreatePrice:boolean=false;
-  toggleFreePrice:boolean=false;
+  toggleOpenPrice:boolean=false;
   oneTimeSelected:boolean=true;
   recurringSelected:boolean=false;
   selectedPeriod:any='DAILY';
@@ -416,7 +416,7 @@ export class CreateOfferComponent implements OnInit {
   }
 
   savePrice(){
-    if(this.priceForm.value.name && this.priceForm.value.price && !this.toggleFreePrice){
+    if(this.priceForm.value.name && this.priceForm.value.price){
       let priceToCreate: ProductOfferingPriceRefOrValue = {
         id: uuidv4(),
         name: this.priceForm.value.name,
@@ -906,10 +906,7 @@ export class CreateOfferComponent implements OnInit {
         });
       }
     } else {
-      this.createdPrices.push({
-        name: 'Open',
-        description: 'The offering is open, so it can be directly accessed'
-      })
+      this.createdPrices=[];
       this.saveOfferInfo();
     }
     console.log(this.offerToCreate)
