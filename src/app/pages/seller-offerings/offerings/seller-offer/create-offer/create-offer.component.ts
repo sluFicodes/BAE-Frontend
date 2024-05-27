@@ -518,6 +518,14 @@ export class CreateOfferComponent implements OnInit {
     }
   }
 
+  checkCustom(){
+    if(this.createdPrices.length==1 && this.createdPrices[0].priceType=='custom'){
+      return true
+    } else {
+      return false
+    }
+  }
+
   onSLAMetricChange(event: any) {
     this.creatingSLA.unitMeasure=event.target.value;
   }

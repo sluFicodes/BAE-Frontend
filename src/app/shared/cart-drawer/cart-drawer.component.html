@@ -30,8 +30,8 @@
                <div class="p-2 flex items-center">
                   @if (item.options.pricing) {
                      <div class="flex place-content-center flex-col">
-                        <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice(item).price}} {{getPrice(item).unit}}</span>
-                        <span class="text-xs dark:text-primary-50">{{getPrice(item).text}}</span>
+                        <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice(item)?.price}} {{getPrice(item)?.unit}}</span>
+                        <span class="text-xs dark:text-primary-50">{{getPrice(item)?.text}}</span>
                       </div>
                   }
                </div>
@@ -60,7 +60,11 @@
             @for (price of totalPrice; track price) {
                <p class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{price.price}} {{price.unit}} {{price.text}}</p>
             } @empty {
-               <p class="flex flex-right text-gray-700 dark:text-gray-400 justify-end">0.</p>
+               @if(check_custom){
+                  <span class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{ 'SHOPPING_CART._calculated' | translate }}</span>
+                } @else {
+                  <span class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{ 'SHOPPING_CART._free' | translate }}</span>
+                } 
             }
          </div>
    </div>  

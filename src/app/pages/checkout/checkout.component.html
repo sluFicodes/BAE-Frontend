@@ -136,7 +136,11 @@
             @for (price of totalPrice; track price) {
               <p class="text-sm text-body">{{ formatter.format(price.price)}} {{price.text ? price.text : 'single'}}</p>
             } @empty {
-              <span class="text-sm text-body">{{ 'SHOPPING_CART._free' | translate }}</span>
+              @if(check_custom){
+                <span class="text-sm text-body">{{ 'SHOPPING_CART._calculated' | translate }}</span>
+              } @else {
+                <span class="text-sm text-body">{{ 'SHOPPING_CART._free' | translate }}</span>
+              }              
             }
             </div>
           </div>

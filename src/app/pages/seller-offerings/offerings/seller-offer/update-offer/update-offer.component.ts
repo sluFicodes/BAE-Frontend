@@ -615,8 +615,10 @@ export class UpdateOfferComponent implements OnInit{
     console.log(this.priceToUpdate)
     this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
     this.priceForm.controls['description'].setValue(this.priceToUpdate.description);
-    this.priceForm.controls['price'].setValue(this.priceToUpdate.price.taxIncludedAmount.value);
-    this.selectedPriceUnit=this.priceToUpdate.price.taxIncludedAmount.unit;
+    if(this.priceToUpdate.priceType!='custom'){
+      this.priceForm.controls['price'].setValue(this.priceToUpdate.price.taxIncludedAmount.value);
+      this.selectedPriceUnit=this.priceToUpdate.price.taxIncludedAmount.unit;
+    }
     this.cdr.detectChanges();
     console.log(this.selectedPriceUnit)
     if(this.priceToUpdate.priceType=='one time'){
@@ -719,6 +721,14 @@ export class UpdateOfferComponent implements OnInit{
     const index = this.createdPrices.findIndex(item => item.id === price.id);
     if (index !== -1) {
       this.createdPrices.splice(index, 1);
+    }
+  }
+
+  checkCustom(){
+    if(this.createdPrices.length==1 && this.createdPrices[0].priceType=='custom'){
+      return true
+    } else {
+      return false
     }
   }
 

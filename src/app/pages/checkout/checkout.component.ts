@@ -40,6 +40,7 @@ export class CheckoutComponent implements OnInit {
   formatter: any;
   preferred:boolean=false;
   loading_purchase:boolean=false;
+  check_custom:boolean=false;
 
 
   constructor(
@@ -75,11 +76,16 @@ export class CheckoutComponent implements OnInit {
 
   getPrice(item: any) {
     if(item.options.pricing != undefined){
-      return {
-        'priceType': item.options.pricing.priceType,
-        'price': item.options.pricing.price?.value,
-        'unit': item.options.pricing.price?.unit,
-        'text': item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? item.options.pricing.recurringChargePeriodType : item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ ' + item.options.pricing?.unitOfMeasure?.units : ''
+      if(item.options.pricing.priceType=='custom'){
+        this.check_custom=true;
+        return null
+      } else {
+        return {
+          'priceType': item.options.pricing.priceType,
+          'price': item.options.pricing.price?.value,
+          'unit': item.options.pricing.price?.unit,
+          'text': item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? item.options.pricing.recurringChargePeriodType : item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ ' + item.options.pricing?.unitOfMeasure?.units : ''
+        }
       }
     } else {
       return null
@@ -89,6 +95,8 @@ export class CheckoutComponent implements OnInit {
   getTotalPrice() {
     this.totalPrice = [];
     let insertCheck = false;
+    this.check_custom=false;
+    this.cdr.detectChanges();
     let priceInfo: any = {};
     for (let i = 0; i < this.items.length; i++) {
       console.log('totalprice')
@@ -146,27 +154,29 @@ export class CheckoutComponent implements OnInit {
       }
       let productPrice: { description: string | undefined; name: string | undefined; price: { taxIncludedAmount: { value: number | undefined; unit: string | undefined; }; taxRate: number; }; priceType: string | undefined; recurringChargePeriod: string | undefined; unitOfMeasure: string | undefined; id: string | undefined; productOfferingPrice: { id: string | undefined; href: string | undefined; }; }[] = []
       if(this.items[i].options.pricing != undefined){
-        productPrice = [
-          {
-            "description": this.items[i].options.pricing?.description,
-            "name": this.items[i].options.pricing?.name,
-            "price": {
-              "taxIncludedAmount": {
-                "value": this.items[i].options.pricing?.price?.value,
-                "unit": this.items[i].options.pricing?.price?.unit
+        if(this.items[i].options?.pricing?.priceType != 'custom'){
+          productPrice = [
+            {
+              "description": this.items[i].options.pricing?.description,
+              "name": this.items[i].options.pricing?.name,
+              "price": {
+                "taxIncludedAmount": {
+                  "value": this.items[i].options.pricing?.price?.value,
+                  "unit": this.items[i].options.pricing?.price?.unit
+                },
+                "taxRate": this.TAX_RATE
               },
-              "taxRate": this.TAX_RATE
-            },
-            "priceType": this.items[i].options.pricing?.priceType,
-            "recurringChargePeriod": this.items[i].options.pricing?.recurringChargePeriodType != undefined ? this.items[i].options.pricing?.recurringChargePeriodType : '',
-            "unitOfMeasure": this.items[i].options.pricing?.unitOfMeasure != undefined ? this.items[i].options.pricing?.unitOfMeasure?.units : '',
-            "id": this.items[i].options.pricing?.id,
-            "productOfferingPrice": {
+              "priceType": this.items[i].options.pricing?.priceType,
+              "recurringChargePeriod": this.items[i].options.pricing?.recurringChargePeriodType != undefined ? this.items[i].options.pricing?.recurringChargePeriodType : '',
+              "unitOfMeasure": this.items[i].options.pricing?.unitOfMeasure != undefined ? this.items[i].options.pricing?.unitOfMeasure?.units : '',
               "id": this.items[i].options.pricing?.id,
-              "href": this.items[i].options.pricing?.href,
+              "productOfferingPrice": {
+                "id": this.items[i].options.pricing?.id,
+                "href": this.items[i].options.pricing?.href,
+              }
             }
-          }
-        ]
+          ]
+        }
       }
       
       products.push({

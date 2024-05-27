@@ -104,7 +104,9 @@ export class InventoryProductsComponent implements OnInit {
       this.api.getProductById(this.inventory[i].productOffering.id).then(prod=> {           
         let attachment: any[]= []
         this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
-          attachment = spec.attachment
+          if(spec.attachment){
+            attachment = spec.attachment
+          }          
           this.inventory[i]['product'] = {
             id: prod.id,
             name: prod.name,
@@ -117,12 +119,37 @@ export class InventoryProductsComponent implements OnInit {
             productOfferingTerm: prod.productOfferingTerm,
             version: prod.version
           };
-          this.inventory[i]['price']={
-            "price": this.inventory[i].productPrice[0].price.taxIncludedAmount.value,
-            "unit": this.inventory[i].productPrice[0].price.taxIncludedAmount.unit,
-            "priceType": this.inventory[i].productPrice[0].priceType,
-            "text": this.inventory[i].productPrice[0].unitOfMeasure != undefined ? '/'+this.inventory[i].productPrice[0].unitOfMeasure : this.inventory[i].productPrice[0].recurringChargePeriodType
+
+          if(this.inventory[i].productPrice){
+            if(this.inventory[i].productPrice.length>0){
+              this.inventory[i]['price']={
+                "price": this.inventory[i].productPrice[0].price.taxIncludedAmount.value,
+                "unit": this.inventory[i].productPrice[0].price.taxIncludedAmount.unit,
+                "priceType": this.inventory[i].productPrice[0].priceType,
+                "text": this.inventory[i].productPrice[0].unitOfMeasure != undefined ? '/'+this.inventory[i].productPrice[0].unitOfMeasure : this.inventory[i].productPrice[0].recurringChargePeriodType
+              }
+            } else {
+              if(prod.productOfferingPrice){
+                if(prod.productOfferingPrice.length==1){
+                  this.api.getProductPrice(prod.productOfferingPrice[0].id).then(price => {
+                    console.log(price)
+                    this.inventory[i]['price']={
+                      "price": '',
+                      "unit": '',
+                      "priceType": price.priceType,
+                      "text": ''
+                    }
+                  })
+                }
+              }
+              console.log('----')
+              console.log(prod.name)
+              console.log(this.inventory[i])
+              console.log(prod)
+            }
+
           }
+
           this.loading=false;
           this.loading_more=false;
           this.cdr.detectChanges();
@@ -166,7 +193,9 @@ export class InventoryProductsComponent implements OnInit {
       console.log(this.inventory)
       this.getOffers(existingInventorySize);
       this.cdr.detectChanges();
-
+      if(data.length==0){
+        this.loading_more=false;
+      }
       //this.loading_more=false;
       this.loading=false;
       this.cdr.detectChanges();
