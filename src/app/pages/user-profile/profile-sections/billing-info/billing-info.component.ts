@@ -92,10 +92,12 @@ export class BillingInfoComponent implements OnInit{
     initFlowbite();
   }
 
-  getBilling(){   
+  getBilling(){
+    let isBillSelected=false;
     this.accountService.getBillingAccount().then(data => {
       this.billing_accounts=[];
       for(let i=0; i< data.length;i++){
+        isBillSelected=false;
         let email =''
         let phone=''
         let phoneType = ''
@@ -121,7 +123,11 @@ export class BillingInfoComponent implements OnInit{
             phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
             phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
           }
+          if(data[i].contact[0].contactMedium[j].preferred==true){
+            isBillSelected=true;
+          }
         }
+        console.log(data[i])
         this.billing_accounts.push({
           "id": data[i].id,
           "href": data[i].href,
@@ -130,9 +136,9 @@ export class BillingInfoComponent implements OnInit{
           "postalAddress": address,
           "telephoneNumber": phone,
           "telephoneType": phoneType,
-          "selected": i==0 ? true : false
+          "selected": isBillSelected
         })
-        if(i==0){
+        if(isBillSelected){
           this.selectedBilling={
             "id": data[i].id,
             "href": data[i].href,
@@ -150,18 +156,72 @@ export class BillingInfoComponent implements OnInit{
       }else{
         this.preferred=true;
       }
+      console.log(this.billing_accounts)
       this.cdr.detectChanges();
     })
+    
     this.cdr.detectChanges();
     initFlowbite();
   }
 
   selectBill(baddr: billingAccountCart){
-    for(let ba of this.billing_accounts){
-      ba.selected = false;
+    const index = this.billing_accounts.findIndex(item => item.id === baddr.id);
+    for(let i=0; i < this.billing_accounts.length; i++){
+      if(i==index){
+        this.billing_accounts[i].selected=true;
+        this.selectedBilling=this.billing_accounts[i];
+      } else {
+        this.billing_accounts[i].selected=false;
+      }
+      this.updateBilling(this.billing_accounts[i])
     }
-    this.selectedBilling = baddr;
     this.cdr.detectChanges();
+  }
+
+  updateBilling(bill:billingAccountCart) {
+      let bill_body = {
+        name: bill.name,
+        contact: [{
+          contactMedium: [
+            {
+              mediumType: 'Email',
+              preferred: bill.selected,
+              characteristic: {
+                contactType: 'Email',
+                emailAddress: bill.email
+              }
+            },
+            {
+              mediumType: 'PostalAddress',
+              preferred: bill.selected,
+              characteristic: {
+                contactType: 'PostalAddress',
+                city: bill.postalAddress.city,
+                country: bill.postalAddress.country,
+                postCode: bill.postalAddress.postCode,
+                stateOrProvince: bill.postalAddress.stateOrProvince,
+                street1: bill.postalAddress.street
+              }
+            },
+            {
+              mediumType: 'TelephoneNumber',
+              preferred: bill.selected,
+              characteristic: {
+                contactType: bill.telephoneType,
+                phoneNumber: bill.telephoneNumber
+              }
+            }
+          ]
+        }]
+      }
+      this.accountService.updateBillingAccount(bill.id, bill_body).subscribe({
+        next: data => {
+          this.eventMessage.emitBillAccChange(false);
+        },
+        error: error => {
+          console.error('There was an error while updating!', error);
+        }
+      });
   }
 
   onDeletedBill(baddr: billingAccountCart) {

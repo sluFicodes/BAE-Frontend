@@ -272,9 +272,11 @@ export class CheckoutComponent implements OnInit {
   }
 
   getBilling(){
+    let isBillSelected=false;
     this.billingAddresses=[];
     this.account.getBillingAccount().then(data => {
       for (let i = 0; i < data.length; i++) {
+        isBillSelected=false;
         let email = ''
         let phone = ''
         let phoneType = ''
@@ -301,6 +303,9 @@ export class CheckoutComponent implements OnInit {
               phone = data[i].contact[0].contactMedium[j].characteristic.phoneNumber
               phoneType = data[i].contact[0].contactMedium[j].characteristic.contactType
             }
+            if(data[i].contact[0].contactMedium[j].preferred==true){
+              isBillSelected=true;
+            }
           }
         }
         const baddr = {
@@ -311,10 +316,10 @@ export class CheckoutComponent implements OnInit {
           "postalAddress": address ?? {},
           "telephoneNumber": phone ?? '',
           "telephoneType": phoneType ?? '',
-          "selected": i == 0
+          "selected": isBillSelected
         }
         this.billingAddresses.push(baddr)
-        if (i == 0) {
+        if (isBillSelected) {
           this.selectedBillingAddress = baddr
         }
       }
