@@ -738,6 +738,11 @@ export class UpdateProductSpecComponent implements OnInit{
     const index = this.prodAttachments.findIndex(item => item.url === att.url);
     if (index !== -1) {
       console.log('eliminar')
+      if(this.prodAttachments[index].name=='Profile Picture'){
+        this.showImgPreview=false;
+        this.imgPreview='';
+        this.cdr.detectChanges();
+      }
       this.prodAttachments.splice(index, 1);
     }  
     this.cdr.detectChanges();
