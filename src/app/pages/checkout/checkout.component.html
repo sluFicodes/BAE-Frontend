@@ -1,3 +1,17 @@
+@if(loading_purchase){
+  <div class="absolute bg-white dark:bg-gray-400 dark:bg-opacity-60 bg-opacity-60 z-10 h-full w-full flex items-center justify-center">
+    <div class="flex items-center">
+      <span class="text-3xl text-bold mr-4 text-primary-100">{{ 'SHOPPING_CART._loading_purchase' | translate }}</span>
+      <svg class="animate-spin h-8 w-8 text-primary-100" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+        </path>
+      </svg>
+    </div>
+  </div>
+}
 <div class="container mx-auto px-4 py-8 lg:py-10 lg:px-8 xl:py-14 xl:px-16 2xl:px-20">
   <h1 class="mb-4 pb-2 mt-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white w-full"><span class="underline underline-offset-3 decoration-8 decoration-primary-100 dark:decoration-primary-100">{{ 'SHOPPING_CART._checkout' | translate }}</span></h1>
   <div class="m-auto flex w-full flex-col items-center rtl:space-x-reverse lg:flex-row lg:items-start lg:space-x-8">
@@ -7,7 +21,7 @@
         <div class="mb-5 flex items-center justify-between md:mb-8">
           <div class="flex items-center space-x-3 rtl:space-x-reverse md:space-x-4"><span
             class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-base text-white lg:text-xl">1</span>
-            <p class="text-lg capitalize text-heading lg:text-xl">Contact</p>
+            <p class="text-lg capitalize text-heading lg:text-xl">{{ 'SHOPPING_CART._contact' | translate }}</p>
           </div>
 
           <button
@@ -15,12 +29,12 @@
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 stroke-2 ltr:mr-0.5 rtl:ml-0.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
-            Update
+            {{ 'SHOPPING_CART._update' | translate }}
           </button>
         </div>
         <div class="w-full">
           <div class="">
-            <div class="special-label">Contact Person</div>
+            <div class="special-label">{{ 'SHOPPING_CART._contact_person' | translate }}</div>
             <p class="text-lg text-heading lg:text-xl">{{contact.username}} {{contact.email}}</p>
           </div>
         </div>
@@ -29,7 +43,7 @@
         <div class="mb-5 flex items-center justify-between md:mb-8">
           <div class="flex items-center space-x-3 rtl:space-x-reverse md:space-x-4"><span
             class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-base text-white lg:text-xl">2</span>
-            <p class="text-lg capitalize text-heading lg:text-xl">Billing Address</p></div>
+            <p class="text-lg capitalize text-heading lg:text-xl">{{ 'SHOPPING_CART._billingAddress' | translate }}</p></div>
           <button
             (click)="addBill=true;$event.stopPropagation();"
             class="flex items-center text-sm font-semibold text-accent transition-colors duration-200 hover:text-accent-hover focus:text-accent-hover focus:outline-0">
@@ -41,7 +55,7 @@
         </div>
 
         <div id="billing-addresses" role="radiogroup" aria-labelledby="billing-addresses">
-          <label class="sr-only" id="billing-addresses-label" role="none">Billing Address</label>
+          <label class="sr-only" id="billing-addresses-label" role="none">{{ 'SHOPPING_CART._billingAddress' | translate }}</label>
           @if (billingAddresses.length > 0) {
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3" role="none">
               @for(baddr of billingAddresses; track baddr.id; let pos = $index) {
@@ -62,7 +76,7 @@
         <div class="mb-5 flex items-center justify-between md:mb-8">
           <div class="flex items-center space-x-3 rtl:space-x-reverse md:space-x-4"><span
             class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-base text-white lg:text-xl">3</span>
-            <p class="text-lg capitalize text-heading lg:text-xl">Order Note</p></div>
+            <p class="text-lg capitalize text-heading lg:text-xl">{{ 'SHOPPING_CART._order_note' | translate }}</p></div>
         </div>
         <div class="block">
           <div><textarea id="large-input" name="orderNote"
@@ -75,7 +89,7 @@
     <div class="w-3/4 rounded rounded-lg bg-secondary-50 p-4">
       <div class="w-full">
         <div class="mb-4 flex flex-col items-center space-x-4 rtl:space-x-reverse">
-          <span class="text-2xl text-start font-bold">Your Order</span></div>
+          <span class="text-2xl text-start font-bold">{{ 'SHOPPING_CART._your_order' | translate }}</span></div>
         <div class="flex flex-col border-b border-border-200 py-3">
           @for (item of items; track item.id; let idx = $index) {
           <!-- <div class="flex justify-between py-2">
@@ -117,7 +131,7 @@
         </div>
         <div class="mt-4 space-y-2">
           <div class="flex justify-between text-primary-100 font-bold">
-            <p class="text-sm text-body">Sub Total</p>
+            <p class="text-sm text-body">{{ 'SHOPPING_CART._subtotal' | translate }}</p>
             <div class="flex flex-col items-end">
             @for (price of totalPrice; track price) {
               <p class="text-sm text-body">{{ formatter.format(price.price)}} {{price.text ? price.text : 'single'}}</p>
@@ -126,10 +140,10 @@
             }
             </div>
           </div>
-          <div class="flex justify-between"><p class="text-sm text-body">Tax</p><span class="text-sm text-body">Calculated at checkout</span>
+          <div class="flex justify-between"><p class="text-sm text-body">Tax</p><span class="text-sm text-body">{{ 'SHOPPING_CART._calculated' | translate }}</span>
           </div>
-          <div class="flex justify-between"><p class="text-sm text-body">Service fee*</p><span
-            class="text-sm text-body">Calculated at checkout</span></div>
+          <div class="flex justify-between"><p class="text-sm text-body">{{ 'SHOPPING_CART._fee' | translate }}</p><span
+            class="text-sm text-body">{{ 'SHOPPING_CART._calculated' | translate }}</span></div>
         </div>
         <button class="inline-flex items-center justify-center shrink-0 font-semibold leading-none rounded outline-none transition duration-300 ease-in-out focus:outline-0 focus:shadow focus:ring-1 focus:ring-accent-700 bg-primary-50 text-white border border-transparent hover:bg-secondary-100 px-5 py-0 h-12 mt-5 w-full"
                 (click)="orderProduct()">

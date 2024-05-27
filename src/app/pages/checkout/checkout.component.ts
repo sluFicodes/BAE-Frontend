@@ -39,6 +39,7 @@ export class CheckoutComponent implements OnInit {
   contact = {email: '', username: ''};
   formatter: any;
   preferred:boolean=false;
+  loading_purchase:boolean=false;
 
 
   constructor(
@@ -129,6 +130,7 @@ export class CheckoutComponent implements OnInit {
   async orderProduct(){
     console.log('buying')
     console.log(moment().utc())
+    this.loading_purchase=true;
     let products = []
     for(let i = 0; i<this.items.length; i++){
       let char = [];
@@ -216,6 +218,7 @@ export class CheckoutComponent implements OnInit {
             console.error('There was an error while updating!', error);
           }
         });
+        this.loading_purchase=false;
         this.goToInventory();
       },
       error: error => {
