@@ -31,14 +31,10 @@ export const environment = {
     pollURL: '/poll',
     SIOP_INFO: {
         enabled: false,
-        provider: "",
         pollPath: "",
         clientID: "",
         callbackURL: "",
         verifierHost: "",
         verifierQRCodePath: "",
-        verifierTokenPath: "",
-        verifierJWKSPath: "",
-        allowedRoles: []
     }
 };
