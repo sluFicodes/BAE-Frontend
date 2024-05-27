@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild,ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
@@ -10,6 +10,9 @@ type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 //type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 import { certifications } from 'src/app/models/certification-standards.const'
+import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { LoginInfo } from 'src/app/models/interfaces';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-product-details',
@@ -41,6 +44,7 @@ export class ProductDetailsComponent implements OnInit {
   complianceLevel:number=1;
   serviceSpecs:any[] = [];
   resourceSpecs:any[]=[];
+  check_logged:boolean=false;
   protected readonly faScaleBalanced = faScaleBalanced;
   protected readonly faArrowProgress = faArrowProgress;
   protected readonly faArrowRightArrowLeft = faArrowRightArrowLeft;
@@ -52,16 +56,26 @@ export class ProductDetailsComponent implements OnInit {
   protected readonly faAtom = faAtom;
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
     private api: ApiServiceService,
     private priceService: PriceServiceService,
     private router: Router,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private localStorage: LocalStorageService,
   ) {
   }
 
   ngOnInit() {
     initFlowbite();
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      this.check_logged=true;
+      this.cdr.detectChanges();
+    } else {
+      this.check_logged=false,
+      this.cdr.detectChanges();
+    }
     window.scrollTo(0, 0);
     this.id = this.route.snapshot.paramMap.get('id');
     console.log('--- Details ID:')
@@ -143,6 +157,10 @@ export class ProductDetailsComponent implements OnInit {
       })
     })
 
+  }
+
+  toggleCartSelection(){
+    console.log('Add to cart...')
   }
 
   goTo(path:string) {
