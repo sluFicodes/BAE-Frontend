@@ -28,5 +28,17 @@ export const environment = {
     verifierQRCodeURL: '/login',
     callbackURLPair: '1223',
     clientIDPair: '3344',
-    pollURL: '/poll'
+    pollURL: '/poll',
+    SIOP_INFO: {
+        enabled: false,
+        provider: "",
+        pollPath: "",
+        clientID: "",
+        callbackURL: "",
+        verifierHost: "",
+        verifierQRCodePath: "",
+        verifierTokenPath: "",
+        verifierJWKSPath: "",
+        allowedRoles: []
+    }
 };

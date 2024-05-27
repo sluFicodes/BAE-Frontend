@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
     let aux =this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) === '{}'){
       this.siopInfo.getSiopInfo().subscribe((data)=>{
-        environment.SIOP= data.siopEnabled
+        environment.SIOP_INFO= data
       })
     }
     else if (((aux.expire - moment().unix())-4) > 0) {

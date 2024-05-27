@@ -15,7 +15,7 @@ export class QrVerifierService {
     this._intervalId = value;
   }
   private fetchServer(thePopup:Window, state:string):void {
-          fetch(`${environment.BASE_URL}${environment.pollURL}?state=${state}`).then(
+          fetch(`${environment.BASE_URL}${environment.SIOP_INFO.pollPath}?state=${state}`).then(
             (response) =>{
             
               if (response.status === 400 || response.status === 500) {

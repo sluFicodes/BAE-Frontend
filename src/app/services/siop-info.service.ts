@@ -10,6 +10,6 @@ export class SiopInfoService {
   constructor(private http: HttpClient) { }
 
   getSiopInfo(){
-    return this.http.get<{siopEnabled: boolean}>(`${environment.BASE_URL}/siop`)
+    return this.http.get<any>(`${environment.BASE_URL}/siop`)
   }
 }
