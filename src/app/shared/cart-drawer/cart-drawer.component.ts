@@ -23,6 +23,7 @@ export class CartDrawerComponent implements OnInit{
   items: cartProduct[] = [];
   totalPrice:any;
   showBackDrop:boolean=true;
+  check_custom:boolean=false;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -88,41 +89,56 @@ export class CartDrawerComponent implements OnInit{
     }
   }*/
 
-  getPrice(item:any){
-    return {
-      'priceType': item.options.pricing.priceType,
-      'price': item.options.pricing.price?.value,
-      'unit': item.options.pricing.price?.unit,
-      'text': item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? item.options.pricing.recurringChargePeriodType : item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ '+ item.options.pricing?.unitOfMeasure?.units : ''
+  getPrice(item: any) {
+    if(item.options.pricing != undefined){
+      if(item.options.pricing.priceType=='custom'){
+        this.check_custom=true;
+        return null
+      } else {
+        return {
+          'priceType': item.options.pricing.priceType,
+          'price': item.options.pricing.price?.value,
+          'unit': item.options.pricing.price?.unit,
+          'text': item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? item.options.pricing.recurringChargePeriodType : item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ ' + item.options.pricing?.unitOfMeasure?.units : ''
+        }
+      }
+    } else {
+      return null
     }
   }
 
-  getTotalPrice(){
-    this.totalPrice=[];
+  getTotalPrice() {
+    this.totalPrice = [];
     let insertCheck = false;
-    let priceInfo:any  ={};
-    for(let i=0; i<this.items.length; i++){
+    this.check_custom=false;
+    this.cdr.detectChanges();
+    let priceInfo: any = {};
+    for (let i = 0; i < this.items.length; i++) {
       console.log('totalprice')
       console.log(this.items[i])
       insertCheck = false;
-      if(this.totalPrice.length == 0){
+      if (this.totalPrice.length == 0) {
         priceInfo = this.getPrice(this.items[i]);
-        this.totalPrice.push(priceInfo);
-        console.log('Añade primero')
-      } else {
-        for(let j=0; j<this.totalPrice.length; j++){
-          priceInfo = this.getPrice(this.items[i]);
-          if(priceInfo.priceType == this.totalPrice[j].priceType && priceInfo.unit == this.totalPrice[j].unit && priceInfo.text == this.totalPrice[j].text){
-            this.totalPrice[j].price=this.totalPrice[j].price+priceInfo.price;
-            insertCheck=true;
-            console.log('suma')
-          }
-          console.log('precio segundo')
-          console.log(priceInfo)
-        }
-        if(insertCheck==false){
+        if(priceInfo!=null){
           this.totalPrice.push(priceInfo);
-          insertCheck=true;
+          console.log('Añade primero')
+        }
+      } else {
+        for (let j = 0; j < this.totalPrice.length; j++) {
+          priceInfo = this.getPrice(this.items[i]);
+          if(priceInfo!=null){
+            if (priceInfo.priceType == this.totalPrice[j].priceType && priceInfo.unit == this.totalPrice[j].unit && priceInfo.text == this.totalPrice[j].text) {
+              this.totalPrice[j].price = this.totalPrice[j].price + priceInfo.price;
+              insertCheck = true;
+              console.log('suma')
+            }
+            console.log('precio segundo')
+            console.log(priceInfo)
+          }
+        }
+        if (insertCheck == false && priceInfo!=null) {
+          this.totalPrice.push(priceInfo);
+          insertCheck = true;
           console.log('añade segundo')
         }
       }

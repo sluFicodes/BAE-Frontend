@@ -207,7 +207,17 @@
         "_billing_check": "You should first create at least a billing address in order to checkout an order.",
         "_click_here": "Click here",
         "_free": "Free",
-        "_free_desc": "The offering is free"
+        "_free_desc": "The offering is free",
+        "_loading_purchase": "Loading purchase",
+        "_contact": "Contact",
+        "_update": "Update",
+        "_contact_person": "Contact Person",
+        "_order_note": "Order Note",
+        "_your_order": "Your Order",
+        "_subtotal": "Sub Total",
+        "_tax": "Tax",
+        "_calculated": "Calculated at checkout",
+        "_fee": "Service fee*"
     },
     "PROFILE":{
         "_general": "General",

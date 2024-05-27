@@ -37,6 +37,7 @@ export class OrderInfoComponent implements OnInit {
   page: number=0;
   ORDER_LIMIT: number = environment.ORDER_LIMIT;
   filters: any[]=[];
+  check_custom:boolean=false;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -241,23 +242,36 @@ export class OrderInfoComponent implements OnInit {
   getTotalPrice(items:any[]){
     let totalPrice = [];
     let insertCheck = false;
+    this.check_custom=false;
     for(let i=0; i<items.length; i++){
       insertCheck = false;
       if(totalPrice.length == 0 && items[i].productOfferingPrice != undefined){
-        totalPrice.push(items[i].productOfferingPrice);
+        if(items[i].productOfferingPrice.priceType != 'custom'){
+          totalPrice.push(items[i].productOfferingPrice);
+        } else {
+          this.check_custom=true;
+        }     
       } else {
         for(let j=0; j<totalPrice.length; j++){
           if(items[i].productOfferingPrice != undefined){
-            if(items[i].productOfferingPrice.priceType == totalPrice[j].priceType && items[i].productOfferingPrice.unit == totalPrice[j].unit && items[i].productOfferingPrice.text == totalPrice[j].text){
-              totalPrice[j].price=totalPrice[j].price+items[i].productOfferingPrice.price;
-              insertCheck=true;
+            if(items[i].productOfferingPrice.priceType != 'custom'){
+              if(items[i].productOfferingPrice.priceType == totalPrice[j].priceType && items[i].productOfferingPrice.unit == totalPrice[j].unit && items[i].productOfferingPrice.text == totalPrice[j].text){
+                totalPrice[j].price=totalPrice[j].price+items[i].productOfferingPrice.price;
+                insertCheck=true;
+              }
+            } else {
+              this.check_custom=true;
             }
           }
         }
         if(insertCheck==false){
           if(items[i].productOfferingPrice != undefined){
-            totalPrice.push(items[i].productOfferingPrice);
-            insertCheck=true;
+            if(items[i].productOfferingPrice.priceType != 'custom'){
+              totalPrice.push(items[i].productOfferingPrice);
+              insertCheck=true;
+            } else {
+              this.check_custom=true;
+            }
           }
         }
       }

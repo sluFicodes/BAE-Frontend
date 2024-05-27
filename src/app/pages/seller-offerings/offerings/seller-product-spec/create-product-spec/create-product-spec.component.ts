@@ -638,6 +638,11 @@ export class CreateProductSpecComponent implements OnInit {
     const index = this.prodAttachments.findIndex(item => item.url === att.url);
     if (index !== -1) {
       console.log('eliminar')
+      if(this.prodAttachments[index].name=='Profile Picture'){
+        this.showImgPreview=false;
+        this.imgPreview='';
+        this.cdr.detectChanges();
+      }
       this.prodAttachments.splice(index, 1);
     }  
     this.cdr.detectChanges();
@@ -881,6 +886,9 @@ export class CreateProductSpecComponent implements OnInit {
     this.charsForm.reset();
     this.creatingChars=[];
     this.showCreateChar=false;
+    this.stringCharSelected=true;
+    this.numberCharSelected=false;
+    this.rangeCharSelected=false;
     this.cdr.detectChanges();
   }
 
