@@ -137,7 +137,7 @@ export class UpdateOfferComponent implements OnInit{
   creatingPrice:any;
   priceDescription:string='';
   showCreatePrice:boolean=false;
-  toggleFreePrice:boolean=false;
+  toggleOpenPrice:boolean=false;
   oneTimeSelected:boolean=true;
   recurringSelected:boolean=false;
   selectedPeriod:any='DAILY';
@@ -509,16 +509,27 @@ export class UpdateOfferComponent implements OnInit{
     this.selectedPriceUnit=event.target.value;
   }
 
+  checkValidPrice(){
+    if(this.customSelected && this.priceForm.value.name != ''){
+      return false
+    } else if(!this.priceForm.invalid){
+      return false
+    } else {
+      return true
+    }
+  }
+
   savePrice(){
-    if(this.priceForm.value.name && this.priceForm.value.price && !this.toggleFreePrice){
+    if(this.priceForm.value.name){
       let priceToCreate: ProductOfferingPriceRefOrValue = {
         id: uuidv4(),
         name: this.priceForm.value.name,
         description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",    
-        //percentage: 0,
+        lifecycleStatus: "Active",
         priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-        price: {
+      }
+      if(!this.customSelected && this.priceForm.value.price){
+        priceToCreate.price = {
           percentage: 0,
           taxRate: 20,
           dutyFreeAmount: {
@@ -573,7 +584,17 @@ export class UpdateOfferComponent implements OnInit{
       console.log(this.createdPrices)      
     }
     this.priceAlterForm.reset();
+    this.priceAlterForm.controls['condition'].setValue('');
+    this.priceAlterForm.controls['price'].setValue('');
     this.priceForm.reset();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
+    // Explicitly mark all controls as pristine and untouched
+    Object.keys(this.priceForm.controls).forEach(key => {
+      this.priceForm.get(key)?.markAsPristine();
+      this.priceForm.get(key)?.markAsUntouched();
+      this.priceForm.get(key)?.updateValueAndValidity();
+    });
 
     this.selectedPeriod='DAILY';
     this.selectedPeriodAlter='DAILY';
@@ -582,7 +603,11 @@ export class UpdateOfferComponent implements OnInit{
     this.priceComponentSelected=false;
     this.discountSelected=false;
     this.noAlterSelected=true;
-    this.showCreatePrice=false;  
+    this.showCreatePrice=false;    
+    this.usageSelected=false;
+    this.recurringSelected=false;
+    this.customSelected=false;
+    this.oneTimeSelected=true;
   }
 
   showUpdatePrice(price:any){
@@ -628,15 +653,17 @@ export class UpdateOfferComponent implements OnInit{
   }
 
   updatePrice(){
-    if(this.priceForm.value.name && this.priceForm.value.price && !this.toggleFreePrice){
+    if(this.priceForm.value.name){
       let priceToCreate: ProductOfferingPriceRefOrValue = {
         id: uuidv4(),
         name: this.priceForm.value.name,
         description: this.priceForm.value.description ? this.priceForm.value.description : '',
         lifecycleStatus: "Active",    
         //percentage: 0,
-        priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-        price: {
+        priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom'
+      }
+      if(!this.customSelected && this.priceForm.value.price){
+        priceToCreate.price = {
           percentage: 0,
           taxRate: 20,
           dutyFreeAmount: {
@@ -672,6 +699,8 @@ export class UpdateOfferComponent implements OnInit{
 
   closeEditPrice(){
     this.priceForm.reset();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
     this.selectedPeriod='DAILY';
     this.selectedPeriodAlter='DAILY';
     this.selectedPriceUnit=currencies[0].code;
@@ -679,6 +708,10 @@ export class UpdateOfferComponent implements OnInit{
     this.priceComponentSelected=false;
     this.discountSelected=false;
     this.noAlterSelected=true;
+    this.usageSelected=false;
+    this.recurringSelected=false;
+    this.customSelected=false;
+    this.oneTimeSelected=true;
     this.editPrice=false;
   }
 
@@ -1020,6 +1053,25 @@ export class UpdateOfferComponent implements OnInit{
   }
 
   showFinish(){
+    this.priceAlterForm.reset();
+    this.priceAlterForm.controls['condition'].setValue('');
+    this.priceAlterForm.controls['price'].setValue('');
+    this.priceForm.reset();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
+
+    this.selectedPeriod='DAILY';
+    this.selectedPeriodAlter='DAILY';
+    this.selectedPriceUnit=currencies[0].code;
+    this.priceTypeAlter='ONE TIME';
+    this.priceComponentSelected=false;
+    this.discountSelected=false;
+    this.noAlterSelected=true;
+    this.showCreatePrice=false;    
+    this.usageSelected=false;
+    this.recurringSelected=false;
+    this.customSelected=false;
+    this.oneTimeSelected=true;
     this.saveLicense();
     if(this.generalForm.value.name && this.generalForm.value.version){
       this.offerToUpdate={
@@ -1139,10 +1191,7 @@ export class UpdateOfferComponent implements OnInit{
         }
       }      
     } else {
-      this.createdPrices.push({
-        name: 'Open',
-        description: 'The offering is open, so it can be directly accessed'
-      })
+      this.createdPrices=[];
       this.saveOfferInfo();
     }
     //this.saveOfferInfo();

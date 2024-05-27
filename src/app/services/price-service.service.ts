@@ -63,7 +63,7 @@ export class PriceServiceService {
           result = {
             'priceType': 'Free',
             'price': 0,
-            'unit': null,
+            'unit': '',
             'text': ''
           }        
         }

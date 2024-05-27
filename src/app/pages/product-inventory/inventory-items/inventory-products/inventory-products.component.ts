@@ -143,20 +143,6 @@ export class InventoryProductsComponent implements OnInit {
     return images.length > 0 ? images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
-  getPrice(prod:ProductOffering){
-    console.log('producto')
-    console.log(prod)
-    let result:any = this.priceService.formatCheapestPricePlan(prod);
-    console.log('price')
-    console.log(result)
-    return {
-      "price": result.price,
-      "unit": result.unit,
-      "priceType": result.priceType,
-      "text": result.text
-    }
-  }
-
   goToProductDetails(productOff:ProductOffering| undefined) {
     document.querySelector("body > div[modal-backdrop]")?.remove()
     this.router.navigate(['/search', productOff?.id]);

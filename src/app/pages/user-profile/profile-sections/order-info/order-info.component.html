@@ -290,9 +290,15 @@
                                     <td class="px-6 py-4 text-center align-middle">
                                         {{item.name}}
                                     </td>
-                                    <td class="px-6 py-4 text-center align-middle">
-                                        {{item.productOfferingPrice.price}} {{item.productOfferingPrice.unit}} {{item.productOfferingPrice.text}}
-                                    </td>
+                                    @if(item.productOfferingPrice){
+                                        <td class="px-6 py-4 text-center align-middle">
+                                            {{item?.productOfferingPrice?.price}} {{item?.productOfferingPrice?.unit}} {{item?.productOfferingPrice?.text}}
+                                        </td>
+                                    } @else {
+                                        <td class="px-6 py-4 text-center align-middle">
+                                            {{ 'SHOPPING_CART._free' | translate }}
+                                        </td>                                        
+                                    }
                                 </tr>
                             }
                         </tbody>
@@ -305,7 +311,7 @@
                              @for (price of getTotalPrice(orderToShow.productOrderItem); track price) {
                                 <p class="flex block justify-end mr-2 text-sm text-gray-500">{{price.price}} {{price.unit}} {{price.text}}</p>
                              } @empty {
-                                <p class="flex flex-right text-gray-700 justify-end text-gray-500">0</p>
+                                <p class="flex flex-right text-gray-700 justify-end text-gray-500">Free</p>
                              }
                           </div>
                     </div>

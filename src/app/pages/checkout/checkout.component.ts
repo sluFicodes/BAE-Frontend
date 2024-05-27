@@ -73,11 +73,15 @@ export class CheckoutComponent implements OnInit {
   }
 
   getPrice(item: any) {
-    return {
-      'priceType': item.options.pricing.priceType,
-      'price': item.options.pricing.price?.value,
-      'unit': item.options.pricing.price?.unit,
-      'text': item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? item.options.pricing.recurringChargePeriodType : item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ ' + item.options.pricing?.unitOfMeasure?.units : ''
+    if(item.options.pricing != undefined){
+      return {
+        'priceType': item.options.pricing.priceType,
+        'price': item.options.pricing.price?.value,
+        'unit': item.options.pricing.price?.unit,
+        'text': item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? item.options.pricing.recurringChargePeriodType : item.options.pricing.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ ' + item.options.pricing?.unitOfMeasure?.units : ''
+      }
+    } else {
+      return null
     }
   }
 
@@ -91,20 +95,24 @@ export class CheckoutComponent implements OnInit {
       insertCheck = false;
       if (this.totalPrice.length == 0) {
         priceInfo = this.getPrice(this.items[i]);
-        this.totalPrice.push(priceInfo);
-        console.log('Añade primero')
+        if(priceInfo!=null){
+          this.totalPrice.push(priceInfo);
+          console.log('Añade primero')
+        }
       } else {
         for (let j = 0; j < this.totalPrice.length; j++) {
           priceInfo = this.getPrice(this.items[i]);
-          if (priceInfo.priceType == this.totalPrice[j].priceType && priceInfo.unit == this.totalPrice[j].unit && priceInfo.text == this.totalPrice[j].text) {
-            this.totalPrice[j].price = this.totalPrice[j].price + priceInfo.price;
-            insertCheck = true;
-            console.log('suma')
+          if(priceInfo!=null){
+            if (priceInfo.priceType == this.totalPrice[j].priceType && priceInfo.unit == this.totalPrice[j].unit && priceInfo.text == this.totalPrice[j].text) {
+              this.totalPrice[j].price = this.totalPrice[j].price + priceInfo.price;
+              insertCheck = true;
+              console.log('suma')
+            }
+            console.log('precio segundo')
+            console.log(priceInfo)
           }
-          console.log('precio segundo')
-          console.log(priceInfo)
         }
-        if (insertCheck == false) {
+        if (insertCheck == false && priceInfo!=null) {
           this.totalPrice.push(priceInfo);
           insertCheck = true;
           console.log('añade segundo')
@@ -134,6 +142,30 @@ export class CheckoutComponent implements OnInit {
           })
         }
       }
+      let productPrice: { description: string | undefined; name: string | undefined; price: { taxIncludedAmount: { value: number | undefined; unit: string | undefined; }; taxRate: number; }; priceType: string | undefined; recurringChargePeriod: string | undefined; unitOfMeasure: string | undefined; id: string | undefined; productOfferingPrice: { id: string | undefined; href: string | undefined; }; }[] = []
+      if(this.items[i].options.pricing != undefined){
+        productPrice = [
+          {
+            "description": this.items[i].options.pricing?.description,
+            "name": this.items[i].options.pricing?.name,
+            "price": {
+              "taxIncludedAmount": {
+                "value": this.items[i].options.pricing?.price?.value,
+                "unit": this.items[i].options.pricing?.price?.unit
+              },
+              "taxRate": this.TAX_RATE
+            },
+            "priceType": this.items[i].options.pricing?.priceType,
+            "recurringChargePeriod": this.items[i].options.pricing?.recurringChargePeriodType != undefined ? this.items[i].options.pricing?.recurringChargePeriodType : '',
+            "unitOfMeasure": this.items[i].options.pricing?.unitOfMeasure != undefined ? this.items[i].options.pricing?.unitOfMeasure?.units : '',
+            "id": this.items[i].options.pricing?.id,
+            "productOfferingPrice": {
+              "id": this.items[i].options.pricing?.id,
+              "href": this.items[i].options.pricing?.href,
+            }
+          }
+        ]
+      }
       
       products.push({
         "id": this.items[i].id,
@@ -145,27 +177,7 @@ export class CheckoutComponent implements OnInit {
         },
         "product": {
           "productCharacteristic": char,
-          "productPrice": [
-            {
-              "description": this.items[i].options.pricing?.description,
-              "name": this.items[i].options.pricing?.name,
-              "price": {
-                "taxIncludedAmount": {
-                  "value": this.items[i].options.pricing?.price?.value,
-                  "unit": this.items[i].options.pricing?.price?.unit
-                },
-                "taxRate": this.TAX_RATE
-              },
-              "priceType": this.items[i].options.pricing?.priceType,
-              "recurringChargePeriod": this.items[i].options.pricing?.recurringChargePeriodType != undefined ? this.items[i].options.pricing?.recurringChargePeriodType : '',
-              "unitOfMeasure": this.items[i].options.pricing?.unitOfMeasure != undefined ? this.items[i].options.pricing?.unitOfMeasure?.units : '',
-              "id": this.items[i].options.pricing?.id,
-              "productOfferingPrice": {
-                "id": this.items[i].options.pricing?.id,
-                "href": this.items[i].options.pricing?.href,
-              }
-            }
-          ]
+          "productPrice": productPrice
         }
       })
     }
@@ -189,6 +201,7 @@ export class CheckoutComponent implements OnInit {
       "orderDate": moment().utc(),
       "notificationContact": this.selectedBillingAddress.email,
     }
+    console.log('--- order ---')
     console.log(productOrder)
     await this.orderService.postProductOrder(productOrder).subscribe({
       next: data => {
