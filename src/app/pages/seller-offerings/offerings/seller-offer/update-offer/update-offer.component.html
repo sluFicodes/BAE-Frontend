@@ -1566,7 +1566,9 @@
                         <option value="ONE TIME">ONE TIME</option>
                         <option value="RECURRING">RECURRING</option>
                         <option value="USAGE">USAGE</option>
-                        <option value="CUSTOM">CUSTOM</option>
+                        @if(createdPrices.length==1 && createdPrices[0].priceType=='custom'){
+                            <option selected value="CUSTOM">CUSTOM</option>
+                        }                        
                     </select>
                     @if(recurringSelected){
                         <label class="font-bold text-lg">{{ 'UPDATE_OFFER._choose_period' | translate }}</label>
