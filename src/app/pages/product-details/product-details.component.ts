@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild,ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
@@ -11,7 +11,9 @@ type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 //type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 import { certifications } from 'src/app/models/certification-standards.const'
 import { LocalStorageService } from 'src/app/services/local-storage.service';
-import { LoginInfo } from 'src/app/models/interfaces';
+import { LoginInfo, cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
+import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
+import {EventMessageService} from "../../services/event-message.service";
 import * as moment from 'moment';
 
 @Component({
@@ -21,6 +23,8 @@ import * as moment from 'moment';
 })
 export class ProductDetailsComponent implements OnInit {
 
+  @ViewChild('relationshipsContent')
+  relationshipsContent: ElementRef | undefined;
   @ViewChild('detailsContent')
   detailsContent: ElementRef | undefined;
   @ViewChild('charsContent')
@@ -29,8 +33,6 @@ export class ProductDetailsComponent implements OnInit {
   attachContent: ElementRef | undefined;
   @ViewChild('agreementsContent')
   agreementsContent: ElementRef | undefined;
-  @ViewChild('relationshipsContent')
-  relationshipsContent: ElementRef | undefined;
 
   id:any;
   productOff: Product | undefined;
@@ -45,6 +47,17 @@ export class ProductDetailsComponent implements OnInit {
   serviceSpecs:any[] = [];
   resourceSpecs:any[]=[];
   check_logged:boolean=false;
+  cartSelection:boolean=false;
+  check_prices:boolean=false;
+  selected_price:any;
+  check_char:boolean=false;
+  check_terms:boolean=false;
+  selected_terms:boolean=false;
+  selected_chars:productSpecCharacteristicValueCart[]=[];
+  formattedPrices:any[]=[];
+  toastVisibility: boolean = false;
+  lastAddedProd:cartProduct | undefined;
+
   protected readonly faScaleBalanced = faScaleBalanced;
   protected readonly faArrowProgress = faArrowProgress;
   protected readonly faArrowRightArrowLeft = faArrowRightArrowLeft;
@@ -63,7 +76,47 @@ export class ProductDetailsComponent implements OnInit {
     private router: Router,
     private elementRef: ElementRef,
     private localStorage: LocalStorageService,
+    private cartService: ShoppingCartServiceService,
+    private eventMessage: EventMessageService,
   ) {
+  }
+
+  @HostListener('window:scroll', ['$event']) 
+  updateTabs(event:any) {
+    let tabs_container = document.getElementById('tabs-container');
+    let tabsOffset = 0;
+    if(tabs_container){
+      tabsOffset=tabs_container.offsetHeight
+    }
+    let details_container = document.getElementById('details-container')    
+    let chars_container = document.getElementById('chars-container')
+    let attach_container = document.getElementById('attach-container')
+    let agreements_container = document.getElementById('agreements-container')
+    let relationships_container = document.getElementById('agreements-container')
+
+    let detailsOffset=tabsOffset
+    if(details_container && (details_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToDetails(false)
+      detailsOffset=details_container.getBoundingClientRect().bottom
+    }
+    let charsOffset=detailsOffset;
+    if(this.charsContent!=undefined && chars_container && (chars_container.getBoundingClientRect().top >= detailsOffset && chars_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToChars(false)
+      charsOffset=chars_container.getBoundingClientRect().bottom
+    }
+    let attOffsett=charsOffset;
+    if(this.attachContent!=undefined && attach_container && (attach_container.getBoundingClientRect().top >= charsOffset && attach_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToAttach(false)
+      attOffsett=attach_container.getBoundingClientRect().bottom
+    }
+    let agreeOffset=attOffsett;
+    if(this.agreementsContent!= undefined && agreements_container && (agreements_container.getBoundingClientRect().top >= attOffsett && agreements_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToAgreements(false)
+      agreeOffset=agreements_container.offsetHeight
+    }
+    if(this.relationshipsContent!= undefined && relationships_container && (relationships_container.getBoundingClientRect().top >= agreeOffset && relationships_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToRelationships(false)
+    }
   }
 
   ngOnInit() {
@@ -161,6 +214,225 @@ export class ProductDetailsComponent implements OnInit {
 
   toggleCartSelection(){
     console.log('Add to cart...')
+    if (this.productOff?.productOfferingPrice != undefined){
+      if(this.productOff?.productOfferingPrice.length > 1){
+        this.check_prices=true;
+        this.selected_price=this.productOff?.productOfferingPrice[this.productOff?.productOfferingPrice.length-1]
+      } else {
+        this.selected_price=this.productOff?.productOfferingPrice[0]
+      }
+
+      this.cdr.detectChanges();
+    }
+
+    if(this.productOff?.productOfferingTerm != undefined){
+      if(this.productOff.productOfferingTerm.length == 1 && this.productOff.productOfferingTerm[0].name == undefined){
+        this.check_terms=false;
+      } else {
+        this.check_terms=true;
+      }
+
+    }
+
+    if(this.prodSpec.productSpecCharacteristic != undefined){
+      for(let i=0; i<this.prodSpec.productSpecCharacteristic.length; i++){
+        let charvalue = this.prodSpec.productSpecCharacteristic[i].productSpecCharacteristicValue;
+        if(charvalue != undefined){
+          if(charvalue?.length>1){
+            this.check_char = true;
+          }
+          for(let j=0; j<charvalue.length;j++){
+            if(charvalue[j]?.isDefault == true){
+              this.selected_chars.push(
+                {
+                "characteristic": this.prodSpec.productSpecCharacteristic[i],
+                "value": charvalue[j]
+              });
+            }
+          }
+        }
+      }
+      console.log(this.selected_chars)
+    }
+
+    if (this.check_prices==true || this.check_char == true || this.check_terms == true){
+      this.cartSelection=true;
+      this.cdr.detectChanges();
+      if(this.check_prices==true){
+        let price_elem = document.getElementById('price')
+        if(price_elem!=null){
+          this.removeClass(price_elem,'hidden')
+        }
+        let price_button = document.getElementById('button-price')
+        if(price_button != null){
+          if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            console.log('already selected')
+          } else {
+            this.addClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          }
+        }
+      } else if(this.check_char==true){
+        let char_elem = document.getElementById('char')
+        if(char_elem!=null){
+          this.removeClass(char_elem,'hidden')
+        }
+        let char_button = document.getElementById('button-char')
+        if(char_button != null){
+          if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            console.log('already selected')
+          } else {
+            this.addClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          }
+        }
+      } else {
+        let terms_elem = document.getElementById('terms')
+        if(terms_elem!=null){
+          this.removeClass(terms_elem,'hidden')
+        }
+        let terms_button = document.getElementById('button-terms')
+        if(terms_button != null){
+          if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
+            console.log('already selected')
+          } else {
+            this.addClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
+          }
+        }
+      }
+    }else {
+      this.addProductToCart(this.productOff,false)
+    }
+  }
+
+  async addProductToCart(productOff:Product| undefined,options:boolean){
+    //this.localStorage.addCartItem(productOff as Product);
+    if(options==true){
+      console.log('termschecked:')
+      console.log(this.selected_terms)
+      if(productOff!= undefined && productOff?.productOfferingPrice != undefined){
+        let prodOptions = {
+          "id": productOff?.id,
+          "name": productOff?.name,
+          "image": this.getProductImage(),
+          "href": productOff.href,
+          "options": {
+            "characteristics": this.selected_chars,
+            "pricing": this.selected_price
+          },
+          "termsAccepted": this.selected_terms
+        }
+        this.lastAddedProd=prodOptions;
+      await this.cartService.addItemShoppingCart(prodOptions).subscribe({
+        next: data => {
+            console.log(data)
+            console.log('Update successful');
+        },
+        error: error => {
+            console.error('There was an error while updating!', error);
+        }
+      });
+    }
+    } else {
+      if(productOff!= undefined && productOff?.productOfferingPrice != undefined){
+        let prodOptions = {
+          "id": productOff?.id,
+          "name": productOff?.name,
+          "image": this.getProductImage(),
+          "href": productOff.href,
+          "options": {
+            "characteristics": this.selected_chars,
+            "pricing": this.selected_price
+          },
+          "termsAccepted": true
+        }
+        this.lastAddedProd=prodOptions;
+      await this.cartService.addItemShoppingCart(prodOptions).subscribe({
+        next: data => {
+            console.log(data)
+            console.log('Update successful');
+        },
+        error: error => {
+            console.error('There was an error while updating!', error);
+        }
+      });
+    }
+    }
+    if(productOff!== undefined){
+      this.eventMessage.emitAddedCartItem(productOff as cartProduct);
+    }
+    //TOGGLE TOAST
+    this.toastVisibility=true;
+
+    this.cdr.detectChanges();
+    //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+    let element = document.getElementById("progress-bar")
+    let parent = document.getElementById("toast-add-cart")
+    if (element != null && parent != null) {
+      element.style.width = '0%'
+      element.offsetWidth
+      element.style.width = '100%'
+      setTimeout(() => {
+        this.toastVisibility=false
+      }, 3500);
+    }
+
+    if(this.cartSelection==true){
+      this.cartSelection=false;
+      this.check_char=false;
+      this.check_terms=false;
+      this.check_prices=false;
+      this.selected_chars=[];
+      this.selected_price={};
+      this.selected_terms=false;
+      this.cdr.detectChanges();
+    }
+    this.cdr.detectChanges();
+  }
+
+  deleteProduct(product: Product | undefined){
+    if(product !== undefined) {
+      //this.localStorage.removeCartItem(product);
+      this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('removed'));
+      this.eventMessage.emitRemovedCartItem(product as Product);
+    }
+    this.toastVisibility=false;
+  }
+
+  onPriceChange(price:any){
+    this.selected_price=price;
+    console.log('change price')
+    console.log(this.selected_price)
+    this.cdr.detectChanges;
+  }
+
+  onCharChange(idx:number,validx:number,char:any){
+    let defaultChar = { "isDefault": true, "value": char.value}
+    this.selected_chars[idx].value=defaultChar;
+    let prodcharval = this.selected_chars[idx]['characteristic'].productSpecCharacteristicValue
+    if( prodcharval != undefined){
+      for(let i=0; i<prodcharval.length; i++){
+        if(i==validx){
+          prodcharval[i].isDefault=true;
+        } else {
+          prodcharval[i].isDefault=false;
+        }
+      }
+    }
+
+    console.log('change char')
+    console.log(this.selected_chars)
+    this.cdr.detectChanges();
+  }
+
+  hideCartSelection(){
+    this.cartSelection=false;
+    this.check_char=false;
+    this.check_terms=false;
+    this.check_prices=false;
+    this.formattedPrices=[];
+    this.selected_chars=[];
+    this.selected_price={};
+    this.selected_terms=false;
+    this.cdr.detectChanges();
   }
 
   goTo(path:string) {
@@ -200,9 +472,9 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  goToDetails(){
+  goToDetails(scroll:boolean){
     //const targetElement = this.elementRef.nativeElement.querySelector('#detailsContent');
-    if (this.detailsContent!=undefined) {
+    if (this.detailsContent!=undefined && scroll) {
       this.detailsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -219,8 +491,8 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
-  goToChars(){
-    if (this.charsContent != undefined) {
+  goToChars(scroll:boolean){
+    if (this.charsContent != undefined && scroll) {
       this.charsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -237,8 +509,8 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
-  goToAttach(){
-    if (this.attachContent != undefined) {
+  goToAttach(scroll:boolean){
+    if (this.attachContent != undefined && scroll) {
       this.attachContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -255,8 +527,8 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
-  goToAgreements(){
-    if (this.agreementsContent) {
+  goToAgreements(scroll:boolean){
+    if (this.agreementsContent != undefined && scroll) {
       this.agreementsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center'});
     }
 
@@ -273,8 +545,8 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
-  goToRelationships(){
-    if (this.relationshipsContent != undefined) {
+  goToRelationships(scroll:boolean){
+    if (this.relationshipsContent != undefined && scroll) {
       this.relationshipsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -289,6 +561,83 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
     this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
     this.selectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+  }
+
+  unselectTag(elem:HTMLElement | null,cls:string){
+    if(elem != null){
+      if(elem.className.match(cls)){
+        this.removeClass(elem,cls)
+      } else {
+        console.log('already unselected')
+      }
+    }
+  }
+
+  selectTag(elem:HTMLElement| null,cls:string){
+    if(elem != null){
+      if(elem.className.match(cls)){
+        console.log('already selected')
+      } else {
+        this.addClass(elem,cls)
+      }
+    }
+  }
+
+  clickShowPrice(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+
+    this.unselectTag(price_elem,'hidden')
+    this.selectTag(char_elem,'hidden')
+    this.selectTag(terms_elem,'hidden')
+
+    this.selectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+    this.unselectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+    this.unselectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+
+  }
+
+  clickShowChar(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+
+    this.unselectTag(char_elem,'hidden')
+    this.selectTag(price_elem,'hidden')
+    this.selectTag(terms_elem,'hidden')
+
+    this.selectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+    this.unselectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+    this.unselectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+
+  }
+
+  clickShowTerms(){
+    let price_elem = document.getElementById('price')
+    let char_elem = document.getElementById('char')
+    let terms_elem = document.getElementById('terms')
+
+    let price_button = document.getElementById('button-price')
+    let char_button = document.getElementById('button-char')
+    let terms_button = document.getElementById('button-terms')
+
+    this.unselectTag(terms_elem,'hidden')
+    this.selectTag(price_elem,'hidden')
+    this.selectTag(char_elem,'hidden')
+
+    this.selectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+    this.unselectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+    this.unselectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
+
   }
 
 }

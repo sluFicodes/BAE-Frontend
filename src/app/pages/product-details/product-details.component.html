@@ -81,18 +81,18 @@
         </div>
     </div>
 <!-- END HEADER CARD -->
-    <div class=" sticky top-[72px] z-10 w-full h-full bg-secondary-50 rounded-t-lg pt-4 pr-4 pl-4 dark:bg-white dark:border-gray-700 border-secondary-50 border-t">
+    <div id="tabs-container" class=" sticky top-[72px] z-10 w-full h-full bg-secondary-50 rounded-t-lg pt-4 pr-4 pl-4 dark:bg-white dark:border-gray-700 border-secondary-50 border-t">
         <div class="w-full text-sm font-medium text-center text-gray-600 border-b border-gray-300 inline-flex justify-between">
             <ul class="flex flex-wrap -mb-px">
                 <li class="mr-2">
-                    <button id="details-button" (click)="goToDetails()"
+                    <button id="details-button" (click)="goToDetails(true)"
                         class="inline-block p-4 text-primary-100 border-b-2 border-primary-100 rounded-t-lg hover:text-primary-50 hover:border-primary-50">
                         {{ 'PRODUCT_DETAILS._details' | translate }}
                     </button>
                 </li>
                 @if(prodSpec.productSpecCharacteristic != undefined && prodSpec.productSpecCharacteristic.length>0) {
                     <li class="mr-2">
-                        <button id="chars-button" (click)="goToChars()" class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50"
+                        <button id="chars-button" (click)="goToChars(true)" class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50"
                             aria-current="page">
                             {{ 'PRODUCT_DETAILS._chars' | translate }}
                         </button>
@@ -100,7 +100,7 @@
                 }
                 @if(attatchments.length>0){ 
                     <li class="mr-2">
-                        <button id="attach-button" (click)="goToAttach()"
+                        <button id="attach-button" (click)="goToAttach(true)"
                             class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50">
                             {{ 'PRODUCT_DETAILS._attach' | translate }}
                         </button>
@@ -108,7 +108,7 @@
                 }
                 @if(productOff?.productOfferingTerm?.at(0)?.name || productOff?.serviceLevelAgreement){
                     <li class="mr-2">
-                        <button id="agreements-button" (click)="goToAgreements()"
+                        <button id="agreements-button" (click)="goToAgreements(true)"
                             class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50">
                             {{ 'PRODUCT_DETAILS._agreements' | translate }}
                         </button>
@@ -116,144 +116,148 @@
                 }
                 @if(prodSpec.productSpecificationRelationship != undefined && prodSpec.productSpecificationRelationship.length>0){
                     <li class="mr-2">
-                        <button id="relationships-button" (click)="goToRelationships()"
+                        <button id="relationships-button" (click)="goToRelationships(true)"
                             class="inline-block p-4 rounded-t-lg hover:text-primary-50 hover:border-primary-50">
                             {{ 'PRODUCT_DETAILS._relationships' | translate }}
                         </button>
                     </li>
                 }
             </ul>
-            <!--@if(check_logged){
+            @if(check_logged){
             <button type="button" (click)="toggleCartSelection()" class="w-fit m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
                 <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
                 </svg>
                 {{ 'CARD._add_cart' | translate }}
             </button>
-            }-->
+            }
         </div>
     </div>      
 
     <div class="w-full h-full bg-secondary-50 rounded-b-lg p-4 dark:bg-white dark:border-gray-700 border-secondary-50 border-b">        
 
-        <div class="w-full bg-secondary-50/95 dark:bg-white/95 rounded-lg p-12">
+        <div id="desc-container" class="w-full bg-secondary-50/95 dark:bg-white/95 rounded-lg p-12">
 
-            <h2 #detailsContent class="text-4xl font-extrabold text-primary-100 text-center pb-4">Description</h2>
-            <markdown [data]="productOff?.description"></markdown>
-            @if(serviceSpecs.length > 0){
-                <div class="pb-2">                
-                    <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'PRODUCT_DETAILS._service_spec' | translate }}:</h5>
-                    @for(service of serviceSpecs; track service.id){
-                        <p class="pl-4"><b>{{service.name}}</b>:  {{service.description}}</p>
-                    }
-                </div>
-             }
-             @if(resourceSpecs.length > 0){
-                <div class="pb-2">                
-                    <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'PRODUCT_DETAILS._resource_spec' | translate }}:</h5>
-                    @for(resource of resourceSpecs; track resource.id){
-                        <p class="pl-4"><b>{{resource.name}}</b>: {{resource.description}}</p>
-                    }
-                </div>
-            }
-            <!--<div class="pb-2">
-                <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'CARD._comp_profile' | translate }}:</h5>
-                @for (char of complianceProf; track char.id) {
-                    @if (char.href == '#') {
-                        <p class="pl-4"><b>{{char.name}}</b>: {{char.value}}</p>
-                    } @else {
-                        <p class="pl-4"><b>{{char.name}}</b>: <a href="{{char.href}}">{{char.value}}</a></p>
-                    }
+            <div id="details-container">            
+                <h2 #detailsContent class="text-4xl font-extrabold text-primary-100 text-center pb-4">Description</h2>
+                <markdown [data]="productOff?.description"></markdown>
+                @if(serviceSpecs.length > 0){
+                    <div class="pb-2">                
+                        <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'PRODUCT_DETAILS._service_spec' | translate }}:</h5>
+                        @for(service of serviceSpecs; track service.id){
+                            <p class="pl-4"><b>{{service.name}}</b>:  {{service.description}}</p>
+                        }
+                    </div>
                 }
-        </div>-->
-        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'CARD._comp_profile' | translate }}</h2>
-        <div class="container mx-auto px-4">
-            <div class="flex flex-wrap -mx-4">
-                @for (char of complianceProf; track char.id) {
-                    <div class="w-1/3 px-4 mb-8">                
-                        <div class="border border-2 rounded-lg shadow bg-white shadow-md p-8 h-full"
-                        [ngClass]="char.href == '#' ? 'border-red-400' : char.domesupported == true ? 'border-gray-400' : 'border-green-400'">
-                            <h3 class="text-2xl font-bold mb-4">{{char.name}}</h3>            
-                            <div class="flex justify-between">
-                                @if (char.href == '#') {
-
-                                    <a class="text-xs ml-4 font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-red-200 text-red-700">
-                                        Not achieved yet
-                                    </a>
-                                } @else {
-                                    <a class="mb-2 font-normal pl-4 text-primary-100" target="_blank" href="{{char.href}}">
-                                        {{char.value}}
-                                    </a>
-                                    @if(char.domesupported==true){
-                                        <a class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-gray-400 text-gray-900">
-                                            Under evaluation
+                @if(resourceSpecs.length > 0){
+                    <div class="pb-2">                
+                        <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'PRODUCT_DETAILS._resource_spec' | translate }}:</h5>
+                        @for(resource of resourceSpecs; track resource.id){
+                            <p class="pl-4"><b>{{resource.name}}</b>: {{resource.description}}</p>
+                        }
+                    </div>
+                }
+                <!--<div class="pb-2">
+                    <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{ 'CARD._comp_profile' | translate }}:</h5>
+                    @for (char of complianceProf; track char.id) {
+                        @if (char.href == '#') {
+                            <p class="pl-4"><b>{{char.name}}</b>: {{char.value}}</p>
+                        } @else {
+                            <p class="pl-4"><b>{{char.name}}</b>: <a href="{{char.href}}">{{char.value}}</a></p>
+                        }
+                    }
+            </div>-->
+            <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'CARD._comp_profile' | translate }}</h2>
+            <div class="container mx-auto px-4">
+                <div class="flex flex-wrap -mx-4">
+                    @for (char of complianceProf; track char.id) {
+                        <div class="w-1/3 px-4 mb-8">                
+                            <div class="border border-2 rounded-lg shadow bg-white shadow-md p-8 h-full"
+                            [ngClass]="char.href == '#' ? 'border-red-400' : 'border-gray-400'">
+                                <h3 class="text-2xl font-bold mb-4">{{char.name}}</h3>            
+                                <div class="flex justify-between">
+                                    @if (char.href == '#') {
+                                        <a class="text-xs ml-4 font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-red-200 text-red-700">
+                                            Not achieved yet
                                         </a>
+                                        <!-- TODO: ADD EXPIRED when dome supported certs are expired-->
                                     } @else {
-                                        <a class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-green-200 text-green-700">
+                                        <a class="mb-2 font-normal pl-4 text-primary-100" target="_blank" href="{{char.href}}">
+                                            {{char.value}}
+                                        </a>
+                                        <a class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-gray-400 text-gray-900">
                                             Self declared
                                         </a>
+                                        <!--
+                                            TODO: WHEN VERIFIED APPLIED SHOW VERIFIED 
+                                            @if(char.domesupported==true && verified){
+                                            <a class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 bg-green-200 text-green-700">
+                                                Dome verified
+                                            </a>
+                                            }                                      
+                                        -->
                                     }
-                                }
-                                @if(char.domesupported == true){
-                                    <fa-icon [icon]="faAtom" class="fa-2xl text-primary-100 align-middle"></fa-icon>
-                                } @else {
-                                    <fa-icon [icon]="faAtom" class="fa-2xl text-gray-600 align-middle"></fa-icon>
-                                }                               
+                                    @if(char.domesupported == true){
+                                        <fa-icon [icon]="faAtom" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                    } @else {
+                                        <fa-icon [icon]="faAtom" class="fa-2xl text-gray-600 align-middle"></fa-icon>
+                                    }                               
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
-        </div>
 
-        <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product pricing</h2>
-        <div class="grid grid-flow-col auto-cols-auto justify-items-center p-2">
-        @if(productOff?.productOfferingPrice != undefined){
-            @for (price of productOff?.productOfferingPrice; track price.id) {
-                @if (price.priceType == 'recurring') {
-                    <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
-                        <div class="bg-green-500 rounded-t-lg w-full">
-                            <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
+            <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product pricing</h2>
+            <div class="grid grid-flow-col auto-cols-auto justify-items-center p-2">
+            @if(productOff?.productOfferingPrice != undefined){
+                @for (price of productOff?.productOfferingPrice; track price.id) {
+                    @if (price.priceType == 'recurring') {
+                        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                            <div class="bg-green-500 rounded-t-lg w-full">
+                                <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
+                            </div>
+                            <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                            <p class="flex justify-center font-normal text-gray-700">/{{price.recurringChargePeriodType}}</p>
+                            <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
                         </div>
-                        <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
-                        <p class="flex justify-center font-normal text-gray-700">/{{price.recurringChargePeriodType}}</p>
-                        <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
-                    </div>
-                } @else if (price.priceType == 'usage') {
-                    <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
-                        <div class="bg-yellow-300 rounded-t-lg w-full">
-                            <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                    } @else if (price.priceType == 'usage') {
+                        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                            <div class="bg-yellow-300 rounded-t-lg w-full">
+                                <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                            </div>
+                            <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                            <p class="flex justify-center font-normal text-gray-700">/{{price.unitOfMeasure?.units}}</p>
+                            <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
                         </div>
-                        <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
-                        <p class="flex justify-center font-normal text-gray-700">/{{price.unitOfMeasure?.units}}</p>
-                        <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
-                    </div>
-                } @else if (price.priceType == 'custom') {
-                    <markdown class="dark:text-gray-600 w-full" [data]="price?.description"></markdown>
-                } @else {
+                    } @else if (price.priceType == 'custom') {
+                        <markdown class="dark:text-gray-600 w-full" [data]="price?.description"></markdown>
+                    } @else {
+                        <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                            <div class="bg-blue-500 rounded-t-lg w-full">
+                                <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                            </div>
+                            <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                            <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                        </div>
+                    }
+                }
+                @if(productOff?.productOfferingPrice?.length==0){
                     <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
                         <div class="bg-blue-500 rounded-t-lg w-full">
-                            <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                            <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{ 'SHOPPING_CART._free' | translate }}</h5>
                         </div>
-                        <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
-                        <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
-                    </div>
+                        <p class="flex justify-center mb-2 font-normal text-gray-700">{{ 'SHOPPING_CART._free_desc' | translate }}</p>
+                    </div> 
                 }
             }
-            @if(productOff?.productOfferingPrice?.length==0){
-                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
-                    <div class="bg-blue-500 rounded-t-lg w-full">
-                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{ 'SHOPPING_CART._free' | translate }}</h5>
-                    </div>
-                    <p class="flex justify-center mb-2 font-normal text-gray-700">{{ 'SHOPPING_CART._free_desc' | translate }}</p>
-                </div> 
-            }
-        }
 
+            </div>
         </div>
         
         @if(prodSpec.productSpecCharacteristic != undefined && prodSpec.productSpecCharacteristic.length>0) {
-            <div #charsContent>
+            <div #charsContent id="chars-container">
                 <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product characteristics</h2>
                 <div class="container mx-auto px-4">
                     <div class="flex flex-wrap -mx-4">
@@ -305,7 +309,7 @@
 
         @if(attatchments.length>0){ 
         <h2 #attachContent class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product attachments</h2>
-        <div class="container mx-auto px-4">
+        <div id="attach-container" class="container mx-auto px-4">
             <div class="flex flex-wrap -mx-4">
                 @for (att of attatchments; track att.id) {
                     <div class="w-1/3 px-4 mb-8">                
@@ -332,33 +336,35 @@
 
         }
 
-        <div #agreementsContent>
-            @if(productOff?.productOfferingTerm?.at(0)?.name){
-                <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._license' | translate }}</h2>                    
-                <div class="container mx-auto px-4">
-                    <div class="border border-gray-200 rounded-lg shadow bg-white p-8">
-                        <div class="grid grid-cols-80/20 pb-4 h-1/4">
-                            <div class="flex justify-start">
-                                <h2 class="text-gray-900 text-3xl font-extrabold mb-2">{{productOff?.productOfferingTerm?.at(0)?.name}}</h2>
+        @if(productOff?.productOfferingTerm?.at(0)?.name || productOff?.serviceLevelAgreement){
+            <div #agreementsContent id="agreements-container">
+                @if(productOff?.productOfferingTerm?.at(0)?.name){
+                    <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._license' | translate }}</h2>                    
+                    <div class="container mx-auto px-4">
+                        <div class="border border-gray-200 rounded-lg shadow bg-white p-8">
+                            <div class="grid grid-cols-80/20 pb-4 h-1/4">
+                                <div class="flex justify-start">
+                                    <h2 class="text-gray-900 text-3xl font-extrabold mb-2">{{productOff?.productOfferingTerm?.at(0)?.name}}</h2>
+                                </div>
+                                <div class="flex justify-end">
+                                    <fa-icon [icon]="faScaleBalanced" class="fa-2xl text-primary-100 align-middle"></fa-icon>
+                                </div>
                             </div>
-                            <div class="flex justify-end">
-                                <fa-icon [icon]="faScaleBalanced" class="fa-2xl text-primary-100 align-middle"></fa-icon>
-                            </div>
+                            
+                            <p class="h-2/4 text-lg font-normal text-gray-700 mb-4">{{productOff?.productOfferingTerm?.at(0)?.description}}</p>
                         </div>
-                        
-                        <p class="h-2/4 text-lg font-normal text-gray-700 mb-4">{{productOff?.productOfferingTerm?.at(0)?.description}}</p>
                     </div>
-                </div>
-            }
-            @if(productOff?.serviceLevelAgreement){ 
-            <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._sla' | translate }}</h2>                   
-                <p class="mb-2 pl-4 font-normal text-gray-700">{{productOff?.serviceLevelAgreement?.name}}.</p>
-            }
-        </div>
+                }
+                @if(productOff?.serviceLevelAgreement){ 
+                <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">{{ 'PRODUCT_DETAILS._sla' | translate }}</h2>                   
+                    <p class="mb-2 pl-4 font-normal text-gray-700">{{productOff?.serviceLevelAgreement?.name}}.</p>
+                }
+            </div>
+        }
 
         @if(prodSpec.productSpecificationRelationship != undefined && prodSpec.productSpecificationRelationship.length>0){
             <h2 #relationshipsContent class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12">Product relationships</h2>            
-            <div class="container mx-auto px-4">
+            <div id="relationships-container" class="container mx-auto px-4">
                 <div class="flex flex-wrap -mx-4">
                     @for (rel of prodSpec.productSpecificationRelationship; track rel.id) {
                         <div class="w-1/3 px-4 mb-8">                
@@ -386,3 +392,178 @@
 
     </div>
 </div>
+
+<!-- ADD TO CART TOAST -->
+@if (toastVisibility) {
+    <div id="toast-add-cart" class="flex grid grid-flow-row mr-2 items-center w-auto max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 fixed top-1/2 right-0 z-50 justify-center" role="alert">
+      <div class="flex items-center justify-center">
+        <svg class="w-[18px] h-[18px] text-gray-800 dark:text-white mr-2 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 15a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0h8m-8 0-1-4m9 4a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-9-4h10l2-7H3m2 7L3 4m0 0-.792-3H1"/>
+        </svg>
+        <div class="text-sm font-normal">
+          {{ 'CARD._added_card' | translate }}.
+        </div>
+        <div class="flex items-center ms-auto space-x-2 rtl:space-x-reverse p-1.5">
+            <button type="button" (click)="deleteProduct(lastAddedProd)" class="px-3 py-2 text-xs font-medium text-center text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">{{ 'CARD._undo' | translate }}</button>
+            <button type="button" (click)="toastVisibility=false" class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-add-cart" aria-label="Close">
+            <span class="sr-only">{{ 'CARD._close_toast' | translate }}</span>
+            <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="flex w-full mt-2 rounded-full h-2.5 dark:bg-gray-700">
+        <div id="progress-bar" class="flex bg-green-600 h-2.5 rounded-full dark:bg-green-500 transition-width delay-200 duration-3000 ease-out" style="width: 0px;"></div>
+      </div>
+    </div>
+}
+<!-- CART SELECTION modal -->
+@if (cartSelection){
+    <div id="cart-selection-modal" [ngClass]="cartSelection ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+      <div class="relative w-full max-w-7xl max-h-full">
+          <!-- Modal content -->
+          <div class="relative bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+              <!-- Modal header -->
+              <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
+                <button (click)="hideCartSelection()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="cart-selection-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">{{ 'CARD._close' | translate }}</span>
+                </button>
+              </div>
+              <!-- Modal body -->
+              <div class="w-full h-full p-8">
+                <div class="flex">
+                  @if(check_prices){
+                    <button id="button-price" type="button" (click)="clickShowPrice()" class="h-fit ml-4 w-fit text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                      {{ 'CARD._price_plans' | translate }}
+                    </button>
+                  }
+                  @if(check_char){
+                    <button id="button-char" type="button" (click)="clickShowChar()" class="h-fit w-fit ml-4 text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                      {{ 'CARD._chars' | translate }}
+                    </button>
+                  }
+                  @if(check_terms){
+                    <button id="button-terms" type="button" (click)="clickShowTerms()" class="h-fit w-fit ml-4 text-primary-100 dark:text-white rounded-lg text-lg px-5 py-2.5 text-center inline-flex items-center">
+                      {{ 'CARD._terms' | translate }}
+                    </button>
+                    }
+                </div>
+                <hr class="h-px ml-4 mr-4 mb-2 bg-gray-300 border-0">
+                <div class="border border-gray-300 bg-secondary-50/95 rounded-lg">
+                  @if(check_prices){
+                    <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="price">
+                        <h5 class="text-3xl font-semibold tracking-tight text-primary-100 ">{{ 'CARD._select_price' | translate }}:</h5>
+                        <div class="grid grid-flow-col gap-8 p-4">
+                        @for (price of productOff?.productOfferingPrice; track price.id; let idx = $index) {
+                          @if (price.priceType == 'recurring') {
+                            <div class="flex items-center">
+                              <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 ">
+                              <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 peer-checked:border  rounded-lg cursor-pointer peer-checked:border-primary-100">
+                                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                                  <div class="bg-green-500 rounded-t-lg w-full">
+                                      <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
+                                  </div>
+                                  <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                  <p class="flex justify-center font-normal text-gray-700">/{{price.recurringChargePeriodType}}</p>
+                                  <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                                </div>
+  
+                              </label>
+                              </div>
+  
+                          } @else if (price.priceType == 'usage') {
+                            <div class="flex items-center">
+                              <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer items-center w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                              <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 peer-checked:border  rounded-lg cursor-pointer peer-checked:border-primary-100">
+  
+                                <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full">
+                                    <div class="bg-yellow-300 rounded-t-lg w-full">
+                                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                                    </div>
+                                    <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                    <p class="flex justify-center font-normal text-gray-700">/{{price.unitOfMeasure?.units}}</p>
+                                    <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                                </div>
+                              </label>
+                            </div>
+                          } @else {
+                            <div class="flex items-center">
+                              <input checked [id]="'price-radio-'+idx" (change)="onPriceChange(price)" type="radio" value="" name="price-radio" class="hidden peer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                              <label [for]="'price-radio-'+idx" class="inline-flex items-center justify-center w-full p-5 peer-checked:border rounded-lg cursor-pointer peer-checked:border-primary-100">
+  
+                              <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow w-full justify-center">
+                                  <div class="bg-blue-500 rounded-t-lg w-full">
+                                      <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                                  </div>
+                                  <p class="flex justify-center font-normal text-gray-700"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
+                                  <p class="flex justify-center mb-2 font-normal text-gray-700">{{price.description}}</p>
+                              </div>
+                            </label>
+                          </div>
+                          }
+                      }
+                    </div>
+                    </div>
+                    }
+                    @if(check_char){
+                      <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="char">
+                        <h5 class="text-3xl font-semibold tracking-tight text-primary-100">{{ 'CARD._select_char' | translate }}:</h5>
+                        @for(char of prodSpec.productSpecCharacteristic; track char.id; let charidx = $index){
+                          <div class="min-h-19 pb-2">
+                            <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{char.name}}:</h5>
+                            @for (val of char?.productSpecCharacteristicValue; track val.value; let validx = $index) {
+                              <div class="flex">
+                              @if (val?.isDefault == true) {
+                              <div class="flex items-center mb-4">
+                                <input checked [id]="'char-radio-'+charidx+validx" (change)="onCharChange(charidx,validx,val)" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900">{{val.value}}</label>
+                              </div>
+                              } @else {
+                                <div class="flex items-center mb-4">
+                                  <input [id]="'char-radio-'+charidx+validx" (change)="onCharChange(charidx,validx,val)" type="radio" value="" [name]="'char-radio-'+charidx" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                  <label [for]="'char-radio-'+charidx+validx" class="ms-2 text-sm font-medium text-gray-900">{{val.value}}</label>
+                                </div>
+                              }
+                            </div>
+                          }
+                          </div>
+                        }
+                      </div>
+                      }
+                      @if(check_terms){
+                        <div class="hidden pl-4 md:pl-8 pt-2 md:pt-4 pb-2 md:pb-4" id="terms">
+                          <h5 class="text-3xl font-semibold tracking-tight text-primary-100">{{ 'CARD._terms' | translate }}:</h5>
+                          @for (term of productOff?.productOfferingTerm; track term.name){
+                            <p class="text-gray-900 text-bold"> <span class="font-bold">{{term.name}}:</span> {{term.description}}</p>
+                          }
+                          <div class="flex items-center mb-4">
+                            <input id="terms-checkbox" type="checkbox" (change)="selected_terms=!selected_terms" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                            <label for="terms-checkbox" class="ms-2 text-sm font-medium text-gray-900">{{ 'CARD._accept_terms' | translate }}</label>
+                        </div>
+                        </div>
+                      }
+                    </div>
+                      @if(check_terms == true && selected_terms == false){
+                        <button disabled (click)="addProductToCart(productOff,true)" type="button" class="cursor-not-allowed mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                          <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                          <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                          </svg>
+                          {{ 'CARD._add_cart' | translate }}
+                        </button>
+                      } @else {
+                        <button (click)="addProductToCart(productOff,true)" type="button" class="mt-2 w-full flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                          <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
+                          <path d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"/>
+                          </svg>
+                          {{ 'CARD._add_cart' | translate }}
+                        </button>
+                      }
+              </div>
+          </div>
+      </div>
+    </div>
+  }
