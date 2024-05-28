@@ -44,7 +44,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
               private route: ActivatedRoute,
               private eventMessage: EventMessageService,
               private router: Router,
-              private qrVerifier:QrVerifierService) {
+              private qrVerifier: QrVerifierService) {
 
     this.themeToggleDarkIcon = themeToggleDarkIcon;
     this.themeToggleLightIcon = themeToggleLightIcon;
@@ -279,40 +279,18 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       dropdown.classList.add('hidden');
     }
   }
-  private popupCenter = (url:string, title:string, w:number, h:number) => {
-    // Fixes dual-screen position                             Most browsers        Firefox
-    const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
-    const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
-    
-    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-    
-    const systemZoom = width / window.screen.availWidth;
-    const left = (width - w) / 2 / systemZoom + dualScreenLeft
-    const top = (height - h) / 2 / systemZoom + dualScreenTop
-    const newWindow = window.open(url, title,
-      `
-      popup=yes,
-      scrollbars=yes,
-      width=${w / systemZoom},
-      height=${h / systemZoom},
-      top=${top},
-      left=${left}
-      `
-    )
-    newWindow?.focus()
-    return newWindow;
-  }
+
   onLoginClick(){
     if (environment.SIOP_INFO.enabled === true && this.qrVerifier.intervalId === undefined){
       this.statePair = uuid.v4()
-      this.qrWindow = this.popupCenter( `${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${this.statePair}&client_callback=${environment.SIOP_INFO.callbackURL}&client_id=${environment.SIOP_INFO.clientID}`,  'Scan QR code',  500, 500);
+      this.qrWindow = this.qrVerifier.launchPopup(`${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${this.statePair}&client_callback=${environment.SIOP_INFO.callbackURL}&client_id=${environment.SIOP_INFO.clientID}`,  'Scan QR code',  500, 500);
       this.initChecking()
     }
     else if (environment.SIOP_INFO.enabled === false){
       window.location.replace(`${environment.BASE_URL}` +  '/login')
     }
   }
+
   private initChecking():void {
     this.qrVerifier.pollServer(this.qrWindow, this.statePair); 
   }
@@ -326,5 +304,5 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   protected readonly faBrain = faBrain;
   protected readonly faAnglesLeft = faAnglesLeft;
   protected readonly faUser = faUser;
-  protected  readonly faUsers = faUsers;
+  protected readonly faUsers = faUsers;
 }

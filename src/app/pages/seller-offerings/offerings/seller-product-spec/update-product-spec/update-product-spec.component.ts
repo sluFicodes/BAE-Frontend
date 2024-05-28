@@ -16,6 +16,7 @@ import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 
 import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { QrVerifierService } from 'src/app/services/qr-verifier.service';
 
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 type ProductSpecification_Update = components["schemas"]["ProductSpecification_Update"];
@@ -147,6 +148,7 @@ export class UpdateProductSpecComponent implements OnInit{
     private attachmentService: AttachmentServiceService,
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
+    private qrVerifier: QrVerifierService
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
@@ -436,9 +438,16 @@ export class UpdateProductSpecComponent implements OnInit{
     console.log(this.selectedISOS)
   }
 
-  verifyCredential(sel:any){
+  verifyCredential(sel: any){
     console.log('verifing credential')
     console.log(sel)
+
+    const state = `cert:${uuidv4()}`
+
+    const qrWin = this.qrVerifier.launchPopup(`${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${state}&client_callback=${environment.SIOP_INFO.callbackURL}&client_id=${environment.SIOP_INFO.clientID}`,  'Scan QR code',  500, 500)
+    this.qrVerifier.pollCertCredential(qrWin, state).then((data) => {
+      console.log(`We got the vc: ${data['vc']}`)
+    })
   }
 
   public dropped(files: NgxFileDropEntry[],sel:any) {

@@ -26,6 +26,7 @@ export const environment = {
     SIOP_INFO: {
         enabled: false,
         pollPath: "",
+        pollCertPath: "",
         clientID: "",
         callbackURL: "",
         verifierHost: "",
