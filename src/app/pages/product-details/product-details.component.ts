@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild,ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
@@ -21,6 +21,8 @@ import * as moment from 'moment';
 })
 export class ProductDetailsComponent implements OnInit {
 
+  @ViewChild('relationshipsContent')
+  relationshipsContent: ElementRef | undefined;
   @ViewChild('detailsContent')
   detailsContent: ElementRef | undefined;
   @ViewChild('charsContent')
@@ -29,8 +31,6 @@ export class ProductDetailsComponent implements OnInit {
   attachContent: ElementRef | undefined;
   @ViewChild('agreementsContent')
   agreementsContent: ElementRef | undefined;
-  @ViewChild('relationshipsContent')
-  relationshipsContent: ElementRef | undefined;
 
   id:any;
   productOff: Product | undefined;
@@ -64,6 +64,44 @@ export class ProductDetailsComponent implements OnInit {
     private elementRef: ElementRef,
     private localStorage: LocalStorageService,
   ) {
+  }
+
+  @HostListener('window:scroll', ['$event']) 
+  updateTabs(event:any) {
+    let tabs_container = document.getElementById('tabs-container');
+    let tabsOffset = 0;
+    if(tabs_container){
+      tabsOffset=tabs_container.offsetHeight
+    }
+    let details_container = document.getElementById('details-container')    
+    let chars_container = document.getElementById('chars-container')
+    let attach_container = document.getElementById('attach-container')
+    let agreements_container = document.getElementById('agreements-container')
+    let relationships_container = document.getElementById('agreements-container')
+
+    let detailsOffset=tabsOffset
+    if(details_container && (details_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToDetails(false)
+      detailsOffset=details_container.getBoundingClientRect().bottom
+    }
+    let charsOffset=detailsOffset;
+    if(this.charsContent!=undefined && chars_container && (chars_container.getBoundingClientRect().top >= detailsOffset && chars_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToChars(false)
+      charsOffset=chars_container.getBoundingClientRect().bottom
+    }
+    let attOffsett=charsOffset;
+    if(this.attachContent!=undefined && attach_container && (attach_container.getBoundingClientRect().top >= charsOffset && attach_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToAttach(false)
+      attOffsett=attach_container.getBoundingClientRect().bottom
+    }
+    let agreeOffset=attOffsett;
+    if(this.agreementsContent!= undefined && agreements_container && (agreements_container.getBoundingClientRect().top >= attOffsett && agreements_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToAgreements(false)
+      agreeOffset=agreements_container.offsetHeight
+    }
+    if(this.relationshipsContent!= undefined && relationships_container && (relationships_container.getBoundingClientRect().top >= agreeOffset && relationships_container.getBoundingClientRect().bottom <= window.innerHeight)){
+      this.goToRelationships(false)
+    }
   }
 
   ngOnInit() {
@@ -200,9 +238,9 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-  goToDetails(){
+  goToDetails(scroll:boolean){
     //const targetElement = this.elementRef.nativeElement.querySelector('#detailsContent');
-    if (this.detailsContent!=undefined) {
+    if (this.detailsContent!=undefined && scroll) {
       this.detailsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -219,8 +257,8 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
-  goToChars(){
-    if (this.charsContent != undefined) {
+  goToChars(scroll:boolean){
+    if (this.charsContent != undefined && scroll) {
       this.charsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -237,8 +275,8 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
-  goToAttach(){
-    if (this.attachContent != undefined) {
+  goToAttach(scroll:boolean){
+    if (this.attachContent != undefined && scroll) {
       this.attachContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
@@ -255,8 +293,8 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
-  goToAgreements(){
-    if (this.agreementsContent) {
+  goToAgreements(scroll:boolean){
+    if (this.agreementsContent != undefined && scroll) {
       this.agreementsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center'});
     }
 
@@ -273,8 +311,8 @@ export class ProductDetailsComponent implements OnInit {
     this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
-  goToRelationships(){
-    if (this.relationshipsContent != undefined) {
+  goToRelationships(scroll:boolean){
+    if (this.relationshipsContent != undefined && scroll) {
       this.relationshipsContent.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
