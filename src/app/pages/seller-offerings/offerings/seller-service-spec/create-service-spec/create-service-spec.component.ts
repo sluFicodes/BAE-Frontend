@@ -219,6 +219,9 @@ export class CreateServiceSpecComponent implements OnInit {
     this.charsForm.reset();
     this.creatingChars=[];
     this.showCreateChar=false;
+    this.stringCharSelected=true;
+    this.numberCharSelected=false;
+    this.rangeCharSelected=false;
     this.cdr.detectChanges();
   }
 
