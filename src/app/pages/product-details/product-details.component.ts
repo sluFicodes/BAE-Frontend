@@ -58,6 +58,9 @@ export class ProductDetailsComponent implements OnInit {
   toastVisibility: boolean = false;
   lastAddedProd:cartProduct | undefined;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   protected readonly faScaleBalanced = faScaleBalanced;
   protected readonly faArrowProgress = faArrowProgress;
   protected readonly faArrowRightArrowLeft = faArrowRightArrowLeft;
@@ -325,9 +328,29 @@ export class ProductDetailsComponent implements OnInit {
         next: data => {
             console.log(data)
             console.log('Update successful');
+            //TOGGLE TOAST
+            this.toastVisibility=true;
+
+            this.cdr.detectChanges();
+            //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+            let element = document.getElementById("progress-bar")
+            let parent = document.getElementById("toast-add-cart")
+            if (element != null && parent != null) {
+              element.style.width = '0%'
+              element.offsetWidth
+              element.style.width = '100%'
+              setTimeout(() => {
+                this.toastVisibility=false
+              }, 3500);
+            }
         },
         error: error => {
             console.error('There was an error while updating!', error);
+            this.errorMessage='There was an error while adding item to the cart!';
+            this.showError=true;
+            setTimeout(() => {
+              this.showError = false;
+            }, 3000);
         }
       });
     }
@@ -349,30 +372,35 @@ export class ProductDetailsComponent implements OnInit {
         next: data => {
             console.log(data)
             console.log('Update successful');
+            //TOGGLE TOAST
+            this.toastVisibility=true;
+
+            this.cdr.detectChanges();
+            //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+            let element = document.getElementById("progress-bar")
+            let parent = document.getElementById("toast-add-cart")
+            if (element != null && parent != null) {
+              element.style.width = '0%'
+              element.offsetWidth
+              element.style.width = '100%'
+              setTimeout(() => {
+                this.toastVisibility=false
+              }, 3500);
+            }
         },
         error: error => {
             console.error('There was an error while updating!', error);
+            this.errorMessage='There was an error while adding item to the cart!';
+            this.showError=true;
+            setTimeout(() => {
+              this.showError = false;
+            }, 3000);
         }
       });
     }
     }
     if(productOff!== undefined){
       this.eventMessage.emitAddedCartItem(productOff as cartProduct);
-    }
-    //TOGGLE TOAST
-    this.toastVisibility=true;
-
-    this.cdr.detectChanges();
-    //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
-    let element = document.getElementById("progress-bar")
-    let parent = document.getElementById("toast-add-cart")
-    if (element != null && parent != null) {
-      element.style.width = '0%'
-      element.offsetWidth
-      element.style.width = '100%'
-      setTimeout(() => {
-        this.toastVisibility=false
-      }, 3500);
     }
 
     if(this.cartSelection==true){

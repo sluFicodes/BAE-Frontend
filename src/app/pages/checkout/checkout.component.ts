@@ -42,6 +42,8 @@ export class CheckoutComponent implements OnInit {
   loading_purchase:boolean=false;
   check_custom:boolean=false;
 
+  errorMessage:any='';
+  showError:boolean=false;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -225,14 +227,28 @@ export class CheckoutComponent implements OnInit {
             console.log('EMPTY');
           },
           error: error => {
+            this.loading_purchase=false;
+            this.cdr.detectChanges();
             console.error('There was an error while updating!', error);
+            this.errorMessage='There was an error while clearing the cart!';
+            this.showError=true;
+            setTimeout(() => {
+              this.showError = false;
+            }, 3000);
           }
         });
         this.loading_purchase=false;
         this.goToInventory();
       },
       error: error => {
-        console.error('There was an error while updating!', error);
+        this.loading_purchase=false;
+        this.cdr.detectChanges();
+        console.error('There was an error during purchase!', error);
+        this.errorMessage='There was an error during purchase!';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
       }
     });
   }
@@ -355,7 +371,8 @@ export class CheckoutComponent implements OnInit {
   }
 
   onDeleted(baddr: billingAccountCart) {
-    this.account.deleteBillingAccount(baddr.id).subscribe({
+    console.log('Deleting billing account')
+    /*this.account.deleteBillingAccount(baddr).subscribe({
         next: result => {
           console.log('--- DELETE BILLING ADDRESS ---')
           console.log(baddr.id)
@@ -363,10 +380,14 @@ export class CheckoutComponent implements OnInit {
         },
         error: error => {
           console.log('--- ERROR WHILE DELETING BILLING ADDRESS ---')
-          console.log(error)
+          this.errorMessage='There was an error while deleting the billing addresss!';
+          this.showError=true;
+          setTimeout(() => {
+            this.showError = false;
+          }, 3000);
         }
       }
-    )
+    )*/
   }
 
   deleteProduct(product: cartProduct){

@@ -277,7 +277,8 @@
         "_confirm_delete": "Are you sure about deleting the following billing address?",
         "_cancel": "No, cancel",
         "_invalid_phone": "Phonenumber is invalid!",
-        "_invalid_email": "Email is invalid!"
+        "_invalid_email": "Email is invalid!",
+        "_no_billing": "There's no billing information."
     },
     "CREATE_CATALOG": {
         "_back": "Back",
@@ -653,7 +654,11 @@
         "_save_price":"Save price",
         "_save_license": "Save license",
         "_no_prod_spec": "Bundled offers can't include product specifications.",
-        "_cancel": "Cancel"
+        "_cancel": "Cancel",
+        "_no_prods": "There's no product specifications.",
+        "_no_cats": "There's no catalogs.",
+        "_no_categories": "There's no categories",
+        "_no_offer": "There's no offerings."
     },
     "UPDATE_OFFER":{
         "_back": "Back",
@@ -745,11 +750,23 @@
         "_save_price":"Save price",
         "_save_license": "Save license",
         "_no_prod_spec": "Bundled offers can't include product specifications.",
-        "_cancel": "Cancel"
+        "_cancel": "Cancel",
+        "_no_prods": "There's no product specifications.",
+        "_no_cats": "There's no catalogs.",
+        "_no_categories": "There's no categories",
+        "_no_offer": "There's no offerings."
     },
     "OFFERINGS": {
         "_catalogs": "Catalogs",
         "_offers": "Offer",
+        "_no_offer": "No offerings included.",
+        "_no_offerings": "There's no product offerings.",
+        "_no_prod": "There's no product specifications.",
+        "_no_prod_rel": "There's no product specifications, so you can't create relationships.",
+        "_no_cat": "There's no catalogs.",
+        "_no_categories": "There's no categories.",
+        "_no_res": "There's no resource specifications",
+        "_no_serv": "There's no service specifications",
         "_prod_spec": "Product Specifications",
         "_serv_spec": "Service Specifications",
         "_res_spec": "Resource Specifications",

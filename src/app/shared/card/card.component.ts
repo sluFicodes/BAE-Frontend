@@ -57,6 +57,9 @@ export class CardComponent implements OnInit, AfterViewInit {
   check_logged:boolean=false;
   protected readonly faAtom = faAtom;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
@@ -178,9 +181,29 @@ export class CardComponent implements OnInit, AfterViewInit {
         next: data => {
             console.log(data)
             console.log('Update successful');
+            //TOGGLE TOAST
+            this.toastVisibility=true;
+
+            this.cdr.detectChanges();
+            //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+            let element = document.getElementById("progress-bar")
+            let parent = document.getElementById("toast-add-cart")
+            if (element != null && parent != null) {
+              element.style.width = '0%'
+              element.offsetWidth
+              element.style.width = '100%'
+              setTimeout(() => {
+                this.toastVisibility=false
+              }, 3500);
+            }
         },
         error: error => {
-            console.error('There was an error while updating!', error);
+            console.error('There was an error while adding item to cart!', error);
+            this.errorMessage='There was an error while adding item to cart!';
+            this.showError=true;
+            setTimeout(() => {
+              this.showError = false;
+            }, 3000);
         }
       });
     }
@@ -202,30 +225,35 @@ export class CardComponent implements OnInit, AfterViewInit {
         next: data => {
             console.log(data)
             console.log('Update successful');
+            //TOGGLE TOAST
+            this.toastVisibility=true;
+
+            this.cdr.detectChanges();
+            //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+            let element = document.getElementById("progress-bar")
+            let parent = document.getElementById("toast-add-cart")
+            if (element != null && parent != null) {
+              element.style.width = '0%'
+              element.offsetWidth
+              element.style.width = '100%'
+              setTimeout(() => {
+                this.toastVisibility=false
+              }, 3500);
+            }
         },
         error: error => {
-            console.error('There was an error while updating!', error);
+            console.error('There was an error while adding item to cart!', error);
+            this.errorMessage='There was an error while adding item to cart!';
+            this.showError=true;
+            setTimeout(() => {
+              this.showError = false;
+            }, 3000);
         }
       });
     }
     }
     if(productOff!== undefined){
       this.eventMessage.emitAddedCartItem(productOff as cartProduct);
-    }
-    //TOGGLE TOAST
-    this.toastVisibility=true;
-
-    this.cdr.detectChanges();
-    //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
-    let element = document.getElementById("progress-bar")
-    let parent = document.getElementById("toast-add-cart")
-    if (element != null && parent != null) {
-      element.style.width = '0%'
-      element.offsetWidth
-      element.style.width = '100%'
-      setTimeout(() => {
-        this.toastVisibility=false
-      }, 3500);
     }
 
     if(this.cartSelection==true){

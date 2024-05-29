@@ -249,7 +249,7 @@
                 <div class="col-span-2 flex align-items-middle h-fit m-4">
                     <label for="prod-brand" class="font-bold text-lg">{{ 'CREATE_OFFER._is_bundled' | translate }}</label>
                     <label class="inline-flex items-center me-5 cursor-pointer ml-4">
-                        <input type="checkbox" (change)="toggleBundleCheck()" value="" class="sr-only peer">
+                        <input type="checkbox" (change)="toggleBundleCheck()" [checked]="bundleChecked" class="sr-only peer">
                         <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
                     </label>
                 </div>
@@ -263,6 +263,18 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     } @else {
+                        @if(bundledOffers.length==0){
+                            <div class="flex justify-center w-full m-4">
+                                <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <div>
+                                        {{ 'OFFERINGS._no_offerings' | translate }}
+                                    </div>
+                                </div>
+                            </div>                    
+                        }@else{
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -315,10 +327,22 @@
                                             <input id="select-checkbox" [checked]="isProdInBundle(prod)" type="checkbox" value="" (click)="addProdToBundle(prod)" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         </td>
                                     </tr>
+                                } @empty {
+                                    <div class="flex justify-center w-full m-4">
+                                        <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                          <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                          </svg>
+                                          <div>
+                                            {{ 'CREATE_OFFER._no_offer' | translate }}
+                                          </div>
+                                        </div>
+                                    </div>                          
                                 }
                             </tbody>
                         </table>
                         </div>
+                        }
                     }
                     @if (!loadingBundle_more) {
                         @if (bundlePageCheck) {
@@ -375,6 +399,18 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     } @else {
+                        @if(prodSpecs.length==0){
+                            <div class="flex justify-center w-full m-4">
+                                <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <div>
+                                        {{ 'OFFERINGS._no_prod' | translate }}
+                                    </div>
+                                </div>
+                            </div>                    
+                        }@else{
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4 mb-4">                        
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -426,6 +462,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        }
                         @if (!loadingProdSpec_more) {
                             @if (prodSpecPageCheck) {
                             <div class="flex pt-6 pb-2 justify-center align-middle">
@@ -470,6 +507,18 @@
                         <span class="sr-only">Loading...</span>
                         </div>
                 } @else {
+                    @if(catalogs.length==0){
+                        <div class="flex justify-center w-full m-4">
+                            <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                </svg>
+                                <div>
+                                    {{ 'OFFERINGS._no_cat' | translate }}
+                                </div>
+                            </div>
+                        </div>                    
+                    }@else{
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -511,6 +560,7 @@
                             </tbody>
                         </table>
                     </div>
+                    }
                     @if (!loadingCatalog_more) {
                         @if (catalogPageCheck) {
                         <div class="flex pt-6 pb-2 justify-center align-middle">
@@ -545,7 +595,6 @@
             @if(showCategory){
                 <h2 class="text-3xl font-bold text-primary-100 ml-4">{{ 'CREATE_OFFER._category' | translate }}</h2>
                 <div class="m-4">
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">
                         @if(loadingCategory){
                             <div role="status" class="w-full h-fit flex justify-center align-middle">
                                 <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -554,7 +603,20 @@
                                 </svg>
                                 <span class="sr-only">Loading...</span>
                             </div>
-                        } @else {                    
+                        } @else {   
+                            @if(categories.length==0){
+                                <div class="flex justify-center w-full m-4">
+                                    <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                        </svg>
+                                        <div>
+                                            {{ 'OFFERINGS._no_categories' | translate }}
+                                        </div>
+                                    </div>
+                                </div>                    
+                            }@else{
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">               
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                     <tr class="flex w-full justify-between">
@@ -594,9 +656,10 @@
                                     }
                                 </tbody>
                             </table>
+                            </div>
+                            }
                         }
-                        </div>
-                        <div class="flex w-full justify-items-end justify-end ml-4">
+                        <div class="flex w-full justify-items-end justify-end ml-4 mt-4">
                             <button type="button" (click)="toggleLicense();categoriesDone=true;"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                                 {{ 'CREATE_OFFER._next' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -1488,3 +1551,6 @@
         </div>
     </div>
 </div>
+@if(showError){
+    <error-message class="fixed w-fit top-1/2 left-1/2" [message]="errorMessage"></error-message>
+}

@@ -39,6 +39,9 @@ export class InventoryProductsComponent implements OnInit {
   searchField = new FormControl();
   keywordFilter:any=undefined;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private inventoryService: ProductInventoryServiceService,
     private localStorage: LocalStorageService,
@@ -243,6 +246,11 @@ export class InventoryProductsComponent implements OnInit {
       },
       error: error => {
           console.error('There was an error while updating!', error);
+          this.errorMessage='There was an error while unsubscribing!';
+          this.showError=true;
+          setTimeout(() => {
+            this.showError = false;
+          }, 3000);
       }
     });
   }

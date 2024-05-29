@@ -45,6 +45,9 @@ export class CreateCatalogComponent implements OnInit {
     description: new FormControl(''),
   });
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private router: Router,
     private cdr: ChangeDetectorRef,
@@ -124,6 +127,11 @@ export class CreateCatalogComponent implements OnInit {
       },
       error: error => {
         console.error('There was an error while updating!', error);
+        this.errorMessage='There was an error while creating the catalog!';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
       }
     })
   }

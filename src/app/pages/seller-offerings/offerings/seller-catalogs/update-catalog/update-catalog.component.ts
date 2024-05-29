@@ -48,6 +48,9 @@ export class UpdateCatalogComponent implements OnInit {
   });
   catStatus:any='Active';
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private router: Router,
     private cdr: ChangeDetectorRef,
@@ -134,6 +137,11 @@ export class UpdateCatalogComponent implements OnInit {
       },
       error: error => {
         console.error('There was an error while updating!', error);
+        this.errorMessage='There was an error while updating the catalog!';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
       }
     })
   }
