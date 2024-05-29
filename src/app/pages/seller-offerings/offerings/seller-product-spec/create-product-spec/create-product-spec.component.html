@@ -271,6 +271,18 @@
                                 <span class="sr-only">Loading...</span>
                             </div>
                         } @else {
+                            @if(prodSpecs.length==0){
+                                <div class="flex justify-center w-full m-4">
+                                    <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                        </svg>
+                                        <div>
+                                            {{ 'OFFERINGS._no_prod' | translate }}
+                                        </div>
+                                    </div>
+                                </div>                    
+                            }@else{
                             <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -327,6 +339,7 @@
                                 </tbody>
                             </table>
                             </div>
+                            }
                         }
                         @if (!loadingBundle_more) {
                             @if (bundlePageCheck) {
@@ -673,6 +686,18 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     } @else {
+                        @if(resourceSpecs.length==0){
+                            <div class="flex justify-center w-full m-4">
+                                <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <div>
+                                        {{ 'OFFERINGS._no_res' | translate }}
+                                    </div>
+                                </div>
+                            </div>                    
+                        }@else{
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -720,6 +745,7 @@
                         </table>
                         </div>
                         }
+                        }
                         @if (!loadingResourceSpec_more) {
                             @if (resourceSpecPageCheck) {
                             <div class="flex pt-6 pb-2 justify-center align-middle">
@@ -760,6 +786,18 @@
                             <span class="sr-only">Loading...</span>
                             </div>
                     } @else {
+                        @if(serviceSpecs.length==0){
+                            <div class="flex justify-center w-full m-4">
+                                <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <div>
+                                        {{ 'OFFERINGS._no_serv' | translate }}
+                                    </div>
+                                </div>
+                            </div>                    
+                        }@else{
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -806,6 +844,7 @@
                             </tbody>
                         </table>
                         </div>
+                        }
                         }
                         @if (!loadingServiceSpec_more) {
                             @if (serviceSpecPageCheck) {
@@ -1090,6 +1129,18 @@
                                     <span class="sr-only">Loading...</span>
                                     </div>
                             } @else {
+                                @if(prodSpecRels.length==0){
+                                    <div class="flex justify-center w-full m-4">
+                                        <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                                            <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                            </svg>
+                                            <div>
+                                                {{ 'OFFERINGS._no_prod_rel' | translate }}
+                                            </div>
+                                        </div>
+                                    </div>                    
+                                }@else{
                                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">                        
                                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                                         <thead class="text-xs text-gray-700 uppercase bg-gray-100">
@@ -1127,6 +1178,7 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                }
                                 @if (!loadingprodSpecRel_more) {
                                     @if (prodSpecRelPageCheck) {
                                     <div class="flex pt-6 pb-2 justify-center align-middle">
@@ -1149,7 +1201,7 @@
                                 }
                             }
                             <div class="flex w-full justify-items-center justify-center mt-4">
-                                <button type="button" (click)="saveRel()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                <button type="button" (click)="saveRel()" [disabled]="prodSpecRels.length==0" [ngClass]="prodSpecRels.length==0 ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                                     {{ 'CREATE_PROD_SPEC._save_relationship' | translate }}
                                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
