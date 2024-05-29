@@ -66,6 +66,9 @@ export class CreateResourceSpecComponent implements OnInit {
   creatingChars:CharacteristicValueSpecification[]=[];
   showCreateChar:boolean=false;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private router: Router,
     private cdr: ChangeDetectorRef,
@@ -278,7 +281,12 @@ export class CreateResourceSpecComponent implements OnInit {
         console.log('serv created')
       },
       error: error => {
-        console.error('There was an error while updating!', error);
+        console.error('There was an error while creating!', error);
+        this.errorMessage='There was an error while creating the resource!';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
       }
     })
   }

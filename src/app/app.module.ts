@@ -59,6 +59,7 @@ import { ChatbotWidgetComponent } from './chatbot-widget/chatbot-widget.componen
 import { UpdateOfferComponent } from './pages/seller-offerings/offerings/seller-offer/update-offer/update-offer.component';
 import { CreateCatalogComponent } from './pages/seller-offerings/offerings/seller-catalogs/create-catalog/create-catalog.component';
 import { UpdateCatalogComponent } from './pages/seller-offerings/offerings/seller-catalogs/update-catalog/update-catalog.component';
+import { ErrorMessageComponent } from 'src/app/shared/error-message/error-message.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { UpdateCatalogComponent } from './pages/seller-offerings/offerings/selle
     UpdateServiceSpecComponent,
     UpdateOfferComponent,
     CreateCatalogComponent,
-    UpdateCatalogComponent
+    UpdateCatalogComponent,
+    ErrorMessageComponent
   ],
   imports: [
     BrowserModule,

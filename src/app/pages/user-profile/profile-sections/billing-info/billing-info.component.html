@@ -71,7 +71,7 @@
 
 <!-- BILL ADDRESS EDIT modal -->
 @if (editBill){
-    <div id="edit-bill-modal" [ngClass]="editBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+    <div id="edit-bill-modal" [ngClass]="editBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
         <div class="w-1/2 relative bg-secondary-50 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
             <!-- Modal header -->
             <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
@@ -123,4 +123,7 @@
         </div>
     </div>
 
+}
+@if(showError){
+    <error-message class="fixed w-fit top-1/2 left-1/2 z-50" [message]="errorMessage"></error-message>
 }

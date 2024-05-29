@@ -37,6 +37,9 @@ export class BillingInfoComponent implements OnInit{
   countries: any[] = countries;
   preferred:boolean=false;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private localStorage: LocalStorageService,
     private api: ApiServiceService,
@@ -220,6 +223,11 @@ export class BillingInfoComponent implements OnInit{
         },
         error: error => {
           console.error('There was an error while updating!', error);
+          this.errorMessage='There was an error while updating billing account!';
+          this.showError=true;
+          setTimeout(() => {
+            this.showError = false;
+          }, 3000);
         }
       });
   }

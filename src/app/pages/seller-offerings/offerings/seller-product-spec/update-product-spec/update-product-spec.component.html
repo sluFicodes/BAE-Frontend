@@ -1530,7 +1530,7 @@
 <!-- BILL ADDRESS DELETE modal -->
 @if (showUploadFile){
     <div id="upload-file-modal" [ngClass]="showUploadFile ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" 
-    class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full shadow-2xl">
+    class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-modal md:h-full shadow-2xl">
         <div class="relative p-4 w-full max-w-md h-full md:h-auto" (click)="$event.stopPropagation();">
             <!-- Modal content -->
             <div class="relative p-4 text-center bg-secondary-50 rounded-lg shadow sm:p-5">
@@ -1564,4 +1564,7 @@
         </div>
     </div>
 
+}
+@if(showError){
+    <error-message class="fixed w-fit top-1/2 left-1/2 z-50" [message]="errorMessage"></error-message>
 }
