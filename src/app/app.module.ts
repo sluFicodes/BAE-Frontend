@@ -60,6 +60,7 @@ import { UpdateOfferComponent } from './pages/seller-offerings/offerings/seller-
 import { CreateCatalogComponent } from './pages/seller-offerings/offerings/seller-catalogs/create-catalog/create-catalog.component';
 import { UpdateCatalogComponent } from './pages/seller-offerings/offerings/seller-catalogs/update-catalog/update-catalog.component';
 import { ErrorMessageComponent } from 'src/app/shared/error-message/error-message.component';
+import { CartCardComponent } from 'src/app/shared/cart-card/cart-card.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import { ErrorMessageComponent } from 'src/app/shared/error-message/error-messag
     UpdateOfferComponent,
     CreateCatalogComponent,
     UpdateCatalogComponent,
-    ErrorMessageComponent
+    ErrorMessageComponent,
+    CartCardComponent
   ],
   imports: [
     BrowserModule,

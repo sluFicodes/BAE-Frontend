@@ -54,7 +54,6 @@ export class ProductDetailsComponent implements OnInit {
   check_terms:boolean=false;
   selected_terms:boolean=false;
   selected_chars:productSpecCharacteristicValueCart[]=[];
-  formattedPrices:any[]=[];
   toastVisibility: boolean = false;
   lastAddedProd:cartProduct | undefined;
 
@@ -87,6 +86,12 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: ShoppingCartServiceService,
     private eventMessage: EventMessageService,
   ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'CloseCartCard') {
+        this.hideCartSelection();
+        this.cdr.detectChanges();
+      }
+    })
   }
 
   @HostListener('window:scroll', ['$event']) 
@@ -239,7 +244,6 @@ export class ProductDetailsComponent implements OnInit {
       } else {
         this.check_terms=true;
       }
-
     }
 
     if(this.prodSpec.productSpecCharacteristic != undefined){
@@ -266,7 +270,6 @@ export class ProductDetailsComponent implements OnInit {
     if (this.check_prices==false && this.check_char == false && this.check_terms == false){
       this.addProductToCart(this.productOff,false);
     } else {
-      this.clickShowChar();
       this.cartSelection=true;      
       this.cdr.detectChanges();
     }
@@ -389,40 +392,13 @@ export class ProductDetailsComponent implements OnInit {
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
-  }
-
-  onPriceChange(price:any){
-    this.selected_price=price;
-    console.log('change price')
-    console.log(this.selected_price)
-    this.cdr.detectChanges;
-  }
-
-  onCharChange(idx:number,validx:number,char:any){
-    let defaultChar = { "isDefault": true, "value": char.value}
-    this.selected_chars[idx].value=defaultChar;
-    let prodcharval = this.selected_chars[idx]['characteristic'].productSpecCharacteristicValue
-    if( prodcharval != undefined){
-      for(let i=0; i<prodcharval.length; i++){
-        if(i==validx){
-          prodcharval[i].isDefault=true;
-        } else {
-          prodcharval[i].isDefault=false;
-        }
-      }
-    }
-
-    console.log('change char')
-    console.log(this.selected_chars)
-    this.cdr.detectChanges();
-  }
+  }  
 
   hideCartSelection(){
     this.cartSelection=false;
     this.check_char=false;
     this.check_terms=false;
     this.check_prices=false;
-    this.formattedPrices=[];
     this.selected_chars=[];
     this.selected_price={};
     this.selected_terms=false;
@@ -555,55 +531,6 @@ export class ProductDetailsComponent implements OnInit {
         this.addClass(elem,cls)
       }
     }
-  }
-
-  //STEPS CSS EFFECTS:
-  selectStep(step:string,stepCircle:string, stepText:string){
-    
-    this.unselectTag(document.getElementById(step),'text-gray-400 after:border-gray-400');
-    this.selectTag(document.getElementById(step),'text-white after:border-primary-100');
-    
-    this.unselectTag(document.getElementById(stepCircle),'bg-white dark:bg-secondary-100 border-2 border-gray-400');
-    this.selectTag(document.getElementById(stepCircle),'bg-primary-100');
-    
-    this.unselectTag(document.getElementById(stepText),'text-gray-400');
-    this.selectTag(document.getElementById(stepText),'text-primary-100');
-  }
-
-  clickShowPrice(){
-    this.selectStep('step-price','circle-price','text-price')
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    this.unselectTag(price_elem,'hidden')
-    this.selectTag(char_elem,'hidden')
-    this.selectTag(terms_elem,'hidden')
-
-  }
-
-  clickShowChar(){
-    this.selectStep('step-char','circle-char','text-char')
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    this.unselectTag(char_elem,'hidden')
-    this.selectTag(price_elem,'hidden')
-    this.selectTag(terms_elem,'hidden')
-
-  }
-
-  clickShowTerms(){
-    this.selectStep('step-terms','circle-terms','text-terms')
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    this.unselectTag(terms_elem,'hidden')
-    this.selectTag(price_elem,'hidden')
-    this.selectTag(char_elem,'hidden')
-
   }
 
 }

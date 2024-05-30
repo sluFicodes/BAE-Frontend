@@ -7,7 +7,7 @@ export interface EventMessage {
   type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess' | 'BillAccChanged' |
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
   'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
-  'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession';
+  'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession' | 'CloseCartCard';
   text?: string,
   value?: object | boolean
 }
@@ -128,6 +128,10 @@ export class EventMessageService {
     console.log('event eChangedSession')
     console.log(session)
     this.eventMessageSubject.next({ type: 'ChangedSession', value: session });
+  }
+
+  emitCloseCartCard(val:any){
+    this.eventMessageSubject.next({type:'CloseCartCard', value: val})
   }
 
 }
