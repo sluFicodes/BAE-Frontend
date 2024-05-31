@@ -55,7 +55,7 @@ export class ProductDetailsComponent implements OnInit {
   selected_terms:boolean=false;
   selected_chars:productSpecCharacteristicValueCart[]=[];
   toastVisibility: boolean = false;
-  lastAddedProd:cartProduct | undefined;
+  lastAddedProd:any | undefined;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -89,6 +89,25 @@ export class ProductDetailsComponent implements OnInit {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'CloseCartCard') {
         this.hideCartSelection();
+        //TOGGLE TOAST
+        if(ev.value!=undefined){
+          this.lastAddedProd=ev.value;
+          this.toastVisibility=true;
+  
+          this.cdr.detectChanges();
+          //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+          let element = document.getElementById("progress-bar")
+          let parent = document.getElementById("toast-add-cart")
+          if (element != null && parent != null) {
+            element.style.width = '0%'
+            element.offsetWidth
+            element.style.width = '100%'
+            setTimeout(() => {
+              this.toastVisibility=false
+            }, 3500);
+          }
+        }
+
         this.cdr.detectChanges();
       }
     })

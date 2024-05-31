@@ -34,7 +34,6 @@ export class CartCardComponent implements OnInit {
   selected_terms:boolean=false;
   selected_chars:productSpecCharacteristicValueCart[]=[];
   formattedPrices:any[]=[];
-  toastVisibility: boolean = false;
   lastAddedProd:cartProduct | undefined;
 
   errorMessage:any='';
@@ -127,21 +126,6 @@ export class CartCardComponent implements OnInit {
         next: data => {
             console.log(data)
             console.log('Update successful');
-            //TOGGLE TOAST
-            this.toastVisibility=true;
-
-            this.cdr.detectChanges();
-            //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
-            let element = document.getElementById("progress-bar")
-            let parent = document.getElementById("toast-add-cart")
-            if (element != null && parent != null) {
-              element.style.width = '0%'
-              element.offsetWidth
-              element.style.width = '100%'
-              setTimeout(() => {
-                this.toastVisibility=false
-              }, 3500);
-            }
         },
         error: error => {
             console.error('There was an error while updating!', error);
@@ -171,21 +155,6 @@ export class CartCardComponent implements OnInit {
         next: data => {
             console.log(data)
             console.log('Update successful');
-            //TOGGLE TOAST
-            this.toastVisibility=true;
-
-            this.cdr.detectChanges();
-            //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
-            let element = document.getElementById("progress-bar")
-            let parent = document.getElementById("toast-add-cart")
-            if (element != null && parent != null) {
-              element.style.width = '0%'
-              element.offsetWidth
-              element.style.width = '100%'
-              setTimeout(() => {
-                this.toastVisibility=false
-              }, 3500);
-            }
         },
         error: error => {
             console.error('There was an error while updating!', error);
@@ -200,7 +169,7 @@ export class CartCardComponent implements OnInit {
     }
     if(productOff!== undefined){
       this.eventMessage.emitAddedCartItem(productOff as cartProduct);
-      this.eventMessage.emitCloseCartCard(true);
+      this.eventMessage.emitCloseCartCard(productOff as cartProduct);
       this.check_char=false;
       this.check_terms=false;
       this.check_prices=false;
@@ -214,7 +183,7 @@ export class CartCardComponent implements OnInit {
   }
 
   hideCartSelection(){
-    this.eventMessage.emitCloseCartCard(true);
+    this.eventMessage.emitCloseCartCard(undefined);
     this.cartSelection=false;
     this.check_char=false;
     this.check_terms=false;
@@ -298,7 +267,19 @@ export class CartCardComponent implements OnInit {
     this.selectTag(document.getElementById(stepText),'text-primary-100');
   }
 
-  clickShowPrice(){
+  unselectStep(step:string,stepCircle:string, stepText:string){
+  
+    this.selectTag(document.getElementById(step),'text-gray-400 after:border-gray-400');
+    this.unselectTag(document.getElementById(step),'text-white after:border-primary-100');
+    
+    this.selectTag(document.getElementById(stepCircle),'bg-white dark:bg-secondary-100 border-2 border-gray-400');
+    this.unselectTag(document.getElementById(stepCircle),'bg-primary-100');
+    
+    this.selectTag(document.getElementById(stepText),'text-gray-400');
+    this.unselectTag(document.getElementById(stepText),'text-primary-100');
+  }
+
+  clickShowPrice(back:boolean){
     this.selectStep('step-price','circle-price','text-price')
     let price_elem = document.getElementById('price')
     let char_elem = document.getElementById('char')
@@ -307,10 +288,13 @@ export class CartCardComponent implements OnInit {
     this.unselectTag(price_elem,'hidden')
     this.selectTag(char_elem,'hidden')
     this.selectTag(terms_elem,'hidden')
-
+    if(back){
+      this.selectStep('step-char','circle-char','text-char')
+      this.unselectStep('step-terms','circle-terms','text-terms');
+    }
   }
 
-  clickShowChar(){
+  clickShowChar(back:boolean){
     this.selectStep('step-char','circle-char','text-char')
     let price_elem = document.getElementById('price')
     let char_elem = document.getElementById('char')
@@ -319,10 +303,13 @@ export class CartCardComponent implements OnInit {
     this.unselectTag(char_elem,'hidden')
     this.selectTag(price_elem,'hidden')
     this.selectTag(terms_elem,'hidden')
-
+    if(back){
+      this.unselectStep('step-price','circle-price','text-price');
+      this.unselectStep('step-terms','circle-terms','text-terms');
+    }
   }
 
-  clickShowTerms(){
+  clickShowTerms(back:boolean){
     this.selectStep('step-terms','circle-terms','text-terms')
     let price_elem = document.getElementById('price')
     let char_elem = document.getElementById('char')
@@ -331,6 +318,10 @@ export class CartCardComponent implements OnInit {
     this.unselectTag(terms_elem,'hidden')
     this.selectTag(price_elem,'hidden')
     this.selectTag(char_elem,'hidden')
+    if(back){
+      this.selectStep('step-price','circle-price','text-price');
+      this.selectStep('step-char','circle-char','text-char');
+    }
 
   }
 

@@ -129,7 +129,8 @@
         "_terms": "Terms and conditions",
         "_accept_terms": "I have read and I accept the terms and conditions.",
         "_next": "Next",
-        "_checkout": "Proceed to purchase",
+        "_back": "Back",
+        "_checkout": "Add to cart",
         "_no_terms": "This product has no terms and conditions.",
         "_no_chars": "This product has no characteristics.",
         "_no_prices": "This product has no price plans."

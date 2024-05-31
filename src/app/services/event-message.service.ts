@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Subject} from "rxjs";
-import {Category} from "../models/interfaces";
+import {Category, cartProduct} from "../models/interfaces";
 import { LoginInfo } from 'src/app/models/interfaces';
 
 export interface EventMessage {
@@ -130,7 +130,7 @@ export class EventMessageService {
     this.eventMessageSubject.next({ type: 'ChangedSession', value: session });
   }
 
-  emitCloseCartCard(val:any){
+  emitCloseCartCard(val:cartProduct | undefined){
     this.eventMessageSubject.next({type:'CloseCartCard', value: val})
   }
 

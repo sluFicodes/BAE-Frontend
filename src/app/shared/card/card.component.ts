@@ -38,7 +38,7 @@ export class CardComponent implements OnInit, AfterViewInit {
   bgColor: string = '';
   toastVisibility: boolean = false;
   detailsModalVisibility: boolean = false;
-  lastAddedProd:cartProduct | undefined;
+  lastAddedProd:any | undefined;
   targetModal: any;
   modal: Modal;
   prodSpec:ProductSpecification = {};
@@ -79,6 +79,25 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.eventMessage.messages$.subscribe(ev => {
         if(ev.type === 'CloseCartCard') {
           this.hideCartSelection();
+          //TOGGLE TOAST
+          if(ev.value!=undefined){
+            this.lastAddedProd=ev.value;
+            this.toastVisibility=true;
+    
+            this.cdr.detectChanges();
+            //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+            let element = document.getElementById("progress-bar")
+            let parent = document.getElementById("toast-add-cart")
+            if (element != null && parent != null) {
+              element.style.width = '0%'
+              element.offsetWidth
+              element.style.width = '100%'
+              setTimeout(() => {
+                this.toastVisibility=false
+              }, 3500);
+            }
+          }
+  
           this.cdr.detectChanges();
         }
       })
