@@ -56,6 +56,8 @@ export class BillingAccountFormComponent implements OnInit {
   loading: boolean = false;
   is_create: boolean = false;
 
+  errorMessage:any='';
+  showError:boolean=false;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -183,7 +185,12 @@ export class BillingAccountFormComponent implements OnInit {
           this.billingForm.reset();
         },
         error: error => {
-          console.error('There was an error while updating!', error);
+          console.error('There was an error while creating!', error);
+          this.errorMessage='There was an error while creating billing account!';
+          this.showError=true;
+          setTimeout(() => {
+            this.showError = false;
+          }, 3000);
         }
       });
     }
@@ -268,6 +275,11 @@ export class BillingAccountFormComponent implements OnInit {
           },
           error: error => {
             console.error('There was an error while updating!', error);
+            this.errorMessage='There was an error while updating billing account!';
+            this.showError=true;
+            setTimeout(() => {
+              this.showError = false;
+            }, 3000);
           }
         });
       }

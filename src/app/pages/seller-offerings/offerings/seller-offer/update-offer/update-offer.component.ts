@@ -160,6 +160,9 @@ export class UpdateOfferComponent implements OnInit{
   discountSelected:boolean=false;
   noAlterSelected:boolean=true;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   //FINAL OFFER USING API CALL STRUCTURE
   offerToUpdate:ProductOffering_Update | undefined;
 
@@ -1148,7 +1151,7 @@ export class UpdateOfferComponent implements OnInit{
               console.log('usage')
               priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
             }
-            await this.api.postOfferingPrice(priceToCreate).subscribe({
+            await this.api.postOfferingPrice({priceToCreate}).subscribe({
               next: data => {
                 console.log('precio')
                 console.log(data)
@@ -1158,7 +1161,12 @@ export class UpdateOfferComponent implements OnInit{
                 }            
               },
               error: error => {
-                console.error('There was an error while updating!', error);
+                console.error('There was an error while creating offers price!', error);
+                this.errorMessage='There was an error while creating offers price!';
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
               }
             });
           } else {
@@ -1183,7 +1191,7 @@ export class UpdateOfferComponent implements OnInit{
                 console.log('usage')
                 priceToUpdate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
               }
-              await this.api.updateOfferingPrice(priceToUpdate).subscribe({
+              await this.api.updateOfferingPrice({priceToUpdate}).subscribe({
                 next: data => {
                   console.log('precio')
                   console.log(data)
@@ -1194,6 +1202,11 @@ export class UpdateOfferComponent implements OnInit{
                 },
                 error: error => {
                   console.error('There was an error while updating!', error);
+                  this.errorMessage='There was an error while updating offers price!';
+                  this.showError=true;
+                  setTimeout(() => {
+                    this.showError = false;
+                  }, 3000);
                 }
               });
             }
@@ -1273,6 +1286,11 @@ export class UpdateOfferComponent implements OnInit{
       },
       error: error => {
         console.error('There was an error while updating!', error);
+        this.errorMessage='There was an error while updating the offer!';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
       }
     });
   }

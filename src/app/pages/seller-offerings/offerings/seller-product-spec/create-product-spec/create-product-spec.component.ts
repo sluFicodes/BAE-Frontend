@@ -143,6 +143,9 @@ export class CreateProductSpecComponent implements OnInit {
   //FINAL PRODUCT USING API CALL STRUCTURE
   productSpecToCreate:ProductSpecification_Create | undefined;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private router: Router,
     private api: ApiServiceService,
@@ -381,7 +384,12 @@ export class CreateProductSpecComponent implements OnInit {
                       console.log('uploaded')
                   },
                   error: error => {
-                      console.error('There was an error while updating!', error);
+                      console.error('There was an error while uploading the file!', error);
+                      this.errorMessage='There was an error while uploading the file!';
+                      this.showError=true;
+                      setTimeout(() => {
+                        this.showError = false;
+                      }, 3000);
                   }
                 });
               }
@@ -406,7 +414,12 @@ export class CreateProductSpecComponent implements OnInit {
                       console.log('uploaded')
                   },
                   error: error => {
-                      console.error('There was an error while updating!', error);
+                      console.error('There was an error while uploading!', error);
+                      this.errorMessage='There was an error while uploading the file!';
+                      this.showError=true;
+                      setTimeout(() => {
+                        this.showError = false;
+                      }, 3000);
                   }
                 });
               }
@@ -972,10 +985,14 @@ export class CreateProductSpecComponent implements OnInit {
     this.prodSpecService.postProdSpec(this.productSpecToCreate).subscribe({
       next: data => {
         this.goBack();
-        console.log('creado producto')
       },
       error: error => {
-        console.error('There was an error while updating!', error);
+        console.error('There was an error while creating!', error);
+        this.errorMessage='There was an error while creating the product!';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
       }
     });
   }

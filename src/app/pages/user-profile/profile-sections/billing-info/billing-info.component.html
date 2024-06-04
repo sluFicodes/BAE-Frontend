@@ -59,6 +59,17 @@
                                 </button>
                             </td>
                         </tr>
+                    } @empty {
+                        <div class="flex justify-center w-full m-4">
+                            <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                              <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                              </svg>
+                              <div>
+                                  {{ 'BILLING._no_billing' | translate }}
+                              </div>
+                            </div>
+                        </div>                          
                     }
                 </tbody>
             </table>
@@ -71,7 +82,7 @@
 
 <!-- BILL ADDRESS EDIT modal -->
 @if (editBill){
-    <div id="edit-bill-modal" [ngClass]="editBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+    <div id="edit-bill-modal" [ngClass]="editBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
         <div class="w-1/2 relative bg-secondary-50 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
             <!-- Modal header -->
             <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
@@ -123,4 +134,7 @@
         </div>
     </div>
 
+}
+@if(showError){
+    <error-message class="fixed w-fit top-1/2 left-1/2 z-50" [message]="errorMessage"></error-message>
 }

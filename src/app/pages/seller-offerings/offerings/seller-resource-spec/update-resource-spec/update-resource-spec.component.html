@@ -541,3 +541,7 @@
   </div>
 
 </div>
+
+@if(showError){
+    <error-message class="fixed w-fit top-1/2 left-1/2" [message]="errorMessage"></error-message>
+}

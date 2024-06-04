@@ -37,6 +37,9 @@ export class UserInfoComponent implements OnInit {
   countries: any[] = countries;
   preferred:boolean=false;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private localStorage: LocalStorageService,
     private api: ApiServiceService,
@@ -105,6 +108,11 @@ export class UserInfoComponent implements OnInit {
       },
       error: error => {
           console.error('There was an error while updating!', error);
+          this.errorMessage='There was an error while updating profile!';
+          this.showError=true;
+          setTimeout(() => {
+            this.showError = false;
+          }, 3000);
       }
     });
   }

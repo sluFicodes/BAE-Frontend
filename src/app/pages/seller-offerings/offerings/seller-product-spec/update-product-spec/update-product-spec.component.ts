@@ -137,6 +137,9 @@ export class UpdateProductSpecComponent implements OnInit{
   //FINAL PRODUCT USING API CALL STRUCTURE
   productSpecToUpdate:ProductSpecification_Update | undefined;
 
+  errorMessage:any='';
+  showError:boolean=false;
+
   constructor(
     private router: Router,
     private api: ApiServiceService,
@@ -490,7 +493,12 @@ export class UpdateProductSpecComponent implements OnInit{
                       console.log('uploaded')
                   },
                   error: error => {
-                      console.error('There was an error while updating!', error);
+                      console.error('There was an error while uploading file!', error);
+                      this.errorMessage='There was an error while uploading the file!';
+                      this.showError=true;
+                      setTimeout(() => {
+                        this.showError = false;
+                      }, 3000);
                   }
                 });
               }
@@ -515,7 +523,12 @@ export class UpdateProductSpecComponent implements OnInit{
                       console.log('uploaded')
                   },
                   error: error => {
-                      console.error('There was an error while updating!', error);
+                      console.error('There was an error while uploading file!', error);
+                      this.errorMessage='There was an error while uploading the file!';
+                      this.showError=true;
+                      setTimeout(() => {
+                        this.showError = false;
+                      }, 3000);
                   }
                 });
               }
@@ -1080,6 +1093,11 @@ export class UpdateProductSpecComponent implements OnInit{
       },
       error: error => {
         console.error('There was an error while updating!', error);
+        this.errorMessage='There was an error while uploading the product!';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
       }
     });
   }

@@ -158,6 +158,8 @@ export class CreateOfferComponent implements OnInit {
   priceComponentSelected:boolean=false;
   discountSelected:boolean=false;
   noAlterSelected:boolean=true;
+  errorMessage:any='';
+  showError:boolean=false;
 
   //FINAL OFFER USING API CALL STRUCTURE
   offerToCreate:ProductOffering_Create | undefined;
@@ -948,7 +950,12 @@ export class CreateOfferComponent implements OnInit {
             }            
           },
           error: error => {
-            console.error('There was an error while updating!', error);
+            console.error('There was an error while creating offers price!', error);
+            this.errorMessage='There was an error while creating offers price!';
+            this.showError=true;
+            setTimeout(() => {
+              this.showError = false;
+            }, 3000);
           }
         });
       }
@@ -1029,7 +1036,12 @@ export class CreateOfferComponent implements OnInit {
         this.goBack();
       },
       error: error => {
-        console.error('There was an error while updating!', error);
+        console.error('There was an error while creating the offer!', error);
+        this.errorMessage='There was an error while creating the offer!';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
       }
     });
   }
