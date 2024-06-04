@@ -351,7 +351,7 @@
                                 </div>
                             </div>
                             
-                            <p class="h-2/4 text-lg font-normal text-gray-700 mb-4">{{productOff?.productOfferingTerm?.at(0)?.description}}</p>
+                            <markdown class="h-2/4 text-lg font-normal text-gray-700 mb-4" [data]="productOff?.productOfferingTerm?.at(0)?.description"></markdown>
                         </div>
                     </div>
                 }

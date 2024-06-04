@@ -10,6 +10,7 @@ import { ShoppingCartComponent } from "./pages/shopping-cart/shopping-cart.compo
 import {CheckoutComponent} from "./pages/checkout/checkout.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 import { SellerOfferingsComponent } from "./pages/seller-offerings/seller-offerings.component";
+import { AdminComponent } from "./pages/admin/admin.component";
 
 
 const routes: Routes = [
@@ -45,6 +46,9 @@ const routes: Routes = [
   },
   { path: 'my-offerings',
   component: SellerOfferingsComponent
+  },
+  { path: 'admin',
+  component: AdminComponent
   }
 ]
 

@@ -169,7 +169,8 @@ class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0
                   @if(check_terms){                    
                       <h5 class="text-3xl font-semibold tracking-tight text-primary-100">{{ 'CARD._terms' | translate }}:</h5>
                       @for (term of productOff?.productOfferingTerm; track term.name){
-                      <p class="text-gray-900 text-bold"> <span class="font-bold">{{term.name}}:</span> {{term.description}}</p>
+                      <p class="text-gray-900 text-bold"> <span class="font-bold">{{term.name}}:</span></p>
+                      <markdown class="text-lg font-normal mb-4" [data]="term.description"></markdown>
                       }
                       <div class="flex items-center mb-4">
                           <input id="terms-checkbox" type="checkbox" (change)="selected_terms=!selected_terms" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
@@ -211,6 +212,6 @@ class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0
         </div>
     </div>
   </div>
-  @if(showError){
+@if(showError){
     <error-message class="fixed w-fit top-1/2 left-1/2 z-50" [message]="errorMessage"></error-message>
-    }
+}

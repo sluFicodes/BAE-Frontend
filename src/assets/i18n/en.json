@@ -173,7 +173,8 @@
         "_support": "Support",
         "_knowledge": "Knowledge Base",
         "_ticketing": "Ticketing System",
-        "_change_session": "Change session"
+        "_change_session": "Change session",
+        "_admin": "Administration"
     },
     "PRODUCT_DETAILS": {
         "_back": "Back",
@@ -804,5 +805,47 @@
         "_seller": "Seller",
         "_owner": "Owner",
         "_role": "Role"
+    },
+    "ADMIN":{
+        "_admin": "Administration",
+        "_filter_state": "Filter by state",
+        "_state": "State",
+        "_order_by": "Order by...",
+        "_last_update": "Last update",
+        "_name": "Name",
+        "_active": "Active",
+        "_launched": "Launched",
+        "_retired": "Retired",
+        "_obsolete": "Obsolete",
+        "_status": "Status",
+        "_actions": "Actions",
+        "_load_more": "Load more",
+        "_categories": "Categories"
+    },
+    "CATEGORIES":{
+        "_categories": "Categories",
+        "_add_new_cat": "Add new category",
+        "_no_cat": "No categories included"
+    },
+    "CREATE_CATEGORIES":{
+        "_categories": "Categories",
+        "_add_new_cat": "Add new category",
+        "_no_cat": "No categories included",
+        "_back": "Back",
+        "_create": "Create category",
+        "_new": "New category",
+        "_steps": "Steps",
+        "_general": "General",
+        "_general_info": "Category's general information",
+        "_finish": "Create category",        
+        "_summary": "Category's summary",
+        "_name": "Name",
+        "_description": "Description",
+        "_preview": "Preview",
+        "_show_preview": "Show preview",
+        "_status": "Status",
+        "_next": "Next",
+        "_choose_parent": "Choose a parent category",
+        "_parent": "Parent category"
     }
 }
