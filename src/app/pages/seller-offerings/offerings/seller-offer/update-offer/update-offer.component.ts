@@ -843,7 +843,7 @@ export class UpdateOfferComponent implements OnInit{
 
   getCategories(){
     console.log('Getting categories...')
-    this.api.getCategories().then(data => {      
+    this.api.getLaunchedCategories().then(data => {      
       for(let i=0; i < data.length; i++){
         this.findChildren(data[i],data);
         this.unformattedCategories.push(data[i]);

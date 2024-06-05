@@ -92,7 +92,7 @@ export class UpdateProductSpecComponent implements OnInit{
 
   //COMPLIANCE PROFILE INFO:
   buttonISOClicked:boolean=false;
-  availableISOS:any[]=certifications;
+  availableISOS:any[]=[];
   selectedISOS:any[]=[];
   selectedISO:any;
   showUploadFile:boolean=false;
@@ -151,6 +151,9 @@ export class UpdateProductSpecComponent implements OnInit{
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
   ) {
+    for(let i=0; i<certifications.length; i++){
+      this.availableISOS.push(certifications[i])
+    }
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
         this.initPartyInfo();
@@ -221,10 +224,14 @@ export class UpdateProductSpecComponent implements OnInit{
     }
 
     //COMPLIANCE PROFILE
-    if(this.prod.productSpecCharacteristic){
+    if(this.prod.productSpecCharacteristic){     
+      console.log(certifications)
+      console.log('--')
+      console.log(this.prod.productSpecCharacteristic)
       for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
         const index = this.availableISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
         if (index !== -1) {
+          console.log('adding sel iso')
           this.selectedISOS.push({
             name: this.prod.productSpecCharacteristic[i].name,
             url: this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value,
@@ -234,6 +241,10 @@ export class UpdateProductSpecComponent implements OnInit{
           this.availableISOS.splice(index, 1);
         }
       }
+      console.log('selected isos')
+      console.log(this.selectedISOS)
+      console.log('available')
+      console.log(this.availableISOS)
     }
 
     //CHARS

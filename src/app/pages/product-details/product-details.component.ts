@@ -54,9 +54,8 @@ export class ProductDetailsComponent implements OnInit {
   check_terms:boolean=false;
   selected_terms:boolean=false;
   selected_chars:productSpecCharacteristicValueCart[]=[];
-  formattedPrices:any[]=[];
   toastVisibility: boolean = false;
-  lastAddedProd:cartProduct | undefined;
+  lastAddedProd:any | undefined;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -71,6 +70,11 @@ export class ProductDetailsComponent implements OnInit {
   protected readonly faShieldHalved = faShieldHalved;
   protected readonly faAtom = faAtom;
 
+  stepsElements:string[]=['step-chars','step-price','step-terms','step-checkout'];
+  stepsText:string[]=['text-chars','text-price','text-terms','text-checkout'];
+  stepsCircles:string[]=['circle-chars','circle-price','circle-terms','circle-checkout'];
+
+
   constructor(
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -82,6 +86,31 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: ShoppingCartServiceService,
     private eventMessage: EventMessageService,
   ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'CloseCartCard') {
+        this.hideCartSelection();
+        //TOGGLE TOAST
+        if(ev.value!=undefined){
+          this.lastAddedProd=ev.value;
+          this.toastVisibility=true;
+  
+          this.cdr.detectChanges();
+          //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+          let element = document.getElementById("progress-bar")
+          let parent = document.getElementById("toast-add-cart")
+          if (element != null && parent != null) {
+            element.style.width = '0%'
+            element.offsetWidth
+            element.style.width = '100%'
+            setTimeout(() => {
+              this.toastVisibility=false
+            }, 3500);
+          }
+        }
+
+        this.cdr.detectChanges();
+      }
+    })
   }
 
   @HostListener('window:scroll', ['$event']) 
@@ -234,7 +263,6 @@ export class ProductDetailsComponent implements OnInit {
       } else {
         this.check_terms=true;
       }
-
     }
 
     if(this.prodSpec.productSpecCharacteristic != undefined){
@@ -258,51 +286,11 @@ export class ProductDetailsComponent implements OnInit {
       console.log(this.selected_chars)
     }
 
-    if (this.check_prices==true || this.check_char == true || this.check_terms == true){
-      this.cartSelection=true;
+    if (this.check_prices==false && this.check_char == false && this.check_terms == false){
+      this.addProductToCart(this.productOff,false);
+    } else {
+      this.cartSelection=true;      
       this.cdr.detectChanges();
-      if(this.check_prices==true){
-        let price_elem = document.getElementById('price')
-        if(price_elem!=null){
-          this.removeClass(price_elem,'hidden')
-        }
-        let price_button = document.getElementById('button-price')
-        if(price_button != null){
-          if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
-            console.log('already selected')
-          } else {
-            this.addClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
-          }
-        }
-      } else if(this.check_char==true){
-        let char_elem = document.getElementById('char')
-        if(char_elem!=null){
-          this.removeClass(char_elem,'hidden')
-        }
-        let char_button = document.getElementById('button-char')
-        if(char_button != null){
-          if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
-            console.log('already selected')
-          } else {
-            this.addClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
-          }
-        }
-      } else {
-        let terms_elem = document.getElementById('terms')
-        if(terms_elem!=null){
-          this.removeClass(terms_elem,'hidden')
-        }
-        let terms_button = document.getElementById('button-terms')
-        if(terms_button != null){
-          if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
-            console.log('already selected')
-          } else {
-            this.addClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
-          }
-        }
-      }
-    }else {
-      this.addProductToCart(this.productOff,false)
     }
   }
 
@@ -423,40 +411,13 @@ export class ProductDetailsComponent implements OnInit {
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
-  }
-
-  onPriceChange(price:any){
-    this.selected_price=price;
-    console.log('change price')
-    console.log(this.selected_price)
-    this.cdr.detectChanges;
-  }
-
-  onCharChange(idx:number,validx:number,char:any){
-    let defaultChar = { "isDefault": true, "value": char.value}
-    this.selected_chars[idx].value=defaultChar;
-    let prodcharval = this.selected_chars[idx]['characteristic'].productSpecCharacteristicValue
-    if( prodcharval != undefined){
-      for(let i=0; i<prodcharval.length; i++){
-        if(i==validx){
-          prodcharval[i].isDefault=true;
-        } else {
-          prodcharval[i].isDefault=false;
-        }
-      }
-    }
-
-    console.log('change char')
-    console.log(this.selected_chars)
-    this.cdr.detectChanges();
-  }
+  }  
 
   hideCartSelection(){
     this.cartSelection=false;
     this.check_char=false;
     this.check_terms=false;
     this.check_prices=false;
-    this.formattedPrices=[];
     this.selected_chars=[];
     this.selected_price={};
     this.selected_terms=false;
@@ -480,26 +441,6 @@ export class ProductDetailsComponent implements OnInit {
       elem.className += (" " + cls);
   }
 
-  unselectMenu(elem:HTMLElement | null,cls:string){
-    if(elem != null){
-      if(elem.className.match(cls)){
-        this.removeClass(elem,cls)
-      } else {
-        console.log('already unselected')
-      }
-    }
-  }
-
-  selectMenu(elem:HTMLElement| null,cls:string){
-    if(elem != null){
-      if(elem.className.match(cls)){
-        console.log('already selected')
-      } else {
-        this.addClass(elem,cls)
-      }
-    }
-  }
-
   goToDetails(scroll:boolean){
     //const targetElement = this.elementRef.nativeElement.querySelector('#detailsContent');
     if (this.detailsContent!=undefined && scroll) {
@@ -512,11 +453,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.selectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
   goToChars(scroll:boolean){
@@ -530,11 +471,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.unselectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.selectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
   goToAttach(scroll:boolean){
@@ -548,11 +489,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.unselectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.selectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
   goToAgreements(scroll:boolean){
@@ -566,11 +507,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.unselectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.selectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
   goToRelationships(scroll:boolean){
@@ -584,11 +525,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.unselectMenu(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectMenu(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.selectMenu(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
   }
 
   unselectTag(elem:HTMLElement | null,cls:string){
@@ -609,63 +550,6 @@ export class ProductDetailsComponent implements OnInit {
         this.addClass(elem,cls)
       }
     }
-  }
-
-  clickShowPrice(){
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    let price_button = document.getElementById('button-price')
-    let char_button = document.getElementById('button-char')
-    let terms_button = document.getElementById('button-terms')
-
-    this.unselectTag(price_elem,'hidden')
-    this.selectTag(char_elem,'hidden')
-    this.selectTag(terms_elem,'hidden')
-
-    this.selectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-
-  }
-
-  clickShowChar(){
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    let price_button = document.getElementById('button-price')
-    let char_button = document.getElementById('button-char')
-    let terms_button = document.getElementById('button-terms')
-
-    this.unselectTag(char_elem,'hidden')
-    this.selectTag(price_elem,'hidden')
-    this.selectTag(terms_elem,'hidden')
-
-    this.selectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-
-  }
-
-  clickShowTerms(){
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    let price_button = document.getElementById('button-price')
-    let char_button = document.getElementById('button-char')
-    let terms_button = document.getElementById('button-terms')
-
-    this.unselectTag(terms_elem,'hidden')
-    this.selectTag(price_elem,'hidden')
-    this.selectTag(char_elem,'hidden')
-
-    this.selectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-
   }
 
 }

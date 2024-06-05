@@ -60,6 +60,12 @@ import { UpdateOfferComponent } from './pages/seller-offerings/offerings/seller-
 import { CreateCatalogComponent } from './pages/seller-offerings/offerings/seller-catalogs/create-catalog/create-catalog.component';
 import { UpdateCatalogComponent } from './pages/seller-offerings/offerings/seller-catalogs/update-catalog/update-catalog.component';
 import { ErrorMessageComponent } from 'src/app/shared/error-message/error-message.component';
+import { CartCardComponent } from 'src/app/shared/cart-card/cart-card.component';
+import { AdminComponent } from './pages/admin/admin.component';
+import { CategoriesComponent } from './pages/admin/categories/categories.component';
+import { CreateCategoryComponent } from './pages/admin/categories/create-category/create-category.component';
+import { UpdateCategoryComponent } from './pages/admin/categories/update-category/update-category.component';
+import { CategoriesRecursionListComponent } from './shared/categories-recursion-list/categories-recursion-list.component'
 
 @NgModule({
   declarations: [
@@ -106,7 +112,13 @@ import { ErrorMessageComponent } from 'src/app/shared/error-message/error-messag
     UpdateOfferComponent,
     CreateCatalogComponent,
     UpdateCatalogComponent,
-    ErrorMessageComponent
+    ErrorMessageComponent,
+    CartCardComponent,
+    AdminComponent,
+    CategoriesComponent,
+    CreateCategoryComponent,
+    UpdateCategoryComponent,
+    CategoriesRecursionListComponent
   ],
   imports: [
     BrowserModule,

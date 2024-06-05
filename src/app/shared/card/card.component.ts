@@ -38,7 +38,7 @@ export class CardComponent implements OnInit, AfterViewInit {
   bgColor: string = '';
   toastVisibility: boolean = false;
   detailsModalVisibility: boolean = false;
-  lastAddedProd:cartProduct | undefined;
+  lastAddedProd:any | undefined;
   targetModal: any;
   modal: Modal;
   prodSpec:ProductSpecification = {};
@@ -76,6 +76,31 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.complianceProf.push({id: 'iso27001', name: 'ISO 27001', value: 'Not achieved yet', href:'#'})
       this.complianceProf.push({id: 'iso27017', name: 'ISO 27017', value: 'Not achieved yet', href:'#'})
       this.complianceProf.push({id: 'iso17025', name: 'ISO 17025', value: 'Not achieved yet', href:'#'})
+      this.eventMessage.messages$.subscribe(ev => {
+        if(ev.type === 'CloseCartCard') {
+          this.hideCartSelection();
+          //TOGGLE TOAST
+          if(ev.value!=undefined){
+            this.lastAddedProd=ev.value;
+            this.toastVisibility=true;
+    
+            this.cdr.detectChanges();
+            //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
+            let element = document.getElementById("progress-bar")
+            let parent = document.getElementById("toast-add-cart")
+            if (element != null && parent != null) {
+              element.style.width = '0%'
+              element.offsetWidth
+              element.style.width = '100%'
+              setTimeout(() => {
+                this.toastVisibility=false
+              }, 3500);
+            }
+          }
+  
+          this.cdr.detectChanges();
+        }
+      })
     }
 
   @HostListener('document:click')
@@ -198,8 +223,8 @@ export class CardComponent implements OnInit, AfterViewInit {
             }
         },
         error: error => {
-            console.error('There was an error while adding item to cart!', error);
-            this.errorMessage='There was an error while adding item to cart!';
+            console.error('There was an error while updating!', error);
+            this.errorMessage='There was an error while adding item to the cart!';
             this.showError=true;
             setTimeout(() => {
               this.showError = false;
@@ -242,8 +267,8 @@ export class CardComponent implements OnInit, AfterViewInit {
             }
         },
         error: error => {
-            console.error('There was an error while adding item to cart!', error);
-            this.errorMessage='There was an error while adding item to cart!';
+            console.error('There was an error while updating!', error);
+            this.errorMessage='There was an error while adding item to the cart!';
             this.showError=true;
             setTimeout(() => {
               this.showError = false;
@@ -290,9 +315,8 @@ export class CardComponent implements OnInit, AfterViewInit {
     initFlowbite();*/
   }
 
-  toggleCartSelection(productOff:Product| undefined){
-    //this.formattedPrices = this.priceService.getFormattedPriceList(productOff);
-    console.log(productOff)
+  toggleCartSelection(){
+    console.log('Add to cart...')
     if (this.productOff?.productOfferingPrice != undefined){
       if(this.productOff?.productOfferingPrice.length > 1){
         this.check_prices=true;
@@ -304,13 +328,12 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
     }
 
-    if(productOff?.productOfferingTerm != undefined){
-      if(productOff.productOfferingTerm.length == 1 && productOff.productOfferingTerm[0].name == undefined){
+    if(this.productOff?.productOfferingTerm != undefined){
+      if(this.productOff.productOfferingTerm.length == 1 && this.productOff.productOfferingTerm[0].name == undefined){
         this.check_terms=false;
       } else {
         this.check_terms=true;
       }
-
     }
 
     if(this.prodSpec.productSpecCharacteristic != undefined){
@@ -334,53 +357,12 @@ export class CardComponent implements OnInit, AfterViewInit {
       console.log(this.selected_chars)
     }
 
-    if (this.check_prices==true || this.check_char == true || this.check_terms == true){
-      this.cartSelection=true;
+    if (this.check_prices==false && this.check_char == false && this.check_terms == false){
+      this.addProductToCart(this.productOff,false);
+    } else {
+      this.cartSelection=true;      
       this.cdr.detectChanges();
-      if(this.check_prices==true){
-        let price_elem = document.getElementById('price')
-        if(price_elem!=null){
-          this.removeClass(price_elem,'hidden')
-        }
-        let price_button = document.getElementById('button-price')
-        if(price_button != null){
-          if(price_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
-            console.log('already selected')
-          } else {
-            this.addClass(price_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
-          }
-        }
-      } else if(this.check_char==true){
-        let char_elem = document.getElementById('char')
-        if(char_elem!=null){
-          this.removeClass(char_elem,'hidden')
-        }
-        let char_button = document.getElementById('button-char')
-        if(char_button != null){
-          if(char_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
-            console.log('already selected')
-          } else {
-            this.addClass(char_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
-          }
-        }
-      } else {
-        let terms_elem = document.getElementById('terms')
-        if(terms_elem!=null){
-          this.removeClass(terms_elem,'hidden')
-        }
-        let terms_button = document.getElementById('button-terms')
-        if(terms_button != null){
-          if(terms_button.className.match('underline underline-offset-4 decoration-primary-50 decoration-4')){
-            console.log('already selected')
-          } else {
-            this.addClass(terms_button,"underline underline-offset-4 decoration-primary-50 decoration-4")
-          }
-        }
-      }
-    }else {
-      this.addProductToCart(productOff,false)
     }
-
   }
 
   hideCartSelection(){
@@ -408,115 +390,4 @@ export class CardComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/search', productOff?.id]);
   }
 
-  onPriceChange(price:any){
-    this.selected_price=price;
-    console.log('change price')
-    console.log(this.selected_price)
-    this.cdr.detectChanges;
-  }
-
-  onCharChange(idx:number,validx:number,char:any){
-    let defaultChar = { "isDefault": true, "value": char.value}
-    this.selected_chars[idx].value=defaultChar;
-    let prodcharval = this.selected_chars[idx]['characteristic'].productSpecCharacteristicValue
-    if( prodcharval != undefined){
-      for(let i=0; i<prodcharval.length; i++){
-        if(i==validx){
-          prodcharval[i].isDefault=true;
-        } else {
-          prodcharval[i].isDefault=false;
-        }
-      }
-    }
-
-    console.log('change char')
-    console.log(this.selected_chars)
-    this.cdr.detectChanges();
-  }
-
-  removeClass(elem: HTMLElement, cls:string) {
-    var str = " " + elem.className + " ";
-    elem.className = str.replace(" " + cls + " ", " ").replace(/^\s+|\s+$/g, "");
-  }
-
-  addClass(elem: HTMLElement, cls:string) {
-      elem.className += (" " + cls);
-  }
-
-  unselectTag(elem:HTMLElement | null,cls:string){
-    if(elem != null){
-      if(elem.className.match(cls)){
-        this.removeClass(elem,cls)
-      } else {
-        console.log('already unselected')
-      }
-    }
-  }
-
-  selectTag(elem:HTMLElement| null,cls:string){
-    if(elem != null){
-      if(elem.className.match(cls)){
-        console.log('already selected')
-      } else {
-        this.addClass(elem,cls)
-      }
-    }
-  }
-
-  clickShowPrice(){
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    let price_button = document.getElementById('button-price')
-    let char_button = document.getElementById('button-char')
-    let terms_button = document.getElementById('button-terms')
-
-    this.unselectTag(price_elem,'hidden')
-    this.selectTag(char_elem,'hidden')
-    this.selectTag(terms_elem,'hidden')
-
-    this.selectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-
-  }
-
-  clickShowChar(){
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    let price_button = document.getElementById('button-price')
-    let char_button = document.getElementById('button-char')
-    let terms_button = document.getElementById('button-terms')
-
-    this.unselectTag(char_elem,'hidden')
-    this.selectTag(price_elem,'hidden')
-    this.selectTag(terms_elem,'hidden')
-
-    this.selectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-
-  }
-
-  clickShowTerms(){
-    let price_elem = document.getElementById('price')
-    let char_elem = document.getElementById('char')
-    let terms_elem = document.getElementById('terms')
-
-    let price_button = document.getElementById('button-price')
-    let char_button = document.getElementById('button-char')
-    let terms_button = document.getElementById('button-terms')
-
-    this.unselectTag(terms_elem,'hidden')
-    this.selectTag(price_elem,'hidden')
-    this.selectTag(char_elem,'hidden')
-
-    this.selectTag(terms_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(price_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-    this.unselectTag(char_button,'underline underline-offset-4 decoration-primary-50 decoration-4')
-
-  }
 }

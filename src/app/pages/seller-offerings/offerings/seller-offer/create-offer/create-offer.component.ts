@@ -12,9 +12,6 @@ import { ResourceSpecServiceService } from 'src/app/services/resource-spec-servi
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { countries } from 'src/app/models/country.const'
-import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
-import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { currencies } from 'currencies.json';
@@ -654,7 +651,7 @@ export class CreateOfferComponent implements OnInit {
       }
     })*/
     console.log('Getting categories...')
-    this.api.getCategories().then(data => {      
+    this.api.getLaunchedCategories().then(data => {      
       for(let i=0; i < data.length; i++){
         this.findChildren(data[i],data);
         this.unformattedCategories.push(data[i]);

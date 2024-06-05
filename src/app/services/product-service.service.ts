@@ -16,6 +16,7 @@ export class ApiServiceService {
   public static API_PRODUCT: String = environment.PRODUCT_CATALOG;
   public static PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
   public static CATALOG_LIMIT: number= environment.CATALOG_LIMIT;
+  public static CATEGORY_LIMIT: number = environment.CATEGORY_LIMIT;
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
@@ -111,13 +112,24 @@ export class ApiServiceService {
   }
 
   getLaunchedCategories() {
-    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category?limit=100&lifecycleStatus=Launched`;
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category?limit==${ApiServiceService.CATEGORY_LIMIT}&lifecycleStatus=Launched`;
 
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
-  getCategories(){
-    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category?limit=100`;
+  getCategories(status:any[]){
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category?limit=${ApiServiceService.CATEGORY_LIMIT}`;
+    let lifeStatus=''
+    if(status.length>0){
+      for(let i=0; i < status.length; i++){
+        if(i==status.length-1){
+          lifeStatus=lifeStatus+status[i]
+        } else {
+          lifeStatus=lifeStatus+status[i]+','
+        }    
+      }
+      url=url+'&lifecycleStatus='+lifeStatus;
+    }
 
     return lastValueFrom(this.http.get<any[]>(url));
   }
@@ -132,6 +144,18 @@ export class ApiServiceService {
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category?parentId=${id}`;
 
     return lastValueFrom(this.http.get<any[]>(url));
+  }
+
+  postCategory(category:any){
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category`;
+ 
+    return this.http.post<any>(url, category);
+  }
+
+  updateCategory(category:any,id:any){
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category/${id}`;
+ 
+    return this.http.patch<any>(url, category);
   }
 
   getCatalogs(page:any,filter:any) {

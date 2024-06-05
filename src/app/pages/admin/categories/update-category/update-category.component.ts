@@ -1,33 +1,32 @@
-import { Component, Input, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import {EventMessageService} from "src/app/services/event-message.service";
-import { ServiceSpecServiceService } from 'src/app/services/service-spec-service.service';
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
 
-import {components} from "src/app/models/service-catalog";
-type ServiceSpecification_Update = components["schemas"]["ServiceSpecification_Update"];
-type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
-type ProductSpecificationCharacteristic = components["schemas"]["CharacteristicSpecification"];
+import {components} from "src/app/models/product-catalog";
+type Category_Update = components["schemas"]["Category_Update"];
 
 @Component({
-  selector: 'update-service-spec',
-  templateUrl: './update-service-spec.component.html',
-  styleUrl: './update-service-spec.component.css'
+  selector: 'update-category',
+  templateUrl: './update-category.component.html',
+  styleUrl: './update-category.component.css'
 })
-export class UpdateServiceSpecComponent implements OnInit {
-  @Input() serv: any;
+export class UpdateCategoryComponent implements OnInit {
+  @Input() category: any;
 
   partyId:any='';
+  categoryToUpdate:Category_Update | undefined;
 
-  serviceToUpdate:ServiceSpecification_Update | undefined;
+  categories:any[]=[];
+  unformattedCategories:any[]=[];
 
-  stepsElements:string[]=['general-info','chars','summary'];
-  stepsCircles:string[]=['general-circle','chars-circle','summary-circle'];
+  stepsElements:string[]=['general-info','summary'];
+  stepsCircles:string[]=['general-circle','summary-circle'];
 
   //markdown variables:
   showPreview:boolean=false;
@@ -36,27 +35,23 @@ export class UpdateServiceSpecComponent implements OnInit {
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
-  showChars:boolean=false;
   showSummary:boolean=false;
+  //Check if step was done
+  generalDone:boolean=false;
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
   });
-  servStatus:any;
+  isParent:boolean=true;
+  parentSelectionCheck:boolean=false;
+  checkDisableParent:boolean=false;
+  selectedCategory:any=undefined;
+  selected:any[];
+  loading: boolean = false;
 
-  //CHARS INFO
-  charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('')
-  });
-  stringCharSelected:boolean=true;
-  numberCharSelected:boolean=false;
-  rangeCharSelected:boolean=false;
-  prodChars:ProductSpecificationCharacteristic[]=[];
-  creatingChars:CharacteristicValueSpecification[]=[];
-  showCreateChar:boolean=false;
+  catStatus:any='Active';
 
   errorMessage:any='';
   showError:boolean=false;
@@ -67,11 +62,14 @@ export class UpdateServiceSpecComponent implements OnInit {
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
     private elementRef: ElementRef,
-    private servSpecService: ServiceSpecServiceService,
+    private api: ApiServiceService
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
         this.initPartyInfo();
+      }
+      if(ev.type === 'CategoryAdded') {
+        this.addCategory(ev.value);
       }
     })
   }
@@ -84,17 +82,8 @@ export class UpdateServiceSpecComponent implements OnInit {
     }
   }
 
-  @ViewChild('stringValue') charStringValue!: ElementRef;
-  @ViewChild('numberValue') charNumberValue!: ElementRef;
-  @ViewChild('numberUnit') charNumberUnit!: ElementRef;
-  @ViewChild('fromValue') charFromValue!: ElementRef;
-  @ViewChild('toValue') charToValue!: ElementRef;
-  @ViewChild('rangeUnit') charRangeUnit!: ElementRef;
-
   ngOnInit() {
     this.initPartyInfo();
-    console.log(this.serv)
-    this.populateResInfo();
   }
 
   initPartyInfo(){
@@ -107,181 +96,185 @@ export class UpdateServiceSpecComponent implements OnInit {
         this.partyId = loggedOrg.partyId
       }
     }
+    this.getCategories();
+    this.populateCatInfo();
   }
 
-  populateResInfo(){
-    //GENERAL INFORMATION
-    this.generalForm.controls['name'].setValue(this.serv.name);
-    this.generalForm.controls['description'].setValue(this.serv.description);
-    this.servStatus=this.serv.lifecycleStatus;
 
-    //CHARS
-    this.prodChars=this.serv.specCharacteristic;
+  populateCatInfo(){
+    //GENERAL INFORMATION
+    this.generalForm.controls['name'].setValue(this.category.name);
+    this.generalForm.controls['description'].setValue(this.category.description);
+    this.catStatus=this.category.lifecycleStatus;
+    if(this.category.isRoot==false){
+      this.isParent=false;
+      this.parentSelectionCheck=true;
+      this.checkDisableParent=true;
+    } else {
+      this.isParent=true;
+      this.parentSelectionCheck=false;
+    }
   }
 
   goBack() {
-    this.eventMessage.emitSellerServiceSpec(true);
+    this.eventMessage.emitAdminCategories(true);
   }
 
-  setServStatus(status:any){
-    this.servStatus=status;
-    this.cdr.detectChanges();
+  getCategories(){
+    console.log('Getting categories...')
+    this.api.getLaunchedCategories().then(data => {      
+      for(let i=0; i < data.length; i++){
+        this.findChildren(data[i],data);
+        this.unformattedCategories.push(data[i]);
+      }
+      this.loading=false;
+      if(this.category.isRoot==false){
+        const index = this.categories.findIndex(item => item.id === this.category.parentId);
+        if (index !== -1) {
+          this.selectedCategory=this.categories[index]
+          this.selected=[]
+          this.selected.push(this.selectedCategory)
+        }
+      }
+      this.cdr.detectChanges();
+      initFlowbite();
+    }) 
+  }
+
+  findChildren(parent:any,data:any[]){
+    let childs = data.filter((p => p.parentId === parent.id));
+    parent["children"] = childs;
+    if(parent.isRoot == true){
+      this.categories.push(parent)
+    } else {
+      this.saveChildren(this.categories,parent)
+    }
+    if(childs.length != 0){
+      for(let i=0; i < childs.length; i++){
+        this.findChildren(childs[i],data)
+      }
+    }
+  }
+
+  findChildrenByParent(parent:any){
+    let childs: any[] = []
+    this.api.getCategoriesByParentId(parent.id).then(c => {
+      childs=c;
+      parent["children"] = childs;
+      if(parent.isRoot == true){
+        this.categories.push(parent)
+      } else {
+        this.saveChildren(this.categories,parent)
+      }
+      if(childs.length != 0){
+        for(let i=0; i < childs.length; i++){
+          this.findChildrenByParent(childs[i])
+        }
+      }
+      initFlowbite();
+    })
+
+  }
+
+  saveChildren(superCategories:any[],parent:any){
+    for(let i=0; i < superCategories.length; i++){
+      let children = superCategories[i].children;
+      if (children != undefined){
+        let check = children.find((element: { id: any; }) => element.id == parent.id) 
+        if (check != undefined) {
+          let idx = children.findIndex((element: { id: any; }) => element.id == parent.id)
+          children[idx] = parent
+          superCategories[i].children = children         
+        }
+        this.saveChildren(children,parent)
+      }          
+    }
   }
 
   toggleGeneral(){
     this.selectStep('general-info','general-circle');
     this.showGeneral=true;
-    this.showChars=false;
     this.showSummary=false;
   }
 
-  toggleChars(){
-    this.selectStep('chars','chars-circle');
-    this.showGeneral=false;
-    this.showChars=true;
-    this.showSummary=false;
+  toggleParent(){
+    this.isParent=!this.isParent;
+    this.parentSelectionCheck=!this.parentSelectionCheck;
+    this.cdr.detectChanges();
   }
 
-  onTypeChange(event: any) {
-    if(event.target.value=='string'){
-      this.stringCharSelected=true;
-      this.numberCharSelected=false;
-      this.rangeCharSelected=false;
-    }else if (event.target.value=='number'){
-      this.stringCharSelected=false;
-      this.numberCharSelected=true;
-      this.rangeCharSelected=false;
-    }else{
-      this.stringCharSelected=false;
-      this.numberCharSelected=false;
-      this.rangeCharSelected=true;
-    }
-    this.creatingChars=[];
-  }
 
-  addCharValue(){
-    if(this.stringCharSelected){
-      console.log('string')
-      if(this.creatingChars.length==0){
-        this.creatingChars.push({
-          isDefault:true,
-          value:this.charStringValue.nativeElement.value
-        })
-      } else{
-        this.creatingChars.push({
-          isDefault:false,
-          value:this.charStringValue.nativeElement.value
-        })
-      }      
-    } else if (this.numberCharSelected){
-      console.log('number')
-      if(this.creatingChars.length==0){
-        this.creatingChars.push({
-          isDefault:true,
-          value:this.charNumberValue.nativeElement.value,
-          unitOfMeasure:this.charNumberUnit.nativeElement.value
-        })
-      } else{
-        this.creatingChars.push({
-          isDefault:false,
-          value:this.charNumberValue.nativeElement.value,
-          unitOfMeasure:this.charNumberUnit.nativeElement.value
-        })
-      } 
-    }else{
-      console.log('range')
-      if(this.creatingChars.length==0){
-        this.creatingChars.push({
-          isDefault:true,
-          valueFrom:this.charFromValue.nativeElement.value,
-          valueTo:this.charToValue.nativeElement.value,
-          unitOfMeasure:this.charRangeUnit.nativeElement.value
-        })
-      } else{
-        this.creatingChars.push({
-          isDefault:false,
-          valueFrom:this.charFromValue.nativeElement.value,
-          valueTo:this.charToValue.nativeElement.value,
-          unitOfMeasure:this.charRangeUnit.nativeElement.value})
-      } 
-    }
-  }
-
-  selectDefaultChar(char:any,idx:any){
-    for(let i=0;i<this.creatingChars.length;i++){
-      if(i==idx){
-        this.creatingChars[i].isDefault=true;
+  addCategory(cat:any){
+    if(this.selectedCategory==undefined){
+      this.selectedCategory=cat;
+      this.selected=[];
+      this.selected.push(cat);
+    } else {
+      const index = this.selected.findIndex(item => item.id === cat.id);
+      if (index !== -1) {
+        this.selected=[];
+        this.selectedCategory=undefined;
       } else {
-        this.creatingChars[i].isDefault=false;
+        this.selectedCategory=cat;
+        this.selected=[];
+        this.selected.push(cat);
       }
     }
+
+    this.cdr.detectChanges();
   }
 
-  saveChar(){
-    if(this.charsForm.value.name!=null){
-      this.prodChars.push({
-        id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
-        name: this.charsForm.value.name,
-        description: this.charsForm.value.description != null ? this.charsForm.value.description : '',
-        characteristicValueSpecification: this.creatingChars
-      })
+  isCategorySelected(cat:any){
+    if(this.selectedCategory==undefined){
+      return false;
+    } else {
+      if(cat.id==this.selectedCategory.id){
+        return true
+      } else {
+        return false
+      }
     }
-
-    this.charsForm.reset();
-    this.creatingChars=[];
-    this.showCreateChar=false;
-    this.stringCharSelected=true;
-    this.numberCharSelected=false;
-    this.rangeCharSelected=false;
-    this.cdr.detectChanges();
-  }
-
-  removeCharValue(char:any,idx:any){
-    console.log(this.creatingChars)
-    this.creatingChars.splice(idx, 1);
-    console.log(this.creatingChars)
-  }
-
-  deleteChar(char:any){
-    const index = this.prodChars.findIndex(item => item.id === char.id);
-    if (index !== -1) {
-      console.log('eliminar')
-      this.prodChars.splice(index, 1);
-    }   
-    this.cdr.detectChanges();
-    console.log(this.prodChars)    
   }
 
   showFinish(){
     if(this.generalForm.value.name!=null){
-      this.serviceToUpdate={
+      this.categoryToUpdate={
         name: this.generalForm.value.name,
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
-        lifecycleStatus: this.servStatus,
-        specCharacteristic: this.prodChars
+        lifecycleStatus: this.catStatus,
+        isRoot: this.isParent
       }
-      this.showChars=false;
+      if(this.isParent==false){
+        this.categoryToUpdate.parentId=this.selectedCategory.id;
+      }
+      console.log(this.isParent)
+      console.log('CATEGORY TO UPDATE:')
+      console.log(this.categoryToUpdate)
       this.showGeneral=false;
       this.showSummary=true;
       this.selectStep('summary','summary-circle');
     }
   }
 
-  updateService(){
-    this.servSpecService.updateServSpec(this.serviceToUpdate,this.serv.id).subscribe({
+  updateCategory(){
+    this.api.updateCategory(this.categoryToUpdate,this.category.id).subscribe({
       next: data => {
         this.goBack();
-        console.log('serv updated')
       },
       error: error => {
         console.error('There was an error while updating!', error);
-        this.errorMessage='There was an error while updating the service!';
+        this.errorMessage='There was an error while creating the category!';
         this.showError=true;
         setTimeout(() => {
           this.showError = false;
         }, 3000);
       }
-    });
+    })
+  }
+
+  setCatStatus(status:any){
+    this.catStatus=status;
+    this.cdr.detectChanges();
   }
 
   //STEPS METHODS
@@ -416,6 +409,4 @@ export class UpdateServiceSpecComponent implements OnInit {
       this.description=this.generalForm.value.description;
     }    
   }
-
-
 }
