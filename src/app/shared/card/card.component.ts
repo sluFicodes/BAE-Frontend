@@ -22,6 +22,7 @@ import { initFlowbite } from 'flowbite';
 import { LoginInfo, cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
 import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
 import * as moment from 'moment';
+import { certifications } from 'src/app/models/certification-standards.const';
 
 @Component({
   selector: 'bae-off-card',
@@ -42,8 +43,8 @@ export class CardComponent implements OnInit, AfterViewInit {
   targetModal: any;
   modal: Modal;
   prodSpec:ProductSpecification = {};
-  complianceProf:any[] = [];
-  complianceLevel:number=1;
+  complianceProf:any[] = certifications;
+  complianceLevel:number = 1;
   showModal:boolean=false;
   cartSelection:boolean=false;
   check_prices:boolean=false;
@@ -71,11 +72,7 @@ export class CardComponent implements OnInit, AfterViewInit {
     ) {
       this.targetModal = document.getElementById('details-modal');
       this.modal = new Modal(this.targetModal);
-      this.complianceProf.push({id: 'cloudRulebook', name: 'EU Cloud Rulebook', value: 'Not achieved yet', href:'#'})
-      this.complianceProf.push({id: 'cloudSecurity', name: 'EU Cloud Security', value: 'Not achieved yet', href:'#'})
-      this.complianceProf.push({id: 'iso27001', name: 'ISO 27001', value: 'Not achieved yet', href:'#'})
-      this.complianceProf.push({id: 'iso27017', name: 'ISO 27017', value: 'Not achieved yet', href:'#'})
-      this.complianceProf.push({id: 'iso17025', name: 'ISO 17025', value: 'Not achieved yet', href:'#'})
+
       this.eventMessage.messages$.subscribe(ev => {
         if(ev.type === 'CloseCartCard') {
           this.hideCartSelection();
@@ -145,18 +142,32 @@ export class CardComponent implements OnInit, AfterViewInit {
     let specId:any|undefined=this.productOff?.productSpecification?.id;
     if(specId != undefined){
       this.api.getProductSpecification(specId).then(spec => {
-        this.prodSpec=spec;
+        let vcs = 0
+        let domeSup = 0
+        this.prodSpec = spec;
         for(let z=0; z < this.complianceProf.length; z++){
+          if (this.complianceProf[z].domesupported) {
+            domeSup += 1
+          }
+
           if(this.prodSpec.productSpecCharacteristic != undefined){
-            let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === this.complianceProf[z].id));
+            let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === `${this.complianceProf[z].name}:VC`));
+
             if(compProf != undefined){
-              this.complianceProf[z].href = compProf.productSpecCharacteristicValue?.at(0)?.value
-              this.complianceProf[z].value = 'Yes'
+              vcs += 1
             }
+          }
+        }
+
+        if (vcs > 0) {
+          this.complianceLevel = 2
+          if (vcs == domeSup) {
+            this.complianceLevel = 3
           }
         }
       })
     }
+
     let result:any = this.priceService.formatCheapestPricePlan(this.productOff);
     this.price = {
       "price": result.price,

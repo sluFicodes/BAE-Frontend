@@ -231,7 +231,17 @@ export class UpdateProductSpecComponent implements OnInit{
       console.log(certifications)
       console.log('--')
       console.log(this.prod.productSpecCharacteristic)
-      for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
+      for(let i=0; i < this.prod.productSpecCharacteristic.length; i++) {
+        // Check if this is a VC
+        if (this.prod.productSpecCharacteristic[i].name.endsWith(':VC')) {
+          let cert = certifications.find(item => `${item.name}:VC` === this.prod.productSpecCharacteristic[i].name)
+          if (cert) {
+            const val = this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value
+            this.verifiedISO[cert.name] = val
+          }
+          continue
+        }
+
         const index = this.availableISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
         if (index !== -1) {
           console.log('adding sel iso')
