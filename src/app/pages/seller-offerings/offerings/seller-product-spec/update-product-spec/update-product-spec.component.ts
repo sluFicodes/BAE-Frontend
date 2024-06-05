@@ -16,6 +16,7 @@ import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 
 import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { QrVerifierService } from 'src/app/services/qr-verifier.service';
 
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 type ProductSpecification_Update = components["schemas"]["ProductSpecification_Update"];
@@ -94,6 +95,7 @@ export class UpdateProductSpecComponent implements OnInit{
   buttonISOClicked:boolean=false;
   availableISOS:any[]=[];
   selectedISOS:any[]=[];
+  verifiedISO:any = {};
   selectedISO:any;
   showUploadFile:boolean=false;
 
@@ -150,6 +152,7 @@ export class UpdateProductSpecComponent implements OnInit{
     private attachmentService: AttachmentServiceService,
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
+    private qrVerifier: QrVerifierService
   ) {
     for(let i=0; i<certifications.length; i++){
       this.availableISOS.push(certifications[i])
@@ -228,7 +231,17 @@ export class UpdateProductSpecComponent implements OnInit{
       console.log(certifications)
       console.log('--')
       console.log(this.prod.productSpecCharacteristic)
-      for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
+      for(let i=0; i < this.prod.productSpecCharacteristic.length; i++) {
+        // Check if this is a VC
+        if (this.prod.productSpecCharacteristic[i].name.endsWith(':VC')) {
+          let cert = certifications.find(item => `${item.name}:VC` === this.prod.productSpecCharacteristic[i].name)
+          if (cert) {
+            const val = this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value
+            this.verifiedISO[cert.name] = val
+          }
+          continue
+        }
+
         const index = this.availableISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
         if (index !== -1) {
           console.log('adding sel iso')
@@ -438,6 +451,10 @@ export class UpdateProductSpecComponent implements OnInit{
       console.log('seleccionar')
       this.selectedISOS.splice(index, 1);
       this.availableISOS.push({name: iso.name, mandatory: iso.mandatory, domesupported: iso.domesupported});
+
+      if (iso.name in this.verifiedISO) {
+        delete this.verifiedISO[iso.name]
+      }
     }  
     this.cdr.detectChanges();
     console.log(this.prodSpecsBundle)    
@@ -450,9 +467,21 @@ export class UpdateProductSpecComponent implements OnInit{
     console.log(this.selectedISOS)
   }
 
-  verifyCredential(sel:any){
+  verifyCredential(sel: any){
     console.log('verifing credential')
     console.log(sel)
+
+    const state = `cert:${uuidv4()}`
+
+    const qrWin = this.qrVerifier.launchPopup(`${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${state}&client_callback=${environment.SIOP_INFO.callbackURL}&client_id=${environment.SIOP_INFO.clientID}`,  'Scan QR code',  500, 500)
+    this.qrVerifier.pollCertCredential(qrWin, state).then((data) => {
+      this.verifiedISO[sel.name] = data.vc
+      console.log(`We got the vc: ${data['vc']}`)
+    })
+  }
+
+  isVerified(sel: any) {
+    return sel.name in this.verifiedISO
   }
 
   public dropped(files: NgxFileDropEntry[],sel:any) {
@@ -509,7 +538,7 @@ export class UpdateProductSpecComponent implements OnInit{
                 this.attachmentService.uploadFile(fileBody).subscribe({
                   next: data => {
                       console.log(data)
-                      if(sel=='img'){
+                      if(sel == 'img'){
                         this.showImgPreview=true;
                         this.imgPreview=data.content;
                         this.prodAttachments.push({
@@ -1031,8 +1060,9 @@ export class UpdateProductSpecComponent implements OnInit{
     return value.trim().length === 0;
   }
 
-  showFinish(){
-    for(let i=0; i<this.selectedISOS.length;i++){
+  showFinish() {
+    // Load compliance profile
+    for(let i = 0; i < this.selectedISOS.length; i++){
       this.prodChars.push({
         id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
         name: this.selectedISOS[i].name,
@@ -1042,8 +1072,21 @@ export class UpdateProductSpecComponent implements OnInit{
         }]
       })
     }
+
+    // Load compliance VCs
+    for (const name in this.verifiedISO) {
+      this.prodChars.push({
+        id: `urn:ngsi-ld:characteristic:${uuidv4()}`,
+        name: `${name}:VC`,
+        productSpecCharacteristicValue: [{
+          isDefault: true,
+          value: this.verifiedISO[name]
+        }]
+      })
+    }
+
     if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){
-      this.productSpecToUpdate={
+      this.productSpecToUpdate = {
         name: this.generalForm.value.name,
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
         version: this.generalForm.value.version,
@@ -1088,7 +1131,7 @@ export class UpdateProductSpecComponent implements OnInit{
   }
 
   updateProduct(){
-    this.prodSpecService.updateProdSpec(this.productSpecToUpdate,this.prod.id).subscribe({
+    this.prodSpecService.updateProdSpec(this.productSpecToUpdate, this.prod.id).subscribe({
       next: data => {
         this.goBack();
         console.log('actualiado producto')
