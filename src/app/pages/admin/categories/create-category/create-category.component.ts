@@ -1,31 +1,30 @@
 import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import {EventMessageService} from "src/app/services/event-message.service";
-import { ResourceSpecServiceService } from 'src/app/services/resource-spec-service.service';
 import { LoginInfo } from 'src/app/models/interfaces';
+import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
 
-import {components} from "src/app/models/resource-catalog";
-type ResourceSpecification_Create = components["schemas"]["ResourceSpecification_Create"];
-type CharacteristicValueSpecification = components["schemas"]["ResourceSpecificationCharacteristicValue"];
-type ResourceSpecificationCharacteristic = components["schemas"]["ResourceSpecificationCharacteristic"];
+import {components} from "src/app/models/product-catalog";
+type Category_Create = components["schemas"]["Category_Create"];
 
 @Component({
-  selector: 'create-resource-spec',
-  templateUrl: './create-resource-spec.component.html',
-  styleUrl: './create-resource-spec.component.css'
+  selector: 'create-category',
+  templateUrl: './create-category.component.html',
+  styleUrl: './create-category.component.css'
 })
-export class CreateResourceSpecComponent implements OnInit {
-
+export class CreateCategoryComponent implements OnInit {
   partyId:any='';
+  categoryToCreate:Category_Create | undefined;
 
-  resourceToCreate:ResourceSpecification_Create | undefined;
+  categories:any[]=[];
+  unformattedCategories:any[]=[];
 
-  stepsElements:string[]=['general-info','chars','summary'];
-  stepsCircles:string[]=['general-circle','chars-circle','summary-circle'];
+  stepsElements:string[]=['general-info','summary'];
+  stepsCircles:string[]=['general-circle','summary-circle'];
 
   //markdown variables:
   showPreview:boolean=false;
@@ -34,29 +33,20 @@ export class CreateResourceSpecComponent implements OnInit {
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
-  showChars:boolean=false;
   showSummary:boolean=false;
   //Check if step was done
   generalDone:boolean=false;
-  charsDone:boolean=false;
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     description: new FormControl(''),
   });
-
-  //CHARS INFO
-  charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('')
-  });
-  stringCharSelected:boolean=true;
-  numberCharSelected:boolean=false;
-  rangeCharSelected:boolean=false;
-  prodChars:ResourceSpecificationCharacteristic[]=[];
-  creatingChars:CharacteristicValueSpecification[]=[];
-  showCreateChar:boolean=false;
+  isParent:boolean=true;
+  parentSelectionCheck:boolean=false;
+  selectedCategory:any=undefined;
+  selected:any[];
+  loading: boolean = false;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -67,11 +57,14 @@ export class CreateResourceSpecComponent implements OnInit {
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
     private elementRef: ElementRef,
-    private resSpecService: ResourceSpecServiceService,
+    private api: ApiServiceService
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
         this.initPartyInfo();
+      }
+      if(ev.type === 'CategoryAdded') {
+        this.addCategory(ev.value);
       }
     })
   }
@@ -83,13 +76,6 @@ export class CreateResourceSpecComponent implements OnInit {
       this.cdr.detectChanges();
     }
   }
-
-  @ViewChild('stringValue') charStringValue!: ElementRef;
-  @ViewChild('numberValue') charNumberValue!: ElementRef;
-  @ViewChild('numberUnit') charNumberUnit!: ElementRef;
-  @ViewChild('fromValue') charFromValue!: ElementRef;
-  @ViewChild('toValue') charToValue!: ElementRef;
-  @ViewChild('rangeUnit') charRangeUnit!: ElementRef;
 
   ngOnInit() {
     this.initPartyInfo();
@@ -105,179 +91,147 @@ export class CreateResourceSpecComponent implements OnInit {
         this.partyId = loggedOrg.partyId
       }
     }
+    this.getCategories();
   }
 
   goBack() {
-    this.eventMessage.emitSellerResourceSpec(true);
+    this.eventMessage.emitAdminCategories(true);
+  }
+
+  getCategories(){
+    console.log('Getting categories...')
+    this.api.getLaunchedCategories().then(data => {      
+      for(let i=0; i < data.length; i++){
+        this.findChildren(data[i],data);
+        this.unformattedCategories.push(data[i]);
+      }
+      this.loading=false;
+      this.cdr.detectChanges();
+      initFlowbite();
+    }) 
+  }
+
+  findChildren(parent:any,data:any[]){
+    let childs = data.filter((p => p.parentId === parent.id));
+    parent["children"] = childs;
+    if(parent.isRoot == true){
+      this.categories.push(parent)
+    } else {
+      this.saveChildren(this.categories,parent)
+    }
+    if(childs.length != 0){
+      for(let i=0; i < childs.length; i++){
+        this.findChildren(childs[i],data)
+      }
+    }
+  }
+
+  findChildrenByParent(parent:any){
+    let childs: any[] = []
+    this.api.getCategoriesByParentId(parent.id).then(c => {
+      childs=c;
+      parent["children"] = childs;
+      if(parent.isRoot == true){
+        this.categories.push(parent)
+      } else {
+        this.saveChildren(this.categories,parent)
+      }
+      if(childs.length != 0){
+        for(let i=0; i < childs.length; i++){
+          this.findChildrenByParent(childs[i])
+        }
+      }
+      initFlowbite();
+    })
+
+  }
+
+  saveChildren(superCategories:any[],parent:any){
+    for(let i=0; i < superCategories.length; i++){
+      let children = superCategories[i].children;
+      if (children != undefined){
+        let check = children.find((element: { id: any; }) => element.id == parent.id) 
+        if (check != undefined) {
+          let idx = children.findIndex((element: { id: any; }) => element.id == parent.id)
+          children[idx] = parent
+          superCategories[i].children = children         
+        }
+        this.saveChildren(children,parent)
+      }          
+    }
   }
 
   toggleGeneral(){
     this.selectStep('general-info','general-circle');
     this.showGeneral=true;
-    this.showChars=false;
     this.showSummary=false;
   }
 
-  toggleChars(){
-    this.selectStep('chars','chars-circle');
-    this.showGeneral=false;
-    this.showChars=true;
-    this.showSummary=false;
+  toggleParent(){
+    this.isParent=!this.isParent;
+    this.parentSelectionCheck=!this.parentSelectionCheck;
+    this.cdr.detectChanges();
   }
 
-  onTypeChange(event: any) {
-    if(event.target.value=='string'){
-      this.stringCharSelected=true;
-      this.numberCharSelected=false;
-      this.rangeCharSelected=false;
-    }else if (event.target.value=='number'){
-      this.stringCharSelected=false;
-      this.numberCharSelected=true;
-      this.rangeCharSelected=false;
-    }else{
-      this.stringCharSelected=false;
-      this.numberCharSelected=false;
-      this.rangeCharSelected=true;
-    }
-    this.creatingChars=[];
-  }
-
-  addCharValue(){
-    if(this.stringCharSelected){
-      console.log('string')
-      if(this.creatingChars.length==0){
-        this.creatingChars.push({
-          isDefault:true,
-          value:this.charStringValue.nativeElement.value
-        })
-      } else{
-        this.creatingChars.push({
-          isDefault:false,
-          value:this.charStringValue.nativeElement.value
-        })
-      }      
-    } else if (this.numberCharSelected){
-      console.log('number')
-      if(this.creatingChars.length==0){
-        this.creatingChars.push({
-          isDefault:true,
-          value:this.charNumberValue.nativeElement.value,
-          unitOfMeasure:this.charNumberUnit.nativeElement.value
-        })
-      } else{
-        this.creatingChars.push({
-          isDefault:false,
-          value:this.charNumberValue.nativeElement.value,
-          unitOfMeasure:this.charNumberUnit.nativeElement.value
-        })
-      } 
-    }else{
-      console.log('range')
-      if(this.creatingChars.length==0){
-        this.creatingChars.push({
-          isDefault:true,
-          valueFrom:this.charFromValue.nativeElement.value,
-          valueTo:this.charToValue.nativeElement.value,
-          unitOfMeasure:this.charRangeUnit.nativeElement.value
-        })
-      } else{
-        this.creatingChars.push({
-          isDefault:false,
-          valueFrom:this.charFromValue.nativeElement.value,
-          valueTo:this.charToValue.nativeElement.value,
-          unitOfMeasure:this.charRangeUnit.nativeElement.value})
-      } 
-    }
-  }
-
-  selectDefaultChar(char:any,idx:any){
-    for(let i=0;i<this.creatingChars.length;i++){
-      if(i==idx){
-        this.creatingChars[i].isDefault=true;
+  addCategory(cat:any){
+    if(this.selectedCategory==undefined){
+      this.selectedCategory=cat;
+      this.selected=[];
+      this.selected.push(cat);
+    } else {
+      const index = this.selected.findIndex(item => item.id === cat.id);
+      if (index !== -1) {
+        this.selected=[];
+        this.selectedCategory=undefined;
       } else {
-        this.creatingChars[i].isDefault=false;
+        this.selectedCategory=cat;
+        this.selected=[];
+        this.selected.push(cat);
       }
     }
+
+    this.cdr.detectChanges();
   }
 
-  saveChar(){
-    if(this.charsForm.value.name!=null){
-      this.prodChars.push({
-        id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
-        name: this.charsForm.value.name,
-        description: this.charsForm.value.description != null ? this.charsForm.value.description : '',
-        resourceSpecCharacteristicValue: this.creatingChars
-      })
+  isCategorySelected(cat:any){
+    if(this.selectedCategory==undefined){
+      return false;
+    } else {
+      if(cat.id==this.selectedCategory.id){
+        return true
+      } else {
+        return false
+      }
     }
-
-    this.charsForm.reset();
-    this.creatingChars=[];
-    this.showCreateChar=false;
-    this.stringCharSelected=true;
-    this.numberCharSelected=false;
-    this.rangeCharSelected=false;
-    this.cdr.detectChanges();
-  }
-
-  removeCharValue(char:any,idx:any){
-    console.log(this.creatingChars)
-    this.creatingChars.splice(idx, 1);
-    console.log(this.creatingChars)
-  }
-
-  deleteChar(char:any){
-    const index = this.prodChars.findIndex(item => item.id === char.id);
-    if (index !== -1) {
-      console.log('eliminar')
-      this.prodChars.splice(index, 1);
-    }   
-    this.cdr.detectChanges();
-    console.log(this.prodChars)    
   }
 
   showFinish(){
     if(this.generalForm.value.name!=null){
-      this.resourceToCreate={
+      this.categoryToCreate={
         name: this.generalForm.value.name,
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
         lifecycleStatus: "Active",
-        resourceSpecCharacteristic: this.prodChars,
-        relatedParty: [
-          {
-              id: this.partyId,
-              //href: "http://proxy.docker:8004/party/individual/urn:ngsi-ld:individual:803ee97b-1671-4526-ba3f-74681b22ccf3",
-              role: "Owner",
-              "@referredType": ''
-          }
-        ],
+        isRoot: this.isParent
       }
-      console.log('SERVICE TO CREATE:')
-      console.log(this.resourceToCreate)
-      this.showChars=false;
+      if(this.isParent==false){
+        this.categoryToCreate.parentId=this.selectedCategory.id;
+      }
+      console.log('CATEGORY TO CREATE:')
+      console.log(this.categoryToCreate)
       this.showGeneral=false;
       this.showSummary=true;
       this.selectStep('summary','summary-circle');
-      /*this.resSpecService.postResSpec(this.resourceToCreate).subscribe({
-        next: data => {
-          this.goBack();
-          console.log('serv created')
-        },
-        error: error => {
-          console.error('There was an error while updating!', error);
-        }
-      });*/
     }
   }
 
-  createResource(){
-    this.resSpecService.postResSpec(this.resourceToCreate).subscribe({
+  createCategory(){
+    this.api.postCategory(this.categoryToCreate).subscribe({
       next: data => {
         this.goBack();
-        console.log('serv created')
       },
       error: error => {
-        console.error('There was an error while creating!', error);
-        this.errorMessage='There was an error while creating the resource!';
+        console.error('There was an error while updating!', error);
+        this.errorMessage='There was an error while creating the category!';
         this.showError=true;
         setTimeout(() => {
           this.showError = false;

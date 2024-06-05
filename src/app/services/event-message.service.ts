@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import {Subject} from "rxjs";
-import {Category} from "../models/interfaces";
+import {Category, cartProduct} from "../models/interfaces";
 import { LoginInfo } from 'src/app/models/interfaces';
 
 export interface EventMessage {
   type: 'AddedFilter' | 'RemovedFilter' | 'AddedCartItem' | 'RemovedCartItem' | 'FilterShown' | 'ToggleCartDrawer' | 'LoginProcess' | 'BillAccChanged' |
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
   'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
-  'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession';
+  'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession' | 'CloseCartCard'|
+  'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast';
   text?: string,
   value?: object | boolean
 }
@@ -128,6 +129,29 @@ export class EventMessageService {
     console.log('event eChangedSession')
     console.log(session)
     this.eventMessageSubject.next({ type: 'ChangedSession', value: session });
+  }
+
+  emitCloseCartCard(val:cartProduct | undefined){
+    this.eventMessageSubject.next({type:'CloseCartCard', value: val})
+  }
+
+  emitShowCartToast(val:cartProduct | undefined){
+    this.eventMessageSubject.next({type:'ShowCartToast', value: val})
+  }
+  emitHideCartToast(val:cartProduct | undefined){
+    this.eventMessageSubject.next({type:'HideCartToast', value: val})
+  }
+  
+  emitAdminCategories(show:boolean){
+    this.eventMessageSubject.next({ type: 'AdminCategories', value: show });
+  }
+
+  emitCreateCategory(show:boolean){
+    this.eventMessageSubject.next({ type: 'CreateCategory', value: show });
+  }
+
+  emitUpdateCategory(cat:any){
+    this.eventMessageSubject.next({ type: 'UpdateCategory', value: cat });
   }
 
 }

@@ -19,6 +19,7 @@ export const environment = {
     SERV_SPEC_LIMIT: 6,
     RES_SPEC_LIMIT: 6,
     ORDER_LIMIT: 6,
+    CATEGORY_LIMIT: 100,
     SIOP: true,
     //SIOP: false,
     TAX_RATE: 20,

@@ -9,7 +9,8 @@ import {
   faBrain,
   faAnglesLeft,
   faUser,
-  faUsers
+  faUsers,
+  faCogs
 } from "@fortawesome/sharp-solid-svg-icons";
 import {LocalStorageService} from "../../services/local-storage.service";
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -96,8 +97,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
         this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();
         this.email=aux.email;
         for(let i=0;i<aux.roles.length;i++){
-          this.roles.push(aux.roles[i].name)
+          this.roles.push(aux.roles[i].name)          
         }
+        console.log(this.roles)
       } else {
         let loggedOrg = this.orgs.find((element: { id: any; }) => element.id == aux.logged_as)
         console.log('loggedOrg')
@@ -217,12 +219,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     this.cdr.detectChanges();
   }
 
-  logout(){
+  async logout(){
     this.localStorage.setObject('login_items',{});
     this.is_logged=false;
     this.username='';
     this.email='';
     this.usercharacters='';
+    this.router.navigate(['/dashboard']);
+    await this.loginService.logout();    
     this.cdr.detectChanges();
   }
 
@@ -304,5 +308,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   protected readonly faBrain = faBrain;
   protected readonly faAnglesLeft = faAnglesLeft;
   protected readonly faUser = faUser;
-  protected readonly faUsers = faUsers;
+  protected  readonly faUsers = faUsers;
+  protected readonly faCogs = faCogs;
 }
