@@ -27,6 +27,7 @@ export class QrVerifierService {
           return
         }
 
+        this.stopChecking(thePopup)
         thePopup.close()
         handler(response)
       })

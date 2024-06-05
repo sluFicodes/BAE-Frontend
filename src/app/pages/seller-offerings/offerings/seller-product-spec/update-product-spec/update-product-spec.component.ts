@@ -95,6 +95,7 @@ export class UpdateProductSpecComponent implements OnInit{
   buttonISOClicked:boolean=false;
   availableISOS:any[]=[];
   selectedISOS:any[]=[];
+  verifiedISO:any = {};
   selectedISO:any;
   showUploadFile:boolean=false;
 
@@ -440,6 +441,10 @@ export class UpdateProductSpecComponent implements OnInit{
       console.log('seleccionar')
       this.selectedISOS.splice(index, 1);
       this.availableISOS.push({name: iso.name, mandatory: iso.mandatory, domesupported: iso.domesupported});
+
+      if (iso.name in this.verifiedISO) {
+        delete this.verifiedISO[iso.name]
+      }
     }  
     this.cdr.detectChanges();
     console.log(this.prodSpecsBundle)    
@@ -460,8 +465,13 @@ export class UpdateProductSpecComponent implements OnInit{
 
     const qrWin = this.qrVerifier.launchPopup(`${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${state}&client_callback=${environment.SIOP_INFO.callbackURL}&client_id=${environment.SIOP_INFO.clientID}`,  'Scan QR code',  500, 500)
     this.qrVerifier.pollCertCredential(qrWin, state).then((data) => {
+      this.verifiedISO[sel.name] = data.vc
       console.log(`We got the vc: ${data['vc']}`)
     })
+  }
+
+  isVerified(sel: any) {
+    return sel.name in this.verifiedISO
   }
 
   public dropped(files: NgxFileDropEntry[],sel:any) {
@@ -518,7 +528,7 @@ export class UpdateProductSpecComponent implements OnInit{
                 this.attachmentService.uploadFile(fileBody).subscribe({
                   next: data => {
                       console.log(data)
-                      if(sel=='img'){
+                      if(sel == 'img'){
                         this.showImgPreview=true;
                         this.imgPreview=data.content;
                         this.prodAttachments.push({
@@ -1040,8 +1050,9 @@ export class UpdateProductSpecComponent implements OnInit{
     return value.trim().length === 0;
   }
 
-  showFinish(){
-    for(let i=0; i<this.selectedISOS.length;i++){
+  showFinish() {
+    // Load compliance profile
+    for(let i = 0; i < this.selectedISOS.length; i++){
       this.prodChars.push({
         id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
         name: this.selectedISOS[i].name,
@@ -1051,8 +1062,21 @@ export class UpdateProductSpecComponent implements OnInit{
         }]
       })
     }
+
+    // Load compliance VCs
+    for (const name in this.verifiedISO) {
+      this.prodChars.push({
+        id: `urn:ngsi-ld:characteristic:${uuidv4()}`,
+        name: `${name}:VC`,
+        productSpecCharacteristicValue: [{
+          isDefault: true,
+          value: this.verifiedISO[name]
+        }]
+      })
+    }
+
     if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){
-      this.productSpecToUpdate={
+      this.productSpecToUpdate = {
         name: this.generalForm.value.name,
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
         version: this.generalForm.value.version,
@@ -1097,7 +1121,7 @@ export class UpdateProductSpecComponent implements OnInit{
   }
 
   updateProduct(){
-    this.prodSpecService.updateProdSpec(this.productSpecToUpdate,this.prod.id).subscribe({
+    this.prodSpecService.updateProdSpec(this.productSpecToUpdate, this.prod.id).subscribe({
       next: data => {
         this.goBack();
         console.log('actualiado producto')

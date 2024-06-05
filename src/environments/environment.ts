@@ -25,11 +25,7 @@ export const environment = {
     CATEGORY_LIMIT: 100,
     SIOP: false,
     TAX_RATE: 20,
-    CHAT_API: 'http://85.215.243.214:5000/predict',
-    verifierQRCodeURL: '/login',
-    callbackURLPair: '1223',
-    clientIDPair: '3344',
-    pollURL: '/poll',
+    CHAT_API: 'https://85.215.243.214:5000/predict',
     SIOP_INFO: {
         enabled: false,
         pollPath: "",

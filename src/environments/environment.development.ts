@@ -26,7 +26,7 @@ export const environment = {
     //SIOP: true,
     SIOP: false,
     TAX_RATE: 20,
-    CHAT_API: 'http://85.215.243.214:5000/predict',
+    CHAT_API: 'https://85.215.243.214:5000/predict',
     SIOP_INFO: {
         enabled: false,
         pollPath: "",
