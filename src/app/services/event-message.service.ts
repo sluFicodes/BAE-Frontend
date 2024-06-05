@@ -8,7 +8,7 @@ export interface EventMessage {
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
   'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
   'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession' | 'CloseCartCard'|
-  'AdminCategories' | 'CreateCategory' | 'UpdateCategory';
+  'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast';
   text?: string,
   value?: object | boolean
 }
@@ -133,6 +133,13 @@ export class EventMessageService {
 
   emitCloseCartCard(val:cartProduct | undefined){
     this.eventMessageSubject.next({type:'CloseCartCard', value: val})
+  }
+
+  emitShowCartToast(val:cartProduct | undefined){
+    this.eventMessageSubject.next({type:'ShowCartToast', value: val})
+  }
+  emitHideCartToast(val:cartProduct | undefined){
+    this.eventMessageSubject.next({type:'HideCartToast', value: val})
   }
   
   emitAdminCategories(show:boolean){

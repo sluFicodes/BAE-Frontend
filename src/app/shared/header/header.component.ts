@@ -219,12 +219,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     this.cdr.detectChanges();
   }
 
-  logout(){
+  async logout(){
     this.localStorage.setObject('login_items',{});
     this.is_logged=false;
     this.username='';
     this.email='';
     this.usercharacters='';
+    this.router.navigate(['/dashboard']);
+    await this.loginService.logout();    
     this.cdr.detectChanges();
   }
 

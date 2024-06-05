@@ -1,18 +1,11 @@
 import { Component, Input, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment';
-import { ApiServiceService } from 'src/app/services/product-service.service';
-import { ProductSpecServiceService } from 'src/app/services/product-spec-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import {EventMessageService} from "src/app/services/event-message.service";
-import {AttachmentServiceService} from "src/app/services/attachment-service.service";
 import { ServiceSpecServiceService } from 'src/app/services/service-spec-service.service';
-import { ResourceSpecServiceService } from 'src/app/services/resource-spec-service.service';
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
-import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 

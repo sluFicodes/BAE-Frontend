@@ -2,19 +2,14 @@ import { Component, Input, OnInit, ElementRef, ViewChild,ChangeDetectorRef, Host
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
-import { initFlowbite } from 'flowbite';
 import { PriceServiceService } from 'src/app/services/price-service.service';
-import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved, faAtom} from "@fortawesome/pro-solid-svg-icons";
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
-//type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
-import { certifications } from 'src/app/models/certification-standards.const'
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { LoginInfo, cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
 import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
 import {EventMessageService} from "../../services/event-message.service";
-import * as moment from 'moment';
 
 @Component({
   selector: 'cart-card',

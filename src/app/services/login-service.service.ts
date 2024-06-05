@@ -45,4 +45,10 @@ export class LoginServiceService {
     })
 
   }
+
+  logout(){
+    let url = `${LoginServiceService.BASE_URL}/logout`;
+    console.log('-- logout --')
+    return lastValueFrom(this.http.get<any>(url));
+  }
 }
