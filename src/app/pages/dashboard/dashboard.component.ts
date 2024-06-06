@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { interval, Subscription} from 'rxjs';
 import { RefreshLoginServiceService } from "src/app/services/refresh-login-service.service"
 import { LoginServiceService } from "src/app/services/login-service.service"
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ import { LoginServiceService } from "src/app/services/login-service.service"
 export class DashboardComponent implements OnInit {
 
   isFilterPanelShown = false;
+  searchField = new FormControl();
   //loginSubscription: Subscription = new Subscription();;
   constructor(private localStorage: LocalStorageService,
               private eventMessage: EventMessageService,
