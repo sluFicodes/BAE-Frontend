@@ -1,9 +1,9 @@
 
 <div>
-    <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-gray-300 border-secondary-50 border flex flex-col shadow-lg">
+    <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-secondary-100 dark:border-gray-800 border-gray-300 border-secondary-50 border flex flex-col shadow-lg">
       <div class="flex w-full flex-col items-center md:flex-row justify-between">
         <div class="mb-4 md:mb-0 md:w-1/4 p-8">
-            <h2 class="text-2xl font-bold mb-4">{{ 'OFFERINGS._prod_offer' | translate }}</h2>  
+            <h2 class="text-2xl font-bold mb-4 dark:text-white">{{ 'OFFERINGS._prod_offer' | translate }}</h2>  
         </div>
 
         <div class="flex flex-row w-full justify-end">
@@ -33,7 +33,7 @@
         <div class="p-8 w-full">
           <div class="flex flex-row mb-1">
             <fa-icon [icon]="faSwatchbook" class="fa-base text-primary-100 align-middle mr-2"></fa-icon>
-            <h2 class="text-base font-bold">{{ 'OFFERINGS._filter_state' | translate }}</h2>
+            <h2 class="text-base font-bold dark:text-white">{{ 'OFFERINGS._filter_state' | translate }}</h2>
             </div>
             <button id="dropdownDefault" data-dropdown-toggle="dropdown"
             class="text-black w-full justify-between shadow bg-white border border-gray-300 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center"
@@ -129,7 +129,7 @@
         <span class="sr-only">Loading...</span>
       </div>
 } @else {
-    <div class="bg-secondary-50 dark:bg-white mt-8 p-4 rounded-lg">
+    <div class="bg-secondary-50 dark:bg-secondary-100 border dark:border-gray-800 mt-8 p-4 rounded-lg">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
@@ -210,7 +210,7 @@
         @if (!loading_more) {
             @if (page_check) {
             <div class="flex pt-6 pb-2 justify-center align-middle">
-                <button (click)="next()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+                <button (click)="next()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 dark:text-white bg-white dark:bg-primary-100 dark:hover:bg-secondary-100 border border-gray-300 dark:border-secondary-200 rounded-lg hover:bg-gray-200">
                 {{ 'OFFERINGS._load_more' | translate }}
                 <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
