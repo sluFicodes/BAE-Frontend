@@ -33,10 +33,10 @@
 
             @for (cat of catalogs; track cat.id) {
 
-                <div (click)="goToCatalogSearch(cat.id)" class="block cursor-pointer rounded-lg dark:bg-white bg-cover" style="background-image: url(assets/logos/dome-logo-element-colour.png);" >
-                    <div class="block w-full h-full p-6 bg-opacity-100 bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-secondary-50 border bg-secondary-50/90 dark:bg-white/90 bg-cover">
-                        <h5 class="text-2xl font-bold tracking-tight text-primary-100 dark:text-primary-100">{{cat.name}}</h5>
-                        <p class="font-normal text-gray-700 line-clamp-3">{{cat.description ? cat.description : 'CATALOGS._no_desc' | translate}}</p>
+                <div (click)="goToCatalogSearch(cat.id)" class="block cursor-pointer rounded-lg bg-cover" style="background-image: url(assets/logos/dome-logo-element-colour.png);" >
+                    <div class="block w-full h-full p-6 bg-opacity-100 bg-secondary-50 rounded-lg dark:bg-secondary-100 bg-secondary-50/90 dark:bg-secondary-100/90 bg-cover">
+                        <h5 class="text-2xl font-bold tracking-tight text-primary-100 dark:text-white">{{cat.name}}</h5>
+                        <p class="font-normal text-gray-700 dark:text-gray-400 line-clamp-3">{{cat.description ? cat.description : 'CATALOGS._no_desc' | translate}}</p>
                         <hr class="h-px my-1 bg-primary-100 border-0 dark:bg-primary-100">
                         <div class="">
                           @for(category of cat.category; track category.id) {
