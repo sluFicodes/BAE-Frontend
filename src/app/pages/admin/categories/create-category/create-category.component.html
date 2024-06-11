@@ -240,7 +240,7 @@
                     <div class="mb-4">
                         <label class="font-bold text-lg mr-4">{{ 'CREATE_CATEGORIES._status' | translate }}</label>
                         @if(categoryToCreate?.lifecycleStatus == 'Active'){
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{categoryToCreate?.lifecycleStatus}}</span>
+                            <span class="bg-blue-100 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{categoryToCreate?.lifecycleStatus}}</span>
                         } @else if(categoryToCreate?.lifecycleStatus == 'Launched') {
                             <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{categoryToCreate?.lifecycleStatus}}</span>
                         } @else if(categoryToCreate?.lifecycleStatus == 'Retired') {

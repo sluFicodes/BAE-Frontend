@@ -36,7 +36,7 @@
             <h2 class="text-base font-bold dark:text-white">{{ 'OFFERINGS._filter_state' | translate }}</h2>
             </div>
             <button id="dropdownDefault" data-dropdown-toggle="dropdown"
-            class="text-black w-full justify-between shadow bg-white border border-gray-300 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center"
+            class="text-black dark:text-white w-full justify-between shadow bg-white dark:bg-secondary-200 hover:bg-gray-100 dark:hover:bg-secondary-300 focus:ring-4 focus:outline-none focus:ring-primary-100 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center shadow-lg"
             type="button">
             {{ 'OFFERINGS._filter_state' | translate }}
             <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -45,8 +45,8 @@
             </svg>
             </button>
             
-            <div id="dropdown" class="z-20 hidden w-1/5 p-3 bg-white rounded-lg shadow">
-            <h6 class="mb-3 text-sm font-medium text-gray-900">
+            <div id="dropdown" class="z-20 hidden w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
+            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
                 {{ 'OFFERINGS._state' | translate }}
             </h6>
             <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
@@ -55,7 +55,7 @@
                 <input id="active" type="checkbox" value="" checked (change)="onStateFilterChange('Active')"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
-                <label for="active" class="ml-2 text-sm font-medium text-gray-900">
+                <label for="active" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
                     {{ 'OFFERINGS._active' | translate }}
                 </label>
                 </li>
@@ -64,7 +64,7 @@
                 <input id="launched" type="checkbox" value="" checked (change)="onStateFilterChange('Launched')"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
-                <label for="launched" class="ml-2 text-sm font-medium text-gray-900">
+                <label for="launched" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
                     {{ 'OFFERINGS._launched' | translate }}
                 </label>
                 </li>
@@ -73,7 +73,7 @@
                 <input id="retired" type="checkbox" value="" (change)="onStateFilterChange('Retired')"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
-                <label for="retired" class="ml-2 text-sm font-medium text-gray-900">
+                <label for="retired" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
                     {{ 'OFFERINGS._retired' | translate }}
                 </label>
                 </li>
@@ -82,7 +82,7 @@
                   <input id="obsolete" type="checkbox" value="" (change)="onStateFilterChange('Obsolete')"
                       class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
       
-                  <label for="obsolete" class="ml-2 text-sm font-medium text-gray-900">
+                  <label for="obsolete" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
                     {{ 'OFFERINGS._obsolete' | translate }}
                   </label>
                 </li>
@@ -131,8 +131,8 @@
 } @else {
     <div class="bg-secondary-50 dark:bg-secondary-100 border dark:border-gray-800 mt-8 p-4 rounded-lg">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                     <tr>
                         <th scope="col" class="px-6 py-3">
                             {{ 'OFFERINGS._name' | translate }}
@@ -153,26 +153,26 @@
                 </thead>
                 <tbody>
                     @for (offer of offers; track offer.id) {
-                        <tr class="border-b hover:bg-gray-200">
+                        <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
                             <td class="px-6 py-4">
                                 {{offer.name}}
                             </td>
                             <td class="px-6 py-4">
                                 @if(offer.lifecycleStatus == 'Active'){
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{offer.lifecycleStatus}}</span>
+                                    <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{offer.lifecycleStatus}}</span>
                                 } @else if(offer.lifecycleStatus == 'Launched') {
-                                    <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{offer.lifecycleStatus}}</span>
+                                    <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{offer.lifecycleStatus}}</span>
                                 } @else if(offer.lifecycleStatus == 'Retired') {
-                                    <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{offer.lifecycleStatus}}</span>
+                                    <span class="bg-blue-100 dark:bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{offer.lifecycleStatus}}</span>
                                 } @else if(offer.lifecycleStatus == 'Obsolete') {
-                                    <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{offer.lifecycleStatus}}</span>
+                                    <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{offer.lifecycleStatus}}</span>
                                 }
                             </td>
                             <td class="px-6 py-4">
                                 @if(offer.isBundle == false){
-                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
+                                    <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
                                 } @else {
-                                    <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
+                                    <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
                                 }
                             </td>
                             <td class="px-6 py-4">

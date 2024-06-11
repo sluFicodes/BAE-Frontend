@@ -24,7 +24,9 @@ module.exports = {
           //Secondary dark
           100: '#14274a',
           //Color they use as bg when dark theme
-          200: '#0c1c38'
+          200: '#0c1c38',
+          //Dark theme table background and inputs
+          300: '#182740'
         },
       },
       transitionProperty: {

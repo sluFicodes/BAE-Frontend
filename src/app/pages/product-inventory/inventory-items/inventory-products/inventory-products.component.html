@@ -137,7 +137,7 @@
                             <div>V: {{inv.product?.version || 'latest'}}</div>
                             <div class="flex items-center justify-center rounded-lg">
                             @if(inv.status == 'active'){
-                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{inv.status}}</span>
+                                <span class="bg-blue-100 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{inv.status}}</span>
                             } @else if(inv.status == 'created') {
                                 <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{inv.status}}</span>
                             } @else if(inv.status == 'suspended') {
