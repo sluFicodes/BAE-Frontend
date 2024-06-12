@@ -103,12 +103,12 @@
               </span>
             </div>
             <span class="text-sm text-body"> {{ getPrice(item).text }} {{ formatter.format(getPrice(item).price) }}</span></div> -->
-              <div class="flex justify-between w-full mt-2 mb-2 rounded-lg bg-white border-secondary-50 border shadow-lg">
+              <div class="flex justify-between w-full mt-2 mb-2 rounded-lg bg-white border-secondary-50 dark:bg-primary-100 dark:border-secondary-200 border shadow-lg">
                <button type="button" (click)="deleteProduct(item)" class="flex p-2 box-decoration-clone">
                   @if (item.image) {
-                     <img class="rounded-t-lg w-fit h-[100px]" src="{{item.image}}" alt="">
+                     <img class="rounded-lg w-fit h-[100px]" src="{{item.image}}" alt="">
                   } @else {
-                     <img class="rounded-t-lg w-fit h-[100px]" src="https://placehold.co/600x400/svg" alt="">
+                     <img class="rounded-lg w-fit h-[100px]" src="https://placehold.co/600x400/svg" alt="">
                   }
                </button>
                <div class="p-2 flex items-center">
@@ -123,8 +123,9 @@
                   }
                </div>
                <div class="p-2 flex items-center">
-                  <button type="button" (click)="deleteProduct(item)" class="h-fit text-blue-700 hover:bg-gray-300 hover:text-white focus:ring-4 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center">
-                     <svg class="w-[12px] h-[12px] text-gray-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                  <button type="button" (click)="deleteProduct(item)"
+                  class="h-fit text-gray-700 dark:text-white hover:bg-gray-300 hover:text-white dark:hover:text-blue-700 focus:ring-4 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center">
+                     <svg class="w-[12px] h-[12px] " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                       </svg>
                   </button>
