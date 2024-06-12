@@ -1,4 +1,4 @@
-<div class="w-full h-full bg-secondary-50 rounded-lg dark:border-gray-700 border-secondary-50 border">
+<div class="flex flex-col w-full h-full bg-secondary-50 dark:bg-secondary-100 rounded-lg dark:border-secondary-100 border-secondary-50 border">
 
 
   <div (click)="goToProductDetails(productOff)" class="rounded overflow-hidden cursor-pointer">
@@ -12,8 +12,8 @@
     </div>
   </div>
 
-  <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
-    <div class="px-5 py-5 bg-secondary-50/95 rounded-lg">
+  <div class="flex-1 h-full bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
+    <div class="flex-1 h-full px-5 py-5 bg-secondary-50/95 dark:bg-secondary-100/95 rounded-lg">
       <div class="overflow-y-hidden">
       @for (cat of categories; track cat.id) {
         <bae-badge class="mr-2" [category]=cat></bae-badge>
@@ -31,9 +31,9 @@
       </a>
       </div>
       <a (click)="goToProductDetails(productOff)" class="cursor-pointer">
-        <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{productOff?.name}}</h5>
+        <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-white">{{productOff?.name}}</h5>
       </a>
-      <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600" [data]="productOff?.description"></markdown>
+      <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600 dark:text-gray-400" [data]="productOff?.description"></markdown>
       <div class="flex w-full justify-between mt-2.5 mb-5 text-gray-500 font-mono">
         <div>V: {{productOff?.version || 'latest'}}</div>
         <div class="flex items-center">
@@ -138,10 +138,12 @@
                       </a>                      
                   </div>
               </div>
-              <div class="overflow-hidden flex justify-center items-center bg-white dark:bg-primary-50">
-                <img class="rounded-r-lg h-5/6 w-5/6 object-contain mix-blend-multiply saturate-200" src="{{getProductImage()}}" alt="product image" />
+
+              <div class="relative overflow-hidden flex justify-center items-center border border-1 border-gray-200 dark:border-gray-700 rounded-tr-lg">
+                <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage()}});filter: blur(20px);"></div>
+                <img class="rounded-r-lg h-5/6 w-5/6 object-contain z-10" src="{{getProductImage()}}" alt="product image" />
               </div>
-              <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
+              <hr class="h-px border-gray-200 border-1 dark:border-gray-700">
           </div>
 
         <!-- END HEADER CARD -->

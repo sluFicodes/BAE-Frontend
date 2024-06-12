@@ -11,10 +11,27 @@
 
 @import '@ctrl/ngx-emoji-mart/picker';
 
+:root {
+  /* Default light mode colors */
+  --blockquote-border-color: #ccc;
+  --blockquote-bg-color: #dde6f6;
+  --blockquote-text-color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark mode colors */
+    --blockquote-border-color: #171717;
+    --blockquote-bg-color: #0c1c38;
+    --blockquote-text-color: #eee;
+  }
+}
+
 /* Default styles for Markdown elements */
 markdown {
   font-family: "Blinker", system-ui, sans-serif;
   line-height: 1.6;
+  font-style: var(--blockquote-text-color);
 }
 
 markdown h1 {
@@ -81,19 +98,19 @@ markdown ol li {
 markdown blockquote {
   margin-left: 0;
   padding-left: 1em;
-  border-left: 2px solid #ccc;
+  border-left: 2px solid var(--blockquote-border-color);
 }
 
 markdown code {
   font-family: monospace;
-  background-color: #f4f4f4;
+  background-color: #2d58a7;
   padding: 0.2em 0.4em;
   border-radius: 3px;
 }
 
 markdown pre {
   font-family: monospace;
-  background-color: #f4f4f4;
+  background-color: #2d58a7;
   padding: 0.5em;
   border-radius: 3px;
   overflow: auto;
@@ -106,12 +123,16 @@ markdown table {
 
 markdown table th,
 markdown table td {
-  border: 1px solid #ddd;
+  border: 1px solid var(--blockquote-border-color);
   padding: 8px;
 }
 
 markdown table th {
-  background-color: #f2f2f2;
+  background-color: #2d58a7;
+}
+
+markdown body.dark table th {
+  background-color: #2d58a7;
 }
 
 markdown img {

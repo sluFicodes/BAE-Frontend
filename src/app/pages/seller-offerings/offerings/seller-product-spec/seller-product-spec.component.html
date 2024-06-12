@@ -1,9 +1,9 @@
 
 <div>
-    <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-white dark:border-gray-700 border-gray-300 border-secondary-50 border flex flex-col shadow-lg">
+    <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-secondary-100 dark:border-gray-800 border-gray-300 border-secondary-50 border flex flex-col shadow-lg">
       <div class="flex w-full flex-col items-center md:flex-row justify-between">
         <div class="mb-4 md:mb-0 md:w-1/4 p-8">
-            <h2 class="text-2xl font-bold mb-4">{{ 'OFFERINGS._prod_spec' | translate }}</h2>  
+            <h2 class="text-2xl font-bold mb-4 dark:text-white">{{ 'OFFERINGS._prod_spec' | translate }}</h2>  
         </div>
 
         <div class="flex flex-row w-full justify-end">
@@ -33,10 +33,10 @@
         <div class="p-8 w-full">
           <div class="flex flex-row mb-1">
             <fa-icon [icon]="faSwatchbook" class="fa-base text-primary-100 align-middle mr-2"></fa-icon>
-            <h2 class="text-base font-bold">{{ 'OFFERINGS._filter_state' | translate }}</h2>
+            <h2 class="text-base font-bold dark:text-white">{{ 'OFFERINGS._filter_state' | translate }}</h2>
             </div>
             <button id="dropdownDefault" data-dropdown-toggle="dropdown"
-            class="text-black w-full justify-between shadow bg-white border border-gray-300 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center"
+            class="text-black dark:text-white w-full justify-between shadow bg-white dark:bg-secondary-200 hover:bg-gray-100 dark:hover:bg-secondary-300 focus:ring-4 focus:outline-none focus:ring-primary-100 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center shadow-lg"
             type="button">
             {{ 'OFFERINGS._filter_state' | translate }}
             <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -45,8 +45,8 @@
             </svg>
             </button>
             
-            <div id="dropdown" class="z-20 hidden w-1/5 p-3 bg-white rounded-lg shadow">
-            <h6 class="mb-3 text-sm font-medium text-gray-900">
+            <div id="dropdown" class="z-20 hidden w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
+            <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
                 {{ 'OFFERINGS._state' | translate }}
             </h6>
             <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
@@ -55,7 +55,7 @@
                 <input id="active" type="checkbox" value="" checked (change)="onStateFilterChange('Active')"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
-                <label for="active" class="ml-2 text-sm font-medium text-gray-900">
+                <label for="active" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">
                     {{ 'OFFERINGS._active' | translate }}
                 </label>
                 </li>
@@ -64,7 +64,7 @@
                 <input id="launched" type="checkbox" value="" checked (change)="onStateFilterChange('Launched')"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
-                <label for="launched" class="ml-2 text-sm font-medium text-gray-900">
+                <label for="launched" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">
                     {{ 'OFFERINGS._launched' | translate }}
                 </label>
                 </li>
@@ -73,7 +73,7 @@
                 <input id="retired" type="checkbox" value="" (change)="onStateFilterChange('Retired')"
                     class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
     
-                <label for="retired" class="ml-2 text-sm font-medium text-gray-900">
+                <label for="retired" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">
                     {{ 'OFFERINGS._retired' | translate }}
                 </label>
                 </li>
@@ -82,7 +82,7 @@
                   <input id="obsolete" type="checkbox" value="" (change)="onStateFilterChange('Obsolete')"
                       class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
       
-                  <label for="obsolete" class="ml-2 text-sm font-medium text-gray-900">
+                  <label for="obsolete" class="ml-2 text-sm font-medium text-gray-900 dark:text-white">
                     {{ 'OFFERINGS._obsolete' | translate }}
                   </label>
                 </li>
@@ -129,10 +129,10 @@
         <span class="sr-only">Loading...</span>
       </div>
 } @else {
-  <div class="bg-secondary-50 dark:bg-white mt-8 p-4 rounded-lg">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
+    <div class="bg-secondary-50 dark:bg-secondary-100 border dark:border-gray-800 mt-8 p-4 rounded-lg">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white dark:bg-secondary-300">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                 <tr>
                     <th scope="col" class="px-6 py-3">
                         {{ 'OFFERINGS._name' | translate }}
@@ -153,26 +153,26 @@
             </thead>
             <tbody>
                 @for (prod of prodSpecs; track prod.id) {
-                    <tr class="border-b hover:bg-gray-200">
+                    <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
                         <td class="px-6 py-4">
                             {{prod.name}}
                         </td>
                         <td class="px-6 py-4">
                             @if(prod.lifecycleStatus == 'Active'){
-                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
+                                <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
                             } @else if(prod.lifecycleStatus == 'Launched') {
-                                <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{prod.lifecycleStatus}}</span>
+                                <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{prod.lifecycleStatus}}</span>
                             } @else if(prod.lifecycleStatus == 'Retired') {
-                                <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{prod.lifecycleStatus}}</span>
+                                <span class="bg-blue-100 dark:bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{prod.lifecycleStatus}}</span>
                             } @else if(prod.lifecycleStatus == 'Obsolete') {
-                                <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
+                                <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
                             }
                         </td>
                         <td class="px-6 py-4">
                             @if(prod.isBundle == false){
-                                <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
+                                <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
                             } @else {
-                                <span class="bg-blue-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
+                                <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
                             }
                         </td>
                         <td class="px-6 py-4">
@@ -194,7 +194,7 @@
                     </tr>
                 } @empty {
                     <div class="flex justify-center w-full m-4">
-                        <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50" role="alert">
+                        <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50 dark:bg-secondary-200 dark:text-primary-50" role="alert">
                           <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                           </svg>
@@ -210,7 +210,7 @@
     @if (!loading_more) {
         @if (page_check) {
         <div class="flex pt-6 pb-2 justify-center align-middle">
-            <button (click)="next()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+            <button (click)="next()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 dark:text-white bg-white dark:bg-primary-100 dark:hover:bg-secondary-100 border border-gray-300 dark:border-secondary-200 rounded-lg hover:bg-gray-200">
             {{ 'OFFERINGS._load_more' | translate }}
             <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>

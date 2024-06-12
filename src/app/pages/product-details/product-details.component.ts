@@ -485,11 +485,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.selectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.selectTag(details_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(chars_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(attach_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(agreements_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(relationships_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
   }
 
   goToChars(scroll:boolean){
@@ -503,11 +503,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.unselectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.selectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(details_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.selectTag(chars_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(attach_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(agreements_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(relationships_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
   }
 
   goToAttach(scroll:boolean){
@@ -521,11 +521,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.unselectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.selectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(details_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(chars_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.selectTag(attach_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(agreements_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(relationships_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
   }
 
   goToAgreements(scroll:boolean){
@@ -539,11 +539,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.unselectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.selectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(details_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(chars_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(attach_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.selectTag(agreements_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(relationships_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
   }
 
   goToRelationships(scroll:boolean){
@@ -557,11 +557,11 @@ export class ProductDetailsComponent implements OnInit {
     let agreements_button = document.getElementById('agreements-button')
     let relationships_button = document.getElementById('relationships-button')
 
-    this.unselectTag(details_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(chars_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(attach_button,'text-primary-100 border-b-2 border-primary-100');
-    this.unselectTag(agreements_button,'text-primary-100 border-b-2 border-primary-100');
-    this.selectTag(relationships_button,'text-primary-100 border-b-2 border-primary-100');
+    this.unselectTag(details_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(chars_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(attach_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.unselectTag(agreements_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
+    this.selectTag(relationships_button,'text-primary-100 dark:text-primary-50 dark:border-primary-50 border-b-2 border-primary-100');
   }
 
   unselectTag(elem:HTMLElement | null,cls:string){
