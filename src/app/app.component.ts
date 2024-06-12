@@ -9,8 +9,6 @@ import { Router } from '@angular/router';
 import { LoginInfo } from 'src/app/models/interfaces';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { RefreshLoginServiceService } from "src/app/services/refresh-login-service.service";
-import {SiopInfoService} from "src/app/services/siop-info.service"
-import { environment } from 'src/environments/environment';
 import * as moment from 'moment';
 
 
@@ -29,8 +27,7 @@ export class AppComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private api: ApiServiceService,
-              private refreshApi: RefreshLoginServiceService,
-              private siopInfo: SiopInfoService) {
+              private refreshApi: RefreshLoginServiceService) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('es');
     this.translate.use('es');
@@ -64,9 +61,9 @@ export class AppComponent implements OnInit {
     })
     let aux =this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) === '{}'){
-      this.siopInfo.getSiopInfo().subscribe((data)=>{
-        environment.SIOP_INFO= data
-      })
+      //this.siopInfo.getSiopInfo().subscribe((data)=>{
+      //  environment.SIOP_INFO = data
+      //})
     }
     else if (((aux.expire - moment().unix())-4) > 0) {
       this.refreshApi.stopInterval();
