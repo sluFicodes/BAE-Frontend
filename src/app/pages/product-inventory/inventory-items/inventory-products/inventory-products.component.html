@@ -84,7 +84,7 @@
     } @else {
         <div class="pl-5 grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @for (inv of inventory; track inv.id; let idx = $index) {
-                <div class="w-full h-full bg-secondary-50 rounded-lg dark:border-gray-700 border-secondary-50 border ">
+                <div class="w-full h-full bg-secondary-50 dark:bg-secondary-100 dark:border-secondary-100 rounded-lg border-secondary-50 border ">
 
                     <div (click)="goToProductDetails(inv.product)" class="rounded overflow-hidden cursor-pointer">
                         <div class="relative h-48 flex justify-center items-center">
@@ -96,7 +96,7 @@
                     </div>
                     
                     <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
-                        <div class="px-5 py-5 bg-secondary-50/95 rounded-lg">
+                        <div class="px-5 py-5 bg-secondary-50/95 dark:bg-secondary-100/95 rounded-lg">
                         <div class="h-[30px] overflow-y-hidden">
                         @for (cat of inv.product?.category; track cat.id) {
                             <bae-badge class="ml-2" [category]=cat></bae-badge>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="flex flex-row justify-between">
                             <a (click)="goToProductDetails(inv.product)" class="flex cursor-pointer">
-                            <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-100">{{inv.product?.name}}</h5>
+                            <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-white">{{inv.product?.name}}</h5>
                             </a>
                             @if(inv.status == 'active'){
                             <button type="button" data-tooltip-target="unsubscribe-default" (click)="showUnsubscribeModal(inv);$event.stopPropagation();" class="flex text-red-600 border border-red-600 hover:bg-red-600 hover:text-white focus:ring-4 focus:outline-none focus:ring-red-400 font-medium rounded-full text-sm p-2 text-center inline-flex items-center">
@@ -132,7 +132,7 @@
                             }-->
                         </div>
 
-                        <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600" [data]="inv.product?.description"></markdown>
+                        <markdown class="min-h-19 h-19 line-clamp-2 text-gray-600 dark:text-gray-400" [data]="inv.product?.description"></markdown>
                         <div class="flex w-full justify-between mt-2.5 mb-5 text-gray-500 font-mono">
                             <div>V: {{inv.product?.version || 'latest'}}</div>
                             <div class="flex items-center justify-center rounded-lg">
@@ -143,7 +143,7 @@
                             } @else if(inv.status == 'suspended') {
                                 <span class="bg-blue-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{inv.status}}</span>
                             } @else if(inv.status == 'terminated') {
-                                <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{inv.status}}</span>
+                                <span class="bg-blue-100  text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{inv.status}}</span>
                             }
                         </div>
                         </div>
@@ -151,21 +151,21 @@
                             @if(inv.price.priceType=='custom'){
                                 <div class="flex flex-col place-content-center items-baseline mb-5 w-full">
                                     <div class="flex place-content-center items-baseline w-full">
-                                    <span class="text-2xl font-bold text-gray-900 mr-1">Custom</span>
+                                    <span class="text-2xl font-bold text-gray-900 mr-1 dark:text-white">Custom</span>
                                     </div>
                                 </div>
                             } @else {
                                 <div class="flex flex-col place-content-center items-baseline mb-5 w-full">
                                     <div class="flex place-content-center items-baseline w-full">
-                                    <span class="text-2xl font-bold text-gray-900 mr-1">{{inv.price?.price}} {{inv.price?.unit}}</span>
-                                    <span class="text-xs font-bold text-gray-900">{{inv.price?.text}}</span>
+                                    <span class="text-2xl font-bold text-gray-900 mr-1 dark:text-white">{{inv.price?.price}} {{inv.price?.unit}}</span>
+                                    <span class="text-xs font-bold text-gray-900 dark:text-white">{{inv.price?.text}}</span>
                                     </div>
                                 </div>
                             }
                         } @else {
                             <div class="flex flex-col place-content-center items-baseline mb-5 w-full">
                                 <div class="flex place-content-center items-baseline w-full">
-                                <span class="text-2xl font-bold text-gray-900 mr-1">{{ 'SHOPPING_CART._free' | translate }}</span>
+                                <span class="text-2xl font-bold text-gray-900 mr-1 dark:text-white">{{ 'SHOPPING_CART._free' | translate }}</span>
                                 </div>
                             </div>
                         }
@@ -173,7 +173,7 @@
                     </div>
                     </div>
             } @empty {
-                <div class="min-h-19 dark:text-gray-600 text-center">{{ 'PRODUCT_INVENTORY._not_found' | translate }}.</div>
+                <div class="min-h-19 dark:text-gray-600 text-center dark:text-gray-400">{{ 'PRODUCT_INVENTORY._not_found' | translate }}.</div>
             }
         </div>
         @if (!loading_more) {
