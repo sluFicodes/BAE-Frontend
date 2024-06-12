@@ -227,21 +227,53 @@ export class ProductDetailsComponent implements OnInit {
           this.images = profile;
           this.attatchments = this.productOff?.attachment?.filter(item => item.name != 'Profile Picture') ?? [];
         }
-        for(let z=0; z < this.complianceProf.length; z++){
+
+        let vcs = 0
+        let domeSup = 0
+        for(let z = 0; z < this.complianceProf.length; z++){
+          if (this.complianceProf[z].domesupported) {
+            domeSup += 1
+          }
+
           if(this.prodSpec.productSpecCharacteristic != undefined){
-            let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === this.complianceProf[z].name));
-            if(compProf != undefined){
-              this.complianceProf[z].href = compProf.productSpecCharacteristicValue?.at(0)?.value
-              this.complianceProf[z].value = 'Certification included'
-            } else {
+            // Search certificates or VCs
+            let compProf = this.prodSpec.productSpecCharacteristic.find((p => {
+              return p.name === this.complianceProf[z].name
+            }));
+
+            if (!compProf) {
               this.complianceProf[z].href = '#'
               this.complianceProf[z].value = 'Not provided yet'
+
+            } else {
+              this.complianceProf[z].href = compProf.productSpecCharacteristicValue?.at(0)?.value
+              this.complianceProf[z].value = 'Certification included'
             }
+
+            let vcProf = this.prodSpec.productSpecCharacteristic.find((p => {
+              return p.name === `${this.complianceProf[z].name}:VC`
+            }));
+            
+            if (vcProf) {
+              this.complianceProf[z].verified = true
+              vcs += 1
+            }
+          }
+        }
+
+        // Set compliance level
+        if (vcs > 0) {
+          this.complianceLevel = 2
+          if (vcs == domeSup) {
+            this.complianceLevel = 3
           }
         }
       })
     })
+  }
 
+  isVerified(char: any) {
+    return char.verified == true
   }
 
   toggleCartSelection(){

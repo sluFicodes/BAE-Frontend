@@ -22,9 +22,9 @@
 /* CHATBOX
 =============== */
 .chatbox {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
+    position: fixed;  /* Cambiato da absolute a fixed */
+    bottom: calc(2% + 50px);
+    right: 2%;
 }
 
 /* CONTENT IS CLOSE */
@@ -32,19 +32,20 @@
     display: flex;
     flex-direction: column;
     background: #eee;
-    width: 300px;
-    height: 350px;
+    width: 80vw;  /* Modifica qui */
+    max-width: 400px;
+    height: 70vh; /* Modifica qui */
+    max-height: 600px;
     z-index: -123456;
     opacity: 0;
     transition: all .5s ease-in-out;
 }
 
-/* CONTENT ISOPEN */
+/* CONTENT IS OPEN */
 .chatbox--active {
-    transform: translateY(-40px);
+    transform: translateY(0);
     z-index: 123456;
     opacity: 1;
-
 }
 
 /* BUTTON */
@@ -52,14 +53,13 @@
     text-align: right;
 }
 
-.chatbox-send__button {
+.send__button {
     padding: 6px;
     background: transparent;
     border: none;
     outline: none;
     cursor: pointer;
 }
-
 
 /* HEADER */
 .chatbox__header {
@@ -78,7 +78,7 @@
 
 .messages__item {
     background: orange;
-    max-width: 60.6%;
+    max-width: 85%;
     width: fit-content;
 }
 
@@ -98,8 +98,6 @@
 
 .chatbox__support {
     background: #f9f9f9;
-    height: 450px;
-    width: 350px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -141,7 +139,7 @@
     margin-top: 10px;
     background: #E0E0E0;
     padding: 8px 12px;
-    max-width: 70%;
+    max-width: 85%;
 }
 
 .messages__item--visitor,
@@ -197,4 +195,56 @@
     border-bottom-left-radius: 50px;
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+}
+
+/* Question Container */
+.question-container {
+    margin: 50px 0 50px 20px; /* Allinea a sinistra con un margine */
+    padding: 20px;
+    width: 50%;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra orizzontalmente */
+    text-align: center;
+}
+
+.question-container label {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px; /* Margine inferiore per spazio tra label e select */
+}
+
+.question-container select {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1.2rem;
+    font-family: 'Nunito', sans-serif;
+    margin-bottom: 20px; /* Margine inferiore per spazio tra select e immagine */
+}
+
+.question-container .question-image {
+    max-width: 80%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .chatbox__support {
+        width: 100vw;
+        height: 50vh;
+        bottom: 0;
+        right: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .question-container {
+        width: 90%;
+    }
 }

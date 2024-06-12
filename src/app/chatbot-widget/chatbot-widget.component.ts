@@ -90,7 +90,9 @@ export class ChatbotWidgetComponent {
     let msg1 = { name: name, message: text1, role: role }
     this.messages.push(msg1);
 
-    environment
+    this.updateChatText()
+    textField.value = ''
+
     fetch(environment.CHAT_API, {
       method: 'POST',
       body: JSON.stringify({ message: text1, role: role }),
@@ -104,11 +106,9 @@ export class ChatbotWidgetComponent {
       let msg2 = { name: "DomeGPT", message: r.answer };
       this.messages.push(msg2);
       this.updateChatText()
-      textField.value = ''
     }).catch((error) => {
       console.error('Error:', error);
       this.updateChatText()
-      textField.value = ''
     });
   }
 
