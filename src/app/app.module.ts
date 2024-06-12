@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
@@ -69,6 +69,9 @@ import { CategoriesRecursionListComponent } from './shared/categories-recursion-
 import { provideMatomo } from 'ngx-matomo-client';
 import { withRouter } from 'ngx-matomo-client'
 import { environment } from 'src/environments/environment';
+import { AppInitService } from './services/app-init.service';
+import { appConfigFactory } from './app-config-factory';
+
 
 @NgModule({
   declarations: [
@@ -148,6 +151,13 @@ import { environment } from 'src/environments/environment';
 
   ],
   providers: [
+    AppInitService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appConfigFactory,
+      deps: [AppInitService],
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
