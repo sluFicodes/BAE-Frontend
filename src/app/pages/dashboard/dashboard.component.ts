@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit, ChangeDetectorRef} from '@angular/core';
 import {EventMessageService} from "../../services/event-message.service";
 import {LocalStorageService} from "../../services/local-storage.service";
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -19,6 +19,7 @@ import { FormControl } from '@angular/forms';
 export class DashboardComponent implements OnInit {
 
   isFilterPanelShown = false;
+  showContact:boolean=false;
   searchField = new FormControl();
   //loginSubscription: Subscription = new Subscription();;
   constructor(private localStorage: LocalStorageService,
@@ -27,12 +28,24 @@ export class DashboardComponent implements OnInit {
               private router: Router,
               private api: ApiServiceService,
               private loginService: LoginServiceService,
+              private cdr: ChangeDetectorRef,
               private refreshApi: RefreshLoginServiceService) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'FilterShown') {
         this.isFilterPanelShown = ev.value as boolean;
       }
+      if(ev.type == 'CloseContact'){
+        this.showContact=false;
+        this.cdr.detectChanges();
+      }
     })
+  }
+  @HostListener('document:click')
+  onClick() {
+    if(this.showContact==true){
+      this.showContact=false;
+      this.cdr.detectChanges();
+    }
   }
 
   async ngOnInit() {
@@ -83,6 +96,7 @@ export class DashboardComponent implements OnInit {
         console.log(aux['expire'] - moment().unix() <= 5)
       }
     }
+    this.showContact=true;
     console.log('----')
     /*await this.api.getShoppingCart().then(data => {
       console.log('carrito')

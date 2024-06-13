@@ -65,7 +65,8 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { CategoriesComponent } from './pages/admin/categories/categories.component';
 import { CreateCategoryComponent } from './pages/admin/categories/create-category/create-category.component';
 import { UpdateCategoryComponent } from './pages/admin/categories/update-category/update-category.component';
-import { CategoriesRecursionListComponent } from './shared/categories-recursion-list/categories-recursion-list.component'
+import { CategoriesRecursionListComponent } from './shared/categories-recursion-list/categories-recursion-list.component';
+import { ContactUsComponent } from './offerings/contact-us/contact-us.component'
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ import { CategoriesRecursionListComponent } from './shared/categories-recursion-
     CategoriesComponent,
     CreateCategoryComponent,
     UpdateCategoryComponent,
-    CategoriesRecursionListComponent
+    CategoriesRecursionListComponent,
+    ContactUsComponent
   ],
   imports: [
     BrowserModule,
