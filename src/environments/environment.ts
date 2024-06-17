@@ -36,5 +36,7 @@ export const environment = {
         verifierQRCodePath: "",
     },
     MATOMO_TRACKER_URL: "",
-    MATOMO_SITE_ID: ""
+    MATOMO_SITE_ID: "",
+    TICKETING_SYSTEM_URL: "",
+    KNOWLEDGE_BASE_URL: ""
 };

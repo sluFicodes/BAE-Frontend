@@ -18,6 +18,8 @@ export class AppInitService {
                 environment.CHAT_API = config.chat;
                 environment.MATOMO_SITE_ID = config.matomoId;
                 environment.MATOMO_TRACKER_URL = config.matomoUrl;
+                environment.KNOWLEDGE_BASE_URL = config.knowledgeBaseUrl;
+                environment.TICKETING_SYSTEM_URL = config.ticketingUrl;
                 resolve(config);
             }),
             error: (error) => {
