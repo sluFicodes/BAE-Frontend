@@ -1,8 +1,8 @@
 
 <div>
     <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-secondary-100 dark:border-gray-800 border-gray-300 border-secondary-50 border flex flex-col shadow-lg">
-      <div class="flex w-full flex-col items-center md:flex-row justify-between">
-        <div class="mb-4 md:mb-0 md:w-1/4 p-8">
+      <div class="flex w-full flex-cols items-center justify-between">
+        <div class="mb-4 lg:mb-0 lg:w-1/4 p-8">
             <h2 class="text-2xl font-bold mb-4 dark:text-white">{{ 'OFFERINGS._prod_offer' | translate }}</h2>  
         </div>
 
@@ -45,7 +45,7 @@
             </svg>
             </button>
             
-            <div id="dropdown" class="z-20 hidden w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
+            <div id="dropdown" class="z-20 hidden w-fit md:w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
             <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
                 {{ 'OFFERINGS._state' | translate }}
             </h6>
@@ -140,10 +140,10 @@
                         <th scope="col" class="px-6 py-3">
                             {{ 'OFFERINGS._status' | translate }}
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="hidden md:block px-6 py-3">
                             {{ 'OFFERINGS._type' | translate }}
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="hidden md:block px-6 py-3">
                             {{ 'OFFERINGS._last_update' | translate }}
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -168,14 +168,14 @@
                                     <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{offer.lifecycleStatus}}</span>
                                 }
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 hidden md:block">
                                 @if(offer.isBundle == false){
                                     <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
                                 } @else {
                                     <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
                                 }
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 hidden md:block">
                                 {{offer.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                             </td>
                             <td class="px-6 py-4">

@@ -1,8 +1,8 @@
 
 <div>
     <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-secondary-100 dark:border-gray-800 border-secondary-50 border flex flex-col shadow-lg">
-      <div class="flex w-full flex-col items-center md:flex-row justify-between">
-        <div class="mb-4 md:mb-0 md:w-1/4 p-8">
+      <div class="flex w-full flex-cols items-center justify-between">
+        <div class="mb-4 lg:mb-0 lg:w-1/4 p-8 justify-start">
             <h2 class="text-2xl font-bold mb-4 dark:text-white">{{ 'OFFERINGS._catalogs' | translate }}</h2>  
         </div>
 
@@ -28,7 +28,7 @@
         </div>
 
       </div>
-      <div class="flex w-full flex-col items-center md:flex-row justify-between">
+      <div class="flex w-full flex-col items-center lg:flex-row justify-between">
 
         <div class="p-8 w-full">
           <div class="flex flex-row mb-1">
@@ -45,7 +45,7 @@
             </svg>
             </button>
             
-            <div id="dropdown" class="z-20 hidden w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
+            <div id="dropdown" class="z-20 hidden w-fit md:w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
             <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
                 {{ 'OFFERINGS._state' | translate }}
             </h6>
@@ -140,7 +140,7 @@
                     <th scope="col" class="px-6 py-3">
                         {{ 'OFFERINGS._status' | translate }}
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="hidden md:block px-6 py-3">
                         {{ 'OFFERINGS._role' | translate }}
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -165,7 +165,7 @@
                                 <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{cat.lifecycleStatus}}</span>
                             }
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 hidden md:block">
                             {{cat.relatedParty?.at(0)?.role}}
                         </td>
                         <td class="px-6 py-4">
