@@ -97,6 +97,7 @@ export class DashboardComponent implements OnInit {
       }
     }
     this.showContact=true;
+    this.cdr.detectChanges();
     console.log('----')
     /*await this.api.getShoppingCart().then(data => {
       console.log('carrito')

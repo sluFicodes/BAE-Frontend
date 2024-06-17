@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CategoriesFilterComponent} from "../../shared/categories-filter/categories-filter.component";
 import {components} from "../../models/product-catalog";
@@ -22,6 +22,7 @@ export class SearchComponent implements OnInit {
   page_check:boolean = true;
   page: number=0;
   PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
+  showDrawer:boolean=false;
 
   constructor(
     private api: ApiServiceService,
@@ -44,6 +45,14 @@ export class SearchComponent implements OnInit {
       }
     })
 
+  }
+
+  @HostListener('document:click')
+  onClick() {
+    if(this.showDrawer==true){
+      this.showDrawer=false;
+      this.cdr.detectChanges();
+    }
   }
 
   getProducts(filters:Category[]){
