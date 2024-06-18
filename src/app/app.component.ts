@@ -18,7 +18,7 @@ import * as moment from 'moment';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'DOME Marketplace';
+  title = 'YUMKET deployed by the DOME Project';
   showPanel = false;
 
   constructor(private translate: TranslateService,
