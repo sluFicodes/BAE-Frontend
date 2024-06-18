@@ -1,10 +1,4 @@
 <section class="flex p-5">
-  <button (click)="showDrawer=!showDrawer;$event.stopPropagation();" type="button" class="md:hidden px-2 w-fit h-fit py-2 text-sm font-medium text-center inline-flex items-center dark:text-white bg-white text-primary-100 border border-primary-100 rounded-lg dark:bg-primary-100 dark:border-secondary-200">
-    <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-    </svg>
-    Categories
-  </button>
   @if(showDrawer){
     <div (click)="$event.stopPropagation();" [ngClass]="showDrawer ? 'backdrop-blur-sm': ''" class="fixed h-screen w-3/4 top-0 left-0 z-40 p-4 overflow-y-auto bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label">
       <button type="button" (click)="showDrawer=!showDrawer" aria-controls="drawer-example" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >
@@ -27,8 +21,14 @@
       <span class="sr-only">Loading...</span>
     </div>
   } @else {
-    <div class="flex flex-col w-4/5 lg:w-3/4">
+    <div class="flex flex-col w-full md:w-4/5 lg:w-3/4">
       <section class="pl-5 content pb-5 px-4 flex items-center">
+        <button (click)="showDrawer=!showDrawer;$event.stopPropagation();" type="button" class="md:hidden px-2 w-fit h-fit py-2 text-sm font-medium text-center inline-flex items-center dark:text-white bg-white text-primary-100 border border-primary-100 rounded-lg dark:bg-primary-100 dark:border-secondary-200">
+          <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+          Categories
+        </button>
         <form class="mx-5 w-full">
           <div class="flex">
             <div class="relative w-full">
