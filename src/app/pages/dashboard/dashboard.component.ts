@@ -10,6 +10,7 @@ import { interval, Subscription} from 'rxjs';
 import { RefreshLoginServiceService } from "src/app/services/refresh-login-service.service"
 import { LoginServiceService } from "src/app/services/login-service.service"
 import { FormControl } from '@angular/forms';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +22,7 @@ export class DashboardComponent implements OnInit {
   isFilterPanelShown = false;
   showContact:boolean=false;
   searchField = new FormControl();
+  categories:any[]=[];
   //loginSubscription: Subscription = new Subscription();;
   constructor(private localStorage: LocalStorageService,
               private eventMessage: EventMessageService,
@@ -96,6 +98,15 @@ export class DashboardComponent implements OnInit {
         console.log(aux['expire'] - moment().unix() <= 5)
       }
     }
+    this.api.getLaunchedCategories().then(data => {
+      for(let i=0; i < data.length; i++){
+        if(data[i].isRoot==true){
+          this.categories.push(data[i])
+        }        
+      }
+      initFlowbite();
+      this.cdr.detectChanges();
+    }) 
     this.showContact=true;
     this.cdr.detectChanges();
     console.log('----')

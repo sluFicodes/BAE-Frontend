@@ -34,5 +34,9 @@ export const environment = {
         callbackURL: "",
         verifierHost: "",
         verifierQRCodePath: "",
-    }
+    },
+    MATOMO_TRACKER_URL: "",
+    MATOMO_SITE_ID: "",
+    TICKETING_SYSTEM_URL: "",
+    KNOWLEDGE_BASE_URL: ""
 };

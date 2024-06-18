@@ -23,8 +23,6 @@ export const environment = {
     RES_SPEC_LIMIT: 6,
     ORDER_LIMIT: 6,
     CATEGORY_LIMIT: 100,
-    //SIOP: true,
-    SIOP: false,
     TAX_RATE: 20,
     CHAT_API: 'https://eng-gpt.dome-marketplace-sbx.org/predict',
     SIOP_INFO: {
@@ -35,5 +33,9 @@ export const environment = {
         callbackURL: "",
         verifierHost: "",
         verifierQRCodePath: "",
-    }
+    },
+    MATOMO_TRACKER_URL: "",
+    MATOMO_SITE_ID: "",
+    TICKETING_SYSTEM_URL: "",
+    KNOWLEDGE_BASE_URL: ""
 };
