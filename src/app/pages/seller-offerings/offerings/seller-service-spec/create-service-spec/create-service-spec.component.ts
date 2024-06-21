@@ -115,12 +115,14 @@ export class CreateServiceSpecComponent implements OnInit {
     this.selectStep('general-info','general-circle');
     this.showGeneral=true;
     this.showChars=false;
+    this.showPreview=false;
   }
 
   toggleChars(){
     this.selectStep('chars','chars-circle');
     this.showGeneral=false;
     this.showChars=true;
+    this.showPreview=false;
   }
 
   onTypeChange(event: any) {
@@ -256,6 +258,7 @@ export class CreateServiceSpecComponent implements OnInit {
       this.showSummary=true;
       this.selectStep('summary','summary-circle');
     }
+    this.showPreview=false;
   }
 
   createService(){

@@ -17,6 +17,7 @@ import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { QrVerifierService } from 'src/app/services/qr-verifier.service';
+import { jwtDecode } from "jwt-decode";
 
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 type ProductSpecification_Update = components["schemas"]["ProductSpecification_Update"];
@@ -78,6 +79,7 @@ export class UpdateProductSpecComponent implements OnInit{
   numberCharSelected:boolean=false;
   rangeCharSelected:boolean=false;
   prodChars:ProductSpecificationCharacteristic[]=[];
+  finishChars:ProductSpecificationCharacteristic[]=[];
   creatingChars:CharacteristicValueSpecification[]=[];
   showCreateChar:boolean=false;
 
@@ -95,8 +97,9 @@ export class UpdateProductSpecComponent implements OnInit{
   buttonISOClicked:boolean=false;
   availableISOS:any[]=[];
   selectedISOS:any[]=[];
-  verifiedISO:any = {};
+  verifiedISO:string[] = [];
   selectedISO:any;
+  complianceVC:any = null;
   showUploadFile:boolean=false;
 
   //SERVICE INFO:
@@ -231,14 +234,35 @@ export class UpdateProductSpecComponent implements OnInit{
       console.log(certifications)
       console.log('--')
       console.log(this.prod.productSpecCharacteristic)
-      for(let i=0; i < this.prod.productSpecCharacteristic.length; i++) {
+      for(let i = 0; i < this.prod.productSpecCharacteristic.length; i++) {
         // Check if this is a VC
-        if (this.prod.productSpecCharacteristic[i].name.endsWith(':VC')) {
-          let cert = certifications.find(item => `${item.name}:VC` === this.prod.productSpecCharacteristic[i].name)
-          if (cert) {
-            const val = this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value
-            this.verifiedISO[cert.name] = val
+        if (this.prod.productSpecCharacteristic[i].name == 'Compliance:VC') {
+          // Decode the token
+          try {
+            const decoded = jwtDecode(this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value)
+
+            if ('verifiableCredential' in decoded) {
+              const credential: any = decoded.verifiableCredential;
+
+              const subject = credential.credentialSubject;
+
+              if ('compliance' in subject) {
+                this.verifiedISO = subject.compliance.map((comp: any) => {
+                  return comp.standard
+                })
+              }
+            }
+          } catch (e) {
+            console.log(e)
           }
+
+          // Add verified certifcates
+
+          //let cert = certifications.find(item => `${item.name}:VC` === this.prod.productSpecCharacteristic[i].name)
+          //if (cert) {
+          //  const val = this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value
+            //this.verifiedISO[cert.name] = val
+          //}
           continue
         }
 
@@ -258,6 +282,8 @@ export class UpdateProductSpecComponent implements OnInit{
       console.log(this.selectedISOS)
       console.log('available')
       console.log(this.availableISOS)
+      console.log('API PROD ISOS')
+      console.log(this.prod.productSpecCharacteristic)
     }
 
     //CHARS
@@ -338,6 +364,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleBundle(){
@@ -351,6 +378,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleBundleCheck(){
@@ -430,6 +458,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   addISO(iso:any){
@@ -452,9 +481,9 @@ export class UpdateProductSpecComponent implements OnInit{
       this.selectedISOS.splice(index, 1);
       this.availableISOS.push({name: iso.name, mandatory: iso.mandatory, domesupported: iso.domesupported});
 
-      if (iso.name in this.verifiedISO) {
-        delete this.verifiedISO[iso.name]
-      }
+      //if (iso.name in this.verifiedISO) {
+      //  delete this.verifiedISO[iso.name]
+      //}
     }  
     this.cdr.detectChanges();
     console.log(this.prodSpecsBundle)    
@@ -467,21 +496,31 @@ export class UpdateProductSpecComponent implements OnInit{
     console.log(this.selectedISOS)
   }
 
-  verifyCredential(sel: any){
+  verifyCredential() {
     console.log('verifing credential')
-    console.log(sel)
-
     const state = `cert:${uuidv4()}`
 
     const qrWin = this.qrVerifier.launchPopup(`${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${state}&client_callback=${environment.SIOP_INFO.callbackURL}&client_id=${environment.SIOP_INFO.clientID}`,  'Scan QR code',  500, 500)
     this.qrVerifier.pollCertCredential(qrWin, state).then((data) => {
-      this.verifiedISO[sel.name] = data.vc
+      // Process the VC to verify the cerficates
+      // Validate the product ID and company
+      const subject = data.subject
+
+      if (subject.compliance) {
+        subject.compliance.forEach((comp: any) => {
+          this.verifiedISO.push(comp.standard)
+        })
+
+        this.complianceVC = data.vc;
+      }
+
+      //this.verifiedISO[sel.name] = data.vc
       console.log(`We got the vc: ${data['vc']}`)
     })
   }
 
   isVerified(sel: any) {
-    return sel.name in this.verifiedISO
+    return this.verifiedISO.indexOf(sel.name) > -1
   }
 
   public dropped(files: NgxFileDropEntry[],sel:any) {
@@ -610,6 +649,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
+    this.showPreview=false;
   }
 
   toggleResource(){
@@ -627,6 +667,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getResSpecs(){    
@@ -697,6 +738,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getServSpecs(){    
@@ -763,6 +805,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=true;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   removeImg(){    
@@ -833,6 +876,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=true;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getProdSpecsRel(){
@@ -1063,26 +1107,35 @@ export class UpdateProductSpecComponent implements OnInit{
   }
 
   showFinish() {
+    for(let i=0; i< this.prodChars.length; i++){
+      const index = this.finishChars.findIndex(item => item.name === this.prodChars[i].name);
+      if (index == -1) {
+        this.finishChars.push(this.prodChars[i])
+      }
+    }
     // Load compliance profile
     for(let i = 0; i < this.selectedISOS.length; i++){
-      this.prodChars.push({
-        id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
-        name: this.selectedISOS[i].name,
-        productSpecCharacteristicValue: [{
-          isDefault: true,
-          value: this.selectedISOS[i].url
-        }]
-      })
+      const index = this.finishChars.findIndex(item => item.name === this.selectedISOS[i].name);
+      if (index == -1) {
+        this.finishChars.push({
+          id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
+          name: this.selectedISOS[i].name,
+          productSpecCharacteristicValue: [{
+            isDefault: true,
+            value: this.selectedISOS[i].url
+          }]
+        })
+      }
     }
 
     // Load compliance VCs
-    for (const name in this.verifiedISO) {
-      this.prodChars.push({
+    if(this.complianceVC != null) {
+      this.finishChars.push({
         id: `urn:ngsi-ld:characteristic:${uuidv4()}`,
-        name: `${name}:VC`,
+        name: `Compliance:VC`,
         productSpecCharacteristicValue: [{
           isDefault: true,
-          value: this.verifiedISO[name]
+          value: this.complianceVC
         }]
       })
     }
@@ -1097,7 +1150,7 @@ export class UpdateProductSpecComponent implements OnInit{
         lifecycleStatus: this.prodStatus,
         //isBundle: this.bundleChecked,
         //bundledProductSpecification: this.prodSpecsBundle,
-        productSpecCharacteristic: this.prodChars,
+        productSpecCharacteristic: this.finishChars,
         productSpecificationRelationship: this.prodRelationships,
         attachment: this.prodAttachments,
         resourceSpecification: this.selectedResourceSpecs,
@@ -1114,6 +1167,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=true;
+    this.showPreview=false;
   }
 
   isProdValid(){

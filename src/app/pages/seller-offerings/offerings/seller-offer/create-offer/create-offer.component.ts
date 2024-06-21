@@ -228,6 +228,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleBundle(){
@@ -241,6 +242,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleBundleCheck(){
@@ -270,6 +272,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleCatalogs(){
@@ -287,6 +290,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleCategories(){
@@ -305,6 +309,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleLicense(){
@@ -318,6 +323,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=true;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleSLA(){
@@ -332,6 +338,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=true;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   togglePrice(){
@@ -345,7 +352,8 @@ export class CreateOfferComponent implements OnInit {
     this.showCategory=false;
     this.showLicense=false;
     this.showSLA=false;
-    this.showPrice=true; 
+    this.showPrice=true;
+    this.showPreview=false;
   }
 
   saveLicense(){
@@ -355,7 +363,7 @@ export class CreateOfferComponent implements OnInit {
         description: this.licenseForm.value.description != '' ? this.licenseForm.value.description : ''
       };
     } 
-
+    this.showPreview=false;
   }
 
   onPriceTypeSelected(event: any){
@@ -508,6 +516,7 @@ export class CreateOfferComponent implements OnInit {
     this.recurringSelected=false;
     this.customSelected=false;
     this.oneTimeSelected=true;
+    this.showPreview=false;
   }
 
   removePrice(price:any){
@@ -912,6 +921,7 @@ export class CreateOfferComponent implements OnInit {
     this.showSLA=false;
     this.showPrice=false;
     this.showSummary=true;
+    this.showPreview=false;
   }
 
   async createOffer(){
