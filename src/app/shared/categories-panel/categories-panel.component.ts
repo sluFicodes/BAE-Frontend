@@ -38,7 +38,8 @@ export class CategoriesPanelComponent implements OnInit {
     })
   }
   ngOnInit(): void {
-    this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+    const stored:any = this.localStorage.getObject('selected_categories')
+    this.selected = Array.isArray(stored) ? stored as Category[] : []
   }
 
   notifyDismiss(cat: Category) {
