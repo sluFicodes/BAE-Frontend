@@ -165,6 +165,7 @@ export class CreateCategoryComponent implements OnInit {
     this.selectStep('general-info','general-circle');
     this.showGeneral=true;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleParent(){
@@ -222,6 +223,7 @@ export class CreateCategoryComponent implements OnInit {
       this.showSummary=true;
       this.selectStep('summary','summary-circle');
     }
+    this.showPreview=false;
   }
 
   createCategory(){

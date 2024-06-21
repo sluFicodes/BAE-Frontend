@@ -328,6 +328,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleBundle(){
@@ -341,6 +342,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleBundleCheck(){
@@ -370,6 +372,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleCatalogs(){
@@ -387,6 +390,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleCategories(){
@@ -405,6 +409,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleLicense(){
@@ -418,6 +423,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=true;
     this.showSLA=false;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   toggleSLA(){
@@ -431,6 +437,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=true;
     this.showPrice=false;
+    this.showPreview=false;
   }
 
   togglePrice(){    
@@ -443,7 +450,8 @@ export class UpdateOfferComponent implements OnInit{
     this.showCategory=false;
     this.showLicense=false;
     this.showSLA=false;
-    this.showPrice=true; 
+    this.showPrice=true;
+    this.showPreview=false;
   }
 
   saveLicense(){
@@ -452,8 +460,8 @@ export class UpdateOfferComponent implements OnInit{
         treatment: this.licenseForm.value.treatment,
         description: this.licenseForm.value.description != '' ? this.licenseForm.value.description : ''
       };
-    } 
-
+    }
+    this.showPreview=false;
   }
 
   onPriceTypeSelected(event: any){
@@ -611,6 +619,7 @@ export class UpdateOfferComponent implements OnInit{
     this.recurringSelected=false;
     this.customSelected=false;
     this.oneTimeSelected=true;
+    this.showPreview=false;
   }
 
   showUpdatePrice(price:any){
@@ -1105,6 +1114,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showSummary=true;
+    this.showPreview=false;
   }
 
   async updateOffer(){

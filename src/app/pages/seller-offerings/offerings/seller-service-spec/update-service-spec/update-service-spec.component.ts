@@ -133,6 +133,7 @@ export class UpdateServiceSpecComponent implements OnInit {
     this.showGeneral=true;
     this.showChars=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleChars(){
@@ -140,6 +141,7 @@ export class UpdateServiceSpecComponent implements OnInit {
     this.showGeneral=false;
     this.showChars=true;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   onTypeChange(event: any) {
@@ -265,6 +267,7 @@ export class UpdateServiceSpecComponent implements OnInit {
       this.showSummary=true;
       this.selectStep('summary','summary-circle');
     }
+    this.showPreview=false;
   }
 
   updateService(){
