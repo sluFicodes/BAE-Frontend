@@ -226,6 +226,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleBundle(){
@@ -239,6 +240,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleBundleCheck(){
@@ -318,6 +320,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   addISO(iso:any){
@@ -470,6 +473,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
+    this.showPreview=false;
   }
 
   toggleResource(){
@@ -487,6 +491,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getResSpecs(){    
@@ -557,6 +562,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getServSpecs(){    
@@ -623,6 +629,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=true;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   removeImg(){    
@@ -693,6 +700,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=false;
     this.showRelationships=true;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getProdSpecsRel(){
@@ -981,6 +989,7 @@ export class CreateProductSpecComponent implements OnInit {
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=true;
+    this.showPreview=false;
   }
 
   createProduct(){

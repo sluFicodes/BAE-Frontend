@@ -112,7 +112,7 @@ export class ApiServiceService {
   }
 
   getLaunchedCategories() {
-    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category?limit==${ApiServiceService.CATEGORY_LIMIT}&lifecycleStatus=Launched`;
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category?limit=${ApiServiceService.CATEGORY_LIMIT}&lifecycleStatus=Launched`;
 
     return lastValueFrom(this.http.get<any[]>(url));
   }

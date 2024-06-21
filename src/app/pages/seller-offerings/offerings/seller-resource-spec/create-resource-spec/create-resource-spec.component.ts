@@ -116,6 +116,7 @@ export class CreateResourceSpecComponent implements OnInit {
     this.showGeneral=true;
     this.showChars=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleChars(){
@@ -123,6 +124,7 @@ export class CreateResourceSpecComponent implements OnInit {
     this.showGeneral=false;
     this.showChars=true;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   onTypeChange(event: any) {
@@ -267,6 +269,7 @@ export class CreateResourceSpecComponent implements OnInit {
         }
       });*/
     }
+    this.showPreview=false;
   }
 
   createResource(){

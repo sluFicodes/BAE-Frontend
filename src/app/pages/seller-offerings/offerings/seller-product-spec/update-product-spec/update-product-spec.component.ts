@@ -281,6 +281,8 @@ export class UpdateProductSpecComponent implements OnInit{
       console.log(this.selectedISOS)
       console.log('available')
       console.log(this.availableISOS)
+      console.log('API PROD ISOS')
+      console.log(this.prod.productSpecCharacteristic)
     }
 
     //CHARS
@@ -361,6 +363,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleBundle(){
@@ -374,6 +377,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   toggleBundleCheck(){
@@ -453,6 +457,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   addISO(iso:any){
@@ -643,6 +648,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
+    this.showPreview=false;
   }
 
   toggleResource(){
@@ -660,6 +666,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getResSpecs(){    
@@ -730,6 +737,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getServSpecs(){    
@@ -796,6 +804,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=true;
     this.showRelationships=false;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   removeImg(){    
@@ -866,6 +875,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=true;
     this.showSummary=false;
+    this.showPreview=false;
   }
 
   getProdSpecsRel(){
@@ -1147,6 +1157,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showAttach=false;
     this.showRelationships=false;
     this.showSummary=true;
+    this.showPreview=false;
   }
 
   isProdValid(){
