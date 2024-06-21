@@ -461,6 +461,15 @@
                             </div>
                         }
                     }
+
+                    <div class="flex w-full justify-items-end justify-end ml-4">
+                        <button type="button" (click)="verifyCredential();"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            {{ 'UPDATE_PROD_SPEC._verify' | translate }}
+                            <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
+                            </svg>
+                        </button>
+                    </div>
                     
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white dark:bg-secondary-300 m-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
@@ -494,13 +503,13 @@
                                             </button>
                                             @if(sel.domesupported == true) {
                                                 @if(isVerified(sel)) {
-                                                    <button (click)="verifyCredential(sel)" type="button" class="text-white mr-4 bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-700 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                                    <button type="button" class="text-white mr-4 bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-700 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                                         <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
-                                                          </svg>                                                  
+                                                          </svg>                                              
                                                     </button>
                                                 } @else {
-                                                    <button (click)="verifyCredential(sel)" type="button" class="text-white mr-4 bg-slate-400 hover:bg-slate-500 focus:ring-4 focus:outline-none focus:ring-green-700 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                                    <button type="button" class="text-white mr-4 bg-slate-400 hover:bg-slate-500 focus:ring-4 focus:outline-none focus:ring-green-700 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                                         <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>
                                                           </svg>                                                  

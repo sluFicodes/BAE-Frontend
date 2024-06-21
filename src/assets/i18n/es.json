@@ -459,7 +459,8 @@
         "_profile_pic": "Profile picture",
         "_finish": "Finish",
         "_summary": "Product's summary",
-        "_update_prod": "Update product"
+        "_update_prod": "Update product",
+        "_verify": "Verify Certificates"
     },
     "CREATE_RES_SPEC": {
         "_back": "Back",

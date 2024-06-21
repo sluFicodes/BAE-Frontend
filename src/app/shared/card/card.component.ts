@@ -23,6 +23,7 @@ import { LoginInfo, cartProduct,productSpecCharacteristicValueCart } from '../..
 import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
 import * as moment from 'moment';
 import { certifications } from 'src/app/models/certification-standards.const';
+import { jwtDecode } from "jwt-decode";
 
 @Component({
   selector: 'bae-off-card',
@@ -144,16 +145,39 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.api.getProductSpecification(specId).then(spec => {
         let vcs = 0
         let domeSup = 0
+        let tokenComp = []
         this.prodSpec = spec;
+
+        if(this.prodSpec.productSpecCharacteristic != undefined) {
+          let vcProf = this.prodSpec.productSpecCharacteristic.find((p => {
+            return p.name === `Compliance:VC`
+          }));
+
+          if (vcProf) {
+            const vcToken: any = vcProf.productSpecCharacteristicValue?.at(0)?.value
+            const decoded = jwtDecode(vcToken)
+
+            if ('verifiableCredential' in decoded) {
+              const credential: any = decoded.verifiableCredential;
+
+              const subject = credential.credentialSubject;
+
+              if ('compliance' in subject) {
+                tokenComp = subject.compliance.map((comp: any) => {
+                  return comp.standard
+                })
+              }
+            }
+          }
+        }
+
         for(let z=0; z < this.complianceProf.length; z++){
           if (this.complianceProf[z].domesupported) {
             domeSup += 1
           }
 
           if(this.prodSpec.productSpecCharacteristic != undefined){
-            let compProf = this.prodSpec.productSpecCharacteristic.find((p => p.name === `${this.complianceProf[z].name}:VC`));
-
-            if(compProf != undefined){
+            if (tokenComp.indexOf(this.complianceProf[z].name) > -1) {
               vcs += 1
             }
           }
