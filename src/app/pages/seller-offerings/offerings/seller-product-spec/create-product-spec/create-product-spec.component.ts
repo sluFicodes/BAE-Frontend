@@ -85,6 +85,7 @@ export class CreateProductSpecComponent implements OnInit {
   numberCharSelected:boolean=false;
   rangeCharSelected:boolean=false;
   prodChars:ProductSpecificationCharacteristic[]=[];
+  finishChars:ProductSpecificationCharacteristic[]=[];
   creatingChars:CharacteristicValueSpecification[]=[];
   showCreateChar:boolean=false;
 
@@ -100,7 +101,7 @@ export class CreateProductSpecComponent implements OnInit {
 
   //COMPLIANCE PROFILE INFO:
   buttonISOClicked:boolean=false;
-  availableISOS:any[]=certifications;
+  availableISOS:any[]=[];
   selectedISOS:any[]=[];
   selectedISO:any;
   showUploadFile:boolean=false;
@@ -158,6 +159,9 @@ export class CreateProductSpecComponent implements OnInit {
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
   ) {
+    for(let i=0; i<certifications.length; i++){
+      this.availableISOS.push(certifications[i])
+    }
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
         this.initPartyInfo();
@@ -930,15 +934,24 @@ export class CreateProductSpecComponent implements OnInit {
   }
 
   showFinish(){
+    for(let i=0; i< this.prodChars.length; i++){
+      const index = this.finishChars.findIndex(item => item.name === this.prodChars[i].name);
+      if (index == -1) {
+        this.finishChars.push(this.prodChars[i])
+      }
+    }
     for(let i=0; i<this.selectedISOS.length;i++){
-      this.prodChars.push({
-        id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
-        name: this.selectedISOS[i].name,
-        productSpecCharacteristicValue: [{
-          isDefault: true,
-          value: this.selectedISOS[i].url
-        }]
-      })
+      const index = this.finishChars.findIndex(item => item.name === this.selectedISOS[i].name);
+      if (index == -1) {
+        this.finishChars.push({
+          id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
+          name: this.selectedISOS[i].name,
+          productSpecCharacteristicValue: [{
+            isDefault: true,
+            value: this.selectedISOS[i].url
+          }]
+        })
+      }
     }
     let rels = [];
     for(let i=0; i<this.prodRelationships.length;i++){
@@ -961,7 +974,7 @@ export class CreateProductSpecComponent implements OnInit {
         lifecycleStatus: "Active",
         isBundle: this.bundleChecked,
         bundledProductSpecification: this.prodSpecsBundle,
-        productSpecCharacteristic: this.prodChars,
+        productSpecCharacteristic: this.finishChars,
         productSpecificationRelationship: rels,
         attachment: this.prodAttachments,
         relatedParty: [

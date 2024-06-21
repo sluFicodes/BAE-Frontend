@@ -79,6 +79,7 @@ export class UpdateProductSpecComponent implements OnInit{
   numberCharSelected:boolean=false;
   rangeCharSelected:boolean=false;
   prodChars:ProductSpecificationCharacteristic[]=[];
+  finishChars:ProductSpecificationCharacteristic[]=[];
   creatingChars:CharacteristicValueSpecification[]=[];
   showCreateChar:boolean=false;
 
@@ -1106,21 +1107,30 @@ export class UpdateProductSpecComponent implements OnInit{
   }
 
   showFinish() {
+    for(let i=0; i< this.prodChars.length; i++){
+      const index = this.finishChars.findIndex(item => item.name === this.prodChars[i].name);
+      if (index == -1) {
+        this.finishChars.push(this.prodChars[i])
+      }
+    }
     // Load compliance profile
     for(let i = 0; i < this.selectedISOS.length; i++){
-      this.prodChars.push({
-        id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
-        name: this.selectedISOS[i].name,
-        productSpecCharacteristicValue: [{
-          isDefault: true,
-          value: this.selectedISOS[i].url
-        }]
-      })
+      const index = this.finishChars.findIndex(item => item.name === this.selectedISOS[i].name);
+      if (index == -1) {
+        this.finishChars.push({
+          id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
+          name: this.selectedISOS[i].name,
+          productSpecCharacteristicValue: [{
+            isDefault: true,
+            value: this.selectedISOS[i].url
+          }]
+        })
+      }
     }
 
     // Load compliance VCs
     if(this.complianceVC != null) {
-      this.prodChars.push({
+      this.finishChars.push({
         id: `urn:ngsi-ld:characteristic:${uuidv4()}`,
         name: `Compliance:VC`,
         productSpecCharacteristicValue: [{
@@ -1140,7 +1150,7 @@ export class UpdateProductSpecComponent implements OnInit{
         lifecycleStatus: this.prodStatus,
         //isBundle: this.bundleChecked,
         //bundledProductSpecification: this.prodSpecsBundle,
-        productSpecCharacteristic: this.prodChars,
+        productSpecCharacteristic: this.finishChars,
         productSpecificationRelationship: this.prodRelationships,
         attachment: this.prodAttachments,
         resourceSpecification: this.selectedResourceSpecs,
