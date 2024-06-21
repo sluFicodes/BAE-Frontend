@@ -97,16 +97,16 @@
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-center align-middle">
+                                <th scope="col" class="hidden md:table-cell px-6 py-3 text-center align-middle">
                                     {{ 'PRODUCT_INVENTORY._order_id' | translate }}
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-center align-middle">
                                     {{ 'PRODUCT_INVENTORY._state' | translate }}
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-center align-middle">
+                                <th scope="col" class="hidden md:table-cell px-6 py-3 text-center align-middle">
                                     {{ 'PRODUCT_INVENTORY._priority' | translate }}
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-center align-middle">
+                                <th scope="col" class="hidden md:table-cell px-6 py-3 text-center align-middle">
                                     {{ 'PRODUCT_INVENTORY._bill' | translate }}
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-center align-middle">
@@ -120,7 +120,7 @@
                         <tbody>
                             @for (order of orders; track order.id; let idx = $index) {
                                 <tr class="border-b bg-gray-100 hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                    <td class="px-6 py-4 text-center align-middle">
+                                    <td class="hidden md:table-cell px-6 py-4 text-center align-middle">
                                         {{order.id}}
                                     </td>
                                     <td class="px-6 py-4 text-center align-middle">                                                
@@ -138,10 +138,10 @@
                                             <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{order.state}}</span>
                                         }
                                     </td>
-                                    <td class="px-6 py-4 text-center align-middle">
+                                    <td class="hidden md:table-cell px-6 py-4 text-center align-middle">
                                         {{order.priority}}
                                     </td>
-                                    <td class="px-6 py-4 text-center align-middle">
+                                    <td class="hidden md:table-cell px-6 py-4 text-center align-middle">
                                         {{order.billingAccount.name}}
                                     </td>
                                     <td class="px-6 py-4 text-center align-middle">
@@ -195,7 +195,7 @@
 <!-- ORDER DETAILS modal -->
 @if (showOrderDetails){
     <div id="order-details-modal" [ngClass]="showOrderDetails ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
-        <div class="w-1/2 relative bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+        <div class="w-full md:w-3/4 lg:w-1/2 relative bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-2 rounded-t dark:border-gray-600 shadow-lg">
                 <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">Order details:</h2>                

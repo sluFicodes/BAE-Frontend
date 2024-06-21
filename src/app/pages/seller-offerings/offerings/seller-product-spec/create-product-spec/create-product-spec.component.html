@@ -29,96 +29,105 @@
     <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
         <h2 class="text-3xl font-bold text-primary-100 ml-4 dark:text-white">{{ 'CREATE_PROD_SPEC._new' | translate }}</h2>
         <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
-        <div class="grid grid-cols-20/80">
-            <div class="flex flex-col mr-4">
-                <h2 class="text-xl font-bold text-black mb-4 dark:text-white">{{ 'CREATE_PROD_SPEC._steps' | translate }}</h2>
-                <button id="general-info" (click)="toggleGeneral()" [disabled]="!generalDone"  class="grid grid-cols-20/80 mb-2 text-primary-100 dark:text-primary-50">
-                    <span id="general-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-primary-100 dark:border-primary-50 rounded-full shrink-0">
+        <div class="md:grid md:grid-cols-20/80">
+            <div class="flex sm:flex-row md:flex-col md:mr-4 w-full md:w-fit overflow-x-auto">
+                <h2 class="hidden md:block text-xl font-bold text-black mb-4 dark:text-white">{{ 'CREATE_PROD_SPEC._steps' | translate }}</h2>
+                <button id="general-info" (click)="toggleGeneral()" [disabled]="!generalDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-primary-100 dark:text-primary-50 justify-items-center md:justify-items-start">
+                    <span id="general-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-primary-100 dark:border-primary-50 rounded-full shrink-0">
                         1
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._general' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._general_info' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._general_info' | translate }}</p>
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                    <span id="bundle-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                    <span id="bundle-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         2
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._bundle' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._bundle_info' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._bundle_info' | translate }}</p>
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="compliance" (click)="toggleCompliance()" [disabled]="!complianceDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                    <span id="compliance-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                <button id="compliance" (click)="toggleCompliance()" [disabled]="!complianceDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                    <span id="compliance-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         3
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._comp_profile' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._comp_profile_info' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._comp_profile_info' | translate }}</p>
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="chars" (click)="toggleChars()" [disabled]="!charsDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                    <span id="chars-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                <button id="chars" (click)="toggleChars()" [disabled]="!charsDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                    <span id="chars-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         4
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._chars' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._chars_info' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._chars_info' | translate }}</p>
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="resource" (click)="toggleResource()" [disabled]="!resourceDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                    <span id="resource-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                <button id="resource" (click)="toggleResource()" [disabled]="!resourceDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                    <span id="resource-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         5
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._resource' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._resource_info' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._resource_info' | translate }}</p>
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="service" (click)="toggleService()" [disabled]="!serviceDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                    <span id="service-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                <button id="service" (click)="toggleService()" [disabled]="!serviceDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                    <span id="service-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         6
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._service' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._service_info' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._service_info' | translate }}</p>
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="attach" (click)="toggleAttach()" [disabled]="!attachDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                    <span id="attach-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                <button id="attach" (click)="toggleAttach()" [disabled]="!attachDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                    <span id="attach-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         7
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._attachments' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._attachments_info' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._attachments_info' | translate }}</p>
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="relationships" (click)="toggleRelationship()" [disabled]="!relationshipDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                    <span id="relationships-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                <button id="relationships" (click)="toggleRelationship()" [disabled]="!relationshipDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                    <span id="relationships-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         8
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._relationships' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._relationships_info' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._relationships_info' | translate }}</p>
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="summary" [disabled]="true" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                    <span id="summary-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                <button id="summary" [disabled]="true"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                    <span id="summary-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         9
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._finish' | translate }}</h3>
-                        <p class="flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._summary' | translate }}</p>
+                        <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._summary' | translate }}</p>
                     </span>
                 </button>
                 
@@ -126,7 +135,7 @@
             <div>
                 @if(showGeneral){
                     <h2 class="text-3xl font-bold text-primary-100 ml-4 dark:text-white">{{ 'CREATE_PROD_SPEC._general' | translate }}</h2>
-                    <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="generalForm">
+                    <form class="m-4 md:grid md:grid-cols-2 gap-4" [formGroup]="generalForm">
                         <div>
                             <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_PROD_SPEC._product_name' | translate }}</label>
                             <input formControlName="name" type="text" id="prod-name"
@@ -171,13 +180,13 @@
                                             </svg>                                          
                                             <span class="sr-only">Add list</span>
                                         </button>
-                                        <button (click)="addOrderedList()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <button (click)="addOrderedList()" type="button" class="hidden lg:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
                                             </svg>                                          
                                             <span class="sr-only">Add ordered list</span>
                                         </button>
-                                        <button (click)="addBlockquote()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <button (click)="addBlockquote()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                                 <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
                                             </svg>                                         
@@ -189,25 +198,25 @@
                                             </svg>                                         
                                             <span class="sr-only">Add table</span>
                                         </button>                                 
-                                        <button (click)="addCode()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <button (click)="addCode()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
                                             </svg>                                        
                                             <span class="sr-only">Add code</span>
                                         </button>
-                                        <button (click)="addCodeBlock()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <button (click)="addCodeBlock()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                               </svg>                                                                                  
                                             <span class="sr-only">Add code block</span>
                                         </button>
-                                        <button (click)="addLink()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <button (click)="addLink()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
                                             </svg>                                                                                
                                             <span class="sr-only">Add link</span>
                                         </button>
-                                        <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                        <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="hidden lg:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                             <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
                                             </svg>
@@ -291,13 +300,13 @@
                                         <th scope="col" class="px-6 py-3">
                                             {{ 'CREATE_PROD_SPEC._product_name' | translate }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="hidden md:table-cell px-6 py-3">
                                             {{ 'CREATE_PROD_SPEC._status' | translate }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="hidden md:table-cell px-6 py-3">
                                             {{ 'CREATE_PROD_SPEC._type' | translate }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="hidden lg:table-cell px-6 py-3">
                                             {{ 'CREATE_PROD_SPEC._last_update' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
@@ -311,7 +320,7 @@
                                             <td class="px-6 py-4">
                                                 {{prod.name}}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden md:table-cell px-6 py-4">
                                                 @if(prod.lifecycleStatus == 'Active'){
                                                     <span class="bg-blue-100 bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
                                                 } @else if(prod.lifecycleStatus == 'Launched') {
@@ -322,14 +331,14 @@
                                                     <span class="bg-blue-100 bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
                                                 }
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden md:table-cell px-6 py-4">
                                                 @if(prod.isBundle == false){
                                                     <span class="bg-blue-100 bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'CREATE_PROD_SPEC._simple' | translate }}</span>
                                                 } @else {
                                                     <span class="bg-blue-100 bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'CREATE_PROD_SPEC._bundle' | translate }}</span>
                                                 }
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden lg:table-cell px-6 py-4">
                                                 {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                             </td>
                                             <td class="px-6 py-4">
@@ -429,7 +438,7 @@
                                         <td class="px-6 py-4">
                                             <input type="text" [(ngModel)]="selectedISOS[idx].url" value="{{sel.url}}" [id]="'iso-'+sel.name" class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-2 border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                                       
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 inline-flex">
                                             <button (click)="toggleUploadFile(sel);$event.stopPropagation();" type="button" class="text-white file-select-button mr-4 bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                                 <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v9m-5 0H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1h-2M8 9l4-5 4 5m1 8h.01"/>
@@ -491,7 +500,7 @@
                                         <th scope="col" class="px-6 py-3">
                                             {{ 'CREATE_PROD_SPEC._product_name' | translate }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="hidden lg:table-cell px-6 py-3">
                                             {{ 'CREATE_PROD_SPEC._product_description' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3">
@@ -508,7 +517,7 @@
                                             <td class="px-6 py-4">
                                                 {{prod.name}}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden lg:table-cell px-6 py-4">
                                                 {{prod.description}}                                       
                                             </td>
                                             <td class="px-6 py-4">
@@ -677,7 +686,7 @@
     
                         </div>
                     }
-                    <div class="flex w-full justify-items-end justify-end ml-4">
+                    <div class="flex w-full justify-items-end justify-end ml-4 mt-4">
                         <button type="button" (click)="toggleResource();charsDone=true;" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                             {{ 'CREATE_PROD_SPEC._next' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -717,10 +726,10 @@
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'CREATE_PROD_SPEC._product_name' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_PROD_SPEC._status' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden lg:table-cell px-6 py-3">
                                         {{ 'CREATE_PROD_SPEC._last_update' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
@@ -734,7 +743,7 @@
                                         <td class="px-6 py-4">
                                             {{res.name}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             @if(res.lifecycleStatus == 'Active'){
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{res.lifecycleStatus}}</span>
                                             } @else if(res.lifecycleStatus == 'Launched') {
@@ -745,7 +754,7 @@
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{res.lifecycleStatus}}</span>
                                             }
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden lg:table-cell px-6 py-4">
                                             {{res.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                         </td>
                                         <td class="px-6 py-4">
@@ -817,10 +826,10 @@
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'CREATE_PROD_SPEC._product_name' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_PROD_SPEC._status' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden lg:table-cell px-6 py-3">
                                         {{ 'CREATE_PROD_SPEC._last_update' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
@@ -834,7 +843,7 @@
                                         <td class="px-6 py-4">
                                             {{serv.name}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             @if(serv.lifecycleStatus == 'Active'){
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{serv.lifecycleStatus}}</span>
                                             } @else if(serv.lifecycleStatus == 'Launched') {
@@ -845,7 +854,7 @@
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{serv.lifecycleStatus}}</span>
                                             }
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden lg:table-cell px-6 py-4">
                                             {{serv.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                         </td>
                                         <td class="px-6 py-4">
@@ -878,7 +887,7 @@
                             <span class="sr-only">Loading...</span>
                             </div>
                         }
-                    <div class="flex w-full justify-items-end justify-end ml-4">
+                    <div class="flex w-full justify-items-end justify-end ml-4 mt-4">
                         <button type="button" (click)="toggleAttach();serviceDone=true;" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                             {{ 'CREATE_PROD_SPEC._next' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -943,7 +952,7 @@
                     } @else {
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
-                                <<thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
                                             {{ 'CREATE_PROD_SPEC._product_name' | translate }}
@@ -989,7 +998,7 @@
                         </div>
                     } @else {
                         <div class="m-4 w-full">
-                            <div class="flex grid grid-cols-2 w-full gap-4 align-items-middle align-middle border border-gray-200 dark:border-secondary-200 rounded-lg p-4">                            
+                            <div class="lg:flex lg:grid lg:grid-cols-2 w-full gap-4 align-items-middle align-middle border border-gray-200 dark:border-secondary-200 rounded-lg p-4">                            
                                 <div class="h-fit">
                                     <label for="att-name" class="font-bold text-lg dark:text-white">{{ 'PROFILE._name' | translate }}</label>
                                     <input #attachName type="text" id="att-name" 
@@ -1009,7 +1018,7 @@
                                                 </div>
                                             </div>
                                         </ng-template>
-                                    </ngx-file-drop> 
+                                    </ngx-file-drop>
                                 } @else {
                                     <div class="relative w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50 dark:bg-secondary-200 dark:text-primary-50" role="alert">
                                         <span class="sr-only">Info</span>
@@ -1035,7 +1044,7 @@
                             </div>
                         </div>
                     }
-                    <div class="flex w-full justify-items-end justify-end ml-4">
+                    <div class="flex w-full justify-items-end justify-end ml-4 mt-4">
                         <button type="button" (click)="toggleRelationship();attachDone=true;" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                             {{ 'CREATE_PROD_SPEC._next' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
@@ -1070,10 +1079,10 @@
                                             <th scope="col" class="px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._product_name' | translate }}
                                             </th>
-                                            <th scope="col" class="px-6 py-3">
+                                            <th scope="col" class="hidden md:table-cell px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._type' | translate }}
                                             </th>
-                                            <th scope="col" class="px-6 py-3">
+                                            <th scope="col" class="hidden lg:table-cell px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._last_update' | translate }}
                                             </th>
                                             <th scope="col" class="px-6 py-3">
@@ -1090,7 +1099,7 @@
                                                 <td class="px-6 py-4">
                                                     {{rel.productSpec.name}}
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="hidden md:table-cell px-6 py-4">
                                                     @if(rel.productSpec.lifecycleStatus == 'Active'){
                                                         <span class="bg-blue-100 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{rel.productSpec.lifecycleStatus}}</span>
                                                     } @else if(rel.productSpec.lifecycleStatus == 'Launched') {
@@ -1101,7 +1110,7 @@
                                                         <span class="bg-blue-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{rel.productSpec.lifecycleStatus}}</span>
                                                     }
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="hidden lg:table-cell px-6 py-4">
                                                     {{rel.productSpec.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                                 </td>
                                                 <td class="px-6 py-4">
@@ -1166,7 +1175,7 @@
                                                 <th scope="col" class="px-6 py-3">
                                                     {{ 'CREATE_PROD_SPEC._type' | translate }}
                                                 </th>
-                                                <th scope="col" class="px-6 py-3">
+                                                <th scope="col" class="px-6 py-3 hidden md:table-cell">
                                                     {{ 'CREATE_PROD_SPEC._last_update' | translate }}
                                                 </th>
                                             </tr>
@@ -1185,7 +1194,7 @@
                                                             <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">Bundle</span>
                                                         }
                                                     </td>
-                                                    <td class="px-6 py-4">
+                                                    <td class="px-6 py-4 hidden md:table-cell">
                                                         {{rel.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                                     </td>
                                                 </tr>
@@ -1237,7 +1246,7 @@
                 @if(showSummary){
                     <h2 class="text-3xl font-bold text-primary-100 ml-4 dark:text-white">{{ 'CREATE_PROD_SPEC._finish' | translate }}</h2>
                     <div class="m-8">
-                        <div class="mb-4 grid grid-cols-2 gap-4">
+                        <div class="mb-4 md:grid md:grid-cols-2 gap-4">
                             <div>
                                 <label class="font-bold text-lg dark:text-white">{{ 'CREATE_PROD_SPEC._product_name' | translate }}</label>
                                 <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -1336,7 +1345,7 @@
                                             <th scope="col" class="px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._product_name' | translate }}
                                             </th>
-                                            <th scope="col" class="px-6 py-3">
+                                            <th scope="col" class="hidden lg:table-cell px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._product_description' | translate }}
                                             </th>
                                             <th scope="col" class="px-6 py-3">
@@ -1350,7 +1359,7 @@
                                                 <td class="px-6 py-4">
                                                     {{prod.name}}
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="hidden lg:table-cell px-6 py-4">
                                                     {{prod.description}}                                       
                                                 </td>
                                                 <td class="px-6 py-4">
@@ -1459,10 +1468,10 @@
                                             <th scope="col" class="px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._product_name' | translate }}
                                             </th>
-                                            <th scope="col" class="px-6 py-3">
+                                            <th scope="col" class="hidden md:table-cell px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._type' | translate }}
                                             </th>
-                                            <th scope="col" class="px-6 py-3">
+                                            <th scope="col" class="hidden lg:table-cell px-6 py-3">
                                                 {{ 'CREATE_PROD_SPEC._last_update' | translate }}
                                             </th>
                                         </tr>
@@ -1476,7 +1485,7 @@
                                                 <td class="px-6 py-4">
                                                     {{rel.productSpec.name}}
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="hidden md:table-cell px-6 py-4">
                                                     @if(rel.productSpec.lifecycleStatus == 'Active'){
                                                         <span class="bg-blue-100 dark:bg-secondary-200 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{rel.productSpec.lifecycleStatus}}</span>
                                                     } @else if(rel.productSpec.lifecycleStatus == 'Launched') {
@@ -1487,7 +1496,7 @@
                                                         <span class="bg-blue-100 dark:bg-secondary-200 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{rel.productSpec.lifecycleStatus}}</span>
                                                     }
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="hidden lg:table-cell px-6 py-4">
                                                     {{rel.productSpec.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                                 </td>
                                             </tr>

@@ -140,7 +140,7 @@
                     <th scope="col" class="px-6 py-3">
                         {{ 'OFFERINGS._status' | translate }}
                     </th>
-                    <th scope="col" class="hidden md:block px-6 py-3">
+                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                         {{ 'OFFERINGS._role' | translate }}
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -165,7 +165,7 @@
                                 <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{cat.lifecycleStatus}}</span>
                             }
                         </td>
-                        <td class="px-6 py-4 hidden md:block">
+                        <td class="px-6 py-4 hidden md:table-cell">
                             {{cat.relatedParty?.at(0)?.role}}
                         </td>
                         <td class="px-6 py-4">

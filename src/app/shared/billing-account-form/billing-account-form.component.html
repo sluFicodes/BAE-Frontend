@@ -34,7 +34,7 @@
         <input id="email" [ngClass]="billingForm.get('email')?.invalid == true && billingForm.value.email!='' ? 'border-red-600' : 'border-gray-300'" formControlName="email" name="email" type="text"
         class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
     </div>
-    <div>
+    <div class="col-span-2 lg:col-span-1">
         <label for="phoneType" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._phone_type' | translate }}</label>
         <select id="phoneType" formControlName="telephoneType"
         class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -45,7 +45,7 @@
             <option value="Other">Other</option>
         </select>
     </div>
-    <div>
+    <div class="col-span-2 lg:col-span-1">
         <label for="phoneNumber" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._phone' | translate }}</label>
         <div class="w-full">
             <div class="relative flex items-center">

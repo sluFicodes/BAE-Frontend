@@ -28,12 +28,12 @@
   <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
     <h2 class="text-3xl font-bold text-primary-100 dark:text-white ml-4">{{ 'CREATE_CATALOG._new' | translate }}</h2>
     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
-    <div class="grid grid-cols-20/80">
-        <div class="flex flex-col mr-4">
-            <h2 class="text-xl font-bold text-black mb-4 dark:text-white">{{ 'CREATE_CATALOG._steps' | translate }}</h2>
+    <div class="md:grid md:grid-cols-20/80">
+        <div class="flex sm:flex-row md:flex-col md:mr-4 w-full md:w-fit overflow-x-auto">
+            <h2 class="text-xl hidden md:block font-bold text-black mb-4 dark:text-white">{{ 'CREATE_CATALOG._steps' | translate }}</h2>
             <button id="general-info" (click)="toggleGeneral()" [disabled]="!generalDone"
-            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 text-primary-100 dark:text-primary-50 justify-items-center md:justify-items-start">
-                <span id="general-circle"class="flex items-center justify-center w-8 h-8 border border-2 border-primary-100 dark:border-primary-50 rounded-full shrink-0">
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-primary-100 dark:text-primary-50 justify-items-center md:justify-items-start">
+                <span id="general-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-primary-100 dark:border-primary-50 rounded-full shrink-0">
                     1
                 </span>
                 <span>
@@ -42,8 +42,9 @@
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="summary" [disabled]="true" class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 text-gray-500 justify-items-center md:justify-items-start">
-                <span id="summary-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="summary" [disabled]="true"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="summary-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     2
                 </span>
                 <span>
@@ -52,6 +53,7 @@
                 </span>
             </button>
         </div>
+        <hr class="h-px md:hidden m-4 bg-gray-300 dark:bg-gray-200 border-0">
         <div>
             @if(showGeneral){
                 <h2 class="text-3xl font-bold text-primary-100 dark:text-white ml-4">{{ 'CREATE_CATALOG._general' | translate }}</h2>

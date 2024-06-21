@@ -89,7 +89,7 @@
         </div>
       </div>
     </div>
-    <div class="w-3/4 rounded rounded-lg bg-secondary-50 dark:bg-secondary-100 p-4">
+    <div class="w-full lg:w-3/4 rounded rounded-lg bg-secondary-50 dark:bg-secondary-100 p-4 mt-8 lg:mt-0">
       <div class="w-full">
         <div class="mb-4 flex flex-col items-center space-x-4 rtl:space-x-reverse">
           <span class="text-2xl text-start font-bold dark:text-white">{{ 'SHOPPING_CART._your_order' | translate }}</span></div>
@@ -164,8 +164,8 @@
 
 <!-- BILL ADDRESS ADD modal -->
 @if (addBill){
-  <div id="add-bill-modal" [ngClass]="addBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
-      <div class="w-1/2 relative bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
+  <div id="add-bill-modal" [ngClass]="addBill ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-fit lg:h-[calc(100%-1rem)] max-h-full shadow-2xl">
+      <div class="w-4/5 lg:w-1/2 relative bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
           <!-- Modal header -->
           <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
             <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">{{ 'BILLING._add' | translate }}:</h2>
