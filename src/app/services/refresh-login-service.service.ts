@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import {LocalStorageService} from "./local-storage.service";
 import { LoginInfo } from '../models/interfaces';
 import { LoginServiceService } from 'src/app/services/login-service.service';
+import { environment } from "src/environments/environment";
 
 @Injectable({
   providedIn: 'root'
