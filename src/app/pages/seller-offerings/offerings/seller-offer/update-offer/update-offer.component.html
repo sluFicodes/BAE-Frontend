@@ -1112,7 +1112,7 @@
                                     }           
                                 </select>
                                 @if(recurringSelected){
-                                    <label class="font-bold text-lg">{{ 'UPDATE_OFFER._choose_period' | translate }}</label>
+                                    <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._choose_period' | translate }}</label>
                                     <select id="type" (change)="onPricePeriodChange($event)" class="shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                         <option value="DAILY">DAILY</option>
                                         <option value="WEEKLY">WEEKLY</option>
@@ -1122,7 +1122,7 @@
                                         <option value="QUINQUENNIAL">QUINQUENNIAL</option>                
                                     </select>
                                 } @else if(usageSelected){
-                                    <label class="font-bold text-lg">{{ 'UPDATE_OFFER._unit' | translate }}</label>
+                                    <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._unit' | translate }}</label>
                                     <input #usageUnit type="text"
                                     class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 }

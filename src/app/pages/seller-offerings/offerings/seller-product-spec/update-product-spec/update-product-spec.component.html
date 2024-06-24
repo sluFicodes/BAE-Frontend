@@ -30,7 +30,7 @@
         <h2 class="text-3xl font-bold text-primary-100 ml-4 . dark:text-white">{{ 'UPDATE_PROD_SPEC._update_prod' | translate }}</h2>
         <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
         <div class="md:grid md:grid-cols-20/80">
-            <div class="flex sm:flex-row md:flex-col md:mr-4 w-full md:w-fit overflow-x-auto">
+            <div class="flex sm:flex-row md:flex-col md:mr-4 overflow-x-auto">
                 <h2 class="hidden md:block text-xl font-bold text-black mb-4 dark:text-white">{{ 'UPDATE_PROD_SPEC._steps' | translate }}</h2>
                 <button id="general-info" (click)="toggleGeneral()"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-primary-100 dark:text-primary-50 justify-items-center md:justify-items-start">
@@ -129,8 +129,7 @@
                         <h3 class="flex leading-tight justify-start">{{ 'UPDATE_PROD_SPEC._finish' | translate }}</h3>
                         <p class="hidden xl:flex text-xs justify-start">{{ 'UPDATE_PROD_SPEC._summary' | translate }}</p>
                     </span>
-                </button>
-                
+                </button>                
             </div>
             <div>
                 @if(showGeneral){
@@ -647,7 +646,7 @@
                                 
                             </div>
                             <div>
-                                <label class="font-bold text-lg">{{ 'UPDATE_PROD_SPEC._type' | translate }}</label>
+                                <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._type' | translate }}</label>
                                 <select id="type" (change)="onTypeChange($event)"
                                 class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     <option selected value="string">String</option>
@@ -656,7 +655,7 @@
                                 </select>
                             </div>
                             <div class="col-span-2">
-                                <label for="description" class="font-bold text-lg">{{ 'UPDATE_PROD_SPEC._product_description' | translate }}</label>
+                                <label for="description" class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._product_description' | translate }}</label>
                                 <textarea id="description" formControlName="description" rows="4"
                                 class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"></textarea>
                             </div>                        
