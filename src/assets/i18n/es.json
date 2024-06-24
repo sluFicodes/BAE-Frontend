@@ -88,7 +88,7 @@
             "_register_title": "Register Your Service",
             "_register_desc": "Sign up and submit your service for validation, ensuring compliance and quality.",
             "_verified_title": "Get verified",
-            "_verified_desc": "Our team will quickly verify your offerings to ensure they meet DOME standards.",
+            "_verified_desc": "Our team will quickly verify your offerings to ensure they meet Distributed Open Marketplace standards.",
             "_reach_title": "Reach Europe",
             "_reach_desc": "Once verified, your services will be accessible to a wide European audience, ready to grow your business.",
             "_join": "Join as provider",
@@ -97,15 +97,15 @@
         }
     },
     "EXPLORE": {
-        "_title": "Explore DOME",
+        "_title": "Explore the Distributed Open Marketplace Project",
         "_subtitle": "Whether you're seeking in-depth reports, latest updates or upcoming events, everything ou need to know is just a click away.",
         "_events_title": "Events and Webinars",
-        "_events_desc": "Join us at our next event or webinar to connect with fellow innovators, learn from industry leaders and discover new opportunities within the DOME ecosystem.",
+        "_events_desc": "Join us at our next event or webinar to connect with fellow innovators, learn from industry leaders and discover new opportunities within the 'DOME' Project's ecosystem.",
         "_updates_title": "Latest Updates and News",
-        "_updates_desc": "Stay informed with the latest developments, service enhancements and industry insights directly from the DOME website.",
+        "_updates_desc": "Stay informed with the latest developments, service enhancements and industry insights directly from the 'DOME' Project's website.",
         "_resources_title": "Resources & Reports",
-        "_resources_desc": "Access our library of resources, detailed reports and case studies to gain a deep understanding of the cloud and edge market landscape and DOME's impact.",
-        "_go": "Go to DOME's Site"
+        "_resources_desc": "Access our library of resources, detailed reports and case studies to gain a deep understanding of the cloud and edge market landscape and 'DOME' Project's impact.",
+        "_go": "Go to 'DOME' Project's Site"
     },
     "CARD": {
         "_details": "View details",
