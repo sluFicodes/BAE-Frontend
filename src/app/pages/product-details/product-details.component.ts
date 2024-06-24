@@ -43,7 +43,7 @@ export class ProductDetailsComponent implements OnInit {
   images: AttachmentRefOrValue[]  = [];
   attatchments: AttachmentRefOrValue[]  = [];
   prodSpec:ProductSpecification = {};
-  complianceProf:any[] = certifications;
+  complianceProf:any[] = [];
   complianceLevel:number=1;
   serviceSpecs:any[] = [];
   resourceSpecs:any[]=[];
@@ -87,6 +87,9 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: ShoppingCartServiceService,
     private eventMessage: EventMessageService,
   ) {
+    for(let i=0; i<certifications.length; i++){
+      this.complianceProf.push(certifications[i])
+    }
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'CloseCartCard') {
         this.hideCartSelection();
@@ -228,7 +231,6 @@ export class ProductDetailsComponent implements OnInit {
           this.images = profile;
           this.attatchments = this.productOff?.attachment?.filter(item => item.name != 'Profile Picture') ?? [];
         }
-
         let vcs = 0
         let domeSup = 0
         let tokenComp = []
