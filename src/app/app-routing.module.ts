@@ -26,10 +26,10 @@ const routes: Routes = [
   { path: 'search/:id',
     component: ProductDetailsComponent
   },
-  { path: 'search/catalog/:id',
+  { path: 'search/catalogue/:id',
   component: SearchCatalogComponent
   },
-  { path: 'catalogs',
+  { path: 'catalogues',
   component: CatalogsComponent
   },
   { path: 'shopping-cart',

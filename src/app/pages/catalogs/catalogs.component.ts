@@ -71,7 +71,7 @@ export class CatalogsComponent implements OnInit{
   }
 
   goToCatalogSearch(id:any) {
-    this.router.navigate(['/search/catalog', id]);
+    this.router.navigate(['/search/catalogue', id]);
   }
 
   async next(){
