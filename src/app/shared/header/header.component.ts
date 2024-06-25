@@ -196,7 +196,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
   
   goToCatalogSearch(id:any) {
-    this.router.navigate(['/search/catalog', id]);
+    this.router.navigate(['/search/catalogue', id]);
   }
 
   goTo(path:string) {
