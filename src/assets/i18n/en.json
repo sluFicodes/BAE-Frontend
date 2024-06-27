@@ -253,7 +253,8 @@
         "_city": "City",
         "_mybills": "My billing addresses",
         "_user_id": "User id",
-        "_no_orders": "No orders found"
+        "_no_orders": "No orders found",
+        "_organization": "Organization"
     },
     "PRODUCT_INVENTORY":{
         "_loading": "Loading...",

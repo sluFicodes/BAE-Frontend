@@ -19,7 +19,7 @@ export class RefreshLoginServiceService {
     private api: LoginServiceService,
     private router: Router
     ) {
-    this.intervalObservable = interval(1000); // Default interval duration set to 1000 milliseconds (1 second)
+    //this.intervalObservable = interval(1000); // Default interval duration set to 1000 milliseconds (1 second)
   }
 
   startInterval(intervalDuration: number, data:any): void {

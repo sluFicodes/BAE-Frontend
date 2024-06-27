@@ -60,6 +60,7 @@ export class ProductDetailsComponent implements OnInit {
 
   errorMessage:any='';
   showError:boolean=false;
+  showTermsMore:boolean=false;
 
   protected readonly faScaleBalanced = faScaleBalanced;
   protected readonly faArrowProgress = faArrowProgress;
@@ -87,6 +88,7 @@ export class ProductDetailsComponent implements OnInit {
     private cartService: ShoppingCartServiceService,
     private eventMessage: EventMessageService,
   ) {
+    this.showTermsMore=false;
     for(let i=0; i<certifications.length; i++){
       this.complianceProf.push(certifications[i])
     }
@@ -606,6 +608,16 @@ export class ProductDetailsComponent implements OnInit {
         this.addClass(elem,cls)
       }
     }
+  }
+
+  toggleTermsReadMore(){
+    if(this.showTermsMore==false){
+      document?.getElementById('terms')?.classList.remove('line-clamp-5')
+    } else {
+      document?.getElementById('terms')?.classList.add('line-clamp-5')
+    }
+    this.showTermsMore=!this.showTermsMore;
+    
   }
 
 }
