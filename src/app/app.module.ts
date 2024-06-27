@@ -38,6 +38,7 @@ import { RequestInterceptor } from './interceptors/requests-interceptor';
 import { MarkdownModule } from 'ngx-markdown';
 import { InventoryProductsComponent } from './pages/product-inventory/inventory-items/inventory-products/inventory-products.component';
 import { UserInfoComponent } from './pages/user-profile/profile-sections/user-info/user-info.component';
+import { OrgInfoComponent } from './pages/user-profile/profile-sections/org-info/org-info.component';
 import { BillingInfoComponent } from './pages/user-profile/profile-sections/billing-info/billing-info.component';
 import { OrderInfoComponent } from './pages/user-profile/profile-sections/order-info/order-info.component';
 import { SellerCatalogsComponent } from './pages/seller-offerings/offerings/seller-catalogs/seller-catalogs.component';
@@ -98,6 +99,7 @@ import { appConfigFactory } from './app-config-factory';
     ProductInventoryComponent,
     BillingAccountFormComponent,
     UserProfileComponent,
+    OrgInfoComponent,
     SellerOfferingsComponent,
     InventoryProductsComponent,
     UserInfoComponent,
