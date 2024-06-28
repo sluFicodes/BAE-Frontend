@@ -30,7 +30,7 @@
         <h2 class="text-3xl font-bold text-primary-100 ml-4 . dark:text-white">{{ 'UPDATE_PROD_SPEC._update_prod' | translate }}</h2>
         <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
         <div class="md:grid md:grid-cols-20/80">
-            <div class="flex sm:flex-row md:flex-col md:mr-4 overflow-x-auto">
+            <div class="flex sm:flex-row md:flex-col md:mr-4 overflow-x-auto max-w-[calc(100vw-5rem)]">
                 <h2 class="hidden md:block text-xl font-bold text-black mb-4 dark:text-white">{{ 'UPDATE_PROD_SPEC._steps' | translate }}</h2>
                 <button id="general-info" (click)="toggleGeneral()"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-primary-100 dark:text-primary-50 justify-items-center md:justify-items-start">
@@ -709,15 +709,15 @@
                                     </button> 
                                 </div>
                             } @else if (numberCharSelected){
-                                <div class="flex flex-row items-center align-items-middle">
-                                    <div class="flex w-full">
+                                <div class="flex flex-col md:flex-row items-center align-items-middle">
+                                    <div class="flex w-full mb-2 md:mb-0">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._value' | translate }}
                                         </span>
                                         <input #numberValue type="number" pattern="[0-9]*" id="value"
                                         class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
-                                    <div class="flex w-full">
+                                    <div class="flex w-full mb-2 md:mb-0">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._unit' | translate }}
                                         </span>
@@ -732,22 +732,22 @@
                                     </button> 
                                 </div>
                             } @else if (rangeCharSelected){
-                                <div class="flex flex-row items-center align-items-middle">
-                                    <div class="flex w-full">
+                                <div class="flex flex-col md:flex-row items-center align-items-middle">
+                                    <div class="flex w-full mb-2 md:mb-0">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._from' | translate }}
                                         </span>
                                         <input #fromValue type="number" pattern="[0-9]*" id="value"
                                         class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
-                                    <div class="flex w-full">
+                                    <div class="flex w-full mb-2 md:mb-0">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._to' | translate }}
                                         </span>
                                         <input #toValue type="number" pattern="[0-9]*" id="value"
                                         class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
-                                    <div class="flex w-full">
+                                    <div class="flex w-full mb-2 md:mb-0">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._unit' | translate }}
                                         </span>

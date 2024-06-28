@@ -163,6 +163,8 @@ export class UpdateOfferComponent implements OnInit{
   errorMessage:any='';
   showError:boolean=false;
 
+  innerWidth: '300px';
+
   //FINAL OFFER USING API CALL STRUCTURE
   offerToUpdate:ProductOffering_Update | undefined;
 

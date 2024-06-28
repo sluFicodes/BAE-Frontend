@@ -321,15 +321,15 @@
                                 </button> 
                             </div>
                         } @else if (numberCharSelected){
-                            <div class="flex flex-row items-center align-items-middle">
-                                <div class="flex w-full">
+                            <div class="flex flex-col md:flex-row items-center items-center align-items-middle">
+                                <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                         {{ 'CREATE_SERV_SPEC._value' | translate }}
                                     </span>
                                     <input #numberValue type="number" pattern="[0-9]*" id="value"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 </div>
-                                <div class="flex w-full">
+                                <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                         {{ 'CREATE_SERV_SPEC._unit' | translate }}
                                     </span>
@@ -344,22 +344,22 @@
                                 </button> 
                             </div>
                         } @else if (rangeCharSelected){
-                            <div class="flex flex-row items-center align-items-middle">
-                                <div class="flex w-full">
+                            <div class="flex flex-col md:flex-row items-center align-items-middle">
+                                <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                         {{ 'CREATE_SERV_SPEC._from' | translate }}
                                     </span>
                                     <input #fromValue type="number" pattern="[0-9]*" id="value"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 </div>
-                                <div class="flex w-full">
+                                <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                         {{ 'CREATE_SERV_SPEC._to' | translate }}
                                     </span>
                                     <input #toValue type="number" pattern="[0-9]*" id="value"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 </div>
-                                <div class="flex w-full">
+                                <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                         {{ 'CREATE_SERV_SPEC._unit' | translate }}
                                     </span>
