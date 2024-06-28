@@ -21,8 +21,10 @@ import { environment } from 'src/environments/environment';
 })
 export class UserProfileComponent implements OnInit{
   show_profile: boolean = true;
+  show_org_profile:boolean=false;
   show_orders: boolean = false;
   show_billing: boolean = false;
+  loggedAsUser: boolean = true;
   profile:any;
   partyId:any='';
   token:string='';
@@ -51,8 +53,22 @@ export class UserProfileComponent implements OnInit{
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.token=aux.token;
       this.email=aux.email;
-      this.partyId = aux.partyId;
-      this.getProfile();
+      if(aux.logged_as==aux.id){
+        this.partyId = aux.partyId;
+        this.loggedAsUser=true;
+        this.show_profile=true;
+        this.show_org_profile=false;
+        this.getProfile();
+      } else {
+        let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as);
+        this.partyId = loggedOrg.partyId;
+        this.loggedAsUser=false;
+        this.show_profile=false;
+        this.show_org_profile=true;
+        this.getOrgProfile(); 
+      }
+      //this.partyId = aux.partyId;
+      
     }
     initFlowbite();
   }
@@ -61,6 +77,15 @@ export class UserProfileComponent implements OnInit{
     this.show_billing=false;
     this.show_profile=true;
     this.show_orders=false;
+    this.show_org_profile=false;
+    this.selectGeneral();
+  }
+
+  getOrgProfile(){
+    this.show_billing=false;
+    this.show_profile=false;
+    this.show_orders=false;
+    this.show_org_profile=true;
     this.selectGeneral();
   }
 
@@ -69,6 +94,7 @@ export class UserProfileComponent implements OnInit{
     this.show_billing=true;
     this.show_profile=false;
     this.show_orders=false;
+    this.show_org_profile=false;
     this.cdr.detectChanges();
     initFlowbite();
   }
@@ -78,6 +104,7 @@ export class UserProfileComponent implements OnInit{
     this.show_billing=false;
     this.show_profile=false;
     this.show_orders=true;
+    this.show_org_profile=false;
     this.cdr.detectChanges();
   }
 

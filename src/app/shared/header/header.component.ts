@@ -114,6 +114,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
         for(let i=0;i<loggedOrg.roles.length;i++){
           this.roles.push(loggedOrg.roles[i].name)
         }
+        console.log(this.roles)
       }
       this.cdr.detectChanges();
     }
@@ -196,7 +197,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
   
   goToCatalogSearch(id:any) {
-    this.router.navigate(['/search/catalog', id]);
+    this.router.navigate(['/search/catalogue', id]);
   }
 
   goTo(path:string) {

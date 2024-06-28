@@ -47,8 +47,18 @@ export class AccountServiceService {
     return lastValueFrom(this.http.get<any>(url));
   }
 
+  getOrgInfo(partyId:any){
+    let url = `${AccountServiceService.BASE_URL}/party/organization/${partyId}`;
+    return lastValueFrom(this.http.get<any>(url));
+  }
+
   updateUserInfo(partyId:any,profile:any){
     let url = `${AccountServiceService.BASE_URL}/party/individual/${partyId}`;   
+    return this.http.patch<any>(url, profile);
+  }
+
+  updateOrgInfo(partyId:any,profile:any){
+    let url = `${AccountServiceService.BASE_URL}/party/organization/${partyId}`;   
     return this.http.patch<any>(url, profile);
   }
 }

@@ -10,32 +10,21 @@ import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'user-info',
-  templateUrl: './user-info.component.html',
-  styleUrl: './user-info.component.css'
+  selector: 'org-info',
+  templateUrl: './org-info.component.html',
+  styleUrl: './org-info.component.css'
 })
-export class UserInfoComponent implements OnInit {
+export class OrgInfoComponent {
   loading: boolean = false;
   orders:any[]=[];
   profile:any;
   partyId:any='';
   token:string='';
   email:string='';
-  userProfileForm = new FormGroup({
-    name: new FormControl(''),
-    lastname: new FormControl(''),
-    treatment: new FormControl(''),
-    maritalstatus: new FormControl(''),
-    gender: new FormControl(''),
-    nacionality: new FormControl(''),
-    birthdate: new FormControl(''),
-    city: new FormControl(''),
-    country: new FormControl(''),
-  });
-  dateRange = new FormControl();
   selectedDate:any;
-  countries: any[] = countries;
-  preferred:boolean=false;
+  profileForm = new FormGroup({
+    name: new FormControl('')
+  });
 
   errorMessage:any='';
   showError:boolean=false;
@@ -65,17 +54,9 @@ export class UserInfoComponent implements OnInit {
   initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      if(aux.logged_as==aux.id){
-        this.partyId = aux.partyId;
-      } else {
-        let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
-        this.partyId = loggedOrg.partyId
-        console.log(aux.organizations)
-        this.accountService.getOrgInfo(this.partyId).then(data=> {
-          console.log('org')
-          console.log(data)
-        })
-      }
+      let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
+      this.partyId = loggedOrg.partyId;
+
       this.token=aux.token;
       this.email=aux.email;
       //this.partyId = aux.partyId;
@@ -85,7 +66,8 @@ export class UserInfoComponent implements OnInit {
   }
 
   getProfile(){
-    this.accountService.getUserInfo(this.partyId).then(data=> {
+    this.accountService.getOrgInfo(this.partyId).then(data=> {
+      console.log('--org info--')
       console.log(data)
       this.profile=data;
       this.loadProfileData(this.profile)
@@ -101,20 +83,12 @@ export class UserInfoComponent implements OnInit {
     let profile = {
       "id": this.partyId,
       "href": this.partyId,
-      "countryOfBirth": this.userProfileForm.value.country,
-      "familyName": this.userProfileForm.value.lastname,
-      "gender": this.userProfileForm.value.gender,
-      "givenName": this.userProfileForm.value.name,
-      "maritalStatus": this.userProfileForm.value.maritalstatus,
-      "nationality": this.userProfileForm.value.nacionality,
-      "placeOfBirth": this.userProfileForm.value.city,
-      "title": this.userProfileForm.value.treatment,
-      "birthDate": this.userProfileForm.value.birthdate
+      "tradingName": this.profileForm.value.name
     }
     console.log(profile)
-    this.accountService.updateUserInfo(this.partyId,profile).subscribe({
+    this.accountService.updateOrgInfo(this.partyId,profile).subscribe({
       next: data => {
-        this.userProfileForm.reset();
+        this.profileForm.reset();
         this.getProfile();        
       },
       error: error => {
@@ -129,15 +103,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   loadProfileData(profile:any){
-    this.userProfileForm.controls['name'].setValue(profile.givenName);
-    this.userProfileForm.controls['lastname'].setValue(profile.familyName);
-    //this.userProfileForm.controls['treatment'].setValue(profile.title);
-    this.userProfileForm.controls['maritalstatus'].setValue(profile.maritalStatus);
-    this.userProfileForm.controls['gender'].setValue(profile.gender);
-    this.userProfileForm.controls['nacionality'].setValue(profile.nacionality);
-    //this.userProfileForm.controls['birthdate'].setValue(profile.birthDate);
-    this.userProfileForm.controls['city'].setValue(profile.placeOfBirth);
-    this.userProfileForm.controls['country'].setValue(profile.countryOfBirth);
+    this.profileForm.controls['name'].setValue(profile.tradingName);
   }
 
 }
