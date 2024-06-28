@@ -127,7 +127,7 @@
               <button (click)="goTo('/my-offerings')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faHandHoldingBox" class="mr-2"></fa-icon>{{ 'HEADER._offerings' | translate }}</button>
             </li>
           }
-          @if(roles.includes('admin')){
+          @if(isAdmin){
             <li>
               <button (click)="goTo('/admin')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faCogs" class="mr-2"></fa-icon>{{ 'HEADER._admin' | translate }}</button>
             </li>
@@ -140,10 +140,9 @@
           </li>
         </ul>
         <div class="py-1">
-          <!--@if(orgs.length>0 || roles.includes('admin')){-->
-          @if(orgs.length>0){
+          @if(orgs.length > 0 && isAdmin){
             <button data-dropdown-toggle="orgs-dropdown" data-dropdown-placement="left-start" class="flex w-full justify-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faAnglesLeft" class="mr-2"></fa-icon>{{ 'HEADER._change_session' | translate }}</button>
-          }        
+          }
           <button (click)="logout();" class="flex w-full justify-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faArrowRightFromBracket" class="mr-2"></fa-icon>{{ 'HEADER._sign_out' | translate }}</button>
         </div>
       </div>

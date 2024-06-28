@@ -11,6 +11,7 @@ import { RefreshLoginServiceService } from "src/app/services/refresh-login-servi
 import { LoginServiceService } from "src/app/services/login-service.service"
 import { FormControl } from '@angular/forms';
 import { initFlowbite } from 'flowbite';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,6 +23,7 @@ export class DashboardComponent implements OnInit {
   isFilterPanelShown = false;
   showContact:boolean=false;
   searchField = new FormControl();
+  searchEnabled = environment.SEARCH_ENABLED;
   categories:any[]=[];
   //loginSubscription: Subscription = new Subscription();;
   constructor(private localStorage: LocalStorageService,

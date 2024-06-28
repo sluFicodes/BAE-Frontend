@@ -23,6 +23,7 @@ export class SearchComponent implements OnInit {
   page: number=0;
   PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
   showDrawer:boolean=false;
+  searchEnabled = environment.SEARCH_ENABLED;
 
   constructor(
     private api: ApiServiceService,
