@@ -20,13 +20,16 @@ export class ApiServiceService {
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
-  getProducts(page:any) {
-    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOffering?limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;    
+  getProducts(page:any,keywords:any) {
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOffering?limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}&lifecycleStatus=Launched`;
+    if(keywords!=undefined){
+      url=url+'&keyword='+keywords;
+    } 
 
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
-  getProductsByCategory(ids:Category[],page:any) {
+  getProductsByCategory(ids:Category[],page:any,keywords:any) {
     let id_str='';
     for(let i = 0; i < ids.length; i++){
       if(i == 0){
@@ -46,6 +49,9 @@ export class ApiServiceService {
     } else {
       url = `${baseUrl}?${query}`
     }
+    if(keywords!=undefined){
+      url=url+'&keyword='+keywords;
+    } 
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
