@@ -24,7 +24,7 @@ export class GalleryComponent implements OnInit {
 
   ngOnInit() {
     console.log('API RESPONSE:')
-    this.api.getProducts(0).then(data => {
+    this.api.getProducts(0,undefined).then(data => {
       for(let i=0; i < this.gallery_limit && i < data.length; i++){
           let attachment: any[]= []
           this.api.getProductSpecification(data[i].productSpecification.id).then(spec => {

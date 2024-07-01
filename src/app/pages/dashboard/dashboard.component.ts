@@ -117,4 +117,10 @@ export class DashboardComponent implements OnInit {
       console.log(data)
     })*/
   }
+  filterSearch(event: any) {
+    if(this.searchField.value!='' && this.searchField.value != null){
+      this.router.navigate(['/search', {keywords: this.searchField.value}]);
+    }    
+  }
+  
 }

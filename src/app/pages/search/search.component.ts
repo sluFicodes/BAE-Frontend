@@ -8,6 +8,8 @@ import {LocalStorageService} from "../../services/local-storage.service";
 import {Category} from "../../models/interfaces";
 import {EventMessageService} from "../../services/event-message.service";
 import { environment } from 'src/environments/environment';
+import { ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'bae-search',
@@ -24,10 +26,13 @@ export class SearchComponent implements OnInit {
   PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
   showDrawer:boolean=false;
   searchEnabled = environment.SEARCH_ENABLED;
+  keywords:any=undefined;
+  searchField = new FormControl();
 
   constructor(
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
+    private route: ActivatedRoute,
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService) {
   }
@@ -38,6 +43,8 @@ export class SearchComponent implements OnInit {
     /*await this.api.slaCheck().then(data => {  
       console.log(data)
     })*/
+    this.keywords = this.route.snapshot.paramMap.get('keywords');
+    this.searchField.setValue(this.keywords);
     await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
 
     this.eventMessage.messages$.subscribe(ev => {
@@ -45,7 +52,6 @@ export class SearchComponent implements OnInit {
         this.updateProducts();
       }
     })
-
   }
 
   @HostListener('document:click')
@@ -60,7 +66,7 @@ export class SearchComponent implements OnInit {
     console.log('Filtros...')
     console.log(filters)
     if(filters.length == 0){
-      this.api.getProducts(this.page).then(data => {
+      this.api.getProducts(this.page,this.keywords).then(data => {
         if(data.length<this.PRODUCT_LIMIT){
           this.page_check=false;
           this.cdr.detectChanges();
@@ -137,7 +143,7 @@ export class SearchComponent implements OnInit {
         this.loading_more=false;
       })
     } else {
-      this.api.getProductsByCategory(filters,this.page).then(data => {
+      this.api.getProductsByCategory(filters,this.page,this.keywords).then(data => {
         if(data.length<this.PRODUCT_LIMIT){
           this.page_check=false;
           this.cdr.detectChanges();
@@ -230,6 +236,18 @@ export class SearchComponent implements OnInit {
     this.cdr.detectChanges;
     console.log(this.page)
     await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
+  }
+
+  filterSearch(event: any) {
+    if(this.searchField.value!='' && this.searchField.value != null){
+      this.loading=true;
+      this.products=[];
+      this.page=0;
+      this.cdr.detectChanges();
+      this.keywords=this.searchField.value;
+      let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+      this.getProducts(filters);
+    }    
   }
 
 }
