@@ -26,66 +26,72 @@
   <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
     <h2 class="text-3xl font-bold text-primary-100 dark:text-white ml-4">{{ 'CREATE_OFFER._new' | translate }}</h2>
     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
-    <div class="grid grid-cols-20/80">
-        <div class="flex flex-col mr-4">
-            <h2 class="text-xl font-bold text-black mb-4 dark:text-white">{{ 'CREATE_OFFER._steps' | translate }}</h2>
-            <button id="general-info" (click)="toggleGeneral()" [disabled]="!generalDone"  class="grid grid-cols-20/80 mb-2 text-primary-100 dark:text-primary-50">
-                <span id="general-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-primary-100 dark:border-primary-50 rounded-full shrink-0">
+    <div class="md:grid md:grid-cols-25/75 xl:grid-cols-20/80">
+        <div class="flex sm:flex-row md:flex-col md:mr-4 overflow-x-auto max-w-[calc(100vw-5rem)]">
+            <h2 class="text-xl hidden md:block font-bold text-black mb-4 dark:text-white">{{ 'CREATE_OFFER._steps' | translate }}</h2>
+            <button id="general-info" (click)="toggleGeneral()" [disabled]="!generalDone"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-primary-100 dark:text-primary-50 justify-items-center md:justify-items-start">
+                <span id="general-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-primary-100 dark:border-primary-50 rounded-full shrink-0">
                     1
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._general' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._general_info' | translate }}</p>
+                    <h3 class="flex text-sm md:text-base sm:text-center md:text-start">{{ 'CREATE_OFFER._general' | translate }}</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._general_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                <span id="bundle-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="bundle-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     2
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._bundle' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._bundle_info' | translate }}</p>
+                    <h3 class="flex text-sm md:text-base sm:text-center md:text-start">{{ 'CREATE_OFFER._bundle' | translate }}</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._bundle_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="prodspec" (click)="toggleProdSpec()" [disabled]="!prodSpecDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                <span id="prodspec-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="prodspec" (click)="toggleProdSpec()" [disabled]="!prodSpecDone"
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="prodspec-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     3
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._prod_spec' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._prod_spec_info' | translate }}</p>
+                    <h3 class="flex sm:text-center md:text-start">{{ 'CREATE_OFFER._prod_spec' | translate }}</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._prod_spec_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="catalog" (click)="toggleCatalogs()" [disabled]="!catalogsDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                <span id="catalog-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="catalog" (click)="toggleCatalogs()" [disabled]="!catalogsDone"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="catalog-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     4
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._catalog' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._catalog_info' | translate }}</p>
+                    <h3 class="flex text-sm md:text-base sm:text-center md:text-start">{{ 'CREATE_OFFER._catalog' | translate }}</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._catalog_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="category" (click)="toggleCategories()" [disabled]="!categoriesDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                <span id="category-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="category" (click)="toggleCategories()" [disabled]="!categoriesDone"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="category-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     5
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._category' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._category_info' | translate }}</p>
+                    <h3 class="flex text-sm md:text-base sm:text-center md:text-start">{{ 'CREATE_OFFER._category' | translate }}</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._category_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="license" (click)="toggleLicense()" [disabled]="!licenseDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                <span id="license-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="license" (click)="toggleLicense()" [disabled]="!licenseDone"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="license-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     6
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._license' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._license_info' | translate }}</p>
+                    <h3 class="flex text-sm md:text-base sm:text-center md:text-start">{{ 'CREATE_OFFER._license' | translate }}</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._license_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
@@ -99,34 +105,34 @@
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">-->
-            <button id="price" (click)="togglePrice()" [disabled]="!priceDone" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                <span id="price-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="price" (click)="togglePrice()" [disabled]="!priceDone"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="price-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     7
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._price_plans' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._price_plans_info' | translate }}</p>
+                    <h3 class="flex text-sm md:text-base sm:text-center md:text-start">{{ 'CREATE_OFFER._price_plans' | translate }}</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._price_plans_info' | translate }}</p>
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <button id="summary" [disabled]="true" class="grid grid-cols-20/80 mb-2 text-gray-500">
-                <span id="summary-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
+            <button id="summary" [disabled]="true"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="summary-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     8
                 </span>
                 <span>
-                    <h3 class="flex leading-tight justify-start">{{ 'CREATE_OFFER._finish' | translate }}</h3>
-                    <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._summary' | translate }}</p>
+                    <h3 class="flex text-sm md:text-base sm:text-center md:text-start">{{ 'CREATE_OFFER._finish' | translate }}</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._summary' | translate }}</p>
                 </span>
             </button>
             
         </div>
-
-
         <div>
 
             @if(showGeneral){
                 <h2 class="text-3xl font-bold text-primary-100 dark:text-white ml-4">{{ 'CREATE_OFFER._general' | translate }}</h2>
-                <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="generalForm">
+                <form class="m-4 md:grid md:grid-cols-2 gap-4" [formGroup]="generalForm">
                     <div>
                         <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._name' | translate }}</label>
                         <input formControlName="name" type="text" id="prod-name"
@@ -162,13 +168,13 @@
                                         </svg>                                          
                                         <span class="sr-only">Add list</span>
                                     </button>
-                                    <button (click)="addOrderedList()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button (click)="addOrderedList()" type="button" class="hidden lg:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
                                         </svg>                                          
                                         <span class="sr-only">Add ordered list</span>
                                     </button>
-                                    <button (click)="addBlockquote()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button (click)="addBlockquote()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
                                         </svg>                                         
@@ -180,25 +186,25 @@
                                         </svg>                                         
                                         <span class="sr-only">Add table</span>
                                     </button>                                 
-                                    <button (click)="addCode()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button (click)="addCode()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
                                         </svg>                                        
                                         <span class="sr-only">Add code</span>
                                     </button>
-                                    <button (click)="addCodeBlock()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button (click)="addCodeBlock()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                           </svg>                                                                                  
                                         <span class="sr-only">Add code block</span>
                                     </button>
-                                    <button (click)="addLink()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button (click)="addLink()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
                                         </svg>                                                                                
                                         <span class="sr-only">Add link</span>
                                     </button>
-                                    <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
                                         </svg>
@@ -282,13 +288,13 @@
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'CREATE_OFFER._name' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._status' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._type' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden lg:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._last_update' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
@@ -302,7 +308,7 @@
                                         <td class="px-6 py-4">
                                             {{prod.name}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             @if(prod.lifecycleStatus == 'Active'){
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
                                             } @else if(prod.lifecycleStatus == 'Launched') {
@@ -313,14 +319,14 @@
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
                                             }
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             @if(prod.isBundle == false){
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'CREATE_OFFER._simple' | translate }}</span>
                                             } @else {
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'CREATE_OFFER._bundle' | translate }}</span>
                                             }
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden lg:table-cell px-6 py-4">
                                             {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                         </td>
                                         <td class="px-6 py-4">
@@ -418,13 +424,13 @@
                                         <th scope="col" class="px-6 py-3">
                                             {{ 'OFFERINGS._name' | translate }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="hidden md:table-cell px-6 py-3">
                                             {{ 'OFFERINGS._status' | translate }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="hidden md:table-cell px-6 py-3">
                                             {{ 'OFFERINGS._type' | translate }}
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="hidden md:table-cell px-6 py-3">
                                             {{ 'OFFERINGS._last_update' | translate }}
                                         </th>
                                     </tr>
@@ -436,7 +442,7 @@
                                             <td class="px-6 py-4">
                                                 {{prod.name}}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden md:table-cell px-6 py-4">
                                                 @if(prod.lifecycleStatus == 'Active'){
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
                                                 } @else if(prod.lifecycleStatus == 'Launched') {
@@ -447,14 +453,14 @@
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
                                                 }
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden md:table-cell px-6 py-4">
                                                 @if(prod.isBundle == false){
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
                                                 } @else {
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
                                                 }
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="hidden md:table-cell px-6 py-4">
                                                 {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                             </td>
                                         </tr>
@@ -526,10 +532,10 @@
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'OFFERINGS._name' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'OFFERINGS._status' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'OFFERINGS._role' | translate }}
                                     </th>
                                 </tr>
@@ -541,7 +547,7 @@
                                         <td class="px-6 py-4">
                                             {{cat.name}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             @if(cat.lifecycleStatus == 'Active'){
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{cat.lifecycleStatus}}</span>
                                             } @else if(cat.lifecycleStatus == 'Launched') {
@@ -552,7 +558,7 @@
                                                 <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{cat.lifecycleStatus}}</span>
                                             }
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             {{cat.relatedParty?.at(0)?.role}}
                                         </td>
                                     </tr>
@@ -623,7 +629,7 @@
                                         <th scope="col" class="flex px-6 py-3 w-3/5">
                                             {{ 'CREATE_OFFER._name' | translate }}
                                         </th>
-                                        <th scope="col" class="flex px-6 py-3 w-fit">
+                                        <th scope="col" class="hidden md:flex px-6 py-3 w-fit">
                                             {{ 'CREATE_OFFER._last_update' | translate }}
                                         </th>
                                         <th scope="col" class="flex px-6 py-3 w-fit">
@@ -637,7 +643,7 @@
                                             <td class="flex px-6 py-4 w-3/5">
                                                 <b>{{cat.name}}</b>
                                             </td>
-                                            <td class="flex px-6 py-4 w-fit">
+                                            <td class="hidden md:flex px-6 py-4 w-fit">
                                                 {{cat.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                             </td>
                                             <td class="flex px-6 py-4 w-fit justify-end">
@@ -703,13 +709,13 @@
                                                     </svg>                                          
                                                     <span class="sr-only">Add list</span>
                                                 </button>
-                                                <button (click)="addOrderedList()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button (click)="addOrderedList()" type="button" class="hidden lg:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
                                                     </svg>                                          
                                                     <span class="sr-only">Add ordered list</span>
                                                 </button>
-                                                <button (click)="addBlockquote()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button (click)="addBlockquote()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                                         <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
                                                     </svg>                                         
@@ -721,25 +727,25 @@
                                                     </svg>                                         
                                                     <span class="sr-only">Add table</span>
                                                 </button>                                 
-                                                <button (click)="addCode()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button (click)="addCode()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
                                                     </svg>                                        
                                                     <span class="sr-only">Add code</span>
                                                 </button>
-                                                <button (click)="addCodeBlock()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button (click)="addCodeBlock()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                                       </svg>                                                                                  
                                                     <span class="sr-only">Add code block</span>
                                                 </button>
-                                                <button (click)="addLink()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button (click)="addLink()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
                                                     </svg>                                                                                
                                                     <span class="sr-only">Add link</span>
                                                 </button>
-                                                <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="hidden lg:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
                                                     </svg>
@@ -964,10 +970,10 @@
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'CREATE_OFFER._name' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden xl:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._description' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._type' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
@@ -987,10 +993,10 @@
                                         <td class="px-6 py-4">
                                             {{price.name}}
                                         </td>
-                                        <td class="px-6 py-4 line-clamp-1">
+                                        <td class="hidden xl:table-cell px-6 py-4 line-clamp-1">
                                             {{price.description}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             {{price.priceType}}
                                         </td>
                                         <td class="px-6 py-4">
@@ -1031,7 +1037,7 @@
                 }@else{
                     <label class="font-bold text-xl ml-4 dark:text-white">{{ 'CREATE_OFFER._new_price' | translate }}</label>
                     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
-                        <form class="grid grid-cols-80/20 gap-4 m-4" [formGroup]="priceForm">
+                        <form class="xl:grid xl:grid-cols-80/20 xl:gap-4 m-4" [formGroup]="priceForm">
                             <div>
                                 <label class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._name' | translate }}</label>
                                 <input formControlName="name" type="text" id="name"
@@ -1045,7 +1051,8 @@
                                         [ngClass]="priceForm.get('price')?.invalid == true && priceForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
                                         class="bg-gray-50 dark:bg-secondary-300 border-l border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
         
-                                        <select id="type" (change)="onPriceUnitChange($event)" class="bg-white border-r border-gray-300 dark:bg-secondary-300 text-gray-90 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                                        <select id="type" (change)="onPriceUnitChange($event)"
+                                        class="w-full lg:1/2 xl:w-1/4 bg-white border-r border-gray-300 dark:bg-secondary-300 text-gray-90 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                                             @for(curr of currencies; track curr.code){
                                                 <option value="{{curr.code}}">({{curr.code}}) {{curr.name}}</option>  
                                             }                            
@@ -1184,14 +1191,14 @@
                             <form [formGroup]="priceAlterForm">
                                 <div class="m-4">
                                     <label class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._price_alter' | translate }}</label>
-                                    <select id="type" (change)="onPriceAlterSelected($event)" class="w-1/3 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                                    <select id="type" (change)="onPriceAlterSelected($event)" class="w-full md:w-1/3 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                                         <option value="none">None</option>
                                         <option value="price">Price component</option>
                                         <option value="discount">Discount or fee</option>
                                     </select>
                                 </div>
                                 @if(priceComponentSelected){
-                                    <div class="ml-4 mb-4 grid grid-cols-80/20 gap-4">
+                                    <div class="ml-4 mb-4 md:grid md:grid-cols-80/20 gap-4">
                                         <label class="font-bold text-lg col-span-2 dark:text-white">{{ 'CREATE_OFFER._choose_type' | translate }}</label>
                                         <select id="type" (change)="onPriceTypeAlterSelected($event)" class="mb-2 col-span-2 w-1/3 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                             <option value="ONE TIME">ONE TIME</option>
@@ -1228,7 +1235,7 @@
                                 
                                     </div>
                                 } @else if(discountSelected){
-                                    <div class="ml-4 mb-4 grid grid-cols-20/80">
+                                    <div class="ml-4 mb-4 md:grid md:grid-cols-20/80">
                                         <div>
                                             <label class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._choose_type' | translate }}</label>
                                             <select id="type" #discountfee class="shadow bg-white border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
@@ -1379,7 +1386,7 @@
                                 <th scope="col" class="px-6 py-3">
                                     {{ 'OFFERINGS._status' | translate }}
                                 </th>
-                                <th scope="col" class="px-6 py-3">
+                                <th scope="col" class="hidden md:table-cell px-6 py-3">
                                     {{ 'OFFERINGS._role' | translate }}
                                 </th>
                             </tr>
@@ -1400,7 +1407,7 @@
                                         <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{selectedCatalog.lifecycleStatus}}</span>
                                     }
                                 </td>
-                                <td class="px-6 py-4">
+                                <td class="hidden md:table-cell px-6 py-4">
                                     {{selectedCatalog.relatedParty?.at(0)?.role}}
                                 </td>
                             </tr>
@@ -1416,7 +1423,7 @@
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'CREATE_OFFER._name' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._last_update' | translate }}
                                     </th>
                                 </tr>
@@ -1427,7 +1434,7 @@
                                         <td class="px-6 py-4">
                                             {{cat.name}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             {{cat.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                                         </td>
                                     </tr>
@@ -1445,16 +1452,16 @@
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'CREATE_OFFER._name' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._description' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._type' | translate }}
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'CREATE_OFFER._price' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._unit' | translate }}
                                     </th>
                                 </tr>
@@ -1465,16 +1472,16 @@
                                         <td class="px-6 py-4">
                                             {{price.name}}
                                         </td>
-                                        <td class="px-6 py-4 line-clamp-1">
+                                        <td class="hidden md:table-cell px-6 py-4 line-clamp-1">
                                             {{price.description}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             {{price.priceType}}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{price.price?.taxIncludedAmount?.value}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             {{price.price?.taxIncludedAmount?.unit}}
                                         </td>
                                     </tr>
@@ -1492,13 +1499,13 @@
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'CREATE_OFFER._name' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._description' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._threshold' | translate }}
                                     </th>
-                                    <th scope="col" class="px-6 py-3">
+                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
                                         {{ 'CREATE_OFFER._unit' | translate }}
                                     </th>
                                 </tr>
@@ -1509,13 +1516,13 @@
                                         <td class="px-6 py-4">
                                             {{sla.type}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             {{sla.description}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             {{sla.threshold}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4">
                                             {{sla.unitMeasure}}
                                         </td>
                                     </tr>

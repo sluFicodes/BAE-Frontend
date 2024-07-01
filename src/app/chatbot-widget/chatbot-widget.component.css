@@ -21,10 +21,20 @@
 
 /* CHATBOX
 =============== */
-.chatbox {
-    position: fixed;  /* Cambiato da absolute a fixed */
-    bottom: calc(2% + 50px);
-    right: 2%;
+
+@media screen and (max-width: 768px) {
+    .chatbox {
+        position: fixed;  /* Cambiato da absolute a fixed */
+        bottom: 2%;
+        right: 2%;
+    }
+}
+@media screen and (min-width: 768px) {
+    .chatbox {
+        position: fixed;  /* Cambiato da absolute a fixed */
+        bottom: calc(2% + 50px);
+        right: 2%;
+    }
 }
 
 /* CONTENT IS CLOSE */

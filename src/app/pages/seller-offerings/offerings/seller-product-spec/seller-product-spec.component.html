@@ -1,9 +1,9 @@
 
 <div>
     <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-secondary-100 dark:border-gray-800 border-gray-300 border-secondary-50 border flex flex-col shadow-lg">
-      <div class="flex w-full flex-col items-center md:flex-row justify-between">
-        <div class="mb-4 md:mb-0 md:w-1/4 p-8">
-            <h2 class="text-2xl font-bold mb-4 dark:text-white">{{ 'OFFERINGS._prod_spec' | translate }}</h2>  
+      <div class="flex w-full flex-cols items-center md:flex-row justify-between">
+        <div class="mb-4 lg:mb-0 lg:w-1/4 p-8">
+            <h2 class="text-2xl font-bold mb-4 dark:text-white">{{ 'OFFERINGS._prod_spec' | translate }}</h2>            
         </div>
 
         <div class="flex flex-row w-full justify-end">
@@ -20,7 +20,8 @@
                 </div>
               </form>-->
             <button (click)="goToCreate()" type="button" class="ml-2 mr-8 mb-4 text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center align-middle me-2">
-                <p class="pl-2 pr-2">{{ 'OFFERINGS._add_new_prod' | translate }}</p>
+                <p class="hidden lg:block pl-2 pr-2">{{ 'OFFERINGS._add_new_prod' | translate }}</p>
+                <p class="block lg:hidden pl-2 pr-2">Add new product spec</p>
                 <svg class="w-[18px] h-[18px] text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                 </svg>
@@ -45,7 +46,7 @@
             </svg>
             </button>
             
-            <div id="dropdown" class="z-20 hidden w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
+            <div id="dropdown" class="z-20 hidden w-fit md:w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
             <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
                 {{ 'OFFERINGS._state' | translate }}
             </h6>
@@ -140,10 +141,10 @@
                     <th scope="col" class="px-6 py-3">
                         {{ 'OFFERINGS._status' | translate }}
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3 hidden md:table-cell">
                         {{ 'OFFERINGS._type' | translate }}
                     </th>
-                    <th scope="col" class="px-6 py-3">
+                    <th scope="col" class="px-6 py-3 hidden lg:table-cell">
                         {{ 'OFFERINGS._last_update' | translate }}
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -168,14 +169,14 @@
                                 <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
                             }
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4  hidden md:table-cell">
                             @if(prod.isBundle == false){
                                 <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
                             } @else {
                                 <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
                             }
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 hidden lg:table-cell">
                             {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
                         </td>
                         <td class="px-6 py-4">

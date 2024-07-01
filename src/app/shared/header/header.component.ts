@@ -57,6 +57,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   is_logged:boolean=false;
   showLogin:boolean=false;
   loggedAsOrg:boolean=false;
+  isAdmin:boolean;
   loginInfo:any;
   orgs:any[]=[];
   username:string='';
@@ -95,6 +96,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       this.loginInfo=aux;
       this.is_logged=true;
       this.orgs=aux.organizations;
+      console.log('--roles')
+      console.log(aux.roles)
+      for(let i=0; i < aux.roles.length; i++){
+        if(aux.roles[i].name == 'admin'){
+          this.isAdmin=true;
+          this.cdr.detectChanges();
+        }
+      }     
       if(aux.logged_as == aux.id){
         this.username=aux.user;
         this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();
@@ -134,6 +143,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
           this.is_logged=true;
           this.cdr.detectChanges();
           this.orgs=aux.organizations;
+          for(let i=0; i < aux.roles.length; i++){
+            if(aux.roles[i].name == 'admin'){
+              this.isAdmin=true;
+              this.cdr.detectChanges();
+            }
+          }
           if(aux.logged_as == aux.id){
             this.username=aux.user;
             this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();

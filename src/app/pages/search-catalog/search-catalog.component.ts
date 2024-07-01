@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { PriceServiceService } from 'src/app/services/price-service.service';
@@ -35,7 +35,9 @@ export class SearchCatalogComponent implements OnInit{
   loading_more: boolean = false;
   page_check:boolean = true;
   page: number=0;
-  PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;  
+  PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
+  showDrawer:boolean=false;
+  searchEnabled = environment.SEARCH_ENABLED;
 
   async ngOnInit() {
     initFlowbite();
@@ -53,6 +55,14 @@ export class SearchCatalogComponent implements OnInit{
     })
     console.log('Productos:')
     console.log(this.products)
+  }
+
+  @HostListener('document:click')
+  onClick() {
+    if(this.showDrawer==true){
+      this.showDrawer=false;
+      this.cdr.detectChanges();
+    }
   }
 
   goTo(path:string) {
