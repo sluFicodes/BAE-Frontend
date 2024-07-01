@@ -66,7 +66,12 @@ export class BillingAccountFormComponent implements OnInit {
     private accountService: AccountServiceService,
     private eventMessage: EventMessageService
   ) {
-    getLocaleId
+    getLocaleId;
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'ChangedSession') {
+        this.initUserData();
+      }
+    })
   }
 
 
@@ -77,16 +82,25 @@ export class BillingAccountFormComponent implements OnInit {
     } else {
       this.is_create = true;
     }
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix()) - 4) > 0)) {
-      this.partyId = aux.partyId;
-    }
+    this.initUserData();
     if (this.is_create == false) {
       this.setDefaultValues();
     } else {
       this.detectCountry();
     }
 
+  }
+
+  initUserData(){
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
+    if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix()) - 4) > 0)) {
+      if(aux.logged_as==aux.id){
+        this.partyId = aux.partyId;
+      } else {
+        let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
+        this.partyId = loggedOrg.partyId
+      }
+    }
   }
 
   setDefaultValues() {
@@ -173,8 +187,8 @@ export class BillingAccountFormComponent implements OnInit {
           ]
         }],
         relatedParty: [{
-          href: aux.partyId,
-          id: aux.partyId,
+          href: this.partyId,
+          id: this.partyId,
           role: "Owner"
         }],
         state: "Defined"
@@ -262,8 +276,8 @@ export class BillingAccountFormComponent implements OnInit {
             ]
           }],
           relatedParty: [{
-            href: aux.partyId,
-            id: aux.partyId,
+            href: this.partyId,
+            id: this.partyId,
             role: "Owner"
           }],
           state: "Defined"

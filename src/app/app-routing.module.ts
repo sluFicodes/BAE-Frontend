@@ -11,7 +11,7 @@ import {CheckoutComponent} from "./pages/checkout/checkout.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 import { SellerOfferingsComponent } from "./pages/seller-offerings/seller-offerings.component";
 import { AdminComponent } from "./pages/admin/admin.component";
-
+import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -42,13 +42,16 @@ const routes: Routes = [
   component: ProductInventoryComponent
   },
   { path: 'profile',
-  component: UserProfileComponent
+  component: UserProfileComponent,
+  canActivate: [AuthGuard], data: { roles: ['individual','orgAdmin'] }
   },
   { path: 'my-offerings',
-  component: SellerOfferingsComponent
+  component: SellerOfferingsComponent,
+  canActivate: [AuthGuard], data: { roles: ['seller'] }
   },
   { path: 'admin',
-  component: AdminComponent
+  component: AdminComponent,
+  canActivate: [AuthGuard], data: { roles: ['admin'] }
   }
 ]
 
