@@ -29,11 +29,11 @@
     <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
         <h2 class="text-3xl font-bold text-primary-100 ml-4 dark:text-white">{{ 'CREATE_PROD_SPEC._new' | translate }}</h2>
         <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
-        <div class="md:grid md:grid-cols-20/80">
+        <div class="md:grid md:grid-cols-25/75 xl:grid-cols-20/80">
             <div class="flex sm:flex-row md:flex-col md:mr-4 overflow-x-auto max-w-[calc(100vw-5rem)]">
                 <h2 class="hidden md:block text-xl font-bold text-black mb-4 dark:text-white">{{ 'CREATE_PROD_SPEC._steps' | translate }}</h2>
                 <button id="general-info" (click)="toggleGeneral()" [disabled]="!generalDone"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-primary-100 dark:text-primary-50 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-primary-100 dark:text-primary-50 justify-items-center md:justify-items-start">
                     <span id="general-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-primary-100 dark:border-primary-50 rounded-full shrink-0">
                         1
                     </span>
@@ -44,7 +44,7 @@
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="bundle-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         2
                     </span>
@@ -55,7 +55,7 @@
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="compliance" (click)="toggleCompliance()" [disabled]="!complianceDone"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="compliance-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         3
                     </span>
@@ -66,7 +66,7 @@
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="chars" (click)="toggleChars()" [disabled]="!charsDone"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="chars-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         4
                     </span>
@@ -77,7 +77,7 @@
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="resource" (click)="toggleResource()" [disabled]="!resourceDone"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="resource-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         5
                     </span>
@@ -88,7 +88,7 @@
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="service" (click)="toggleService()" [disabled]="!serviceDone"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="service-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         6
                     </span>
@@ -99,7 +99,7 @@
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="attach" (click)="toggleAttach()" [disabled]="!attachDone"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="attach-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         7
                     </span>
@@ -110,7 +110,7 @@
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="relationships" (click)="toggleRelationship()" [disabled]="!relationshipDone"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="relationships-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         8
                     </span>
@@ -121,7 +121,7 @@
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="summary" [disabled]="true"
-                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-40/60 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="summary-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         9
                     </span>
