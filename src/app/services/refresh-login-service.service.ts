@@ -56,8 +56,18 @@ export class RefreshLoginServiceService {
     } else {
       this.stopInterval();
       this.localStorage.setObject('login_items',{});
-      this.router.navigate(['/dashboard']);
-      this.api.logout();
+      this.api.logout().catch((err) => {
+        console.log('Something happened')
+        console.log(err)
+      })
+
+      this.router.navigate(['/dashboard']).then(() => {
+        console.log('LOGOUT MADE')
+        window.location.reload()
+      }).catch((err) => {
+        console.log('Something happened router')
+        console.log(err)
+      })
     }
     });
   }

@@ -55,7 +55,13 @@ export class AppComponent implements OnInit {
       if(ev.type === 'LoginProcess') {
         this.refreshApi.stopInterval();
         let info = ev.value as LoginInfo;
+
+        console.log('STARTING INTERVAL')
+        console.log(info.expire)
+        console.log(((info.expire - moment().unix())-4))
+
         this.refreshApi.startInterval(((info.expire - moment().unix())-4)*1000, ev);
+
         //this.refreshApi.startInterval(3000, ev.value);
       }
     })
