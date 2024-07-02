@@ -486,20 +486,20 @@
                                             </td>
                                             <td class="px-6 py-4">
                                                 @if(prod.lifecycleStatus == 'Active'){
-                                                    <span class="bg-blue-100 bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
+                                                    <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{prod.lifecycleStatus}}</span>
                                                 } @else if(prod.lifecycleStatus == 'Launched') {
-                                                    <span class="bg-blue-100 bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{prod.lifecycleStatus}}</span>
+                                                    <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{prod.lifecycleStatus}}</span>
                                                 } @else if(prod.lifecycleStatus == 'Retired') {
-                                                    <span class="bg-blue-100 bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{prod.lifecycleStatus}}</span>
+                                                    <span class="bg-blue-100 dark:bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{prod.lifecycleStatus}}</span>
                                                 } @else if(prod.lifecycleStatus == 'Obsolete') {
-                                                    <span class="bg-blue-100 bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
+                                                    <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{prod.lifecycleStatus}}</span>
                                                 }
                                             </td>
                                             <td class="hidden md:table-cell px-6 py-4">
                                                 @if(prod.isBundle == false){
-                                                    <span class="bg-blue-100 bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
+                                                    <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{ 'OFFERINGS._simple' | translate }}</span>
                                                 } @else {
-                                                    <span class="bg-blue-100 bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
+                                                    <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'OFFERINGS._bundle' | translate }}</span>
                                                 }
                                             </td>
                                             <td class="hidden md:table-cell px-6 py-4">
@@ -1070,7 +1070,7 @@
                 </div>-->
                 @if(!showCreatePrice){
                     <div class="flex w-full justify-items-center justify-center ml-4">
-                        <button type="button" (click)="showCreatePrice=!showCreatePrice" [disabled]="checkCustom()" [ngClass]="checkCustom() ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        <button type="button" (click)="showNewPrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                             {{ 'UPDATE_OFFER._new_price' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
@@ -1104,11 +1104,13 @@
                             <div>
                                 <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._choose_type' | translate }}</label>
                                 <select id="type" (change)="onPriceTypeSelected($event)" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                    @if(allowCustom){
+                                        <option value="CUSTOM">CUSTOM</option>  
+                                    }
+                                    @if(allowOthers){
                                     <option value="ONE TIME">ONE TIME</option>
                                     <option value="RECURRING">RECURRING</option>
                                     <option value="USAGE">USAGE</option>
-                                    @if(createdPrices.length==0){
-                                        <option value="CUSTOM">CUSTOM</option>  
                                     }           
                                 </select>
                                 @if(recurringSelected){
@@ -1218,7 +1220,7 @@
                                                 <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900" [data]="priceDescription"></markdown>
                                             
                                         }@else{
-                                            <textarea id="editor" formControlName="description" rows="8" cclass="block w-full px-0 text-sm text-gray-800 border-0 dark:text-gray-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>
+                                            <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 border-0 dark:text-gray-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>
                                         }
                                         @if(showEmoji){
                                             <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
@@ -1619,7 +1621,7 @@
                         </select>
                     } @else if(usageSelected){
                         <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._unit' | translate }}</label>
-                        <input #usageUnitUpdate type="text" value="{{priceToUpdate.unitOfMeasure.units}}"
+                        <input #usageUnitUpdate type="text" value="{{priceToUpdate?.unitOfMeasure?.units}}"
                         class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     }
                 </div>

@@ -52,6 +52,22 @@ export class SearchComponent implements OnInit {
         this.updateProducts();
       }
     })
+
+    let input = document.querySelector('[type=search]')
+    if(input!=undefined){
+      input.addEventListener('input', e => {
+        // Easy way to get the value of the element who trigger the current `e` event
+        console.log(`Input updated`)
+        if(this.searchField.value==''){
+          this.loading=true;
+          this.products=[];
+          this.page=0;
+          this.keywords=undefined;
+          let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+          this.getProducts(filters);
+        }
+      });
+    }
   }
 
   @HostListener('document:click')
@@ -247,7 +263,7 @@ export class SearchComponent implements OnInit {
       this.keywords=this.searchField.value;
       let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
       this.getProducts(filters);
-    }    
+    }
   }
 
 }
