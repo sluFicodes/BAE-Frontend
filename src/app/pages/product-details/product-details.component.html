@@ -147,7 +147,7 @@
 
             <div id="details-container">            
                 <h2 #detailsContent class="text-4xl font-extrabold text-primary-100 dark:text-primary-50 text-center pb-4">Description</h2>
-                <markdown class="dark:text-gray-200" [data]="prodSpec?.description"></markdown>
+                <markdown class="dark:text-gray-200" [data]="prodSpec.description"></markdown>
                 @if(serviceSpecs.length > 0){
                     <div class="pb-2">                
                         <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'PRODUCT_DETAILS._service_spec' | translate }}:</h5>

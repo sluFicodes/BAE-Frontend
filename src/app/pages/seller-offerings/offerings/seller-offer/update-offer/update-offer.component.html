@@ -1602,12 +1602,14 @@
                 <div>
                     <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._choose_type' | translate }}</label>
                     <select id="type" (change)="onPriceTypeSelected($event)" value="{{selectedPriceType}}" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        @if(allowCustom){
+                            <option value="CUSTOM">CUSTOM</option>  
+                        }
+                        @if(allowOthers){
                         <option value="ONE TIME">ONE TIME</option>
                         <option value="RECURRING">RECURRING</option>
                         <option value="USAGE">USAGE</option>
-                        @if(createdPrices.length==1 && createdPrices[0].priceType=='custom'){
-                            <option selected value="CUSTOM">CUSTOM</option>
-                        }                        
+                        }                       
                     </select>
                     @if(recurringSelected){
                         <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._choose_period' | translate }}</label>
