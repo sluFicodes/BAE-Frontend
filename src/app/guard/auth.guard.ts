@@ -19,6 +19,7 @@ export class AuthGuard implements CanActivate {
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     const requiredRoles = route.data['roles'] as Array<string>;
     let userRoles: string | any[] = [];
+
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       if(aux.logged_as == aux.id){
         userRoles.push('individual')
@@ -31,11 +32,12 @@ export class AuthGuard implements CanActivate {
           userRoles.push(loggedOrg.roles[i].name)
         }
       }
-    } else {      
+    } else {
       this.router.navigate(['/dashboard']);
       return false;
     }
-    const hasRequiredRoles = requiredRoles.every(role => userRoles.includes(role));
+
+    const hasRequiredRoles = requiredRoles.some(role => userRoles.includes(role));
 
     if (!hasRequiredRoles) {
       this.router.navigate(['/dashboard']);  // Navigate to an access denied page or login page
