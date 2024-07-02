@@ -4,7 +4,7 @@ import { ApiServiceService } from 'src/app/services/product-service.service';
 import {components} from "../../models/product-catalog";
 import { initFlowbite } from 'flowbite';
 import { PriceServiceService } from 'src/app/services/price-service.service';
-import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved, faAtom} from "@fortawesome/pro-solid-svg-icons";
+import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved, faAtom, faDownload} from "@fortawesome/pro-solid-svg-icons";
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
@@ -71,6 +71,7 @@ export class ProductDetailsComponent implements OnInit {
   protected readonly faBook = faBook;
   protected readonly faShieldHalved = faShieldHalved;
   protected readonly faAtom = faAtom;
+  protected readonly faDownload = faDownload;
 
   stepsElements:string[]=['step-chars','step-price','step-terms','step-checkout'];
   stepsText:string[]=['text-chars','text-price','text-terms','text-checkout'];
@@ -618,6 +619,10 @@ export class ProductDetailsComponent implements OnInit {
     }
     this.showTermsMore=!this.showTermsMore;
     
+  }
+
+  goToLink(url: any){
+    window.open(url, "_blank");
   }
 
 }

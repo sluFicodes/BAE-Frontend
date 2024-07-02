@@ -670,8 +670,10 @@ export class UpdateOfferComponent implements OnInit{
 
   updatePrice(){
     if(this.priceForm.value.name){
+      console.log(this.priceToUpdate.id)
       let priceToCreate: ProductOfferingPriceRefOrValue = {
-        id: uuidv4(),
+        //id: uuidv4(),
+        id: this.priceToUpdate.id,
         name: this.priceForm.value.name,
         description: this.priceForm.value.description ? this.priceForm.value.description : '',
         lifecycleStatus: "Active",    
@@ -1141,9 +1143,12 @@ export class UpdateOfferComponent implements OnInit{
         this.saveOfferInfo();
       } else {
         //TODO CAMBIAR A UPDATE O SOLO POST SI ES UN PRECIO NUEVO
+        console.log(this.oldPrices)
+        console.log(this.createdPrices)
         for(let i=0; i < this.createdPrices.length; i++){
           const index = this.oldPrices.findIndex(item => item.id === this.createdPrices[i].id);
           if (index == -1) {
+            console.log('precio nuevo')
             //Crear el precio porque es nuevo
             let priceToCreate: ProductOfferingPrice = {
               description: this.createdPrices[i].description,
@@ -1163,7 +1168,7 @@ export class UpdateOfferComponent implements OnInit{
               console.log('usage')
               priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
             }
-            await this.api.postOfferingPrice({priceToCreate}).subscribe({
+            await this.api.postOfferingPrice(priceToCreate).subscribe({
               next: data => {
                 console.log('precio')
                 console.log(data)
@@ -1182,10 +1187,12 @@ export class UpdateOfferComponent implements OnInit{
               }
             });
           } else {
+            console.log('precio existente -update')
             //Ver si se ha modificado y modificarlo si es necesario
             if(this.oldPrices[index]!=this.createdPrices[i]){
               console.log('diferentes')
               let priceToUpdate: ProductOfferingPrice = {
+                id: this.createdPrices[i].id,
                 description: this.createdPrices[i].description,
                 lifecycleStatus: this.createdPrices[i].lifecycleStatus,
                 name: this.createdPrices[i].name,
@@ -1203,7 +1210,7 @@ export class UpdateOfferComponent implements OnInit{
                 console.log('usage')
                 priceToUpdate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
               }
-              await this.api.updateOfferingPrice({priceToUpdate}).subscribe({
+              await this.api.updateOfferingPrice(priceToUpdate).subscribe({
                 next: data => {
                   console.log('precio')
                   console.log(data)
