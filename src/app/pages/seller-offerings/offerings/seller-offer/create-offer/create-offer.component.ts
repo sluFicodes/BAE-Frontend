@@ -1120,7 +1120,12 @@ export class CreateOfferComponent implements OnInit {
           },
           error: error => {
             console.error('There was an error while creating offers price!', error);
-            this.errorMessage='There was an error while creating offers price!';
+            if(error.error.error){
+              console.log(error)
+              this.errorMessage='Error: '+error.error.error;
+            } else {
+              this.errorMessage='There was an error while creating offers price!';
+            }
             this.showError=true;
             setTimeout(() => {
               this.showError = false;
@@ -1206,7 +1211,12 @@ export class CreateOfferComponent implements OnInit {
       },
       error: error => {
         console.error('There was an error while creating the offer!', error);
-        this.errorMessage='There was an error while creating the offer!';
+        if(error.error.error){
+          console.log(error)
+          this.errorMessage='Error: '+error.error.error;
+        } else {
+          this.errorMessage='There was an error while creating the offer!';
+        }
         this.showError=true;
         setTimeout(() => {
           this.showError = false;

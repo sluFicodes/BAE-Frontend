@@ -229,8 +229,13 @@ export class CheckoutComponent implements OnInit {
           error: error => {
             this.loading_purchase=false;
             this.cdr.detectChanges();
-            console.error('There was an error while updating!', error);
-            this.errorMessage='There was an error while clearing the cart!';
+            console.error('There was an error while updating!', error.error);
+            if(error.error.error){
+              console.log(error)
+              this.errorMessage='Error: '+error.error.error;
+            } else {
+              this.errorMessage='There was an error while purchasing!';
+            }            
             this.showError=true;
             setTimeout(() => {
               this.showError = false;
@@ -244,7 +249,12 @@ export class CheckoutComponent implements OnInit {
         this.loading_purchase=false;
         this.cdr.detectChanges();
         console.error('There was an error during purchase!', error);
-        this.errorMessage='There was an error during purchase!';
+        if(error.error.error){
+          console.log(error)
+          this.errorMessage='Error: '+error.error.error;
+        } else {
+          this.errorMessage='There was an error while purchasing!';
+        }
         this.showError=true;
         setTimeout(() => {
           this.showError = false;

@@ -278,7 +278,12 @@ export class UpdateServiceSpecComponent implements OnInit {
       },
       error: error => {
         console.error('There was an error while updating!', error);
-        this.errorMessage='There was an error while updating the service!';
+        if(error.error.error){
+          console.log(error)
+          this.errorMessage='Error: '+error.error.error;
+        } else {
+          this.errorMessage='There was an error while updating the service!';
+        }
         this.showError=true;
         setTimeout(() => {
           this.showError = false;

@@ -45,12 +45,12 @@
           </form>
         }
       </section>
-        <div class="md:pl-5 grid grid-cols-1 place-items-center lg:grid-cols-2 xl:grid-cols-3 h-full">
+        <div class="md:pl-5 grid grid-cols-1 place-items-center lg:grid-cols-2 xl:grid-cols-3">
           @for (prod of products; track prod.id) {
             <bae-off-card [productOff]=prod class="w-full h-full p-2"></bae-off-card>
           } @empty {
             <div class="min-h-19 dark:text-gray-600 text-center">No se han encontrado ofertas.</div>
-          } 
+          }
         </div>
     </div>
 
