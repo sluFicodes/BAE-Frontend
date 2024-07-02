@@ -614,6 +614,7 @@ export class UpdateOfferComponent implements OnInit{
   showUpdatePrice(price:any){
     this.priceToUpdate=price;
     console.log(this.priceToUpdate)
+    console.log(this.priceToUpdate)
     this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
     this.priceForm.controls['description'].setValue(this.priceToUpdate.description);
     if(this.priceToUpdate.priceType!='custom'){
@@ -645,11 +646,31 @@ export class UpdateOfferComponent implements OnInit{
       //document.getElementById('usageUnitUpdate').value=this.priceToUpdate.unitOfMeasure.units;
       this.cdr.detectChanges();
     } else {
+      console.log('custom')
       this.selectedPriceType='CUSTOM';
       this.oneTimeSelected=false;
       this.recurringSelected=false;
       this.usageSelected=false;
       this.customSelected=true;
+    }
+    if(this.createdPrices.length==0){
+      this.allowCustom=true;
+      this.allowOthers=true;
+    } else {
+      let check=false;
+      for(let i=0;i<this.createdPrices.length;i++){
+        console.log(this.createdPrices[i].priceType)
+        if(this.createdPrices[i].priceType!='custom'){
+          check=true;
+        }
+      }
+      if(check==true){
+        this.allowCustom=false;
+        this.allowOthers=true;
+      } else {
+        this.allowCustom=true;
+        this.allowOthers=false;  
+      }
     }
     this.cdr.detectChanges();
     this.editPrice=true;
@@ -695,7 +716,7 @@ export class UpdateOfferComponent implements OnInit{
       const index = this.createdPrices.findIndex(item => item.id === this.priceToUpdate.id);
       if (index !== -1) {
         this.createdPrices[index]=priceToCreate;
-      } 
+      }
       console.log('--- price ---')
       console.log(this.createdPrices)      
     }

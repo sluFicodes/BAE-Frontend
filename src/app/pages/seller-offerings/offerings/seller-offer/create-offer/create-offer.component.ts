@@ -563,6 +563,25 @@ export class CreateOfferComponent implements OnInit {
       this.usageSelected=false;
       this.customSelected=true;
     }
+    if(this.createdPrices.length==0){
+      this.allowCustom=true;
+      this.allowOthers=true;
+    } else {
+      let check=false;
+      for(let i=0;i<this.createdPrices.length;i++){
+        console.log(this.createdPrices[i].priceType)
+        if(this.createdPrices[i].priceType!='custom'){
+          check=true;
+        }
+      }
+      if(check==true){
+        this.allowCustom=false;
+        this.allowOthers=true;
+      } else {
+        this.allowCustom=true;
+        this.allowOthers=false;  
+      }
+    }
     this.cdr.detectChanges();
     this.editPrice=true;
   }
