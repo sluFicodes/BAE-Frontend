@@ -130,7 +130,7 @@ export class UpdateOfferComponent implements OnInit{
   //PRICE
   editPrice:boolean=false;
   priceToUpdate:any;
-  selectedPriceType:any='ONE TIME';
+  selectedPriceType:any='CUSTOM';
   currencies=currencies;
   createdPrices:ProductOfferingPriceRefOrValue[]=[];
   oldPrices:any[]=[];
@@ -138,12 +138,12 @@ export class UpdateOfferComponent implements OnInit{
   priceDescription:string='';
   showCreatePrice:boolean=false;
   toggleOpenPrice:boolean=false;
-  oneTimeSelected:boolean=true;
+  oneTimeSelected:boolean=false;
   recurringSelected:boolean=false;
   selectedPeriod:any='DAILY';
   selectedPeriodAlter:any='DAILY';
   usageSelected:boolean=false;
-  customSelected:boolean=false;
+  customSelected:boolean=true;
   priceForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     price: new FormControl('', [Validators.required]),
@@ -159,6 +159,8 @@ export class UpdateOfferComponent implements OnInit{
   priceComponentSelected:boolean=false;
   discountSelected:boolean=false;
   noAlterSelected:boolean=true;
+  allowCustom:boolean=true;
+  allowOthers:boolean=true;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -213,6 +215,7 @@ export class UpdateOfferComponent implements OnInit{
     console.log(this.offer)
     this.initPartyInfo();
     this.populateOfferInfo();
+    this.clearPriceFormInfo();
   }
 
   initPartyInfo(){
@@ -331,6 +334,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   toggleBundle(){
@@ -345,6 +349,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   toggleBundleCheck(){
@@ -375,6 +380,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   toggleCatalogs(){
@@ -393,6 +399,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   toggleCategories(){
@@ -412,6 +419,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   toggleLicense(){
@@ -426,6 +434,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   toggleSLA(){
@@ -440,6 +449,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=true;
     this.showPrice=false;
     this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   togglePrice(){    
@@ -454,6 +464,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=true;
     this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   saveLicense(){
@@ -596,32 +607,8 @@ export class UpdateOfferComponent implements OnInit{
       console.log('--- price ---')
       console.log(this.createdPrices)      
     }
-    this.priceAlterForm.reset();
-    this.priceAlterForm.controls['condition'].setValue('');
-    this.priceAlterForm.controls['price'].setValue('');
-    this.priceForm.reset();
-    this.priceForm.controls['name'].setValue('');
-    this.priceForm.controls['price'].setValue('');
-    // Explicitly mark all controls as pristine and untouched
-    Object.keys(this.priceForm.controls).forEach(key => {
-      this.priceForm.get(key)?.markAsPristine();
-      this.priceForm.get(key)?.markAsUntouched();
-      this.priceForm.get(key)?.updateValueAndValidity();
-    });
 
-    this.selectedPeriod='DAILY';
-    this.selectedPeriodAlter='DAILY';
-    this.selectedPriceUnit=currencies[0].code;
-    this.priceTypeAlter='ONE TIME';
-    this.priceComponentSelected=false;
-    this.discountSelected=false;
-    this.noAlterSelected=true;
-    this.showCreatePrice=false;    
-    this.usageSelected=false;
-    this.recurringSelected=false;
-    this.customSelected=false;
-    this.oneTimeSelected=true;
-    this.showPreview=false;
+    this.clearPriceFormInfo();
   }
 
   showUpdatePrice(price:any){
@@ -719,17 +706,7 @@ export class UpdateOfferComponent implements OnInit{
     this.priceForm.reset();
     this.priceForm.controls['name'].setValue('');
     this.priceForm.controls['price'].setValue('');
-    this.selectedPeriod='DAILY';
-    this.selectedPeriodAlter='DAILY';
-    this.selectedPriceUnit=currencies[0].code;
-    this.priceTypeAlter='ONE TIME';
-    this.priceComponentSelected=false;
-    this.discountSelected=false;
-    this.noAlterSelected=true;
-    this.usageSelected=false;
-    this.recurringSelected=false;
-    this.customSelected=false;
-    this.oneTimeSelected=true;
+    this.clearPriceFormInfo();
     this.editPrice=false;
   }
 
@@ -738,14 +715,84 @@ export class UpdateOfferComponent implements OnInit{
     if (index !== -1) {
       this.createdPrices.splice(index, 1);
     }
+    this.checkCustom();
+    this.clearPriceFormInfo();
+  }
+
+  showNewPrice(){
+    this.checkCustom();
+    this.showCreatePrice=!this.showCreatePrice;    
   }
 
   checkCustom(){
-    if(this.createdPrices.length==1 && this.createdPrices[0].priceType=='custom'){
-      return true
+    if(this.createdPrices.length==0){
+      this.allowCustom=true;
+      this.allowOthers=true;
     } else {
-      return false
+      let check=false;
+      for(let i=0;i<this.createdPrices.length;i++){
+        console.log(this.createdPrices[i].priceType)
+        if(this.createdPrices[i].priceType!='custom'){
+          check=true;
+        }
+      }
+      if(check==true){
+        this.allowCustom=false;
+        this.allowOthers=true;
+      } else {
+        this.allowCustom=true;
+        this.allowOthers=false;  
+      }
     }
+    this.clearPriceFormInfo();
+    console.log(this.customSelected)
+    this.cdr.detectChanges();
+  }
+
+  clearPriceFormInfo(){
+    console.log('clear')
+    if(this.createdPrices.length==0){
+      this.customSelected=true;
+      this.oneTimeSelected=false;
+    } else {
+      let check=false;
+      for(let i=0;i<this.createdPrices.length;i++){
+        if(this.createdPrices[i].priceType!='custom'){
+          check=true;
+        }
+      }
+      if(check==true){
+        this.oneTimeSelected=true;
+        this.customSelected=false;
+      } else {
+        this.oneTimeSelected=false;
+        this.customSelected=true;        
+      }
+    }
+    this.selectedPeriod='DAILY';
+    this.selectedPeriodAlter='DAILY';
+    this.selectedPriceUnit=currencies[0].code;
+    this.priceTypeAlter='ONE TIME';
+    this.priceComponentSelected=false;
+    this.discountSelected=false;
+    this.noAlterSelected=true;
+    this.showCreatePrice=false;    
+    this.usageSelected=false;
+    this.recurringSelected=false;    
+    this.showPreview=false;
+
+    this.priceAlterForm.reset();
+    this.priceAlterForm.controls['condition'].setValue('');
+    this.priceAlterForm.controls['price'].setValue('');
+    this.priceForm.reset();
+    this.priceForm.controls['name'].setValue('');
+    this.priceForm.controls['price'].setValue('');
+    // Explicitly mark all controls as pristine and untouched
+    Object.keys(this.priceForm.controls).forEach(key => {
+      this.priceForm.get(key)?.markAsPristine();
+      this.priceForm.get(key)?.markAsUntouched();
+      this.priceForm.get(key)?.updateValueAndValidity();
+    });
   }
 
   onSLAMetricChange(event: any) {
@@ -1079,25 +1126,7 @@ export class UpdateOfferComponent implements OnInit{
   }
 
   showFinish(){
-    this.priceAlterForm.reset();
-    this.priceAlterForm.controls['condition'].setValue('');
-    this.priceAlterForm.controls['price'].setValue('');
-    this.priceForm.reset();
-    this.priceForm.controls['name'].setValue('');
-    this.priceForm.controls['price'].setValue('');
-
-    this.selectedPeriod='DAILY';
-    this.selectedPeriodAlter='DAILY';
-    this.selectedPriceUnit=currencies[0].code;
-    this.priceTypeAlter='ONE TIME';
-    this.priceComponentSelected=false;
-    this.discountSelected=false;
-    this.noAlterSelected=true;
-    this.showCreatePrice=false;    
-    this.usageSelected=false;
-    this.recurringSelected=false;
-    this.customSelected=false;
-    this.oneTimeSelected=true;
+    this.clearPriceFormInfo();
     this.saveLicense();
     if(this.generalForm.value.name && this.generalForm.value.version){
       this.offerToUpdate={

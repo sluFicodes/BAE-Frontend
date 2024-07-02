@@ -57,6 +57,7 @@ export class ProductDetailsComponent implements OnInit {
   selected_chars:productSpecCharacteristicValueCart[]=[];
   toastVisibility: boolean = false;
   lastAddedProd:any | undefined;
+  checkCustom:boolean=false;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -188,6 +189,10 @@ export class ProductDetailsComponent implements OnInit {
           for(let j=0; j < prodPrices.length; j++){
             this.api.getProductPrice(prodPrices[j].id).then(price => {
               prices.push(price);
+              console.log(price)
+              if(price.priceType == 'custom'){
+                this.checkCustom=true;
+              }
             })
           }
         }
