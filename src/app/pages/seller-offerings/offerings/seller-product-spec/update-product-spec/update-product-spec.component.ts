@@ -564,7 +564,12 @@ export class UpdateProductSpecComponent implements OnInit{
                   },
                   error: error => {
                       console.error('There was an error while uploading file!', error);
-                      this.errorMessage='There was an error while uploading the file!';
+                      if(error.error.error){
+                        console.log(error)
+                        this.errorMessage='Error: '+error.error.error;
+                      } else {
+                        this.errorMessage='There was an error while uploading the file!';
+                      }
                       this.showError=true;
                       setTimeout(() => {
                         this.showError = false;
@@ -594,7 +599,12 @@ export class UpdateProductSpecComponent implements OnInit{
                   },
                   error: error => {
                       console.error('There was an error while uploading file!', error);
-                      this.errorMessage='There was an error while uploading the file!';
+                      if(error.error.error){
+                        console.log(error)
+                        this.errorMessage='Error: '+error.error.error;
+                      } else {
+                        this.errorMessage='There was an error while uploading the file!';
+                      }
                       this.showError=true;
                       setTimeout(() => {
                         this.showError = false;
@@ -1194,7 +1204,12 @@ export class UpdateProductSpecComponent implements OnInit{
       },
       error: error => {
         console.error('There was an error while updating!', error);
-        this.errorMessage='There was an error while uploading the product!';
+        if(error.error.error){
+          console.log(error)
+          this.errorMessage='Error: '+error.error.error;
+        } else {
+          this.errorMessage='There was an error while uploading the product!';
+        }
         this.showError=true;
         setTimeout(() => {
           this.showError = false;

@@ -398,7 +398,12 @@ export class ProductDetailsComponent implements OnInit {
         },
         error: error => {
             console.error('There was an error while updating!', error);
-            this.errorMessage='There was an error while adding item to the cart!';
+            if(error.error.error){
+              console.log(error)
+              this.errorMessage='Error: '+error.error.error;
+            } else {
+              this.errorMessage='There was an error while adding item to the cart!';
+            }
             this.showError=true;
             setTimeout(() => {
               this.showError = false;
