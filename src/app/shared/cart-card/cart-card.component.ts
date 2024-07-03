@@ -58,11 +58,13 @@ export class CartCardComponent implements OnInit {
 
   toggleCartSelection(){
     console.log('Add to cart...')
+    console.log(this.productOff)
     if (this.productOff?.productOfferingPrice != undefined){
       if(this.productOff?.productOfferingPrice.length > 1){
         this.check_prices=true;
         this.selected_price=this.productOff?.productOfferingPrice[this.productOff?.productOfferingPrice.length-1]
-      } else {
+      } else if(this.productOff?.productOfferingPrice.length == 1){
+        this.check_prices=true;
         this.selected_price=this.productOff?.productOfferingPrice[0]
       }
 
@@ -70,11 +72,15 @@ export class CartCardComponent implements OnInit {
     }
 
     if(this.productOff?.productOfferingTerm != undefined){
-      if(this.productOff.productOfferingTerm.length == 1 && this.productOff.productOfferingTerm[0].name == undefined){
+      console.log('terms')
+      console.log(this.productOff?.productOfferingTerm)
+      this.check_terms=true;
+      this.cdr.detectChanges();
+      /*if(this.productOff.productOfferingTerm.length == 1 && this.productOff.productOfferingTerm[0].name == undefined){
         this.check_terms=false;
       } else {
         this.check_terms=true;
-      }
+      }*/
     }
 
     if(this.prodSpec.productSpecCharacteristic != undefined){

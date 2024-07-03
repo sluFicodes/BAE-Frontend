@@ -80,7 +80,7 @@
   <div id="details-modal" [ngClass]="showModal ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full rounded-lg shadow-2xl">
     <div class="relative w-full max-w-7xl max-h-full rounded-t-lg">
         <!-- Modal content -->
-        <div class="relative sm:m-8 bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom rounded-lg" (click)="$event.stopPropagation();">
+        <div class="flex relative sm:m-8 bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom rounded-lg" (click)="$event.stopPropagation();">
             <!--
             <div class="flex items-center justify-between pr-2 pt-2 bg-secondary-50 rounded-t-lg dark:bg-white dark:border-gray-700 border-secondary-50">
               <button (click)="hideModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="details-modal">
@@ -179,7 +179,7 @@
               </div>
             </div>
             <hr class="h-px bg-gray-200 border-0 dark:bg-gray-700">
-            <div class="flex">
+            <div class="flex justify-end align-bottom">
               @if(check_logged){
               <button (click)="toggleCartSelection();$event.stopPropagation();" type="button" class="m-4 w-fit flex items-center justify-start text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg class="w-3.5 h-3.5 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 21">
