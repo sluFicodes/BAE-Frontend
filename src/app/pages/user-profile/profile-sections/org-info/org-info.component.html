@@ -16,6 +16,162 @@
             class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
         </form>
        
+        <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">Contact information</h2>
+        <hr class="h-px mr-4 ml-4 bg-primary-100 dark:bg-white border-0">
+        <div class="m-4 relative overflow-x-auto shadow-md sm:rounded-lg">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Medium type
+                        </th>
+                        <th scope="col" class="px-6 py-3 hidden md:table-cell">
+                            Info
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(medium of contactmediums; track medium) {
+                        <tr class="border-b hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-secondary-200">
+                            <td class="px-6 py-4">
+                                {{medium.mediumType}}
+                            </td>
+                            <td class="px-6 py-4 hidden md:table-cell">
+                                @if(medium.mediumType == 'Email'){
+                                    {{medium.characteristic[0].emailAddress}}
+                                } @else if(medium.mediumType == 'PostalAddress') {
+                                    {{medium.characteristic[0].street1}}, {{medium.characteristic[0].postCode}} ({{medium.characteristic[0].city}}) {{medium.characteristic[0].stateOrProvince}}
+                                } @else {
+                                    {{medium.characteristic[0].phoneNumber}}
+                                }                                
+                            </td> 
+                            <td class="px-6 py-4 inline-flex">
+                                <!--<button type="button" class="text-white bg-primary-100 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 lg:p-2.5 text-center inline-flex items-center me-2">
+                                    <svg class="w-[18px] h-[18px] text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M14 4.182A4.136 4.136 0 0 1 16.9 3c1.087 0 2.13.425 2.899 1.182A4.01 4.01 0 0 1 21 7.037c0 1.068-.43 2.092-1.194 2.849L18.5 11.214l-5.8-5.71 1.287-1.31.012-.012Zm-2.717 2.763L6.186 12.13l2.175 2.141 5.063-5.218-2.141-2.108Zm-6.25 6.886-1.98 5.849a.992.992 0 0 0 .245 1.026 1.03 1.03 0 0 0 1.043.242L10.282 19l-5.25-5.168Zm6.954 4.01 5.096-5.186-2.218-2.183-5.063 5.218 2.185 2.15Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>-->
+                                <button type="button" (click)="removeMedium(medium)" class="text-white bg-red-800 hover:bg-red-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 lg:p-2.5 text-center inline-flex items-center me-2">
+                                    <svg class="w-[18px] h-[18px] text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                        <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+                                        </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    } @empty {
+                        <div class="flex justify-center w-full m-4">
+                            <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50 dark:bg-secondary-200 dark:text-primary-50" role="alert">
+                              <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                              </svg>
+                              <div>
+                                  {{ 'PROFILE._no_mediums' | translate }}
+                              </div>
+                            </div>
+                        </div>                          
+                    }
+                </tbody>
+            </table>
+        </div>
+        <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">Add a new contact medium</h2>
+        <hr class="h-px mr-4 ml-4 bg-primary-100 dark:bg-white border-0">
+        <div class="mr-8">
+            <select id="type" (change)="onTypeChange($event)"
+            class="m-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full">
+                <option value="email">Email</option>
+                <option value="address">Postal Address</option>
+                <option value="phone">Phone Number</option>
+            </select>
+        </div>
+
+        <form class="grid h-full grid-cols-2 gap-5 m-4" [formGroup]="mediumForm">
+            @if(emailSelected){
+                <div class="col-span-2">
+                    <label class="font-bold text-lg dark:text-white">Email</label>
+                    <input formControlName="email" type="text" id="prod-name"
+                    [ngClass]="mediumForm.get('email')?.invalid == true && mediumForm.value.email!='' ? 'border-red-600' : 'border-gray-300'"
+                    class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                    
+                </div>
+            } @else if(addressSelected){
+                <div>
+                    <label for="address.country" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._country' | translate }}</label>
+                    <input id="address.country" formControlName="country" name="address.country" type="text"
+                    class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                </div>
+                <div>
+                    <label for="address.city" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._city' | translate }}</label>
+                    <input id="address.city" formControlName="city" name="address.city" type="text"
+                    class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                </div>
+                <div>
+                    <label for="address.state" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._state' | translate }}</label>
+                    <input id="address.state" formControlName="stateOrProvince" name="address.state" type="text"
+                    class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                </div>
+                <div>
+                    <label for="address.zip" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._post_code' | translate }}</label>
+                    <input id="address.zip" formControlName="postCode" name="address.zip" type="text"
+                    class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                </div>
+                <div class="col-span-2">
+                    <label for="address.street_address" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._street' | translate }}</label>
+                    <textarea id="address.street_address" formControlName="street" name="address.street_address"
+                    class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="4"></textarea>
+                </div>   
+            } @else {
+                <div class="col-span-2 lg:col-span-1">
+                    <label for="phoneType" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._phone_type' | translate }}</label>
+                    <select id="phoneType" formControlName="telephoneType"
+                    class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option value="Mobile">Mobile</option>
+                        <option value="Landline">Landline</option>
+                        <option value="Office">Office</option>
+                        <option value="Home">Home</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="col-span-2 lg:col-span-1">
+                    <label for="phoneNumber" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._phone' | translate }}</label>
+                    <div class="w-full">
+                        <div class="relative flex items-center">
+                            <button (click)="prefixCheck=!prefixCheck"
+                            class="mb-2 flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white rounded-s-lg hover:bg-gray-200 dark:hover:bg-primary-200 focus:ring-4 focus:outline-none focus:ring-gray-100" type="button">
+                                {{phonePrefix.flag}} {{phonePrefix.code}}
+                                <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
+                            </button>
+                            @if(prefixCheck==true){
+                                <div class="absolute bottom-12 right-0 z-20 max-h-48 w-full bg-white divide-y divide-gray-100 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white rounded-lg shadow overflow-y-auto">
+                                    <ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdown-phone-button">
+                                        <li>
+                                            @for(pref of prefixes;track pref.code){
+                                                <button type="button" (click)="selectPrefix(pref)" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-secondary-200" role="menuitem">
+                                                    <div class="inline-flex items-center">
+                                                        {{pref.text}}
+                                                    </div>
+                                                </button>
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                            <input id="phoneNumber" formControlName="telephoneNumber" name="phoneNumber" type="text" [ngClass]="mediumForm.get('telephoneNumber')?.errors?.['invalidPhoneNumber'] == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+                            class="mb-2 bg-gray-50 border text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-secondary-300 dark:text-white">
+                        </div>
+                    </div>
+                </div>  
+            }
+        </form>
+        <div class="flex w-full justify-items-center justify-center m-2 p-2">
+            <button type="button" (click)="saveMedium()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                Save
+                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
+                </svg>                         
+            </button> 
+        </div>
         <div class="flex w-full justify-end">
             <button type="button"  (click)="updateProfile()" class="m-2 flex w-fit justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
                 {{ 'PROFILE._update' | translate }}

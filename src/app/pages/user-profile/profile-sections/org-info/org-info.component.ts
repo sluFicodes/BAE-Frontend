@@ -8,6 +8,11 @@ import { phoneNumbers, countries } from 'src/app/models/country.const'
 import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
+import {components} from "../../../../models/party-catalog";
+import { v4 as uuidv4 } from 'uuid';
+import {parsePhoneNumber, getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
+
+type OrganizationUpdate = components["schemas"]["Organization_Update"];
 
 @Component({
   selector: 'org-info',
@@ -25,6 +30,24 @@ export class OrgInfoComponent {
   profileForm = new FormGroup({
     name: new FormControl('')
   });
+  mediumForm = new FormGroup({
+    email: new FormControl('', [Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    country: new FormControl(''),
+    city: new FormControl(''),
+    stateOrProvince: new FormControl(''),
+    postCode: new FormControl(''),
+    street: new FormControl(''),
+    telephoneNumber: new FormControl(''),
+    telephoneType: new FormControl('')
+  });
+  contactmediums:any[]=[];
+  emailSelected:boolean=true;
+  addressSelected:boolean=false;
+  phoneSelected:boolean=false;
+  prefixes: any[] = phoneNumbers;
+  countries: any[] = countries;
+  phonePrefix: any = phoneNumbers[0];
+  prefixCheck: boolean = false;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -80,10 +103,48 @@ export class OrgInfoComponent {
   }
 
   updateProfile(){
+    let mediums = [];
+    for(let i=0; i<this.contactmediums.length; i++){
+      if(this.contactmediums[i].mediumType == 'Email'){
+        mediums.push({
+          mediumType: 'Email',
+          preferred: this.contactmediums[i].preferred,
+          characteristic: {
+            contactType: this.contactmediums[i].characteristic[0].contactType,
+            emailAddress: this.contactmediums[i].characteristic[0].emailAddress
+          }
+        })
+        console.log(this.contactmediums[i])
+      } else if(this.contactmediums[i].mediumType == 'PostalAddress'){
+        mediums.push({
+          mediumType: this.contactmediums[i].mediumType,
+          preferred: this.contactmediums[i].preferred,
+          characteristic: {
+            contactType: 'PostalAddress',
+            city: this.contactmediums[i].characteristic[0].city,
+            country: this.contactmediums[i].characteristic[0].country,
+            postCode: this.contactmediums[i].characteristic[0].postCode,
+            stateOrProvince: this.contactmediums[i].characteristic[0].stateOrProvince,
+            street1: this.contactmediums[i].characteristic[0].street1
+          }
+        })
+      } else {
+        mediums.push({
+          mediumType: this.contactmediums[i].mediumType,
+          preferred: this.contactmediums[i].preferred,
+          characteristic: {
+            contactType: this.contactmediums[i].characteristic[0].contactType,
+            phoneNumber: this.contactmediums[i].characteristic[0].phoneNumber
+          }
+        })          
+      }
+    }
+    
     let profile = {
       "id": this.partyId,
       "href": this.partyId,
-      "tradingName": this.profileForm.value.name
+      "tradingName": this.profileForm.value.name,
+      "contactMedium": mediums
     }
     console.log(profile)
     this.accountService.updateOrgInfo(this.partyId,profile).subscribe({
@@ -109,6 +170,113 @@ export class OrgInfoComponent {
 
   loadProfileData(profile:any){
     this.profileForm.controls['name'].setValue(profile.tradingName);
+    if(profile.contactMedium){
+      for(let i=0; i<this.profile.contactMedium.length; i++){
+        if(profile.contactMedium[i].mediumType == 'Email'){
+          this.contactmediums.push({
+            id: uuidv4(),
+            mediumType: 'Email',
+            preferred: profile.contactMedium[i].preferred,
+            characteristic: {
+              contactType: profile.contactMedium[i].characteristic[0].contactType,
+              emailAddress: profile.contactMedium[i].characteristic[0].emailAddress
+            }
+          })
+        } else if(profile.contactMedium[i].mediumType == 'PostalAddress'){
+          this.contactmediums.push({
+            id: uuidv4(),
+            mediumType: profile.contactMedium[i].mediumType,
+            preferred: profile.contactMedium[i].preferred,
+            characteristic: {
+              contactType: 'PostalAddress',
+              city: profile.contactMedium[i].characteristic[0].city,
+              country: profile.contactMedium[i].characteristic[0].country,
+              postCode: profile.contactMedium[i].characteristic[0].postCode,
+              stateOrProvince: profile.contactMedium[i].characteristic[0].stateOrProvince,
+              street1: profile.contactMedium[i].characteristic[0].street1
+            }
+          })
+        } else {
+          this.contactmediums.push({
+            id: uuidv4(),
+            mediumType: profile.contactMedium[i].mediumType,
+            preferred: profile.contactMedium[i].preferred,
+            characteristic: {
+              contactType: profile.contactMedium[i].characteristic[0].contactType,
+              phoneNumber: profile.contactMedium[i].characteristic[0].phoneNumber
+            }
+          })          
+        }
+      }
+    }
+  }
+
+  saveMedium(){
+    if(this.emailSelected){
+      this.contactmediums.push({
+        id: uuidv4(),
+        mediumType: 'Email',
+        preferred: false,
+        characteristic: [{
+          emailAddress: this.mediumForm.value.email
+        }]
+      })
+    } else if(this.addressSelected){
+      this.contactmediums.push({
+        id: uuidv4(),
+        mediumType: 'PostalAddress',
+        preferred: false,
+        characteristic: [{
+          contactType: 'PostalAddress',
+          city: this.mediumForm.value.city,
+          country: this.mediumForm.value.country,
+          postCode: this.mediumForm.value.postCode,
+          stateOrProvince: this.mediumForm.value.stateOrProvince,
+          street1: this.mediumForm.value.street
+        }]
+      })
+    } else {
+      this.contactmediums.push({
+        id: uuidv4(),
+        mediumType: 'TelephoneNumber',
+        preferred: false,
+        characteristic: [{
+          contactType: this.mediumForm.value.telephoneType,
+          phoneNumber: this.phonePrefix.code + this.mediumForm.value.telephoneNumber
+        }]
+      })
+    }
+    this.mediumForm.reset();
+    console.log(this.contactmediums)
+  }
+
+  removeMedium(medium:any){
+    const index = this.contactmediums.findIndex(item => item.id === medium.id);
+    if (index !== -1) {
+      this.contactmediums.splice(index, 1);
+    }
+  }
+
+  selectPrefix(pref:any) {
+    console.log(pref)
+    this.prefixCheck = false;
+    this.phonePrefix = pref;
+  }
+
+  onTypeChange(event: any) {
+    if(event.target.value=='email'){
+      this.emailSelected=true;
+      this.addressSelected=false;
+      this.phoneSelected=false;
+    }else if (event.target.value=='address'){
+      this.emailSelected=false;
+      this.addressSelected=true;
+      this.phoneSelected=false;
+    }else{
+      this.emailSelected=false;
+      this.addressSelected=false;
+      this.phoneSelected=true;
+    }
   }
 
 }
