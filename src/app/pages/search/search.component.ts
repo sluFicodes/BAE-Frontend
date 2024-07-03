@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges, HostListener, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CategoriesFilterComponent} from "../../shared/categories-filter/categories-filter.component";
 import {components} from "../../models/product-catalog";
@@ -43,9 +43,17 @@ export class SearchComponent implements OnInit {
     /*await this.api.slaCheck().then(data => {  
       console.log(data)
     })*/
-    this.keywords = this.route.snapshot.paramMap.get('keywords');
-    this.searchField.setValue(this.keywords);
+    
+    if(this.route.snapshot.paramMap.get('keywords')){
+      this.keywords = this.route.snapshot.paramMap.get('keywords');
+      this.searchField.setValue(this.keywords);
+    }
+    this.loading=true;
+    this.products=[];
+    this.page=0;
+    console.log('INIT')
     await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
+
 
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'AddedFilter' || ev.type === 'RemovedFilter') {
@@ -64,6 +72,7 @@ export class SearchComponent implements OnInit {
           this.page=0;
           this.keywords=undefined;
           let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+          console.log('EVENT CLEAR')
           this.getProducts(filters);
         }
       });
@@ -194,7 +203,7 @@ export class SearchComponent implements OnInit {
                           }
                         )
                         this.cdr.detectChanges();
-                      }
+                      }                      
                     })
                   }
                 } else {
@@ -238,6 +247,7 @@ export class SearchComponent implements OnInit {
   }
 
   updateProducts() {
+    console.log('UPDATE')
     this.loading=true;
     this.products=[];
     this.page=0;
@@ -251,16 +261,24 @@ export class SearchComponent implements OnInit {
     this.page=this.page+this.PRODUCT_LIMIT;
     this.cdr.detectChanges;
     console.log(this.page)
+    console.log('NEXT')
     await this.getProducts(this.localStorage.getObject('selected_categories') as Category[] || []);
   }
 
   filterSearch(event: any) {
+    event.preventDefault()
+    this.loading=true;
+    this.products=[];
+    this.page=0;
+    this.cdr.detectChanges();
     if(this.searchField.value!='' && this.searchField.value != null){
-      this.loading=true;
-      this.products=[];
-      this.page=0;
-      this.cdr.detectChanges();
+      console.log('FILTER KEYWORDS')
       this.keywords=this.searchField.value;
+      let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+      this.getProducts(filters);
+    } else {
+      console.log('EMPTY  FILTER KEYWORDS')
+      this.keywords=undefined;
       let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
       this.getProducts(filters);
     }

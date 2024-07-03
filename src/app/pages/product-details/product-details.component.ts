@@ -34,6 +34,7 @@ export class ProductDetailsComponent implements OnInit {
   attachContent: ElementRef | undefined;
   @ViewChild('agreementsContent')
   agreementsContent: ElementRef | undefined;
+  @ViewChild('textDiv') textDiv!: ElementRef;
 
   id:any;
   productOff: Product | undefined;
@@ -58,6 +59,7 @@ export class ProductDetailsComponent implements OnInit {
   toastVisibility: boolean = false;
   lastAddedProd:any | undefined;
   checkCustom:boolean=false;
+  textDivHeight:any;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -306,6 +308,15 @@ export class ProductDetailsComponent implements OnInit {
 
   isVerified(char: any) {
     return char.verified == true
+  }
+
+  ngAfterViewInit() {
+    // Trigger change detection after the view has been initialized
+    this.setImageHeight();
+  }
+
+  setImageHeight() {
+    this.textDivHeight = this.textDiv.nativeElement.offsetHeight;
   }
 
   toggleCartSelection(){
