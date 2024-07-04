@@ -14,7 +14,8 @@
         "_smart_ports": "Smart ports",
         "_smart_cities": "Smart cities",
         "_search_ph": "Search Cloud Services, Edge Services, Providers...",
-        "_search": "Search"
+        "_search": "Search",
+        "_not_found": "No offers found"
     },
     "FEATURED": {
         "_title": "Featured offerings",
@@ -257,7 +258,25 @@
         "_organization": "Organization",
         "_medium_type": "Medium type",
         "_preferred": "Preferred",
-        "_no_mediums": "There's no contact medium information."
+        "_no_mediums": "There's no contact medium information.",
+        "_contact_info": "Contact information",
+        "_info": "Info",
+        "_actions": "Actions",
+        "_add_new_contact": "Add a new contact medium",
+        "_postalAddress": "Postal address",
+        "_phone": "Phone number",
+        "_phone_type": "Phone Type",
+        "_action": "Actions",
+        "_state": "State / Province",
+        "_post_code": "ZIP / Postal Code",
+        "_street": "Street Address",
+        "_edit": "Edit contact medium",
+        "_delete": "Yes, delete",
+        "_confirm_delete": "Are you sure about deleting the following billing address?",
+        "_cancel": "No, cancel",
+        "_invalid_phone": "Phonenumber is invalid!",
+        "_invalid_email": "Email is invalid!",
+        "_save": "Save"
     },
     "PRODUCT_INVENTORY":{
         "_loading": "Loading...",
