@@ -1,7 +1,7 @@
 @if (data?.children) {
   @if (data?.children?.length == 0) {
     <input [(ngModel)]="checked" type="checkbox" [id]="option" value="" class="hidden peer" #optioninput>
-    <label [for]="option" [ngClass]="labelClass" (click)="onClick(optioninput.checked)">
+    <label [for]="option" [ngClass]="isParent && isFirst ? labelClassParentFirst : isParent && isLast ? labelClassParentLast : isParent ? labelClassParent : labelClass" (click)="onClick(optioninput.checked)">
       <div class="flex w-full justify-between items-center">
         <div class="w-full text-base text-left font-semibold">{{ data?.name }}</div>
         <fa-icon [icon]="checked ? faCircleCheck : faCircle" class="mr-2 text-2xl"></fa-icon>
@@ -18,7 +18,7 @@
               <fa-icon [icon]="isCheckedCategory(data) ? faCircleCheck : faCircle" class="text-2xl"></fa-icon>
             </div>
             <button type="button" class="ml-4" [attr.data-accordion-target]="'#accordion-body-'+simplifiedId" aria-expanded="false" [attr.aria-controls]="'accordion-body-'+simplifiedId">              
-              <svg data-accordion-icon class="w-3 h-3 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5"/>
               </svg>
             </button>
