@@ -4,7 +4,7 @@
     <label [for]="option" [ngClass]="isParent && isFirst ? labelClassParentFirst : isParent && isLast ? labelClassParentLast : isParent ? labelClassParent : labelClass" (click)="onClick(optioninput.checked)">
       <div class="flex w-full justify-between items-center">
         <div class="w-full text-base text-left font-semibold">{{ data?.name }}</div>
-        <fa-icon [icon]="checked ? faCircleCheck : faCircle" class="mr-2 text-2xl"></fa-icon>
+        <fa-icon [icon]="checked ? faCircleCheck : faCircle" class="mr-7 text-2xl"></fa-icon>
       </div>
     </label>
   } @else {
