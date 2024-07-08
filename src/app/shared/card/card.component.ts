@@ -24,6 +24,7 @@ import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-servi
 import * as moment from 'moment';
 import { certifications } from 'src/app/models/certification-standards.const';
 import { jwtDecode } from "jwt-decode";
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'bae-off-card',
@@ -58,6 +59,7 @@ export class CardComponent implements OnInit, AfterViewInit {
   @ViewChild('myProdImage') myProdImage!: ElementRef<HTMLImageElement>;
   check_logged:boolean=false;
   protected readonly faAtom = faAtom;
+  PURCHASE_ENABLED: boolean = environment.PURCHASE_ENABLED;
 
   errorMessage:any='';
   showError:boolean=false;
