@@ -54,6 +54,7 @@ export class CreateOfferComponent implements OnInit {
   licenseDone:boolean=false;
   slaDone:boolean=false;
   priceDone:boolean=false;
+  finishDone:boolean=false;
 
   stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price','summary'];
   stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','summary-circle'];
@@ -1063,6 +1064,8 @@ export class CreateOfferComponent implements OnInit {
   }
 
   showFinish(){
+    this.priceDone=true;
+    this.finishDone=true;
     this.clearPriceFormInfo();
     if(this.generalForm.value.name && this.generalForm.value.version){
       this.offerToCreate={

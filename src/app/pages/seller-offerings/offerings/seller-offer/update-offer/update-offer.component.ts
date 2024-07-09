@@ -45,16 +45,6 @@ export class UpdateOfferComponent implements OnInit{
   showSLA:boolean=false;
   showPrice:boolean=false;
 
-  //Check if step was done
-  generalDone:boolean=false;
-  bundleDone:boolean=false;
-  prodSpecDone:boolean=false;
-  catalogsDone:boolean=false;
-  categoriesDone:boolean=false;
-  licenseDone:boolean=false;
-  slaDone:boolean=false;
-  priceDone:boolean=false;
-
   stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price','summary'];
   stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','summary-circle'];
 

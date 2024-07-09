@@ -33,6 +33,7 @@ export class CreateCatalogComponent implements OnInit {
   showSummary:boolean=false;
   //Check if step was done
   generalDone:boolean=false;
+  finishDone:boolean=false;
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
@@ -94,6 +95,7 @@ export class CreateCatalogComponent implements OnInit {
   }
 
   showFinish(){
+    this.finishDone=true;
     if(this.generalForm.value.name!=null){
       this.catalogToCreate={
         name: this.generalForm.value.name,
