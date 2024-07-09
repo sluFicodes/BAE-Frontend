@@ -16,6 +16,7 @@ import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-servi
 import {EventMessageService} from "../../services/event-message.service";
 import { jwtDecode } from "jwt-decode";
 import * as moment from 'moment';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-product-details',
@@ -64,6 +65,7 @@ export class ProductDetailsComponent implements OnInit {
   errorMessage:any='';
   showError:boolean=false;
   showTermsMore:boolean=false;
+  PURCHASE_ENABLED: boolean = environment.PURCHASE_ENABLED;
 
   protected readonly faScaleBalanced = faScaleBalanced;
   protected readonly faArrowProgress = faArrowProgress;
@@ -634,9 +636,9 @@ export class ProductDetailsComponent implements OnInit {
 
   toggleTermsReadMore(){
     if(this.showTermsMore==false){
-      document?.getElementById('terms')?.classList.remove('line-clamp-5')
+      document?.getElementById('terms-markdown')?.classList.remove('line-clamp-5')
     } else {
-      document?.getElementById('terms')?.classList.add('line-clamp-5')
+      document?.getElementById('terms-markdown')?.classList.add('line-clamp-5')
     }
     this.showTermsMore=!this.showTermsMore;
     

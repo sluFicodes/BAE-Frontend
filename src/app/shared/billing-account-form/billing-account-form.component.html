@@ -69,7 +69,7 @@
                         </ul>
                     </div>
                 }
-                <input id="phoneNumber" formControlName="telephoneNumber" name="phoneNumber" type="text" [ngClass]="billingForm.get('telephoneNumber')?.errors?.['invalidPhoneNumber'] == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+                <input id="phoneNumber" formControlName="telephoneNumber" name="phoneNumber" type="number" [ngClass]="billingForm.get('telephoneNumber')?.errors?.['invalidPhoneNumber'] == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
                 class="mb-2 bg-gray-50 border text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-secondary-300 dark:text-white">
             </div>
         </div>
