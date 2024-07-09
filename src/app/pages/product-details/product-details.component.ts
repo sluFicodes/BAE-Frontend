@@ -636,9 +636,9 @@ export class ProductDetailsComponent implements OnInit {
 
   toggleTermsReadMore(){
     if(this.showTermsMore==false){
-      document?.getElementById('terms')?.classList.remove('line-clamp-5')
+      document?.getElementById('terms-markdown')?.classList.remove('line-clamp-5')
     } else {
-      document?.getElementById('terms')?.classList.add('line-clamp-5')
+      document?.getElementById('terms-markdown')?.classList.add('line-clamp-5')
     }
     this.showTermsMore=!this.showTermsMore;
     
