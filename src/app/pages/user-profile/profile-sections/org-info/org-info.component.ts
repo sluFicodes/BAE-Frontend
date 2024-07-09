@@ -52,6 +52,7 @@ export class OrgInfoComponent {
   selectedMedium:any;
   selectedMediumType:any;
   toastVisibility: boolean = false;
+  successVisibility: boolean = false;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -156,7 +157,11 @@ export class OrgInfoComponent {
     this.accountService.updateOrgInfo(this.partyId,profile).subscribe({
       next: data => {
         this.profileForm.reset();
-        this.getProfile();        
+        this.getProfile();
+        this.successVisibility = true;
+        setTimeout(() => {
+          this.successVisibility = false
+        }, 2000);       
       },
       error: error => {
           console.error('There was an error while updating!', error);
@@ -218,19 +223,21 @@ export class OrgInfoComponent {
   }
 
   saveMedium(){
-    const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.mediumForm.value.telephoneNumber);
-    if (phoneNumber) {
-      if (!phoneNumber.isValid()) {
-        console.log('NUMERO INVALIDO')
-        this.mediumForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
-        this.toastVisibility = true;
-        setTimeout(() => {
-          this.toastVisibility = false
-        }, 2000);
-        return;
-      } else {
-        this.mediumForm.controls['telephoneNumber'].setErrors(null);
-        this.toastVisibility = false;
+    if(this.phoneSelected){
+      const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.mediumForm.value.telephoneNumber);
+      if (phoneNumber) {
+        if (!phoneNumber.isValid()) {
+          console.log('NUMERO INVALIDO')
+          this.mediumForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+          this.toastVisibility = true;
+          setTimeout(() => {
+            this.toastVisibility = false
+          }, 2000);
+          return;
+        } else {
+          this.mediumForm.controls['telephoneNumber'].setErrors(null);
+          this.toastVisibility = false;
+        }
       }
     }
 
