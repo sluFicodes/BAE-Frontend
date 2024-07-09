@@ -277,7 +277,8 @@
         "_cancel": "No, cancel",
         "_invalid_phone": "Phonenumber is invalid!",
         "_invalid_email": "Email is invalid!",
-        "_save": "Save"
+        "_save": "Save",
+        "_success": "Updated successfully"
     },
     "PRODUCT_INVENTORY":{
         "_loading": "Loading...",
