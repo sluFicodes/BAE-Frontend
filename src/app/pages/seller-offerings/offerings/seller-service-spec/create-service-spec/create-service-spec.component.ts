@@ -39,6 +39,7 @@ export class CreateServiceSpecComponent implements OnInit {
   //Check if step was done
   generalDone:boolean=false;
   charsDone:boolean=false;
+  finishDone:boolean=false;
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
@@ -236,6 +237,8 @@ export class CreateServiceSpecComponent implements OnInit {
   }
 
   showFinish(){
+    this.charsDone=true;
+    this.finishDone=true;
     if(this.generalForm.value.name!=null){
       this.serviceToCreate={
         name: this.generalForm.value.name,

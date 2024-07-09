@@ -58,6 +58,7 @@ export class CreateProductSpecComponent implements OnInit {
   serviceDone:boolean=false;
   attachDone:boolean=false;
   relationshipDone:boolean=false;
+  finishDone:boolean=false;
 
   stepsElements:string[]=['general-info','bundle','compliance','chars','resource','service','attach','relationships','summary'];
   stepsCircles:string[]=['general-circle','bundle-circle','compliance-circle','chars-circle','resource-circle','service-circle','attach-circle','relationships-circle','summary-circle'];
@@ -944,6 +945,8 @@ export class CreateProductSpecComponent implements OnInit {
   }
 
   showFinish(){
+    this.relationshipDone=true;
+    this.finishDone=true;
     for(let i=0; i< this.prodChars.length; i++){
       const index = this.finishChars.findIndex(item => item.name === this.prodChars[i].name);
       if (index == -1) {
