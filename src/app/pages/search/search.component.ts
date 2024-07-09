@@ -161,11 +161,10 @@ export class SearchComponent implements OnInit {
                   }
                 )
               }
-
+              this.loading=false;
+              this.loading_more=false;
             })
           }
-        this.loading=false;
-        this.loading_more=false;
       })
     } else {
       this.api.getProductsByCategory(filters,this.page,this.keywords).then(data => {
@@ -236,12 +235,12 @@ export class SearchComponent implements OnInit {
                     productOfferingTerm: data[i].productOfferingTerm,
                     version: data[i].version
                   }
-                )
-              }
+               )
+            }
+            this.loading=false;
+            this.loading_more=false;
             })
           }
-        this.loading=false;
-        this.loading_more=false;
       })
     }
   }

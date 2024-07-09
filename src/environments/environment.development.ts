@@ -38,5 +38,6 @@ export const environment = {
     MATOMO_SITE_ID: "",
     TICKETING_SYSTEM_URL: "",
     KNOWLEDGE_BASE_URL: "",
-    SEARCH_ENABLED: true
+    SEARCH_ENABLED: true,
+    PURCHASE_ENABLED: false
 };

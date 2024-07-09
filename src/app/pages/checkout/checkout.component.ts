@@ -26,6 +26,7 @@ import {BillingAccountFormComponent} from "../../shared/billing-account-form/bil
 export class CheckoutComponent implements OnInit {
   protected readonly faCartShopping = faCartShopping;
   public static BASE_URL: String = environment.BASE_URL;
+  PURCHASE_ENABLED: boolean = environment.PURCHASE_ENABLED;
   TAX_RATE: number = environment.TAX_RATE;
   items: cartProduct[] = [];
   totalPrice: any;

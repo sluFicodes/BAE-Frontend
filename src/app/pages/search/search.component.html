@@ -26,7 +26,7 @@
             <div class="relative w-full">
               <input type="search" id="search" [formControl]="searchField" 
               (keydown.enter)="filterSearch($event)"
-              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
               placeholder="{{ 'DASHBOARD._search_ph' | translate }}" required>
               <button type="submit" (click)="filterSearch($event)" class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-blue-700 rounded-e-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
@@ -52,7 +52,7 @@
         @for (prod of products; track prod.id) {
           <bae-off-card [productOff]=prod class="w-full h-full p-2"></bae-off-card>
         } @empty {
-          <div class="min-h-19 dark:text-gray-600 text-center">No se han encontrado ofertas.</div>
+          <div class="min-h-19 dark:text-gray-600 text-center">{{ 'DASHBOARD._not_found' | translate }}</div>
         }
       </div>
       @if (!loading_more) {
