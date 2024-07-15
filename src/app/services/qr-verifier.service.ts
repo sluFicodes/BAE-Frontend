@@ -18,7 +18,11 @@ export class QrVerifierService {
   }
 
   private fetchServer(thePopup:Window, state:string, path:string, handler:any):void {
-    fetch(`${environment.BASE_URL}${path}?state=${state}`).then(
+    // Ask for a dynamic callback validation
+    let newUrl = new URL(window.location.href);
+    let callback = newUrl.origin
+
+    fetch(`${environment.BASE_URL}${path}?state=${state}&callback_url=${callback}`).then(
       (response) =>{
         if (response.status === 400 || response.status === 500) {
           this.stopChecking(thePopup)
