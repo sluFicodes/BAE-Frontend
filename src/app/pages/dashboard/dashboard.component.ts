@@ -108,8 +108,10 @@ export class DashboardComponent implements OnInit {
       }
       initFlowbite();
       this.cdr.detectChanges();
-    }) 
-    this.showContact=true;
+    })
+
+    this.showContact = true;
+
     this.cdr.detectChanges();
     console.log('----')
     /*await this.api.getShoppingCart().then(data => {
