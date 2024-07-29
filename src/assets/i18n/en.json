@@ -485,7 +485,10 @@
         "_finish": "Finish",
         "_summary": "Product's summary",
         "_update_prod": "Update product",
-        "_verify": "Verify Certificates"
+        "_verify": "Verify Certificates",
+        "_how_to_verify": "How to get a valid VC of the certificate?",
+        "_verify_text": "To get a valid VC of the certificate you can access the ",
+        "_dome_trust": "DOME Trust Service Provider for Certification"
     },
     "CREATE_RES_SPEC": {
         "_back": "Back",

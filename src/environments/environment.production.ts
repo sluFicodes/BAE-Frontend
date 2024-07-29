@@ -38,5 +38,6 @@ export const environment = {
     TICKETING_SYSTEM_URL: "",
     KNOWLEDGE_BASE_URL: "",
     SEARCH_ENABLED: true,
-    PURCHASE_ENABLED: false
+    PURCHASE_ENABLED: false,
+    DOME_TRUST_LINK: "https://dome-certification.dome-marketplace.org"
 };
