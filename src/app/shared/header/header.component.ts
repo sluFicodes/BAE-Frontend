@@ -305,6 +305,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
   onLoginClick(){
     if (environment.SIOP_INFO.enabled === true && this.qrVerifier.intervalId === undefined){
+      console.log('SIOP true')
       this.statePair = uuid.v4()
 
       let callbackUrl = environment.SIOP_INFO.callbackURL
@@ -324,6 +325,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       this.initChecking()
     }
     else if (environment.SIOP_INFO.enabled === false){
+      console.log('SIOP false')
       window.location.replace(`${environment.BASE_URL}` +  '/login')
     }
   }
