@@ -306,7 +306,7 @@
                         <div class="px-4 py-2 bg-white dark:bg-secondary-300 rounded-b-lg">
                             <label for="editor" class="sr-only">Publish post</label>
                             @if(showPreview){
-                                    <markdown class="text-gray-800 dark:text-gray-200" [data]="description"></markdown>
+                                    <markdown class="text-gray-800 dark:text-gray-200 text-wrap break-all" [data]="description"></markdown>
                                 
                             }@else{
                                 <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
@@ -334,7 +334,7 @@
                     <label for="prod-brand" class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._is_bundled' | translate }}</label>
                     <label class="inline-flex items-center me-5 ml-4">
                         <input type="checkbox" value="" disabled class="sr-only peer">
-                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
+                        <div class="relative w-11 h-6 bg-gray-400 dark:bg-gray-700 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
                     </label>
                 </div>
                 @if(bundleChecked){
@@ -808,7 +808,7 @@
                                     <div class="px-4 py-2 bg-white dark:bg-secondary-300 rounded-b-lg">
                                         <label for="editor" class="sr-only">Publish post</label>
                                         @if(showPreview){
-                                                <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900" [data]="licenseDescription"></markdown>
+                                                <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="licenseDescription"></markdown>
                                             
                                         }@else{
                                             <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
@@ -1028,10 +1028,10 @@
                             <tbody>
                                 @for (price of createdPrices; track price.id) {
                                     <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 max-w-1/6 text-wrap break-all">
                                             {{price.name}}
                                         </td>
-                                        <td class="hidden xl:table-cell px-6 py-4 line-clamp-1">
+                                        <td class="hidden xl:table-cell px-6 py-4 text-wrap break-all">
                                             {{price.description}}
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4">
@@ -1217,7 +1217,7 @@
                                     <div class="px-4 py-2 bg-white dark:bg-secondary-300 rounded-b-lg">
                                         <label for="editor" class="sr-only">Publish post</label>
                                         @if(showPreview){
-                                                <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900" [data]="priceDescription"></markdown>
+                                                <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="priceDescription"></markdown>
                                             
                                         }@else{
                                             <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 border-0 dark:text-gray-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>
@@ -1347,14 +1347,14 @@
                     <div class="mb-4 md:grid md:grid-cols-2 gap-4">
                         <div>
                             <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>
-                            <label class="mb-2 bg-gray-50 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <label class="mb-2 bg-gray-50 text-wrap break-all dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 {{offerToUpdate?.name}}
                             </label>
 
                         </div>
                         <div>
                             <label for="prod-version" class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._version' | translate }}</label>
-                            <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <label class="mb-2 bg-gray-50 text-wrap break-all border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 {{offerToUpdate?.version}}
                             </label>
                         </div>
@@ -1376,13 +1376,13 @@
                     @if(offerToUpdate?.description !=''){
                         <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._description' | translate }}</label>
                         <div class="px-4 py-2 bg-white rounded-lg p-4 mb-4 dark:bg-secondary-300 border dark:border-secondary-200 dark:text-white">                                
-                            <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900"  [data]="offerToUpdate?.description"></markdown>
+                            <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all"  [data]="offerToUpdate?.description"></markdown>
                         </div>
                     }
 
                     @if(offersBundle.length>0){
                         <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._bundle' | translate }}</label>
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                     <tr>
@@ -1420,7 +1420,7 @@
                 
                 @if(selectedCategories.length>0){
                     <h2 class="font-bold text-lg  dark:text-white">{{ 'UPDATE_OFFER._category' | translate }}</h2>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">   
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">   
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -1449,7 +1449,7 @@
                 }
                 @if(createdPrices.length>0){
                     <h2 class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._price_plans' | translate }}</h2>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -1473,10 +1473,10 @@
                             <tbody>
                                 @for (price of createdPrices; track price.id) {
                                     <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 max-w-1/6 text-wrap break-all">
                                             {{price.name}}
                                         </td>
-                                        <td class="hidden xl:table-cell px-6 py-4 line-clamp-1">
+                                        <td class="hidden xl:table-cell px-6 py-4 text-wrap break-all">
                                             {{price.description}}
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4">
@@ -1496,7 +1496,7 @@
                 }
                 @if(createdSLAs.length>0){
                     <h2 class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._sla' | translate }}</h2>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -1539,12 +1539,12 @@
                     <h2 class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._license' | translate }}</h2>
                     <div>
                         <label for="treatment" class="font-bold text-base dark:text-white">{{ 'UPDATE_OFFER._treatment' | translate }}</label>
-                        <label class="mb-2 bg-gray-50 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <label class="mb-2 bg-gray-50 text-wrap break-all dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             {{createdLicense.treatment}}
                         </label>
                         <label class="font-bold text-base dark:text-white">{{ 'UPDATE_OFFER._description' | translate }}</label>
-                        <div class="px-4 py-2 bg-white dark:bg-secondary-300 border dark:border-secondary-200 dark:text-white rounded-lg p-4">                            
-                            <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900" [data]="createdLicense.description"></markdown>
+                        <div class="px-4 py-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white rounded-lg p-4">                            
+                            <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="createdLicense.description"></markdown>
                         </div>
                     </div>
                 }
@@ -1714,7 +1714,7 @@
                         <div class="px-4 py-2 bg-white dark:bg-secondary-300 rounded-b-lg">
                             <label for="editor" class="sr-only">Publish post</label>
                             @if(showPreview){
-                                    <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900" [data]="priceDescription"></markdown>
+                                    <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="priceDescription"></markdown>
                                 
                             }@else{
                                 <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 border-0 dark:text-gray-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>

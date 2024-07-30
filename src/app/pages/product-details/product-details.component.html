@@ -258,29 +258,29 @@
                         @for (price of productOff?.productOfferingPrice; track price.id) {
                             @if (price.priceType == 'recurring') {
                                 <div class="max-w-sm bg-white dark:bg-secondary-200 dark:border-gray-800 border border-gray-200 rounded-lg shadow w-full">
-                                    <div class="bg-green-500 rounded-t-lg w-full">
+                                    <div class="bg-green-500 rounded-t-lg w-full text-wrap break-all">
                                         <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
                                     </div>
                                     <p class="flex justify-center font-normal text-gray-700 dark:text-white"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
                                     <p class="flex justify-center font-normal text-gray-700 dark:text-white">/{{price.recurringChargePeriodType}}</p>
-                                    <p class="flex justify-center mb-2 p-2 font-normal text-gray-700 dark:text-white">{{price.description}}</p>
+                                    <p class="flex justify-center mb-2 p-2 font-normal text-gray-700 dark:text-white text-wrap break-all">{{price.description}}</p>
                                 </div>
                             } @else if (price.priceType == 'usage') {
                                 <div class="max-w-sm bg-white border border-gray-200 dark:bg-secondary-200 dark:border-gray-800 rounded-lg shadow w-full">
                                     <div class="bg-yellow-300 rounded-t-lg w-full">
-                                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 text-wrap break-all">{{price.name}}</h5>
                                     </div>
                                     <p class="flex justify-center font-normal text-gray-700 dark:text-white"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
                                     <p class="flex justify-center font-normal text-gray-700 dark:text-white">/{{price.unitOfMeasure?.units}}</p>
-                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700 dark:text-white">{{price.description}}</p>
+                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700 dark:text-white text-wrap break-all">{{price.description}}</p>
                                 </div>
                             } @else {
                                 <div class="max-w-sm bg-white border border-gray-200 dark:bg-secondary-200 dark:border-gray-800 rounded-lg shadow w-full">
                                     <div class="bg-blue-500 rounded-t-lg w-full">
-                                        <h5 class="flex justify-center mb-4 p-6 text-2xl font-bold tracking-tight text-gray-900">{{price.name}}</h5>
+                                        <h5 class="flex justify-center mb-4 p-6 text-2xl font-bold tracking-tight text-gray-900 text-wrap break-all">{{price.name}}</h5>
                                     </div>
                                     <p class="flex justify-center font-normal text-gray-700 dark:text-white"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
-                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700 dark:text-white">{{price.description}}</p>
+                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700 dark:text-white text-wrap break-all">{{price.description}}</p>
                                 </div>
                             }
                         }

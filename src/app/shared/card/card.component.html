@@ -154,7 +154,7 @@
             <div class="p-4 lg:p-5 grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div class="justify-start">
                   <h5 class="font-semibold tracking-tight text-lg text-primary-100 dark:text-primary-50">{{ 'CARD._prod_details' | translate }}:</h5>
-                  <markdown class="min-h-19 h-19 dark:text-secondary-50 line-clamp-6" [data]="productOff?.description"></markdown>
+                  <markdown class="min-h-19 h-19 dark:text-secondary-50 line-clamp-6 text-wrap break-all" [data]="productOff?.description"></markdown>
               </div>
               <!--<div class="justify-start">
                 <h5 class="font-semibold tracking-tight text-lg text-primary-100 dark:text-primary-50">{{ 'CARD._comp_profile' | translate }}:</h5>
@@ -170,13 +170,13 @@
               </div>-->
               <div class="justify-start">
                   <h5 class="font-semibold tracking-tight text-lg text-primary-100 dark:text-primary-50">{{ 'CARD._extra_info' | translate }}:</h5>
-                    <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50">
-                      <li>{{ 'CARD._offer_version' | translate }}: v{{productOff?.version}}</li>
-                      <li>{{ 'CARD._product_name' | translate }}: {{prodSpec.name}}</li>
-                      <li>{{ 'CARD._brand' | translate }}: {{prodSpec.brand}}</li>
-                      <li>{{ 'CARD._last_update' | translate }}: {{productOff?.lastUpdate | date:'dd/MM/yy, HH:mm'}}</li>
-                      <li>{{ 'CARD._product_version' | translate }}: v{{prodSpec.version}}</li>
-                      <li>{{ 'CARD._id_number' | translate }}: XX</li>
+                    <ul class="max-w-md space-y-1 list-disc list-inside dark:text-secondary-50 text-wrap break-all line-clamp-8">
+                      <li class="text-wrap break-all line-clamp-1">{{ 'CARD._offer_version' | translate }}: v{{productOff?.version}}</li>
+                      <li class="text-wrap break-all line-clamp-2">{{ 'CARD._product_name' | translate }}: {{prodSpec.name}}</li>
+                      <li class="text-wrap break-all line-clamp-1">{{ 'CARD._brand' | translate }}: {{prodSpec.brand}}</li>
+                      <li class="text-wrap break-all line-clamp-1">{{ 'CARD._last_update' | translate }}: {{productOff?.lastUpdate | date:'dd/MM/yy, HH:mm'}}</li>
+                      <li class="text-wrap break-all line-clamp-1">{{ 'CARD._product_version' | translate }}: v{{prodSpec.version}}</li>
+                      <li class="text-wrap break-all line-clamp-1">{{ 'CARD._id_number' | translate }}: XX</li>
                     </ul>
               </div>
             </div>

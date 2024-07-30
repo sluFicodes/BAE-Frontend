@@ -315,7 +315,7 @@
                             <div class="px-4 py-2 bg-white dark:bg-secondary-300 rounded-lg p-4">
                                 <label for="editor" class="sr-only">Publish post</label>
                                 @if(showPreview){
-                                        <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900" [data]="description"></markdown>
+                                        <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="description"></markdown>
                                     
                                 }@else{
                                     <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
@@ -343,7 +343,7 @@
                         <label for="prod-brand" class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._is_bundled' | translate }}</label>
                         <label class="inline-flex items-center me-5 ml-4">
                             <input type="checkbox" disabled [checked]="bundleChecked" value="" class="sr-only peer">
-                            <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
+                            <div class="relative w-11 h-6 bg-gray-400 dark:bg-gray-700 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
                         </label>
                     </div>
                     @if(bundleChecked){
@@ -617,13 +617,13 @@
                                 <tbody>
                                     @for (prod of prodChars; track prod;) {
                                         <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 max-w-1/6 text-wrap break-all">
                                                 {{prod.name}}
                                             </td>
-                                            <td class="hidden lg:table-cell px-6 py-4">
+                                            <td class="hidden lg:table-cell px-6 py-4 text-wrap break-all">
                                                 {{prod.description}}                                       
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 text-wrap break-all">
                                                 @for (char of prod.productSpecCharacteristicValue; track char;) {
                                                     @if(char.value){
                                                         {{char.value}} {{char?.unitOfMeasure}},
@@ -843,7 +843,7 @@
                             <tbody>
                                 @for (res of resourceSpecs; track res.id) {
                                     <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 text-wrap break-all">
                                             {{res.name}}
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4">
@@ -1071,10 +1071,10 @@
                                 <tbody>
                                     @for (att of prodAttachments; track att) {
                                         <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 max-w-1/6 text-wrap break-all">
                                                 {{att.name}}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 text-wrap break-all">
                                                 {{att.url}} 
                                             </td>
                                             <td class="px-6 py-4">
@@ -1199,7 +1199,7 @@
                                                 <td class="px-6 py-4">
                                                     {{rel.relationshipType}}
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 text-wrap break-all">
                                                     {{rel.productSpec.name}}
                                                 </td>
                                                 <td class="hidden md:table-cell px-6 py-4">
@@ -1352,22 +1352,22 @@
                         <div class="mb-4 md:grid md:grid-cols-2 gap-4">
                             <div>
                                 <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._product_name' | translate }}</label>
-                                <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <label class="mb-2 bg-gray-50 text-wrap break-all border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     {{productSpecToUpdate?.name}}
                                 </label>
                                 <label for="prod-version" class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._product_version' | translate }}</label>
-                                <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <label class="mb-2 bg-gray-50 text-wrap break-all border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     {{productSpecToUpdate?.version}}
                                 </label>
                             </div>
                             <div>
                                 <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._product_brand' | translate }}</label>
-                                <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" >
+                                <label class="mb-2 bg-gray-50 text-wrap break-all border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" >
                                     {{productSpecToUpdate?.brand}}
                                 </label>
                                 @if(productSpecToUpdate?.productNumber!=''){
                                 <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._id_number' | translate }}</label>
-                                <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                                <label class="mb-2 bg-gray-50 text-wrap break-all border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                     {{productSpecToUpdate?.productNumber}}
                                 </label>
                                 }
@@ -1390,7 +1390,7 @@
                         @if(productSpecToUpdate?.description !=''){
                             <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._product_description' | translate }}</label>
                             <div class="px-4 py-2 bg-white dark:bg-secondary-300 border dark:border-secondary-200 rounded-lg p-4 mb-4">                                
-                                <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900" [data]="productSpecToUpdate?.description"></markdown>
+                                <markdown class="bg-gray-50 text-wrap break-all dark:bg-secondary-300 dark:text-white text-gray-900" [data]="productSpecToUpdate?.description"></markdown>
                             </div>
                         }
 
@@ -1403,7 +1403,7 @@
 
                         @if(prodSpecsBundle.length>0){
                             <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._bundle' | translate }}</label>
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                         <tr>
@@ -1418,7 +1418,7 @@
                                     <tbody>
                                         @for (bun of prodSpecsBundle; track bun) {
                                             <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 text-wrap break-all">
                                                     {{bun.name}}
                                                 </td>
                                                 <td class="px-6 py-4">
@@ -1441,7 +1441,7 @@
                         
                         @if(prodChars.length>0){
                             <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._chars' | translate }}</label>
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                         <tr>
@@ -1459,13 +1459,13 @@
                                     <tbody>
                                         @for (prod of productSpecToUpdate?.productSpecCharacteristic; track prod;) {
                                             <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 max-w-1/6 text-wrap break-all">
                                                     {{prod.name}}
                                                 </td>
-                                                <td class="hidden lg:table-cell px-6 py-4">
+                                                <td class="hidden lg:table-cell px-6 py-4 text-wrap break-all">
                                                     {{prod.description}}                                       
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 text-wrap break-all">
                                                     @for (char of prod.productSpecCharacteristicValue; track char;) {
                                                         @if(char.value){
                                                             {{char.value}} {{char?.unitOfMeasure}},
@@ -1483,7 +1483,7 @@
 
                         @if(selectedResourceSpecs.length>0){
                             <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._resource' | translate }}</label>
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                         <tr>
@@ -1495,7 +1495,7 @@
                                     <tbody>
                                         @for (res of selectedResourceSpecs; track res) {
                                             <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 text-wrap break-all">
                                                     {{res.name}}
                                                 </td>
                                             </tr>
@@ -1507,7 +1507,7 @@
 
                         @if(selectedServiceSpecs.length>0){
                             <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._service' | translate }}</label>
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                         <tr>
@@ -1519,7 +1519,7 @@
                                     <tbody>
                                         @for (serv of selectedServiceSpecs; track serv) {
                                             <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 text-wrap break-all">
                                                     {{serv.name}}
                                                 </td>
                                             </tr>
@@ -1531,7 +1531,7 @@
 
                         @if(prodAttachments.length>0){
                             <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._attachments' | translate }}</label>
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                         <tr>
@@ -1546,10 +1546,10 @@
                                     <tbody>
                                         @for (att of productSpecToUpdate?.attachment; track att) {
                                             <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 max-w-1/6 text-wrap break-all">
                                                     {{att.name}}
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 text-wrap break-all">
                                                     {{att.url}} 
                                                 </td>
                                             </tr>
@@ -1561,7 +1561,7 @@
 
                         @if(prodRelationships.length>0){
                             <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._relationships' | translate }}</label>
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                     <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                         <tr>
@@ -1585,7 +1585,7 @@
                                                 <td class="px-6 py-4">
                                                     {{rel.relationshipType}}
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td class="px-6 py-4 text-wrap break-all">
                                                     {{rel.productSpec.name}}
                                                 </td>
                                                 <td class="hidden md:table-cell px-6 py-4">

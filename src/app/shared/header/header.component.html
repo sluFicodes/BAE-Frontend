@@ -148,7 +148,7 @@
       </div>
     }
   </div>
-  <div id="support-dropdown" class="z-30 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
+  <div id="support-dropdown" class="z-50 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
       <li>
         <a href="{{ knowledge }}" target="_blank" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faBrain" class="mr-2"></fa-icon>{{ 'HEADER._knowledge' | translate }}</a>
@@ -158,7 +158,7 @@
       </li>
     </ul>
   </div>
-  <div id="orgs-dropdown" class="z-30 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
+  <div id="orgs-dropdown" class="z-50 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
         @for (org of orgs; track org.id; let idx = $index) {
           @if(org.id != loginInfo.logged_as || loginInfo.logged_as == loginInfo.id){

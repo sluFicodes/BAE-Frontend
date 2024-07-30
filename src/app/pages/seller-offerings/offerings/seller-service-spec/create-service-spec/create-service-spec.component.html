@@ -156,7 +156,7 @@
                             <div class="px-4 py-2 bg-white dark:bg-secondary-300 rounded-b-lg">
                                 <label for="editor" class="sr-only">Publish post</label>
                                 @if(showPreview){
-                                        <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900" [data]="description"></markdown>
+                                        <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="description"></markdown>
                                     
                                 }@else{
                                     <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
@@ -214,13 +214,13 @@
                             <tbody>
                                 @for (prod of prodChars; track prod;) {
                                     <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 text-wrap break-all">
                                             {{prod.name}}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 text-wrap break-all">
                                             {{prod.description}}                                       
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 text-wrap break-all">
                                             @for (char of prod.characteristicValueSpecification; track char;) {
                                                 @if(char.value){
                                                     {{char.value}} {{char?.unitOfMeasure}},
@@ -399,7 +399,7 @@
                 <div class="m-8">
                     <div>
                         <label class="font-bold text-lg dark:text-white">{{ 'CREATE_PROD_SPEC._product_name' | translate }}</label>
-                        <label class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <label class="mb-2 bg-gray-50 text-wrap break-all border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             {{serviceToCreate?.name}}
                         </label>
                     </div>
@@ -420,13 +420,13 @@
                     @if(serviceToCreate?.description !=''){
                         <label class="font-bold text-lg dark:text-white">{{ 'CREATE_PROD_SPEC._product_description' | translate }}</label>
                         <div class="px-4 py-2 bg-white dark:bg-secondary-300 border dark:border-secondary-200 rounded-lg p-4 mb-2"> 
-                            <markdown class="bg-gray-50 dark:bg-secondary-100 dark:text-white text-gray-900" [data]="serviceToCreate?.description"></markdown>
+                            <markdown class="bg-gray-50 text-wrap break-all dark:bg-secondary-100 dark:text-white text-gray-900 text-wrap break-all" [data]="serviceToCreate?.description"></markdown>
                         </div>
                     }
                     
                     @if(prodChars.length>0){
                         <label class="font-bold text-lg dark:text-white">{{ 'CREATE_PROD_SPEC._chars' | translate }}</label>
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                     <tr>
@@ -444,13 +444,13 @@
                                 <tbody>
                                     @for (prod of serviceToCreate?.specCharacteristic; track prod;) {
                                         <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 text-wrap break-all">
                                                 {{prod.name}}
                                             </td>
-                                            <td class="hidden lg:table-cell px-6 py-4">
+                                            <td class="hidden lg:table-cell px-6 py-4 text-wrap break-all">
                                                 {{prod.description}}                                       
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 text-wrap break-all">
                                                 @for (char of prod.characteristicValueSpecification; track char;) {
                                                     @if(char.value){
                                                         {{char.value}} {{char?.unitOfMeasure}},
