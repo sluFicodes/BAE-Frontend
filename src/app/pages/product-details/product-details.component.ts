@@ -95,9 +95,6 @@ export class ProductDetailsComponent implements OnInit {
     private eventMessage: EventMessageService,
   ) {
     this.showTermsMore=false;
-    for(let i=0; i<certifications.length; i++){
-      this.complianceProf.push(certifications[i])
-    }
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'CloseCartCard') {
         this.hideCartSelection();
@@ -182,9 +179,7 @@ export class ProductDetailsComponent implements OnInit {
       console.log(prod)
       this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
         this.prodSpec=spec;
-        console.log('--- Prod spec ---')
-        console.log(this.prodSpec)
-        console.log('------')
+        
         let attachment = spec.attachment
         console.log(spec.attachment)
         let prodPrices: any[] | undefined= prod.productOfferingPrice;
@@ -198,6 +193,26 @@ export class ProductDetailsComponent implements OnInit {
                 this.checkCustom=true;
               }
             })
+          }
+        }
+        if(this.prodSpec.productSpecCharacteristic != undefined){
+          console.log('-- prod spec')
+          console.log(this.prodSpec.productSpecCharacteristic)
+          for(let i=0; i<certifications.length; i++){
+            if(certifications[i].domesupported==true){
+              this.complianceProf.push(certifications[i])
+            } else {
+              let compProf = this.prodSpec.productSpecCharacteristic.find((p => {
+                return p.name === certifications[i].name
+              }));
+              if(compProf){
+                this.complianceProf.push(certifications[i])
+              }
+            }
+            const index = this.prodSpec.productSpecCharacteristic.findIndex(item => item.name === certifications[i].name);
+            if(index!==-1){
+              this.prodSpec.productSpecCharacteristic.splice(index, 1);
+            }
           }
         }
         if(this.prodSpec.serviceSpecification != undefined){
@@ -214,6 +229,7 @@ export class ProductDetailsComponent implements OnInit {
             })
           }
         }
+        
         console.log('serv specs')
         console.log(this.serviceSpecs)
         this.productOff={
@@ -284,7 +300,6 @@ export class ProductDetailsComponent implements OnInit {
             if (!compProf) {
               this.complianceProf[z].href = '#'
               this.complianceProf[z].value = 'Not provided yet'
-
             } else {
               this.complianceProf[z].href = compProf.productSpecCharacteristicValue?.at(0)?.value
               this.complianceProf[z].value = 'Certification included'
