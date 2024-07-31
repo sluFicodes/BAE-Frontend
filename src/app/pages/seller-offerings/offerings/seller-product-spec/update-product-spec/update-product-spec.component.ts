@@ -496,6 +496,17 @@ export class UpdateProductSpecComponent implements OnInit {
     console.log(this.prodSpecsBundle)    
   }
 
+  checkValidISOS():boolean{
+    let invalid = this.selectedISOS.find((p => {
+      return p.url === ''
+    }));
+    if(invalid){
+      return true;
+    } else {
+      return false;
+    }    
+  }
+
   addISOValue(sel:any){
     const index = this.selectedISOS.findIndex(item => item.name === sel.name);
     const nativeElement = document.getElementById('iso-'+sel.name);

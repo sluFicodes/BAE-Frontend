@@ -61,6 +61,7 @@ export class ProductDetailsComponent implements OnInit {
   lastAddedProd:any | undefined;
   checkCustom:boolean=false;
   textDivHeight:any;
+  prodChars:any[]=[];
 
   errorMessage:any='';
   showError:boolean=false;
@@ -196,6 +197,9 @@ export class ProductDetailsComponent implements OnInit {
           }
         }
         if(this.prodSpec.productSpecCharacteristic != undefined){
+          this.prodSpec.productSpecCharacteristic.forEach((char: any) => {
+            this.prodChars.push(char);
+          });
           console.log('-- prod spec')
           console.log(this.prodSpec.productSpecCharacteristic)
           for(let i=0; i<certifications.length; i++){
@@ -209,9 +213,9 @@ export class ProductDetailsComponent implements OnInit {
                 this.complianceProf.push(certifications[i])
               }
             }
-            const index = this.prodSpec.productSpecCharacteristic.findIndex(item => item.name === certifications[i].name);
+            const index = this.prodChars.findIndex(item => item.name === certifications[i].name);
             if(index!==-1){
-              this.prodSpec.productSpecCharacteristic.splice(index, 1);
+              this.prodChars.splice(index, 1);
             }
           }
         }
