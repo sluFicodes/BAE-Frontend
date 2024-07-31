@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener, ElementRef, ViewChild, Input, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {components} from "src/app/models/product-catalog";
 import { environment } from 'src/environments/environment';
@@ -33,13 +33,14 @@ type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
   templateUrl: './update-product-spec.component.html',
   styleUrl: './update-product-spec.component.css'
 })
-export class UpdateProductSpecComponent implements OnInit{
+export class UpdateProductSpecComponent implements OnInit {
   @Input() prod: any;
 
   //PAGE SIZES:
   PROD_SPEC_LIMIT: number = environment.PROD_SPEC_LIMIT;
   SERV_SPEC_LIMIT: number = environment.SERV_SPEC_LIMIT;
   RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
+  DOME_TRUST_LINK: string = environment.DOME_TRUST_LINK
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
@@ -195,6 +196,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.initPartyInfo();
     console.log(this.prod)
     this.populateProductInfo();
+    initFlowbite();
   }
 
   initPartyInfo(){
@@ -365,6 +367,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    initFlowbite();
   }
 
   toggleBundle(){
@@ -379,6 +382,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    initFlowbite();
   }
 
   toggleBundleCheck(){
@@ -459,6 +463,9 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    setTimeout(() => {        
+      initFlowbite();   
+    }, 100);
   }
 
   addISO(iso:any){
@@ -660,6 +667,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
     this.showPreview=false;
+    initFlowbite();
   }
 
   toggleResource(){
@@ -678,6 +686,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    initFlowbite();
   }
 
   getResSpecs(){    
@@ -749,6 +758,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    initFlowbite();
   }
 
   getServSpecs(){    
@@ -816,6 +826,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    initFlowbite();
   }
 
   removeImg(){    
@@ -887,6 +898,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showRelationships=true;
     this.showSummary=false;
     this.showPreview=false;
+    initFlowbite();
   }
 
   getProdSpecsRel(){
@@ -1178,6 +1190,7 @@ export class UpdateProductSpecComponent implements OnInit{
     this.showRelationships=false;
     this.showSummary=true;
     this.showPreview=false;
+    initFlowbite();
   }
 
   isProdValid(){
