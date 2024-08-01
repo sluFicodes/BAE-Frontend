@@ -106,6 +106,7 @@ export class CreateProductSpecComponent implements OnInit {
   selectedISOS:any[]=[];
   selectedISO:any;
   showUploadFile:boolean=false;
+  disableCompNext:boolean=true;
 
   //SERVICE INFO:
   serviceSpecPage=0;
@@ -352,6 +353,18 @@ export class CreateProductSpecComponent implements OnInit {
     console.log(this.prodSpecsBundle)    
   }
 
+  checkValidISOS():boolean{
+    let invalid = this.selectedISOS.find((p => {
+      return p.url === ''
+    }));
+    if(invalid){
+      return true;
+    } else {
+      return false;
+    }
+    
+  }
+
   public dropped(files: NgxFileDropEntry[],sel:any) {
     this.files = files;
     for (const droppedFile of files) {
@@ -465,7 +478,7 @@ export class CreateProductSpecComponent implements OnInit {
 
   toggleUploadFile(sel:any){
     this.showUploadFile=true;
-    this.selectedISO=sel;
+    this.selectedISO=sel;    
   }
 
   uploadFile(){

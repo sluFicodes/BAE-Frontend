@@ -436,7 +436,9 @@
                                             {{sel.name}}
                                         </td>
                                         <td class="px-6 py-4">
-                                            <input type="text" [(ngModel)]="selectedISOS[idx].url" value="{{sel.url}}" [id]="'iso-'+sel.name" class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-2 border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                                       
+                                            {{sel.url}}
+                                            <!--<input readonly type="text" [(ngModel)]="selectedISOS[idx].url" value="{{sel.url}}" [id]="'iso-'+sel.name"
+                                            class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-2 border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" /> -->                                     
                                         </td>
                                         <td class="px-6 py-4 inline-flex">
                                             <button (click)="toggleUploadFile(sel);$event.stopPropagation();" type="button" class="text-white file-select-button mr-4 bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
@@ -469,7 +471,9 @@
                     </div>
 
                     <div class="flex w-full justify-items-end justify-end ml-4">
-                        <button type="button" (click)="toggleChars();complianceDone=true;"  class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        <button type="button" (click)="toggleChars();complianceDone=true;"
+                        [disabled]="checkValidISOS()" [ngClass]="checkValidISOS() ? 'opacity-50' : 'hover:bg-primary-50'"
+                        class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                             {{ 'CREATE_PROD_SPEC._next' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
