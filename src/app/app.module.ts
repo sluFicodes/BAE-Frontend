@@ -68,11 +68,12 @@ import { CreateCategoryComponent } from './pages/admin/categories/create-categor
 import { UpdateCategoryComponent } from './pages/admin/categories/update-category/update-category.component';
 import { CategoriesRecursionListComponent } from './shared/categories-recursion-list/categories-recursion-list.component';
 import { ContactUsComponent } from './offerings/contact-us/contact-us.component';
-import { provideMatomo } from 'ngx-matomo-client';
+import { provideMatomo, MatomoModule } from 'ngx-matomo-client';
 import { withRouter } from 'ngx-matomo-client'
 import { environment } from 'src/environments/environment';
 import { AppInitService } from './services/app-init.service';
 import { appConfigFactory } from './app-config-factory';
+import { VerificationComponent } from './pages/admin/verification/verification.component';
 
 
 @NgModule({
@@ -128,7 +129,8 @@ import { appConfigFactory } from './app-config-factory';
     CreateCategoryComponent,
     UpdateCategoryComponent,
     CategoriesRecursionListComponent,
-    ContactUsComponent
+    ContactUsComponent,
+    VerificationComponent
   ],
   imports: [
     BrowserModule,
@@ -152,7 +154,10 @@ import { appConfigFactory } from './app-config-factory';
       }
     }),
     CategoriesPanelComponent,
-
+    MatomoModule.forRoot({
+      siteId: environment.MATOMO_TRACKER_URL,
+      trackerUrl: environment.MATOMO_SITE_ID,
+    })
   ],
   providers: [
     AppInitService,
@@ -166,17 +171,14 @@ import { appConfigFactory } from './app-config-factory';
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
       multi: true,
-    },
-    provideMatomo({
-      trackerUrl: environment.MATOMO_TRACKER_URL,
-      siteId: environment.MATOMO_SITE_ID
-    }, withRouter())
+    }
   ],
   exports: [
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/');
 }
