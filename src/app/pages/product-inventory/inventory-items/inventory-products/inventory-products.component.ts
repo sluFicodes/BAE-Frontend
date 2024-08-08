@@ -4,6 +4,7 @@ import { ProductInventoryServiceService } from 'src/app/services/product-invento
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ProductOrderService } from 'src/app/services/product-order-service.service';
 import { PriceServiceService } from 'src/app/services/price-service.service';
+import { PaginationService } from 'src/app/services/pagination.service';
 import {EventMessageService} from "src/app/services/event-message.service";
 import { FastAverageColor } from 'fast-average-color';
 import {components} from "src/app/models/product-catalog";
@@ -22,6 +23,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 })
 export class InventoryProductsComponent implements OnInit {
   inventory:any[] = [];
+  nextInventory:any[] =[];
   partyId:any='';
   loading: boolean = false;
   bgColor: string[] = [];
@@ -51,6 +53,7 @@ export class InventoryProductsComponent implements OnInit {
     private router: Router,
     private orderService: ProductOrderService,
     private eventMessage: EventMessageService,
+    private paginationService: PaginationService
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
@@ -204,6 +207,28 @@ export class InventoryProductsComponent implements OnInit {
       this.cdr.detectChanges();
     })
   }
+
+  /*async getInventory(next:boolean){
+    if(next==false){
+      this.loading=true;
+    }
+    
+    let options = {
+      "keywords": this.keywordFilter,
+      "filters": this.filters,
+      "partyId": this.partyId
+    }
+    
+    this.paginationService.getItemsPaginated(this.page, this.INVENTORY_LIMIT, next, this.inventory, this.nextInventory, options,
+      this.inventoryService.getInventory.bind(this.inventoryService)).then(data => {
+      this.page_check=data.page_check;      
+      this.inventory=data.items;
+      this.nextInventory=data.nextItems;
+      this.page=data.page;
+      this.loading=false;
+      this.loading_more=false;
+    })
+  }*/
 
   onStateFilterChange(filter:string){
     const index = this.filters.findIndex(item => item === filter);
