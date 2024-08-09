@@ -71,6 +71,7 @@ export class OrderInfoComponent implements OnInit {
     let today = new Date();
     today.setMonth(today.getMonth()-1);
     this.selectedDate = today.toISOString();
+    this.dateRange.setValue('month');
     this.initPartyInfo();
   }
 
