@@ -238,7 +238,7 @@
                                     <div class="flex justify-start mb-2">
                                         <h2 class="text-gray-900 dark:text-white text-3xl font-extrabold mb-2">{{price.name}}</h2>
                                     </div>
-                                    <markdown class="dark:text-gray-200 w-full text-wrap break-all" [data]="price?.description"></markdown>
+                                    <markdown class="dark:text-gray-200 w-full p-4 text-wrap break-all" [data]="price?.description"></markdown>
                                 </div>
                             }
                         }
@@ -263,7 +263,7 @@
                                     </div>
                                     <p class="flex justify-center font-normal text-gray-700 dark:text-white"> <b class="text-xl mr-2">{{price.price?.value}}</b> {{price.price?.unit}}</p>
                                     <p class="flex justify-center font-normal text-gray-700 dark:text-white">/{{price.recurringChargePeriodType}}</p>
-                                    <p class="flex justify-center mb-2 p-2 font-normal text-gray-700 dark:text-white text-wrap break-all">{{price.description}}</p>
+                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700 dark:text-white text-wrap break-all">{{price.description}}</p>
                                 </div>
                             } @else if (price.priceType == 'usage') {
                                 <div class="max-w-sm bg-white border border-gray-200 dark:bg-secondary-200 dark:border-gray-800 rounded-lg shadow w-full">
