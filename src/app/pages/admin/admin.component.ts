@@ -17,9 +17,11 @@ import {EventMessageService} from "../../services/event-message.service";
   styleUrl: './admin.component.css'
 })
 export class AdminComponent implements OnInit {
-  show_categories:boolean=true;
-  show_create_categories:boolean=false;
-  show_update_categories:boolean=false;
+  show_categories:boolean = true;
+  show_create_categories:boolean = false;
+  show_update_categories:boolean = false;
+  show_verification:boolean = false;
+
   category_to_update:any;
   constructor(
     private localStorage: LocalStorageService,
@@ -46,31 +48,52 @@ export class AdminComponent implements OnInit {
 
   goToCategories(){
     this.selectCategories();
-    this.show_categories=true;
-    this.show_create_categories=false;
-    this.show_update_categories=false;
+    this.show_categories = true;
+    this.show_create_categories = false;
+    this.show_update_categories = false;
+    this.show_verification = false;
     this.cdr.detectChanges();
   }
 
   goToCreateCategories(){
-    this.show_categories=false;
-    this.show_create_categories=true;
-    this.show_update_categories=false;
+    this.show_categories = false;
+    this.show_create_categories = true;
+    this.show_update_categories = false;
+    this.show_verification = false;
     this.cdr.detectChanges();
   }
 
   goToUpdateCategories(){
-    this.show_categories=false;
-    this.show_create_categories=false;
-    this.show_update_categories=true;
+    this.show_categories = false;
+    this.show_create_categories = false;
+    this.show_update_categories = true;
+    this.show_verification = false;
+    this.cdr.detectChanges();
+  }
+
+  goToVerification() {
+    this.selectVerification()
+    this.show_categories = false;
+    this.show_create_categories = false;
+    this.show_update_categories = false;
+    this.show_verification = true;
     this.cdr.detectChanges();
   }
 
   selectCategories(){
     let categories_button = document.getElementById('categories-button')
+    let verify_button = document.getElementById('verify-button')
 
     this.selectMenu(categories_button,'text-white bg-primary-100');
-    //this.unselectMenu(catalog_button,'text-white bg-primary-100');
+    this.unselectMenu(verify_button,'text-white bg-primary-100');
+  }
+
+  selectVerification(){
+    let categories_button = document.getElementById('categories-button')
+    let verify_button = document.getElementById('verify-button')
+
+    this.selectMenu(verify_button,'text-white bg-primary-100');
+    this.unselectMenu(categories_button,'text-white bg-primary-100');
   }
 
   removeClass(elem: HTMLElement, cls:string) {
