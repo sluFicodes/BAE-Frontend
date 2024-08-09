@@ -77,7 +77,7 @@ export class InventoryProductsComponent implements OnInit {
         let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
         this.partyId = loggedOrg.partyId
       }
-      this.getInventory();
+      this.getInventory(false);
     }
     let input = document.querySelector('[type=search]')
     if(input!=undefined){
@@ -86,7 +86,7 @@ export class InventoryProductsComponent implements OnInit {
         console.log(`Input updated`)
         if(this.searchField.value==''){
           this.keywordFilter=undefined;
-          this.getInventory();
+          this.getInventory(false);
         }
       });
     }
@@ -104,75 +104,16 @@ export class InventoryProductsComponent implements OnInit {
       this.cdr.detectChanges();
     }
   }
-
-  getOffers(size:number){
-    for(let i=size; i<this.inventory.length; i++){
-      this.api.getProductById(this.inventory[i].productOffering.id).then(prod=> {           
-        let attachment: any[]= []
-        this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
-          if(spec.attachment){
-            attachment = spec.attachment
-          }          
-          this.inventory[i]['product'] = {
-            id: prod.id,
-            name: prod.name,
-            category: prod.category,
-            description: prod.description,
-            lastUpdate: prod.lastUpdate,
-            attachment: attachment,
-            //productOfferingPrice: data[i].productPrice[0],
-            productSpecification: prod.productSpecification,
-            productOfferingTerm: prod.productOfferingTerm,
-            version: prod.version
-          };
-
-          if(this.inventory[i].productPrice){
-            if(this.inventory[i].productPrice.length>0){
-              this.inventory[i]['price']={
-                "price": this.inventory[i].productPrice[0].price.taxIncludedAmount.value,
-                "unit": this.inventory[i].productPrice[0].price.taxIncludedAmount.unit,
-                "priceType": this.inventory[i].productPrice[0].priceType,
-                "text": this.inventory[i].productPrice[0].unitOfMeasure != undefined ? '/'+this.inventory[i].productPrice[0].unitOfMeasure : this.inventory[i].productPrice[0].recurringChargePeriodType
-              }
-            } else {
-              if(prod.productOfferingPrice){
-                if(prod.productOfferingPrice.length==1){
-                  this.api.getProductPrice(prod.productOfferingPrice[0].id).then(price => {
-                    console.log(price)
-                    this.inventory[i]['price']={
-                      "price": '',
-                      "unit": '',
-                      "priceType": price.priceType,
-                      "text": ''
-                    }
-                  })
-                }
-              }
-              console.log('----')
-              console.log(prod.name)
-              console.log(this.inventory[i])
-              console.log(prod)
-            }
-
-          }
-
-          this.loading=false;
-          this.loading_more=false;
-          this.cdr.detectChanges();
-          initFlowbite();
-        })
-
-      })
-    }
-  }
-
-
+  
   getProductImage(prod:ProductOffering) {
-    let profile = prod?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
-    let images = prod.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
-    if(profile.length!=0){
-      images = profile;
-    } 
+    let images: any[] = []
+    if(prod.attachment){
+      let profile = prod?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
+      images = prod.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
+      if(profile.length!=0){
+        images = profile;
+      } 
+    }
     return images.length > 0 ? images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
@@ -181,34 +122,7 @@ export class InventoryProductsComponent implements OnInit {
     this.router.navigate(['/search', productOff?.id]);
   }
 
-  getInventory(){
-    let existingInventorySize=this.inventory.length;
-    this.inventoryService.getInventory(this.page,this.partyId,this.filters,this.keywordFilter).then(data => {
-      if(data.length<this.INVENTORY_LIMIT){
-        this.page_check=false;
-        this.cdr.detectChanges();
-      }else{
-        this.page_check=true;
-        this.cdr.detectChanges();
-      }
-      for(let i=0; i<data.length;i++){
-        this.inventory.push(data[i])
-      }
-      //this.inventory=data;
-      console.log('inv')
-      console.log(this.inventory)
-      this.getOffers(existingInventorySize);
-      this.cdr.detectChanges();
-      if(data.length==0){
-        this.loading_more=false;
-      }
-      //this.loading_more=false;
-      this.loading=false;
-      this.cdr.detectChanges();
-    })
-  }
-
-  /*async getInventory(next:boolean){
+  async getInventory(next:boolean){
     if(next==false){
       this.loading=true;
     }
@@ -220,7 +134,7 @@ export class InventoryProductsComponent implements OnInit {
     }
     
     this.paginationService.getItemsPaginated(this.page, this.INVENTORY_LIMIT, next, this.inventory, this.nextInventory, options,
-      this.inventoryService.getInventory.bind(this.inventoryService)).then(data => {
+      this.paginationService.getInventory.bind(this.paginationService)).then(data => {
       this.page_check=data.page_check;      
       this.inventory=data.items;
       this.nextInventory=data.nextItems;
@@ -228,7 +142,7 @@ export class InventoryProductsComponent implements OnInit {
       this.loading=false;
       this.loading_more=false;
     })
-  }*/
+  }
 
   onStateFilterChange(filter:string){
     const index = this.filters.findIndex(item => item === filter);
@@ -241,33 +155,23 @@ export class InventoryProductsComponent implements OnInit {
       console.log(this.filters)
       this.filters.push(filter)
     }
-    this.loading=true;
-    this.page=0;
-    this.inventory=[];
-    this.getInventory();
+    this.getInventory(false);
   }
 
   async next(){
-    this.loading_more=true;
-    this.page=this.page+this.INVENTORY_LIMIT;
-    this.cdr.detectChanges;
-    console.log(this.page)
-    await this.getInventory();
+    await this.getInventory(true);
   }
 
   filterInventoryByKeywords(){
     this.keywordFilter=this.searchField.value;
-    this.page=0;
-    this.getInventory();
+    this.getInventory(false);
   }
 
   unsubscribeProduct(id:any){
     this.inventoryService.updateProduct({status: "suspended"},id).subscribe({
       next: data => {
-        this.page=0;
-        this.inventory=[];
         this.unsubscribeModal=false;
-        this.getInventory();              
+        this.getInventory(false);              
       },
       error: error => {
           console.error('There was an error while updating!', error);
