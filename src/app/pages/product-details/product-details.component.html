@@ -160,7 +160,7 @@
                     <div class="pb-2">                
                         <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'PRODUCT_DETAILS._service_spec' | translate }}:</h5>
                         @for(service of serviceSpecs; track service.id){
-                            <p class="pl-4 dark:text-gray-200"><b>{{service.name}}</b>:  {{service.description}}</p>
+                            <p class="pl-4 dark:text-gray-200"><b>{{service.name}}</b>:  <markdown class="text-gray-800 dark:text-gray-200 text-wrap break-all" [data]="service.description"></markdown></p>
                         }
                     </div>
                 }
@@ -168,7 +168,7 @@
                     <div class="pb-2">                
                         <h5 class="text-xl font-semibold tracking-tight text-primary-100 dark:text-primary-50">{{ 'PRODUCT_DETAILS._resource_spec' | translate }}:</h5>
                         @for(resource of resourceSpecs; track resource.id){
-                            <p class="pl-4 dark:text-gray-200"><b>{{resource.name}}</b>: {{resource.description}}</p>
+                            <p class="pl-4 dark:text-gray-200"><b>{{resource.name}}</b>: <markdown class="text-gray-800 dark:text-gray-200 text-wrap break-all" [data]="resource.description"></markdown></p>
                         }
                     </div>
                 }
