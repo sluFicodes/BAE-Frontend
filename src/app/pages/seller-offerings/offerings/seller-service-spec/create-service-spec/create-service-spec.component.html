@@ -221,11 +221,19 @@
                                             {{prod.description}}                                       
                                         </td>
                                         <td class="px-6 py-4 text-wrap break-all">
-                                            @for (char of prod.characteristicValueSpecification; track char;) {
+                                            @for (char of prod.characteristicValueSpecification; track char; let last=$last) {
                                                 @if(char.value){
-                                                    {{char.value}} {{char?.unitOfMeasure}},
+                                                    @if(!last){
+                                                        {{char.value}} {{char?.unitOfMeasure}},
+                                                    } @else {
+                                                        {{char.value}} {{char?.unitOfMeasure}}
+                                                    }                                                    
                                                 } @else {
-                                                    {{char.valueFrom}} - {{char.valueTo}} {{char?.unitOfMeasure}},
+                                                    @if(!last){
+                                                        {{char.valueFrom}} - {{char.valueTo}} {{char?.unitOfMeasure}},
+                                                    } @else {
+                                                        {{char.valueFrom}} - {{char.valueTo}} {{char?.unitOfMeasure}}
+                                                    }
                                                 }                                                
                                             }                                   
                                         </td>
@@ -451,11 +459,19 @@
                                                 {{prod.description}}                                       
                                             </td>
                                             <td class="px-6 py-4 text-wrap break-all">
-                                                @for (char of prod.characteristicValueSpecification; track char;) {
+                                                @for (char of prod.characteristicValueSpecification; track char; let last=$last) {
                                                     @if(char.value){
-                                                        {{char.value}} {{char?.unitOfMeasure}},
+                                                        @if(!last){
+                                                            {{char.value}} {{char?.unitOfMeasure}},
+                                                        } @else {
+                                                            {{char.value}} {{char?.unitOfMeasure}}
+                                                        }                                                    
                                                     } @else {
-                                                        {{char.valueFrom}} - {{char.valueTo}} {{char?.unitOfMeasure}},
+                                                        @if(!last){
+                                                            {{char.valueFrom}} - {{char.valueTo}} {{char?.unitOfMeasure}},
+                                                        } @else {
+                                                            {{char.valueFrom}} - {{char.valueTo}} {{char?.unitOfMeasure}}
+                                                        }
                                                     }                                                
                                                 }                                   
                                             </td>
