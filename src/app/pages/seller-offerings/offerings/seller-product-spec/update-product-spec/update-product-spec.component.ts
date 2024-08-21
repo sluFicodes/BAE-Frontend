@@ -143,6 +143,8 @@ export class UpdateProductSpecComponent implements OnInit {
   imgPreview:any='';
   prodAttachments:AttachmentRefOrValue[]=[];
   attachToCreate:AttachmentRefOrValue={url:'',attachmentType:''};
+  attFileName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9 _.-]*')]);
+  attImageName = new FormControl('', [Validators.required, Validators.pattern('^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp)$')])
 
   //FINAL PRODUCT USING API CALL STRUCTURE
   productSpecToUpdate:ProductSpecification_Update | undefined;
@@ -594,6 +596,9 @@ export class UpdateProductSpecComponent implements OnInit {
                       } else {
                         this.errorMessage='There was an error while uploading the file!';
                       }
+                      if (error.status === 413) {
+                        this.errorMessage='File size too large! Must be under 3MB.';
+                      }
                       this.showError=true;
                       setTimeout(() => {
                         this.showError = false;
@@ -628,6 +633,9 @@ export class UpdateProductSpecComponent implements OnInit {
                         this.errorMessage='Error: '+error.error.error;
                       } else {
                         this.errorMessage='There was an error while uploading the file!';
+                      }
+                      if (error.status === 413) {
+                        this.errorMessage='File size too large! Must be under 3MB.';
                       }
                       this.showError=true;
                       setTimeout(() => {
@@ -712,7 +720,7 @@ export class UpdateProductSpecComponent implements OnInit {
     }
     
     let options = {
-      "filters": [],
+      "filters": ['Active','Launched'],
       "partyId": this.partyId,
       //"sort": undefined,
       //"isBundle": false
@@ -784,7 +792,7 @@ export class UpdateProductSpecComponent implements OnInit {
     }
     
     let options = {
-      "filters": [],
+      "filters": ['Active','Launched'],
       "partyId": this.partyId,
       //"sort": undefined,
       //"isBundle": false
@@ -847,7 +855,9 @@ export class UpdateProductSpecComponent implements OnInit {
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
-    initFlowbite();
+    setTimeout(() => {        
+      initFlowbite();   
+    }, 100);
   }
 
   removeImg(){    
@@ -869,6 +879,7 @@ export class UpdateProductSpecComponent implements OnInit {
       url: this.imgPreview,
       attachmentType: 'Picture'
     })
+    this.attImageName.reset();
     this.cdr.detectChanges();
   }
 
@@ -896,6 +907,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.attachName.nativeElement.value='';
     this.attachToCreate={url:'',attachmentType:''};
     this.showNewAtt=false;
+    this.attFileName.reset();
   }
 
   clearAtt(){
