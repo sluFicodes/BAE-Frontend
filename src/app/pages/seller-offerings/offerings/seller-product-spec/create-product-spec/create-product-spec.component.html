@@ -965,13 +965,13 @@
                             </ngx-file-drop>
                         </div>
                         <label class="font-bold ml-6 dark:text-white">{{ 'CREATE_PROD_SPEC._add_prod_img_url' | translate }}</label>
-                        <div class="flex h-fit ml-6 mt-2 mb-2 w-full justify-between align-items-middle align-middle">
+                        <div class="flex items-center h-fit ml-6 mt-2 mb-2 w-full justify-between">
                             <input #imgURL type="text" id="att-name"
-                            [formControl]="attImageName"
-                            class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                [formControl]="attImageName"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" />
                             <button (click)="saveImgFromURL()"
-                            [disabled]="!attImageName.valid" [ngClass]="!attImageName.valid ? 'opacity-50' : 'hover:bg-primary-50'"                            
-                            class="flex align-items-middle text-white bg-primary-100 rounded-3xl p-1 ml-2 h-fit">
+                                [disabled]="!attImageName.valid" [ngClass]="!attImageName.valid ? 'opacity-50' : 'hover:bg-primary-50'"
+                                class="text-white bg-primary-100 rounded-3xl p-1 ml-2 h-fit">
                                 <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>                                    
                                 </svg>                                  
@@ -980,7 +980,7 @@
                     }
                     <h4 class="text-lg font-bold ml-4 dark:text-white">{{ 'CREATE_PROD_SPEC._add_att' | translate }}</h4>
                     @if(prodAttachments.length == 0){
-                        <div class="flex justify-center w-full m-4">
+                        <div class="flex justify-center w-full ml-6 mt-2 mb-2 mr-4">
                             <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50 dark:bg-secondary-200 dark:text-primary-50" role="alert">
                               <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
