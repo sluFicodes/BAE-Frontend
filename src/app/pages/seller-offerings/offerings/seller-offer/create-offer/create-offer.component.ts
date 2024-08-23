@@ -152,6 +152,7 @@ export class CreateOfferComponent implements OnInit {
     condition: new FormControl(''),
     description: new FormControl(''),
   });
+  validPriceCheck:boolean=true;
   selectedPriceUnit:any=currencies[0].code;
   priceTypeAlter:any='ONE TIME';
   priceComponentSelected:boolean=false;
@@ -422,6 +423,7 @@ export class CreateOfferComponent implements OnInit {
       this.usageSelected=false;
       this.customSelected=true;
     }
+    this.checkValidPrice();
   }
 
   onPriceTypeAlterSelected(event: any){
@@ -446,24 +448,60 @@ export class CreateOfferComponent implements OnInit {
 
   onPricePeriodChange(event: any){
     this.selectedPeriod=event.target.value;
+    this.checkValidPrice();
   }
 
   onPricePeriodAlterChange(event: any){
     this.selectedPeriodAlter=event.target.value;
+    this.checkValidPrice();
   }
 
   onPriceUnitChange(event:any){
     this.selectedPriceUnit=event.target.value;
+    this.checkValidPrice();
   }
 
   checkValidPrice(){
-    if(this.customSelected && this.priceForm.value.name != ''){
-      return false
-    } else if(!this.priceForm.invalid){
-      return false
+    const index = this.createdPrices.findIndex(item => item.name === this.priceForm.value.name);
+    if (index !== -1) {
+      if(this.editPrice && this.createdPrices[index].name == this.priceToUpdate.name){
+        this.priceForm.controls.name.setErrors(null)
+        this.priceForm.controls.name.updateValueAndValidity();
+        if(this.customSelected && this.priceForm.value.name != ''){
+          this.validPriceCheck=false;
+        } else if (this.usageSelected){
+          if(this.usageUnitUpdate.nativeElement.value != ''){
+            this.validPriceCheck=false;
+          } else {
+            this.validPriceCheck=true;
+          }     
+        } else if(!this.priceForm.invalid){
+          this.validPriceCheck=false;
+        } else {
+          this.validPriceCheck=true;
+        }
+      } else {
+        this.priceForm.controls.name.setErrors({invalidName:true})
+        this.validPriceCheck=true;
+      }      
     } else {
-      return true
+      this.priceForm.controls.name.setErrors(null)
+      this.priceForm.controls.name.updateValueAndValidity();
+      if(this.customSelected && this.priceForm.value.name != ''){
+        this.validPriceCheck=false;
+      } else if (this.usageSelected){
+        if(this.usageUnit.nativeElement.value != ''){
+          this.validPriceCheck=false;
+        } else {
+          this.validPriceCheck=true;
+        }    
+      } else if(!this.priceForm.invalid){
+        this.validPriceCheck=false;
+      } else {
+        this.validPriceCheck=true;
+      }
     }
+    this.cdr.detectChanges();
   }
 
   savePrice(){
@@ -602,6 +640,7 @@ export class CreateOfferComponent implements OnInit {
       }
     }
     this.cdr.detectChanges();
+    this.validPriceCheck=false;
     this.editPrice=true;
   }
 
@@ -725,12 +764,14 @@ export class CreateOfferComponent implements OnInit {
     this.priceForm.reset();
     this.priceForm.controls['name'].setValue('');
     this.priceForm.controls['price'].setValue('');
+    this.priceForm.controls['description'].setValue('');
     // Explicitly mark all controls as pristine and untouched
     Object.keys(this.priceForm.controls).forEach(key => {
       this.priceForm.get(key)?.markAsPristine();
       this.priceForm.get(key)?.markAsUntouched();
       this.priceForm.get(key)?.updateValueAndValidity();
     });
+    this.validPriceCheck=true;
   }
 
   onSLAMetricChange(event: any) {

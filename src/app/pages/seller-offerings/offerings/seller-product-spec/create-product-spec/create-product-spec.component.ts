@@ -436,13 +436,21 @@ export class CreateProductSpecComponent implements OnInit {
                   next: data => {
                       console.log(data)
                       if(sel=='img'){
-                        this.showImgPreview=true;
-                        this.imgPreview=data.content;
-                        this.prodAttachments.push({
-                          name: 'Profile Picture',
-                          url: this.imgPreview,
-                          attachmentType: file.type
-                        })
+                        if(file.type.startsWith("image")){
+                          this.showImgPreview=true;
+                          this.imgPreview=data.content;
+                          this.prodAttachments.push({
+                            name: 'Profile Picture',
+                            url: this.imgPreview,
+                            attachmentType: file.type
+                          })
+                        } else {
+                          this.errorMessage='File must have a valid image format!';
+                          this.showError=true;
+                          setTimeout(() => {
+                            this.showError = false;
+                          }, 3000);
+                        }
                       } else {
                         this.attachToCreate={url:data.content,attachmentType:file.type};
                       }
