@@ -9,6 +9,7 @@ import {EventMessageService} from "src/app/services/event-message.service";
 import {AttachmentServiceService} from "src/app/services/attachment-service.service";
 import { ServiceSpecServiceService } from 'src/app/services/service-spec-service.service';
 import { ResourceSpecServiceService } from 'src/app/services/resource-spec-service.service';
+import { PaginationService } from 'src/app/services/pagination.service';
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -78,6 +79,7 @@ export class CreateOfferComponent implements OnInit {
   loadingBundle:boolean=false;
   loadingBundle_more:boolean=false;
   bundledOffers:any[]=[];
+  nextBundledOffers:any[]=[];
   //final selected products inside bundle
   offersBundle:BundledProductOffering[]=[];
 
@@ -88,6 +90,7 @@ export class CreateOfferComponent implements OnInit {
   loadingProdSpec_more:boolean=false;
   selectedProdSpec:any={id:''};
   prodSpecs:any[]=[];
+  nextProdSpecs:any[]=[];
 
   //CATALOG INFO:
   catalogPage=0;
@@ -96,12 +99,10 @@ export class CreateOfferComponent implements OnInit {
   loadingCatalog_more:boolean=false;
   selectedCatalog:any={id:''};
   catalogs:any[]=[];
+  nextCatalogs:any[]=[];
 
   //CATEGORIES
-  categoryPage=0;
-  categoryPageCheck:boolean=false;
   loadingCategory:boolean=false;
-  loadingCategory_more:boolean=false;
   selectedCategories:any[]=[];
   unformattedCategories:any[]=[];
   categories:any[]=[];
@@ -151,6 +152,7 @@ export class CreateOfferComponent implements OnInit {
     condition: new FormControl(''),
     description: new FormControl(''),
   });
+  validPriceCheck:boolean=true;
   selectedPriceUnit:any=currencies[0].code;
   priceTypeAlter:any='ONE TIME';
   priceComponentSelected:boolean=false;
@@ -186,6 +188,7 @@ export class CreateOfferComponent implements OnInit {
     private attachmentService: AttachmentServiceService,
     private servSpecService: ServiceSpecServiceService,
     private resSpecService: ResourceSpecServiceService,
+    private paginationService: PaginationService
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'CategoryAdded') {
@@ -261,7 +264,7 @@ export class CreateOfferComponent implements OnInit {
     this.bundleChecked=!this.bundleChecked;
     if(this.bundleChecked==true){
       this.loadingBundle=true;
-      this.getSellerOffers();
+      this.getSellerOffers(false);
     } else {
       this.offersBundle=[];
     }
@@ -271,7 +274,7 @@ export class CreateOfferComponent implements OnInit {
     this.prodSpecs=[];
     this.prodSpecPage=0;
     this.loadingProdSpec=true;
-    this.getSellerProdSpecs();
+    this.getSellerProdSpecs(false);
     this.selectStep('prodspec','prodspec-circle');
     this.showBundle=false;
     this.showGeneral=false;
@@ -290,7 +293,7 @@ export class CreateOfferComponent implements OnInit {
     this.catalogs=[];
     this.catalogPage=0;
     this.loadingCatalog=true;
-    this.getSellerCatalogs();
+    this.getSellerCatalogs(false);
     this.selectStep('catalog','catalog-circle');
     this.showBundle=false;
     this.showGeneral=false;
@@ -376,10 +379,26 @@ export class CreateOfferComponent implements OnInit {
     if(this.licenseForm.value.treatment){
       this.createdLicense={
         treatment: this.licenseForm.value.treatment,
-        description: this.licenseForm.value.description != '' ? this.licenseForm.value.description : ''
+        description: this.licenseForm.value.description ? this.licenseForm.value.description : ''
       };
-    } 
+    } else {
+      this.createdLicense={
+        treatment: '',
+        description: ''
+      };      
+    }
     this.showPreview=false;
+  }
+
+  clearLicense(){
+    this.freeLicenseSelected=!this.freeLicenseSelected;
+    this.licenseForm.controls['treatment'].setValue('');
+    this.licenseForm.controls['description'].setValue('');
+    this.createdLicense={
+      treatment: '',
+      description: ''
+    };
+    console.log(this.createdLicense.treatment)
   }
 
   onPriceTypeSelected(event: any){
@@ -404,6 +423,7 @@ export class CreateOfferComponent implements OnInit {
       this.usageSelected=false;
       this.customSelected=true;
     }
+    this.checkValidPrice();
   }
 
   onPriceTypeAlterSelected(event: any){
@@ -428,24 +448,60 @@ export class CreateOfferComponent implements OnInit {
 
   onPricePeriodChange(event: any){
     this.selectedPeriod=event.target.value;
+    this.checkValidPrice();
   }
 
   onPricePeriodAlterChange(event: any){
     this.selectedPeriodAlter=event.target.value;
+    this.checkValidPrice();
   }
 
   onPriceUnitChange(event:any){
     this.selectedPriceUnit=event.target.value;
+    this.checkValidPrice();
   }
 
   checkValidPrice(){
-    if(this.customSelected && this.priceForm.value.name != ''){
-      return false
-    } else if(!this.priceForm.invalid){
-      return false
+    const index = this.createdPrices.findIndex(item => item.name === this.priceForm.value.name);
+    if (index !== -1) {
+      if(this.editPrice && this.createdPrices[index].name == this.priceToUpdate.name){
+        this.priceForm.controls.name.setErrors(null)
+        this.priceForm.controls.name.updateValueAndValidity();
+        if(this.customSelected && this.priceForm.value.name != ''){
+          this.validPriceCheck=false;
+        } else if (this.usageSelected){
+          if(this.usageUnitUpdate.nativeElement.value != ''){
+            this.validPriceCheck=false;
+          } else {
+            this.validPriceCheck=true;
+          }     
+        } else if(!this.priceForm.invalid){
+          this.validPriceCheck=false;
+        } else {
+          this.validPriceCheck=true;
+        }
+      } else {
+        this.priceForm.controls.name.setErrors({invalidName:true})
+        this.validPriceCheck=true;
+      }      
     } else {
-      return true
+      this.priceForm.controls.name.setErrors(null)
+      this.priceForm.controls.name.updateValueAndValidity();
+      if(this.customSelected && this.priceForm.value.name != ''){
+        this.validPriceCheck=false;
+      } else if (this.usageSelected){
+        if(this.usageUnit.nativeElement.value != ''){
+          this.validPriceCheck=false;
+        } else {
+          this.validPriceCheck=true;
+        }    
+      } else if(!this.priceForm.invalid){
+        this.validPriceCheck=false;
+      } else {
+        this.validPriceCheck=true;
+      }
     }
+    this.cdr.detectChanges();
   }
 
   savePrice(){
@@ -584,6 +640,7 @@ export class CreateOfferComponent implements OnInit {
       }
     }
     this.cdr.detectChanges();
+    this.validPriceCheck=false;
     this.editPrice=true;
   }
 
@@ -707,12 +764,14 @@ export class CreateOfferComponent implements OnInit {
     this.priceForm.reset();
     this.priceForm.controls['name'].setValue('');
     this.priceForm.controls['price'].setValue('');
+    this.priceForm.controls['description'].setValue('');
     // Explicitly mark all controls as pristine and untouched
     Object.keys(this.priceForm.controls).forEach(key => {
       this.priceForm.get(key)?.markAsPristine();
       this.priceForm.get(key)?.markAsUntouched();
       this.priceForm.get(key)?.updateValueAndValidity();
     });
+    this.validPriceCheck=true;
   }
 
   onSLAMetricChange(event: any) {
@@ -950,90 +1009,88 @@ export class CreateOfferComponent implements OnInit {
     this.selectedCategories=[];
   }
 
-  getSellerCatalogs(){
-    this.api.getCatalogsByUser(this.catalogPage,undefined,this.partyId,['Active','Launched']).then(data => {
-      if(data.length<this.CATALOG_LIMIT){
-        this.catalogPageCheck=false;
-        this.cdr.detectChanges();
-      }else{
-        this.catalogPageCheck=true;
-        this.cdr.detectChanges();
-      }
-      for(let i=0; i < data.length; i++){
-        this.catalogs.push(data[i])
-      }
+  async getSellerCatalogs(next:boolean){
+    if(next==false){
+      this.loadingCatalog=true;
+    }
+    
+    let options = {
+      "keywords": undefined,
+      "filters": ['Active','Launched'],
+      "partyId": this.partyId
+    }
+
+    this.paginationService.getItemsPaginated(this.catalogPage, this.CATALOG_LIMIT, next, this.catalogs,this.nextCatalogs, options,
+      this.api.getCatalogsByUser.bind(this.api)).then(data => {
+      this.catalogPageCheck=data.page_check;      
+      this.catalogs=data.items;
+      this.nextCatalogs=data.nextItems;
+      this.catalogPage=data.page;
       this.loadingCatalog=false;
       this.loadingCatalog_more=false;
-      console.log('--- catalogs')
-      console.log(this.catalogs)
     })
   }
 
   async nextCatalog(){
-    this.loadingCatalog_more=true;
-    this.catalogPage=this.catalogPage+this.CATALOG_LIMIT;
-    this.cdr.detectChanges;
-    console.log(this.catalogPage)
-    await this.getSellerCatalogs();
+    await this.getSellerCatalogs(true);
   }
 
   selectProdSpec(prod:any){
     this.selectedProdSpec=prod;
   }
 
-  getSellerProdSpecs(){
-    this.prodSpecService.getProdSpecByUser(this.prodSpecPage,['Active','Launched'],this.partyId,undefined,false).then(data => {
-      if(data.length<this.PROD_SPEC_LIMIT){
-        this.prodSpecPageCheck=false;
-        this.cdr.detectChanges();
-      }else{
-        this.prodSpecPageCheck=true;
-        this.cdr.detectChanges();
-      }
-      for(let i=0; i < data.length; i++){
-        this.prodSpecs.push(data[i])
-      }
+  async getSellerProdSpecs(next:boolean){
+    if(next==false){
+      this.loadingProdSpec=true;
+    }
+    
+    let options = {
+      "filters": ['Active','Launched'],
+      "partyId": this.partyId,
+      //"sort": undefined,
+      //"isBundle": false
+    }
+
+    this.paginationService.getItemsPaginated(this.prodSpecPage, this.PROD_SPEC_LIMIT, next, this.prodSpecs,this.nextProdSpecs, options,
+      this.prodSpecService.getProdSpecByUser.bind(this.prodSpecService)).then(data => {
+      this.prodSpecPageCheck=data.page_check;      
+      this.prodSpecs=data.items;
+      this.nextProdSpecs=data.nextItems;
+      this.prodSpecPage=data.page;
       this.loadingProdSpec=false;
       this.loadingProdSpec_more=false;
-      console.log('--- prodSpecs')
-      console.log(this.prodSpecs)
     })
   }
 
   async nextProdSpec(){
-    this.loadingProdSpec_more=true;
-    this.prodSpecPage=this.prodSpecPage+this.PROD_SPEC_LIMIT;
-    this.cdr.detectChanges;
-    console.log(this.prodSpecPage)
-    await this.getSellerProdSpecs();
+    await this.getSellerProdSpecs(true);
   }
 
-  getSellerOffers(){    
-    this.api.getProductOfferByOwner(this.bundlePage,['Active','Launched'],this.partyId,undefined,false).then(data => {
-      if(data.length<this.PRODUCT_LIMIT){
-        this.bundlePageCheck=false;
-        this.cdr.detectChanges();
-      }else{
-        this.bundlePageCheck=true;
-        this.cdr.detectChanges();
-      }
-      for(let i=0; i < data.length; i++){
-        this.bundledOffers.push(data[i])
-      }
+  async getSellerOffers(next:boolean){
+    if(next==false){
+      this.loadingBundle=true;
+    }
+    
+    let options = {
+      "filters": ['Active','Launched'],
+      "partyId": this.partyId,
+      "sort": undefined,
+      "isBundle": false
+    }
+
+    this.paginationService.getItemsPaginated(this.bundlePage, this.PRODUCT_LIMIT, next, this.bundledOffers,this.nextBundledOffers, options,
+      this.api.getProductOfferByOwner.bind(this.api)).then(data => {
+      this.bundlePageCheck=data.page_check;      
+      this.bundledOffers=data.items;
+      this.nextBundledOffers=data.nextItems;
+      this.bundlePage=data.page;
       this.loadingBundle=false;
       this.loadingBundle_more=false;
-      console.log('--- bundledOffers')
-      console.log(this.bundledOffers)
-      console.log(data)
     })
   }
 
   async nextBundle(){
-    this.loadingBundle_more=true;
-    this.bundlePage=this.bundlePage+this.PRODUCT_LIMIT;
-    this.cdr.detectChanges;
-    console.log(this.bundlePage)
-    await this.getSellerOffers();
+    await this.getSellerOffers(true);
   }
 
   addProdToBundle(prod:any){
@@ -1067,6 +1124,7 @@ export class CreateOfferComponent implements OnInit {
     this.priceDone=true;
     this.finishDone=true;
     this.clearPriceFormInfo();
+    this.saveLicense();
     if(this.generalForm.value.name && this.generalForm.value.version){
       this.offerToCreate={
         name: this.generalForm.value.name,
@@ -1180,7 +1238,7 @@ export class CreateOfferComponent implements OnInit {
           href: this.selectedProdSpec.id
         }
       }
-      if(this.createdLicense.treatment!=''){
+      if(!this.freeLicenseSelected && this.createdLicense.treatment!=''){
         this.offerToCreate.productOfferingTerm= [
           {
               name: this.createdLicense.treatment,
@@ -1188,6 +1246,14 @@ export class CreateOfferComponent implements OnInit {
               validFor: {}
           }
         ]
+      } else {
+        this.offerToCreate.productOfferingTerm= [
+          {
+              name: '',
+              description: '',
+              validFor: {}
+          }
+        ]        
       }
     }
 

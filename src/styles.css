@@ -68,6 +68,10 @@ markdown p {
   margin-bottom: 1em;
 }
 
+markdown p:last-child {
+  margin-bottom: 0;
+}
+
 markdown ul,
 markdown ol {
   margin-bottom: 1em;

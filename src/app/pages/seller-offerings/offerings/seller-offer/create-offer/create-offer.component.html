@@ -150,61 +150,71 @@
                         <div class="flex items-center justify-between px-3 py-2 border-b">
                             <div class="flex flex-wrap items-center divide-gray-200 dark:divide-secondary-200 sm:divide-x sm:rtl:divide-x-reverse">
                                 <div class="flex items-center space-x-1 rtl:space-x-reverse sm:pe-4 text-gray-500 dark:text-gray-200">
-                                    <button (click)="addBold()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addBold()" type="button"
+                                        class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h4.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0-7H6m2 7h6.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0 0H6"/>
                                         </svg>                                          
                                         <span class="sr-only">Bold</span>
                                     </button>
-                                    <button (click)="addItalic()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addItalic()" type="button"
+                                        class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.874 19 6.143-14M6 19h6.33m-.66-14H18"/>
                                         </svg>                                                                                 
                                         <span class="sr-only">Italic</span>
                                     </button>
-                                    <button (click)="addList()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addList()" type="button"
+                                        class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
                                         </svg>                                          
                                         <span class="sr-only">Add list</span>
                                     </button>
-                                    <button (click)="addOrderedList()" type="button" class="hidden lg:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addOrderedList()" type="button"
+                                        class="hidden lg:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
                                         </svg>                                          
                                         <span class="sr-only">Add ordered list</span>
                                     </button>
-                                    <button (click)="addBlockquote()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addBlockquote()" type="button"
+                                        class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
                                         </svg>                                         
                                         <span class="sr-only">Add blockquote</span>
                                     </button>
-                                    <button (click)="addTable()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addTable()" type="button"
+                                        class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
                                         </svg>                                         
                                         <span class="sr-only">Add table</span>
                                     </button>                                 
-                                    <button (click)="addCode()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCode()" type="button"
+                                        class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
                                         </svg>                                        
                                         <span class="sr-only">Add code</span>
                                     </button>
-                                    <button (click)="addCodeBlock()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCodeBlock()" type="button"
+                                        class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                           </svg>                                                                                  
                                         <span class="sr-only">Add code block</span>
                                     </button>
-                                    <button (click)="addLink()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addLink()" type="button"
+                                        class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
                                         </svg>                                                                                
                                         <span class="sr-only">Add link</span>
                                     </button>
-                                    <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                    <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button"
+                                        class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
                                         </svg>
@@ -305,7 +315,7 @@
                             <tbody>
                                 @for (prod of bundledOffers; track prod.id) {
                                     <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 text-wrap break-all">
                                             {{prod.name}}
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4">
@@ -439,7 +449,7 @@
                                     @for (prod of prodSpecs; track prod) {
                                         <tr class="border-b hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-secondary-200" (click)="selectProdSpec(prod)" 
                                             [ngClass]="prod.id == selectedProdSpec.id ? 'bg-gray-300 dark:bg-secondary-200' : 'bg-white dark:bg-secondary-300'">
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 text-wrap break-all">
                                                 {{prod.name}}
                                             </td>
                                             <td class="hidden md:table-cell px-6 py-4">
@@ -544,7 +554,7 @@
                                 @for (cat of catalogs; track cat) {
                                     <tr class="border-b hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-secondary-200" (click)="selectCatalog(cat)" 
                                         [ngClass]="cat.id == selectedCatalog.id ? 'bg-gray-300 dark:bg-secondary-200' : 'bg-white dark:bg-secondary-300'">
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 text-wrap break-all">
                                             {{cat.name}}
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4">
@@ -570,7 +580,7 @@
                     @if (!loadingCatalog_more) {
                         @if (catalogPageCheck) {
                         <div class="flex pt-6 pb-2 justify-center align-middle">
-                            <button (click)="nextProdSpec()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 dark:text-white bg-white dark:bg-primary-100 dark:hover:bg-secondary-100 border border-gray-300 dark:border-secondary-200 rounded-lg hover:bg-gray-200">
+                            <button (click)="nextCatalog()" class="flex cursor-pointer shadow-lg items-center justify-center px-3 h-8 text-sm font-medium text-gray-500 dark:text-white bg-white dark:bg-primary-100 dark:hover:bg-secondary-100 border border-gray-300 dark:border-secondary-200 rounded-lg hover:bg-gray-200">
                                 {{ 'CREATE_PROD_SPEC._load_more' | translate }}
                             <svg class="w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
@@ -640,7 +650,7 @@
                                 <tbody>
                                     @for (cat of categories; track cat.id;let idx = $index) {
                                         <tr class="flex border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200 w-full justify-between">
-                                            <td class="flex px-6 py-4 w-3/5">
+                                            <td class="flex px-6 py-4 w-3/5 text-wrap break-all">
                                                 <b>{{cat.name}}</b>
                                             </td>
                                             <td class="hidden md:flex px-6 py-4 w-fit">
@@ -691,61 +701,71 @@
                                     <div class="flex items-center justify-between px-3 py-2 border-b">
                                         <div class="flex flex-wrap items-center divide-gray-200 dark:divide-secondary-200 sm:divide-x sm:rtl:divide-x-reverse">
                                             <div class="flex items-center space-x-1 rtl:space-x-reverse sm:pe-4 text-gray-500 dark:text-gray-200">
-                                                <button (click)="addBold()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addBold()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h4.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0-7H6m2 7h6.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0 0H6"/>
                                                     </svg>                                          
                                                     <span class="sr-only">Bold</span>
                                                 </button>
-                                                <button (click)="addItalic()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addItalic()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.874 19 6.143-14M6 19h6.33m-.66-14H18"/>
                                                     </svg>                                                                                 
                                                     <span class="sr-only">Italic</span>
                                                 </button>
-                                                <button (click)="addList()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addList()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
                                                     </svg>                                          
                                                     <span class="sr-only">Add list</span>
                                                 </button>
-                                                <button (click)="addOrderedList()" type="button" class="hidden lg:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addOrderedList()" type="button"
+                                                    class="hidden lg:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
                                                     </svg>                                          
                                                     <span class="sr-only">Add ordered list</span>
                                                 </button>
-                                                <button (click)="addBlockquote()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addBlockquote()" type="button"
+                                                    class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                                         <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
                                                     </svg>                                         
                                                     <span class="sr-only">Add blockquote</span>
                                                 </button>
-                                                <button (click)="addTable()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addTable()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
                                                     </svg>                                         
                                                     <span class="sr-only">Add table</span>
                                                 </button>                                 
-                                                <button (click)="addCode()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCode()" type="button"
+                                                    class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
                                                     </svg>                                        
                                                     <span class="sr-only">Add code</span>
                                                 </button>
-                                                <button (click)="addCodeBlock()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCodeBlock()" type="button"
+                                                    class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                                       </svg>                                                                                  
                                                     <span class="sr-only">Add code block</span>
                                                 </button>
-                                                <button (click)="addLink()" type="button" class="hidden md:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addLink()" type="button"
+                                                    class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
                                                     </svg>                                                                                
                                                     <span class="sr-only">Add link</span>
                                                 </button>
-                                                <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="hidden lg:block p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button"
+                                                    class="hidden lg:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
                                                     </svg>
@@ -783,11 +803,8 @@
                             
                             </form>
                             <div class="flex w-full justify-items-center justify-center ml-4 mt-4">
-                                <button type="button" (click)="freeLicenseSelected=!freeLicenseSelected" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                    {{ 'CREATE_OFFER._cancel' | translate }}
-                                    <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">                                        
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>  
-                                    </svg>                         
+                                <button type="button" (click)="clearLicense()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                    {{ 'CREATE_OFFER._cancel' | translate }}                        
                                 </button>
                             </div>
                         </div>
@@ -853,7 +870,7 @@
                                             <td class="px-6 py-4">
                                                 {{sla.type}}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 text-wrap break-all">
                                                 {{sla.description}}
                                             </td>
                                             <td class="px-6 py-4">
@@ -1042,19 +1059,22 @@
                 }@else{
                     <label class="font-bold text-xl ml-4 dark:text-white">{{ 'CREATE_OFFER._new_price' | translate }}</label>
                     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
-                        <form class="xl:grid xl:grid-cols-80/20 xl:gap-4 m-4" [formGroup]="priceForm">
+                        <form class="xl:grid xl:grid-cols-80/20 xl:gap-4 m-4" [formGroup]="priceForm" (change)="checkValidPrice()">
                             <div>
                                 <label class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._name' | translate }}</label>
-                                <input formControlName="name" type="text" id="name"
-                                    [ngClass]="priceForm.get('name')?.invalid == true && priceForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
-                                    class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                <input formControlName="name" type="text" id="name" (change)="checkValidPrice()"
+                                [ngClass]="priceForm.controls.name.errors?.['invalidName'] ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200 mb-2'"
+                                    class="bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                                @if(priceForm.controls.name.errors?.['invalidName']){
+                                    <p class="mt-1 mb-2 text-sm text-red-600 dark:text-red-500">{{ 'UPDATE_OFFER._duplicated_price_name' | translate }}</p>
+                                }
                                 @if(!customSelected){
                                     <label class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._price' | translate }}</label>
                                 
                                     <div class="flex flex-row w-full">
-                                        <input type="number" pattern="[0-9]*.[0-9]*" formControlName="price"
-                                        [ngClass]="priceForm.get('price')?.invalid == true && priceForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
-                                        class="bg-gray-50 dark:bg-secondary-300 border-l border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+                                        <input type="number" pattern="[0-9]*.[0-9]*" formControlName="price" (change)="checkValidPrice()"
+                                        [ngClass]="priceForm.get('price')?.invalid == true && priceForm.value.price!='' ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+                                        class="bg-gray-50 dark:bg-secondary-300 border-l text-gray-900  dark:text-white text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
         
                                         <select id="type" (change)="onPriceUnitChange($event)"
                                         class="w-full lg:1/2 xl:w-1/4 bg-white border-r border-gray-300 dark:bg-secondary-300 text-gray-90 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
@@ -1103,61 +1123,71 @@
                                     <div class="flex items-center justify-between px-3 py-2 border-b">
                                         <div class="flex flex-wrap items-center divide-gray-200 dark:divide-secondary-200 sm:divide-x sm:rtl:divide-x-reverse">
                                             <div class="flex items-center space-x-1 rtl:space-x-reverse sm:pe-4 text-gray-500 dark:text-gray-200">
-                                                <button (click)="addBold()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addBold()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h4.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0-7H6m2 7h6.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0 0H6"/>
                                                     </svg>                                          
                                                     <span class="sr-only">Bold</span>
                                                 </button>
-                                                <button (click)="addItalic()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addItalic()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.874 19 6.143-14M6 19h6.33m-.66-14H18"/>
                                                     </svg>                                                                                 
                                                     <span class="sr-only">Italic</span>
                                                 </button>
-                                                <button (click)="addList()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addList()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
                                                     </svg>                                          
                                                     <span class="sr-only">Add list</span>
                                                 </button>
-                                                <button (click)="addOrderedList()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addOrderedList()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
                                                     </svg>                                          
                                                     <span class="sr-only">Add ordered list</span>
                                                 </button>
-                                                <button (click)="addBlockquote()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addBlockquote()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                                         <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
                                                     </svg>                                         
                                                     <span class="sr-only">Add blockquote</span>
                                                 </button>
-                                                <button (click)="addTable()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addTable()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
                                                     </svg>                                         
                                                     <span class="sr-only">Add table</span>
                                                 </button>                                 
-                                                <button (click)="addCode()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCode()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
                                                     </svg>                                        
                                                     <span class="sr-only">Add code</span>
                                                 </button>
-                                                <button (click)="addCodeBlock()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCodeBlock()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                                       </svg>                                                                                  
                                                     <span class="sr-only">Add code block</span>
                                                 </button>
-                                                <button (click)="addLink()" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addLink()" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
                                                     </svg>                                                                                
                                                     <span class="sr-only">Add link</span>
                                                 </button>
-                                                <button (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button" class="p-2 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100">
+                                                <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button"
+                                                    class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z"/>
                                                     </svg>
@@ -1286,7 +1316,7 @@
                             </form>
                         }
                         <div class="flex w-full justify-items-center justify-center ml-4">
-                            <button type="button" [disabled]="checkValidPrice()" [ngClass]="checkValidPrice() ? 'opacity-50' : 'hover:bg-primary-50'" (click)="savePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            <button type="button" [disabled]="validPriceCheck" [ngClass]="validPriceCheck ? 'opacity-50' : 'hover:bg-primary-50'" (click)="savePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                                 {{ 'CREATE_OFFER._save_price' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
@@ -1361,7 +1391,7 @@
                                 <tbody>
                                     @for (bun of offersBundle; track bun) {
                                         <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 text-wrap break-all">
                                                 {{bun.name}}
                                             </td>
                                             <td class="px-6 py-4">
@@ -1400,7 +1430,7 @@
                         </thead>
                         <tbody>                       
                             <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                <td class="px-6 py-4">
+                                <td class="px-6 py-4 text-wrap break-all">
                                     {{selectedCatalog.name}}
                                 </td>
                                 <td class="px-6 py-4">
@@ -1438,7 +1468,7 @@
                             <tbody>
                                 @for (cat of selectedCategories; track cat.id) {
                                     <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-                                        <td class="px-6 py-4">
+                                        <td class="px-6 py-4 text-wrap break-all">
                                             {{cat.name}}
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4">
@@ -1523,7 +1553,7 @@
                                         <td class="px-6 py-4">
                                             {{sla.type}}
                                         </td>
-                                        <td class="hidden md:table-cell px-6 py-4">
+                                        <td class="hidden md:table-cell px-6 py-4 text-wrap break-all">
                                             {{sla.description}}
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4">
@@ -1538,17 +1568,19 @@
                         </table>
                     </div>
                 }
-                @if(!freeLicenseSelected){
+                @if(!freeLicenseSelected && createdLicense.treatment!==''){
                     <h2 class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._license' | translate }}</h2>
                     <div>
                         <label for="treatment" class="font-bold text-base dark:text-white">{{ 'CREATE_OFFER._treatment' | translate }}</label>
                         <label class="mb-2 bg-gray-50 text-wrap break-all dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             {{createdLicense.treatment}}
                         </label>
-                        <label class="font-bold text-base dark:text-white">{{ 'CREATE_OFFER._description' | translate }}</label>
-                        <div class="px-4 py-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white rounded-lg p-4"> 
-                            <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="createdLicense.description"></markdown>
-                        </div>
+                        @if(createdLicense.description!==''){
+                            <label class="font-bold text-base dark:text-white">{{ 'CREATE_OFFER._description' | translate }}</label>
+                            <div class="px-4 py-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white rounded-lg p-4"> 
+                                <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="createdLicense.description"></markdown>
+                            </div>
+                        }
                     </div>
                 }
                 <div class="flex w-full justify-items-end justify-end m-4">
@@ -1580,18 +1612,21 @@
             </div>
             <!-- Modal body -->
             <div class="w-full h-full">
-            <form class="lg:grid lg:grid-cols-80/20 gap-4 m-4 p-4" [formGroup]="priceForm">
+            <form class="lg:grid lg:grid-cols-80/20 gap-4 m-4 p-4" [formGroup]="priceForm" (change)="checkValidPrice()">
                 <div>
                     <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>
-                    <input formControlName="name" type="text" id="name"
-                        [ngClass]="priceForm.get('name')?.invalid == true && priceForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
-                        class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    <input formControlName="name" type="text" id="name" (change)="checkValidPrice()"
+                        [ngClass]="priceForm.get('name')?.invalid ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200 mb-2'"
+                        class="mb-2 bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                    @if(priceForm.controls.name.errors?.['invalidName']){
+                        <p class="mt-1 mb-2 text-sm text-red-600 dark:text-red-500">{{ 'UPDATE_OFFER._duplicated_price_name' | translate }}</p>
+                        }
                     @if(!customSelected){
                         <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._price' | translate }}</label>
                         <div class="flex flex-row w-full">
-                            <input type="number" pattern="[0-9]*.[0-9]*" formControlName="price"
-                            [ngClass]="priceForm.get('price')?.invalid == true && priceForm.value.price!='' ? 'border-red-600' : 'border-gray-300'"
-                            class="bg-gray-50 dark:bg-secondary-300 border-l border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
+                            <input type="number" pattern="[0-9]*.[0-9]*" formControlName="price" (change)="checkValidPrice()"
+                            [ngClass]="priceForm.get('price')?.invalid == true && priceForm.value.price!='' ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+                            class="bg-gray-50 dark:bg-secondary-300 border-l text-gray-900 dark:text-white text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
 
                             <select id="type" (change)="onPriceUnitChange($event)" value="{{selectedPriceUnit}}" class="bg-white border-r border-gray-300 dark:bg-secondary-300 text-gray-90 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
                                 @for(curr of currencies; track curr.code){
@@ -1603,16 +1638,18 @@
                 </div>
                 <div>
                     <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._choose_type' | translate }}</label>
-                    <select id="type" (change)="onPriceTypeSelected($event)" value="{{selectedPriceType}}" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        @if(allowCustom){
-                            <option value="CUSTOM">CUSTOM</option>  
-                        }
-                        @if(allowOthers){
-                        <option value="ONE TIME">ONE TIME</option>
-                        <option value="RECURRING">RECURRING</option>
-                        <option value="USAGE">USAGE</option>
-                        }                         
-                    </select>
+                    @if(allowCustom){
+                        <select id="type" (change)="onPriceTypeSelected($event)" value="{{selectedPriceType}}" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="CUSTOM">CUSTOM</option>                        
+                        </select>
+                    }
+                    @if(allowOthers){
+                        <select id="type" (change)="onPriceTypeSelected($event)" value="{{selectedPriceType}}" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                            <option value="ONE TIME">ONE TIME</option>
+                            <option value="RECURRING">RECURRING</option>
+                            <option value="USAGE">USAGE</option>
+                        </select>
+                    }
                     @if(recurringSelected){
                         <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._choose_period' | translate }}</label>
                         <select id="type" value="{{selectedPeriod}}" (change)="onPricePeriodChange($event)" class="shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
@@ -1730,7 +1767,7 @@
                 }
             </form>
             <div class="flex w-full justify-items-center justify-center m-2 p-2">
-                <button type="button" [disabled]="checkValidPrice()" [ngClass]="checkValidPrice() ? 'opacity-50' : 'hover:bg-primary-50'" (click)="updatePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                <button type="button" [disabled]="validPriceCheck" [ngClass]="validPriceCheck ? 'opacity-50' : 'hover:bg-primary-50'" (click)="updatePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                     {{ 'UPDATE_OFFER._save_price' | translate }}
                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
