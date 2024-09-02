@@ -491,7 +491,7 @@ export class OrgInfoComponent {
               console.log(base64String); // You can use this base64 string as needed
               let fileBody = {
                 content: {
-                  name: 'orglogo',
+                  name: 'orglogo'+file.name,
                   data: base64String
                 },
                 contentType: file.type,
