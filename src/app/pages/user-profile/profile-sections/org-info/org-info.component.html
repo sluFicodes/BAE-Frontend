@@ -17,7 +17,7 @@
                 class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />    
             </div>
             <div>
-                <span class="font-bold dark:text-white">Website</span>
+                <span class="font-bold dark:text-white">{{ 'PROFILE._website' | translate }}</span>
                 <input type="text" formControlName="website" id="website"
                 class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />    
             </div>
@@ -127,7 +127,7 @@
             </div>
         </form>
 
-        <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">Add organization logo</h2> 
+        <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">{{ 'PROFILE._add_logo' | translate }}</h2> 
         @if(showImgPreview){
             <div class="relative isolate flex flex-col justify-end overflow-hidden rounded-2xl px-8 pb-8 pt-40 max-w-sm mx-auto m-4 shadow-lg">
                 <img src="{{imgPreview}}" class="absolute inset-0 h-full w-full object-cover">
@@ -154,7 +154,7 @@
                     </ng-template>
                 </ngx-file-drop>
             </div>
-            <label class="font-bold ml-6 dark:text-white">Add organization logo using a URL</label>
+            <label class="font-bold ml-6 dark:text-white">{{ 'PROFILE._add_logo_url' | translate }}</label>
             <div class="flex items-center h-fit ml-6 mt-2 mb-2 w-full justify-between">
                 <input #imgURL type="text" id="att-name"
                     [formControl]="attImageName"

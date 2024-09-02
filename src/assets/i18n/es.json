@@ -282,7 +282,10 @@
         "_invalid_phone": "Phonenumber is invalid!",
         "_invalid_email": "Email is invalid!",
         "_save": "Save",
-        "_success": "Updated successfully"
+        "_success": "Updated successfully",
+        "_website": "Website",
+        "_add_logo": "Add organization logo",
+        "_add_logo_url": "Add organization logo using a URL"
     },
     "PRODUCT_INVENTORY":{
         "_loading": "Loading...",
