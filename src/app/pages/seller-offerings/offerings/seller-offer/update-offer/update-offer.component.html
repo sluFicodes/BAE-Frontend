@@ -1609,7 +1609,7 @@
                 </button>
             </div>
             <!-- Modal body -->
-            <div class="w-full h-full">
+            <div class="w-full max-h-[80vh] overflow-y-auto overflow-x-hidden">
             <form class="lg:grid lg:grid-cols-80/20 gap-4 m-4 p-4" [formGroup]="priceForm" (change)="checkValidPrice()">
                 <div>
                     <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>
