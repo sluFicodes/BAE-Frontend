@@ -62,6 +62,8 @@ export class CategoriesFilterComponent implements OnInit {
   async ngOnInit() {
     this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
     this.checkedCategories = this.selected.map(i => i.id);
+    console.log('checkedcat')
+    console.log(this.checkedCategories)
     if(this.catalogId!=undefined){
       this.api.getCatalog(this.catalogId).then(data => {
         if(data.category){
@@ -206,40 +208,40 @@ export class CategoriesFilterComponent implements OnInit {
     }
   }
 
-  isChildsChecked(cat:Category):boolean {
-    const index = this.categories.findIndex(item => item.id === cat.id);
-    let childs = this.categories[index]?.children
+  isChildsChecked(childs:Category[]|undefined):boolean {
     let check = false
     if (childs != undefined){
-      if(this.categories[index].children){
         for(let i=0; i<childs.length;i++){
           if(this.isCheckedCategory(childs[i])){
-            check = true
-            return check
+            check = true            
+            return check;
           } else {
-            check = this.isChildsChecked(childs[i])
+            check = this.isChildsChecked(childs[i].children)
+            if(check==true){
+              return check;
+            }
           }
         }      
-      }
     }
     return check
   }
 
   checkClasses(first:boolean,last:boolean,cat:Category){
+    let categoryCheck=this.isChildsChecked(cat.children);
     if(first==true){
-      if(this.isChildsChecked(cat)){
+      if(categoryCheck){
         return this.classListFirstChecked
       } else {
         return this.classListFirst
       }
     } else if(last==true){
-      if(this.isChildsChecked(cat)){
+      if(categoryCheck){
         return this.classListLastChecked
       } else {
         return this.classListLast
       }
     } else {
-      if(this.isChildsChecked(cat)){
+      if(categoryCheck){
         return this.classListChecked
       } else {
         return this.classList

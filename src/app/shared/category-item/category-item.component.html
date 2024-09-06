@@ -10,7 +10,7 @@
   } @else {
     @if(data){
       <h2 [id]="'accordion-heading-'+simplifiedId">
-        <div [ngClass]="isFirst ? classListFirst : isLast ? classListLast : classList">
+        <div [ngClass]="checkClasses(isFirst,isLast,data)">
           <span class="text-left justify-start">{{ data.name }}</span>
           <div class="justify-end inline-flex">
             <div class="justify-end" (click)="onClickCategory(data)">

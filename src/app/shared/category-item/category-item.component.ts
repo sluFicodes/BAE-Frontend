@@ -28,6 +28,10 @@ export class CategoryItemComponent implements OnInit {
   classListLast  = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   classList      = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   
+  classListFirstChecked = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-2 border-primary-50 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-primary-50 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  classListLastChecked  = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-2 border-primary-50 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-primary-50 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  classListChecked      = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-2 border-primary-50 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-primary-50 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+
   @Input() data: Category | undefined;
   @Input() isParent = false;
   @Input() isFirst = false;
@@ -89,7 +93,7 @@ export class CategoryItemComponent implements OnInit {
         this.checkedCategories.splice(index, 1);
       } 
     }
-    this.checked = !this.checked;
+    this.checked = !this.checked;    
   }
 
   onClickCategory(cat:Category){
@@ -113,6 +117,47 @@ export class CategoryItemComponent implements OnInit {
       return true
     } else {
       return false
+    }
+  }
+
+  isChildsChecked(childs:Category[]|undefined):boolean {
+    let check = false
+    if (childs != undefined){
+        for(let i=0; i<childs.length;i++){
+          if(this.isCheckedCategory(childs[i])){
+            check = true            
+            return check;
+          } else {
+            check = this.isChildsChecked(childs[i].children)
+            if(check==true){
+              return check;
+            }
+          }
+        }      
+    }
+    return check
+  }
+
+  checkClasses(first:boolean,last:boolean,cat:Category){
+    let categoryCheck=this.isChildsChecked(cat.children);
+    if(first==true){
+      if(categoryCheck){
+        return this.classListFirstChecked
+      } else {
+        return this.classListFirst
+      }
+    } else if(last==true){
+      if(categoryCheck){
+        return this.classListLastChecked
+      } else {
+        return this.classListLast
+      }
+    } else {
+      if(categoryCheck){
+        return this.classListChecked
+      } else {
+        return this.classList
+      }
     }
   }
   
