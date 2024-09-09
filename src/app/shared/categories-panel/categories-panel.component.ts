@@ -25,12 +25,14 @@ export class CategoriesPanelComponent implements OnInit {
     this.selected = [];
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'AddedFilter') {
-        const index = this.selected.indexOf(ev.value as Category, 0);
-        if(index === -1) {
+        const cat = ev.value as Category; 
+        const index = this.selected.findIndex(item => item.id === cat.id);
+        if(index == -1) {
           this.selected.push(ev.value as Category)
         }
       } else if(ev.type === 'RemovedFilter') {
-        const index = this.selected.indexOf(ev.value as Category, 0);
+        const cat = ev.value as Category; 
+        const index = this.selected.findIndex(item => item.id === cat.id);
         if(index > -1) {
           this.selected.splice(index,1);
         }

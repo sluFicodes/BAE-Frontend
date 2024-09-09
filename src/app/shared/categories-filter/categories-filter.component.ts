@@ -62,8 +62,8 @@ export class CategoriesFilterComponent implements OnInit {
   async ngOnInit() {
     this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
     this.checkedCategories = this.selected.map(i => i.id);
-    console.log('checkedcat')
-    console.log(this.checkedCategories)
+    console.log('selected categories')
+    console.log(this.selected)
     if(this.catalogId!=undefined){
       this.api.getCatalog(this.catalogId).then(data => {
         if(data.category){
@@ -154,10 +154,14 @@ export class CategoriesFilterComponent implements OnInit {
   }
 
   addCategory(cat: Category) {
-    this.selected.push(cat);
-    this.selectedCategories.emit(this.selected);
-    this.localStorage.setObject('selected_categories', this.selected);
-    this.eventMessage.emitAddedFilter(cat);
+    const index = this.selected.indexOf(cat, 0);
+    if(index == -1) {
+      this.selected.push(cat);
+      this.checkedCategories.push(cat.id);
+      this.selectedCategories.emit(this.selected);
+      this.localStorage.setObject('selected_categories', this.selected);
+      this.eventMessage.emitAddedFilter(cat);
+    }
   }
 
   removeCategory(cat: Category) {
@@ -167,6 +171,10 @@ export class CategoriesFilterComponent implements OnInit {
       this.selectedCategories.emit(this.selected);
       this.localStorage.setObject('selected_categories', this.selected);
       this.eventMessage.emitRemovedFilter(cat);
+      const checkId = this.checkedCategories.findIndex(item => item === cat.id);
+      if (checkId !== -1) {
+        this.checkedCategories.splice(checkId, 1);
+      }
     }
   }
   
@@ -195,7 +203,7 @@ export class CategoriesFilterComponent implements OnInit {
       const index = this.checkedCategories.findIndex(item => item === cat.id);
       if (index !== -1) {
         this.checkedCategories.splice(index, 1);
-      } 
+      }
     }
   }
 
