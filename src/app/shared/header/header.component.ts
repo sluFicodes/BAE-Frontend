@@ -332,8 +332,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
       console.group(finalUrl)
 
-      this.qrWindow = this.qrVerifier.launchPopup(`${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${this.statePair}&client_callback=${finalUrl}&client_id=${environment.SIOP_INFO.clientID}`,  'Scan QR code',  500, 500);
-      this.initChecking()
+      const verifierUrl = `${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${this.statePair}&client_callback=${finalUrl}&client_id=${environment.SIOP_INFO.clientID}`
+
+      if (environment.SIOP_INFO.isRedirection) {
+        window.location.href = verifierUrl
+      } else {
+        this.qrWindow = this.qrVerifier.launchPopup(verifierUrl,  'Scan QR code',  500, 500);
+        this.initChecking()
+      }
     }
     else if (environment.SIOP_INFO.enabled === false){
       window.location.replace(`${environment.BASE_URL}` +  '/login')

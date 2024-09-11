@@ -26,6 +26,7 @@ export const environment = {
     CHAT_API: 'https://eng-gpt.dome-marketplace-dev.org/predict',
     SIOP_INFO: {
         enabled: false,
+        isRedirection: false,
         pollPath: "",
         pollCertPath: "",
         clientID: "",
