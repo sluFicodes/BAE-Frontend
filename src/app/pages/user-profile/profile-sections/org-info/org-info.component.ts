@@ -11,6 +11,8 @@ import * as moment from 'moment';
 import {components} from "../../../../models/party-catalog";
 import { v4 as uuidv4 } from 'uuid';
 import {parsePhoneNumber, getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
+import {AttachmentServiceService} from "src/app/services/attachment-service.service";
+import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 
 type OrganizationUpdate = components["schemas"]["Organization_Update"];
 
@@ -28,7 +30,9 @@ export class OrgInfoComponent {
   email:string='';
   selectedDate:any;
   profileForm = new FormGroup({
-    name: new FormControl('')
+    name: new FormControl(''),
+    website: new FormControl(''),
+    description: new FormControl(''),
   });
   mediumForm = new FormGroup({
     email: new FormControl('', [Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
@@ -56,13 +60,25 @@ export class OrgInfoComponent {
 
   errorMessage:any='';
   showError:boolean=false;
+  showPreview:boolean=false;
+  showEmoji:boolean=false;
+  description:string='';
+  showImgPreview:boolean=false;
+  imgPreview:any='';
+  attFileName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9 _.-]*')]);
+  attImageName = new FormControl('', [Validators.required, Validators.pattern('^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp)$')])
+
+  @ViewChild('imgURL') imgURL!: ElementRef;
+
+  public files: NgxFileDropEntry[] = [];
 
   constructor(
     private localStorage: LocalStorageService,
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private accountService: AccountServiceService,
-    private eventMessage: EventMessageService
+    private eventMessage: EventMessageService,
+    private attachmentService: AttachmentServiceService,
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
@@ -110,6 +126,25 @@ export class OrgInfoComponent {
 
   updateProfile(){
     let mediums = [];
+    let chars = [];
+    if(this.imgPreview!=''){
+      chars.push({
+        name: 'logo',
+        value: this.imgPreview
+      })
+    }
+    if(this.profileForm.value.description!=''){
+      chars.push({
+        name: 'description',
+        value: this.profileForm.value.description
+      })      
+    }
+    if(this.profileForm.value.website!=''){
+      chars.push({
+        name: 'website',
+        value: this.profileForm.value.website
+      })       
+    }
     for(let i=0; i<this.contactmediums.length; i++){
       console.log(this.contactmediums)
       if(this.contactmediums[i].mediumType == 'Email'){
@@ -151,7 +186,8 @@ export class OrgInfoComponent {
       "id": this.partyId,
       "href": this.partyId,
       "tradingName": this.profileForm.value.name,
-      "contactMedium": mediums
+      "contactMedium": mediums,
+      "partyCharacteristic": chars
     }
     console.log(profile)
     this.accountService.updateOrgInfo(this.partyId,profile).subscribe({
@@ -217,6 +253,19 @@ export class OrgInfoComponent {
               phoneNumber: profile.contactMedium[i].characteristic.phoneNumber
             }
           })          
+        }
+      }
+    }
+    if(profile.partyCharacteristic){
+      for(let i=0;i<profile.partyCharacteristic.length;i++){
+        if(profile.partyCharacteristic[i].name=='logo'){
+          this.imgPreview=profile.partyCharacteristic[i].value
+          this.showImgPreview=true;
+        } else if(profile.partyCharacteristic[i].name=='description'){
+          this.profileForm.controls['description'].setValue(profile.partyCharacteristic[i].value);    
+          this.description=profile.partyCharacteristic[i].value;
+        }else if(profile.partyCharacteristic[i].name=='website'){            
+          this.profileForm.controls['website'].setValue(profile.partyCharacteristic[i].value);    
         }
       }
     }
@@ -422,5 +471,178 @@ export class OrgInfoComponent {
     }
     this.mediumForm.reset();
   }
+
+
+  public dropped(files: NgxFileDropEntry[],sel:any) {
+    this.files = files;
+    for (const droppedFile of files) {
+ 
+      // Is it a file?
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          console.log('dropped')       
+
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e: any) => {
+              const base64String: string = e.target.result.split(',')[1];
+              console.log('BASE 64....')
+              console.log(base64String); // You can use this base64 string as needed
+              let fileBody = {
+                content: {
+                  name: 'orglogo'+file.name,
+                  data: base64String
+                },
+                contentType: file.type,
+                isPublic: true
+              }
+              this.attachmentService.uploadFile(fileBody).subscribe({
+                next: data => {
+                    console.log(data)
+                    if(sel=='img'){
+                      if(file.type.startsWith("image")){
+                        this.showImgPreview=true;
+                        this.imgPreview=data.content;
+                      } else {
+                        this.errorMessage='File must have a valid image format!';
+                        this.showError=true;
+                        setTimeout(() => {
+                          this.showError = false;
+                        }, 3000);
+                      }
+                    }
+                    this.cdr.detectChanges();
+                    console.log('uploaded')
+                },
+                error: error => {
+                    console.error('There was an error while uploading!', error);
+                    if(error.error.error){
+                      console.log(error)
+                      this.errorMessage='Error: '+error.error.error;
+                    } else {
+                      this.errorMessage='There was an error while uploading the file!';
+                    }
+                    if (error.status === 413) {
+                      this.errorMessage='File size too large! Must be under 3MB.';
+                    }
+                    this.showError=true;
+                    setTimeout(() => {
+                      this.showError = false;
+                    }, 3000);
+                }
+              });
+            };
+            reader.readAsDataURL(file);
+          }
+ 
+        });
+      } else {
+        // It was a directory (empty directories are added, otherwise only files)
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        console.log(droppedFile.relativePath, fileEntry);
+      }
+    }
+  }
+ 
+  public fileOver(event: any){
+    console.log(event);
+  }
+ 
+  public fileLeave(event: any){
+    console.log('leave')
+    console.log(event);
+  }
+
+  saveImgFromURL(){
+    this.showImgPreview=true;
+    this.imgPreview=this.imgURL.nativeElement.value;
+    this.attImageName.reset();
+    this.cdr.detectChanges();
+  }
+
+  removeImg(){    
+    this.showImgPreview=false;
+    this.imgPreview='';
+    this.cdr.detectChanges();
+  }
+
+    //Markdown actions:
+    addBold() {
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + ' **bold text** '
+      });  
+    }
+  
+    addItalic() {
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + ' _italicized text_ '
+      });
+    }
+  
+    addList(){
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + '\n- First item\n- Second item'
+      });
+    }
+  
+    addOrderedList(){
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + '\n1. First item\n2. Second item'
+      });
+    }
+  
+    addCode(){
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + '\n`code`'
+      });
+    }
+  
+    addCodeBlock(){
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + '\n```\ncode\n```'
+      });
+    }
+  
+    addBlockquote(){
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + '\n> blockquote'
+      });   
+    }
+  
+    addLink(){
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + ' [title](https://www.example.com) '
+      }); 
+    } 
+  
+    addTable(){
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
+      });
+    }
+  
+    addEmoji(event:any){
+      this.showEmoji=false;
+      const currentText = this.profileForm.value.description;
+      this.profileForm.patchValue({
+        description: currentText + event.emoji.native
+      });
+    }
+  
+    togglePreview(){
+      if(this.profileForm.value.description){
+        this.description=this.profileForm.value.description;
+      }
+    }
 
 }

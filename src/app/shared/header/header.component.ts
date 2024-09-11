@@ -35,6 +35,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
   @ViewChild('theme_toggle_dark_icon') themeToggleDarkIcon: ElementRef;
   @ViewChild('theme_toggle_light_icon') themeToggleLightIcon: ElementRef;
+  @ViewChild('navbarbutton') navbarbutton: ElementRef;
 
   constructor(themeToggleDarkIcon: ElementRef,
               themeToggleLightIcon: ElementRef,
@@ -68,8 +69,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   knowledge: string = environment.KNOWLEDGE_BASE_URL
   ticketing: string = environment.TICKETING_SYSTEM_URL
   public static BASE_URL: String = environment.BASE_URL;
+  isNavBarOpen:boolean = false;
 
-  
   ngOnDestroy(): void {
       this.qrWindow?.close()
       this.qrWindow=null
@@ -86,7 +87,18 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     if(this.showCart==true){
       this.showCart=false;
       this.cdr.detectChanges();
-    }     
+    }
+    if (this.isNavBarOpen) {
+      this.isNavBarOpen = false;
+    }
+  }  
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {    
+    if (this.isNavBarOpen) {
+      this.navbarbutton.nativeElement.blur();
+      this.isNavBarOpen = false;
+    }
   }
 
   async ngOnInit(){
@@ -336,6 +348,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
   private initChecking():void {
     this.qrVerifier.pollServer(this.qrWindow, this.statePair); 
+  }
+
+  toggleNavBar() {
+    this.isNavBarOpen = !this.isNavBarOpen;
   }
 
   protected readonly faCartShopping = faCartShopping;
