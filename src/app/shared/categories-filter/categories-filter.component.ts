@@ -18,6 +18,11 @@ export class CategoriesFilterComponent implements OnInit {
   classListFirst = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   classListLast  = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
   classList      = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  
+  classListFirstChecked = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-2 border-primary-50 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-primary-50 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  classListLastChecked  = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-2 border-primary-50 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-primary-50 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+  classListChecked      = 'flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-2 border-primary-50 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-primary-50 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3';
+    
   labelClass: string = "text-gray-500 bg-white border-2 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-primary-50 hover:text-gray-600 dark:peer-checked:bg-primary-50 dark:peer-checked:text-secondary-100 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-primary-50";
   categories: Category[] = [];
   checkedCategories: any[] = [];
@@ -56,6 +61,9 @@ export class CategoriesFilterComponent implements OnInit {
 
   async ngOnInit() {
     this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+    this.checkedCategories = this.selected.map(i => i.id);
+    console.log('selected categories')
+    console.log(this.selected)
     if(this.catalogId!=undefined){
       this.api.getCatalog(this.catalogId).then(data => {
         if(data.category){
@@ -146,10 +154,14 @@ export class CategoriesFilterComponent implements OnInit {
   }
 
   addCategory(cat: Category) {
-    this.selected.push(cat);
-    this.selectedCategories.emit(this.selected);
-    this.localStorage.setObject('selected_categories', this.selected);
-    this.eventMessage.emitAddedFilter(cat);
+    const index = this.selected.indexOf(cat, 0);
+    if(index == -1) {
+      this.selected.push(cat);
+      this.checkedCategories.push(cat.id);
+      this.selectedCategories.emit(this.selected);
+      this.localStorage.setObject('selected_categories', this.selected);
+      this.eventMessage.emitAddedFilter(cat);
+    }
   }
 
   removeCategory(cat: Category) {
@@ -159,6 +171,10 @@ export class CategoriesFilterComponent implements OnInit {
       this.selectedCategories.emit(this.selected);
       this.localStorage.setObject('selected_categories', this.selected);
       this.eventMessage.emitRemovedFilter(cat);
+      const checkId = this.checkedCategories.findIndex(item => item === cat.id);
+      if (checkId !== -1) {
+        this.checkedCategories.splice(checkId, 1);
+      }
     }
   }
   
@@ -187,7 +203,7 @@ export class CategoriesFilterComponent implements OnInit {
       const index = this.checkedCategories.findIndex(item => item === cat.id);
       if (index !== -1) {
         this.checkedCategories.splice(index, 1);
-      }      
+      }
     }
   }
 
@@ -197,6 +213,47 @@ export class CategoriesFilterComponent implements OnInit {
       return true
     } else {
       return false
+    }
+  }
+
+  isChildsChecked(childs:Category[]|undefined):boolean {
+    let check = false
+    if (childs != undefined){
+        for(let i=0; i<childs.length;i++){
+          if(this.isCheckedCategory(childs[i])){
+            check = true            
+            return check;
+          } else {
+            check = this.isChildsChecked(childs[i].children)
+            if(check==true){
+              return check;
+            }
+          }
+        }      
+    }
+    return check
+  }
+
+  checkClasses(first:boolean,last:boolean,cat:Category){
+    let categoryCheck=this.isChildsChecked(cat.children);
+    if(first==true){
+      if(categoryCheck){
+        return this.classListFirstChecked
+      } else {
+        return this.classListFirst
+      }
+    } else if(last==true){
+      if(categoryCheck){
+        return this.classListLastChecked
+      } else {
+        return this.classListLast
+      }
+    } else {
+      if(categoryCheck){
+        return this.classListChecked
+      } else {
+        return this.classList
+      }
     }
   }
 

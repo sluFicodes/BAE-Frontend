@@ -20,7 +20,8 @@ export class AppInitService {
                 environment.MATOMO_TRACKER_URL = config.matomoUrl;
                 environment.KNOWLEDGE_BASE_URL = config.knowledgeBaseUrl;
                 environment.TICKETING_SYSTEM_URL = config.ticketingUrl;
-                environment.SEARCH_ENABLED = config.searchEnabled
+                environment.SEARCH_ENABLED = config.searchEnabled;
+                environment.DOME_TRUST_LINK = config.domeTrust;
                 resolve(config);
             }),
             error: (error) => {
