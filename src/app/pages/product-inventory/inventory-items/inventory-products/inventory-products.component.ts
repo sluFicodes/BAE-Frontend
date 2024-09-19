@@ -102,7 +102,7 @@ export class InventoryProductsComponent implements OnInit {
     if(this.prodToRenew==true){
       this.prodToRenew=false;
       this.cdr.detectChanges();
-    }
+    }   
   }
   
   getProductImage(prod:ProductOffering) {
@@ -119,7 +119,11 @@ export class InventoryProductsComponent implements OnInit {
 
   goToProductDetails(productOff:ProductOffering| undefined) {
     document.querySelector("body > div[modal-backdrop]")?.remove()
-    this.router.navigate(['/search', productOff?.id]);
+    //this.router.navigate(['/search', productOff?.id]);
+    console.log('info')
+    console.log(productOff)
+    this.router.navigate(['product-inventory', productOff?.id]);
+    //this.router.navigate(['product-inventory', productOff?.id]);
   }
 
   async getInventory(next:boolean){
@@ -171,7 +175,7 @@ export class InventoryProductsComponent implements OnInit {
     this.inventoryService.updateProduct({status: "suspended"},id).subscribe({
       next: data => {
         this.unsubscribeModal=false;
-        this.getInventory(false);              
+        this.getInventory(false);
       },
       error: error => {
           console.error('There was an error while updating!', error);

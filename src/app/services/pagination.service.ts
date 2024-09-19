@@ -25,6 +25,9 @@ export class PaginationService {
   async getItemsPaginated(page:number, pageSize:any, next:boolean, items:any[], nextItems:any[], options:any,
     handler: (...params: any[]) => Promise<any>): Promise<any> {
 
+      console.log('options')
+      console.log(options)
+
     try {
       let params: any[] = [page];
       if("keywords" in options){
@@ -432,7 +435,7 @@ export class PaginationService {
               attachment = spec.attachment
             }          
             inventory[i]['product'] = {
-              id: prod.id,
+              id: inventory[i].id,
               name: prod.name,
               category: prod.category,
               description: prod.description,
@@ -479,6 +482,8 @@ export class PaginationService {
     let inv:any[]=[]
     try {
       let data = await this.inventoryService.getInventory(page,partyId,filters,keywords)
+      console.log('inv request')
+      console.log(data)
       inv = await this.getOffers(data);
     } finally {
       return inv

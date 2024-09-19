@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProductInventoryComponent } from './pages/product-inventory/product-inventory.component';
+import { ProductInvDetailComponent } from './pages/product-inventory/inventory-items/product-inv-detail/product-inv-detail.component';
 import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
@@ -40,6 +41,9 @@ const routes: Routes = [
   },
   { path: 'product-inventory',
   component: ProductInventoryComponent
+  },
+  { path: 'product-inventory/:id',
+  component: ProductInvDetailComponent
   },
   { path: 'profile',
   component: UserProfileComponent,
