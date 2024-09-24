@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit {
   async ngOnInit() {
     this.isFilterPanelShown = JSON.parse(this.localStorage.getItem('is_filter_panel_shown') as string);
     //this.route.snapshot.paramMap.get('id');
-    console.log('--- route data')
+    /*console.log('--- route data')
     console.log(this.route.queryParams)
     console.log(this.route.snapshot.queryParamMap.get('token'))
     if(this.route.snapshot.queryParamMap.get('token') != null){    
@@ -99,7 +99,7 @@ export class DashboardComponent implements OnInit {
         console.log(aux['expire'] - moment().unix())
         console.log(aux['expire'] - moment().unix() <= 5)
       }
-    }
+    }*/
     this.api.getLaunchedCategories().then(data => {
       for(let i=0; i < data.length; i++){
         if(data[i].isRoot==true){
