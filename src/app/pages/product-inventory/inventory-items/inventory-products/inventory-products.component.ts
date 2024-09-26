@@ -15,6 +15,7 @@ type ProductOffering = components["schemas"]["ProductOffering"];
 import * as moment from 'moment';
 import { FormControl } from '@angular/forms';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
 
 @Component({
   selector: 'inventory-products',
@@ -22,6 +23,11 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
   styleUrl: './inventory-products.component.css'
 })
 export class InventoryProductsComponent implements OnInit {
+
+  protected readonly faIdCard = faIdCard;
+  protected readonly faSort = faSort;
+  protected readonly faSwatchbook = faSwatchbook;
+
   inventory:any[] = [];
   nextInventory:any[] =[];
   partyId:any='';
@@ -40,9 +46,13 @@ export class InventoryProductsComponent implements OnInit {
   INVENTORY_LIMIT: number = environment.INVENTORY_LIMIT;
   searchField = new FormControl();
   keywordFilter:any=undefined;
+  selectedProduct:any;
+  selectedInv:any;
 
   errorMessage:any='';
   showError:boolean=false;
+  showDetails:boolean=false;
+  checkCustom:boolean=false;
 
   constructor(
     private inventoryService: ProductInventoryServiceService,
@@ -205,6 +215,21 @@ export class InventoryProductsComponent implements OnInit {
   
   renewProduct(id:any){
     console.log(id)
+  }
+
+  selectProduct(prod:any){
+    this.selectedProduct=prod;
+    for(let i=0; i<this.selectedProduct.product.productPrice?.length;i++){
+      if(this.selectedProduct.product.productPrice[i].priceType == 'custom'){
+        this.checkCustom=true;
+      }
+    }
+    this.showDetails=true;
+    console.log(this.selectedProduct)
+  }
+
+  back(){
+    this.showDetails=false;
   }
 
 }

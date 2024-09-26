@@ -3,7 +3,7 @@
         <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-secondary-100 dark:border-gray-800 border-secondary-50 border flex flex-col shadow-lg">
             <div class="flex w-full flex-cols items-center justify-between">
               <div class="mb-4 lg:mb-0 lg:w-1/4 p-8 justify-start">
-                  <h2 class="text-xl font-bold dark:text-white">Search criteria</h2>  
+                  <h2 class="text-xl font-bold dark:text-white">{{ 'PRODUCT_INVENTORY._search_criteria' | translate }}</h2>  
               </div>  
             </div>
             <div class="flex w-full flex-col items-center lg:flex-row justify-between">
@@ -30,29 +30,20 @@
                       <ul class="space-y-2 text-sm" aria-labelledby="dropdownDefault">
             
                           <li class="flex items-center">
-                          <input id="standby" type="checkbox" value="" (change)="onStateFilterChange('standby')"
+                          <input id="feasibilityChecked" type="checkbox" value="" (change)="onStateFilterChange('feasibilityChecked')"
                               class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
               
-                          <label for="standby" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
-                            Standby
+                          <label for="feasibilityChecked" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
+                            Feasibility Checked
                           </label>
                           </li>
               
                           <li class="flex items-center">
-                          <input id="alarm" type="checkbox" value="" (change)="onStateFilterChange('alarm')"
+                          <input id="designed" type="checkbox" value="" (change)="onStateFilterChange('designed')"
                               class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
               
-                          <label for="alarm" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
-                            Alarm
-                          </label>
-                          </li>
-              
-                          <li class="flex items-center">
-                          <input id="available" type="checkbox" value="" (change)="onStateFilterChange('available')"
-                              class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
-              
-                          <label for="available" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
-                            Available
+                          <label for="designed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
+                            Designed
                           </label>
                           </li>
           
@@ -66,11 +57,29 @@
                           </li>
     
                           <li class="flex items-center">
-                            <input id="suspended" type="checkbox" value="" (change)="onStateFilterChange('suspended')"
+                            <input id="inactive" type="checkbox" value="" (change)="onStateFilterChange('inactive')"
                                 class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
                 
-                            <label for="suspended" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
-                                Suspended
+                            <label for="inactive" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
+                                Inactive
+                            </label>
+                          </li>
+
+                          <li class="flex items-center">
+                            <input id="active" type="checkbox" value="" (change)="onStateFilterChange('active')"
+                                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
+                
+                            <label for="active" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
+                                Active
+                            </label>
+                          </li>
+
+                          <li class="flex items-center">
+                            <input id="terminated" type="checkbox" value="" (change)="onStateFilterChange('terminated')"
+                                class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500" />
+                
+                            <label for="terminated" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-200">
+                                Terminated
                             </label>
                           </li>
                           
@@ -131,7 +140,7 @@
                                     {{ 'OFFERINGS._status' | translate }}
                                 </th>
                                 <th scope="col" class="hidden md:table-cell px-6 py-3">
-                                    Start operating date
+                                    {{ 'PRODUCT_INVENTORY._start_date' | translate }}
                                 </th>
                             </tr>
                         </thead>
@@ -158,7 +167,7 @@
                                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
                                       </svg>
                                       <div>
-                                          {{ 'OFFERINGS._no_res' | translate }}
+                                        {{ 'PRODUCT_INVENTORY._no_services' | translate }}
                                       </div>
                                     </div>
                                 </div>                          
@@ -209,7 +218,7 @@
                         <svg class="rtl:rotate-180  w-3 h-3 mx-1 text-gray-400 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
-                        <span class="ms-1 text-sm font-medium text-gray-500 dark:text-white md:ms-2 ">Service details</span>
+                        <span class="ms-1 text-sm font-medium text-gray-500 dark:text-white md:ms-2 ">{{ 'PRODUCT_INVENTORY._serv_details' | translate }}</span>
                         </div>
                     </li>
                     </ol>
@@ -220,7 +229,7 @@
                 <markdown class="bg-gray-50 text-wrap break-all dark:bg-secondary-300 dark:text-white text-gray-900 pb-4 text-center" [data]="selectedServ.description ? selectedServ.description : 'CATALOGS._no_desc' | translate"></markdown>
                 @if(selectedServ.serviceCharacteristic != undefined && selectedServ.serviceCharacteristic.length>0) {
                     <div #charsContent id="chars-container">
-                        <h2 class="text-xl font-bold dark:text-white pb-4 px-4">Service characteristics</h2>
+                        <h2 class="text-xl font-bold dark:text-white pb-4 px-4">{{ 'PRODUCT_INVENTORY._serv_chars' | translate }}</h2>
                         <div class="container mx-auto px-4">
                             <div class="flex flex-wrap -mx-4">
                                 @for (char of selectedServ.serviceCharacteristic; track char.id; let idx = $index) {
