@@ -72,7 +72,8 @@
                                 </td>
                                 <td class="px-6 py-4 hidden md:table-cell">
                                     @if(medium.mediumType == 'Email'){
-                                        {{medium.characteristic.emailAddress}}
+                                        <a class="cursor-pointer font-medium text-primary-100 dark:text-primary-50 hover:underline" href= "mailto: {{medium.characteristic.emailAddress}}"> {{medium.characteristic.emailAddress}} </a>
+                                        
                                     } @else if(medium.mediumType == 'PostalAddress') {
                                         {{medium.characteristic.street1}}, {{medium.characteristic.postCode}} ({{medium.characteristic.city}}) {{medium.characteristic.stateOrProvince}}
                                     } @else {
