@@ -13,6 +13,7 @@ import { UserProfileComponent } from "./pages/user-profile/user-profile.componen
 import { SellerOfferingsComponent } from "./pages/seller-offerings/seller-offerings.component";
 import { AdminComponent } from "./pages/admin/admin.component";
 import { AuthGuard } from './guard/auth.guard';
+import { OrganizationDetailsComponent } from "./pages/organization-details/organization-details.component"
 
 const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
@@ -26,6 +27,9 @@ const routes: Routes = [
   },
   { path: 'search/:id',
     component: ProductDetailsComponent
+  },
+  { path: 'org-details/:id',
+    component: OrganizationDetailsComponent
   },
   { path: 'search/catalogue/:id',
   component: SearchCatalogComponent

@@ -22,6 +22,8 @@ export class InventoryResourcesComponent implements OnInit {
   protected readonly faSort = faSort;
   protected readonly faSwatchbook = faSwatchbook;
 
+  @Input() resourceId: any = undefined;
+
   partyId:any='';
   loading: boolean = false;
   resources:any[]=[];
@@ -51,6 +53,13 @@ export class InventoryResourcesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.resourceId!=undefined){      
+      this.api.getResourceSpec(this.resourceId).then(res => {
+        this.selectResource(res)
+        console.log('entre')
+        console.log(res)
+      })      
+    }
     this.initInventory();
   }
 

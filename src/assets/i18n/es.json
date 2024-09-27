@@ -142,7 +142,8 @@
         "_checkout": "Add to cart",
         "_no_terms": "This product has no terms and conditions.",
         "_no_chars": "This product has no characteristics.",
-        "_no_prices": "This product has no price plans."
+        "_no_prices": "This product has no price plans.",
+        "_owner": "Owner"
     },
     "CATEGORIES_FILTER": {
         "_remove_badge": "Remove badge",
@@ -930,5 +931,9 @@
         "_next": "Next",
         "_choose_parent": "Choose a parent category",
         "_parent": "Parent category"
+    },
+    "ORGANIZATION": {
+        "_details": "Organization details",
+        "_description": "Description"
     }
 }

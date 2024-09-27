@@ -49,10 +49,10 @@
             <inventory-products></inventory-products>
           }
           @if(show_serv){
-            <inventory-services></inventory-services>
+            <inventory-services [serviceId]="openServiceId"></inventory-services>
           }
           @if(show_res){
-            <inventory-resources></inventory-resources>
+            <inventory-resources [resourceId]="openResourceId"></inventory-resources>
           }
         </div>      
     </div>

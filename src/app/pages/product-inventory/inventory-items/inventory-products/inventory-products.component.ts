@@ -48,6 +48,8 @@ export class InventoryProductsComponent implements OnInit {
   keywordFilter:any=undefined;
   selectedProduct:any;
   selectedInv:any;
+  selectedResources:any[]=[];
+  selectedServices:any[]=[];
 
   errorMessage:any='';
   showError:boolean=false;
@@ -117,7 +119,7 @@ export class InventoryProductsComponent implements OnInit {
   
   getProductImage(prod:ProductOffering) {
     let images: any[] = []
-    if(prod.attachment){
+    if(prod?.attachment){
       let profile = prod?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
       images = prod.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
       if(profile.length!=0){
@@ -155,6 +157,7 @@ export class InventoryProductsComponent implements OnInit {
       this.page=data.page;
       this.loading=false;
       this.loading_more=false;
+      initFlowbite();
     })
   }
 
@@ -219,17 +222,46 @@ export class InventoryProductsComponent implements OnInit {
 
   selectProduct(prod:any){
     this.selectedProduct=prod;
+    this.selectedResources=[];
+    this.selectedServices=[];
     for(let i=0; i<this.selectedProduct.product.productPrice?.length;i++){
       if(this.selectedProduct.product.productPrice[i].priceType == 'custom'){
         this.checkCustom=true;
       }
     }
+    this.api.getProductSpecification(prod.product.productSpecification.id).then(spec => {
+      if(spec.serviceSpecification != undefined){
+        for(let j=0; j < spec.serviceSpecification.length; j++){
+          this.api.getServiceSpec(spec.serviceSpecification[j].id).then(serv => {
+            this.selectedServices.push(serv);
+            console.log(serv)
+          })
+        }
+      }
+      if(spec.resourceSpecification != undefined){
+        for(let j=0; j < spec.resourceSpecification.length; j++){
+          this.api.getResourceSpec(spec.resourceSpecification[j].id).then(res => {
+            this.selectedResources.push(res);
+            console.log(res)
+          })
+        }
+      }
+    })
+
     this.showDetails=true;
     console.log(this.selectedProduct)
   }
 
   back(){
     this.showDetails=false;
+  }
+
+  selectService(id:any){
+    this.eventMessage.emitOpenServiceDetails(id);
+  }
+
+  selectResource(id:any){
+    this.eventMessage.emitOpenResourceDetails(id);
   }
 
 }

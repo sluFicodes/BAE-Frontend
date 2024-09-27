@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewI
 import {components} from "../../models/product-catalog";
 import { initFlowbite } from 'flowbite';
 type ProductOffering = components["schemas"]["ProductOffering"];
+import {EventMessageService} from "../../services/event-message.service";
 
 @Component({
   selector: 'app-product-inventory',
@@ -13,10 +14,24 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
   show_serv:boolean = false;
   show_res:boolean = false;
   show_orders:boolean = false;
+  openServiceId:any=undefined;
+  openResourceId:any=undefined;
 
   constructor(
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private eventMessage: EventMessageService
+  ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'OpenServiceDetails') {
+        this.openServiceId=ev.value;       
+        this.getServices();
+      }
+      if(ev.type === 'OpenResourceDetails'){
+        this.openResourceId=ev.value;
+        this.getResources();
+      }
+    })
+  }
 
   ngOnInit() {
     initFlowbite();

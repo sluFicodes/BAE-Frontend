@@ -22,6 +22,8 @@ export class InventoryServicesComponent implements OnInit {
   protected readonly faSort = faSort;
   protected readonly faSwatchbook = faSwatchbook;
 
+  @Input() serviceId: any = undefined;
+
   partyId:any='';
   loading: boolean = false;
   services:any[]=[];
@@ -51,6 +53,11 @@ export class InventoryServicesComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.serviceId!=undefined){      
+      this.api.getServiceSpec(this.serviceId).then(serv => {
+        this.selectService(serv)
+      })      
+    }
     this.initInventory();
   }
 

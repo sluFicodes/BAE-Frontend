@@ -77,7 +77,7 @@ import { VerificationComponent } from './pages/admin/verification/verification.c
 import { InventoryResourcesComponent } from './pages/product-inventory/inventory-resources/inventory-resources.component';
 import { InventoryServicesComponent } from './pages/product-inventory/inventory-services/inventory-services.component';
 import { ProductInvDetailComponent } from './pages/product-inventory/inventory-items/product-inv-detail/product-inv-detail.component';
-
+import { OrganizationDetailsComponent } from './pages/organization-details/organization-details.component';
 
 @NgModule({
   declarations: [
@@ -136,7 +136,8 @@ import { ProductInvDetailComponent } from './pages/product-inventory/inventory-i
     VerificationComponent,
     InventoryResourcesComponent,
     InventoryServicesComponent,
-    ProductInvDetailComponent
+    ProductInvDetailComponent,
+    OrganizationDetailsComponent
   ],
   imports: [
     BrowserModule,

@@ -244,7 +244,6 @@
                 </div>
                 <div class="hidden lg:block overflow-hidden rounded-lg mr-4">
                     <div class="hidden lg:flex relative justify-center items-center w-full h-full">
-                        <!-- Imagen de fondo difuminada -->
                         <div class="object-contain overflow-hidden absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage(selectedProduct.product)}});filter: blur(20px);"></div>
                         <!-- Imagen superior -->
                         <img class="object-contain max-h-[350px] z-10 p-8" src="{{getProductImage(selectedProduct.product)}}" alt="Descripción de la imagen">
@@ -325,6 +324,104 @@
                             </div>
                         }
                     }
+                </div>
+                
+                <div>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-primary-100 dark:text-primary-50 text-center pb-8 pt-12">{{ 'PRODUCT_INVENTORY._services' | translate }}</h2>
+                    <div class="bg-secondary-50 dark:bg-secondary-100 p-4 rounded-lg">
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white dark:bg-secondary-300">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Id
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'OFFERINGS._name' | translate }}
+                                        </th>
+                                        <th scope="col" class="hidden md:table-cell px-6 py-3">
+                                            {{ 'OFFERINGS._status' | translate }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (serv of selectedServices; track serv.id) {
+                                        <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
+                                            <td class="px-6 py-4 text-wrap break-all w-1/2 md:w-1/4">
+                                                <a (click)="selectService(serv.id)" class="cursor-pointer font-medium text-primary-100 dark:text-primary-50 hover:underline">{{serv.id}}</a>                                  
+                                            </td>
+                                            <td class="px-6 py-4 text-wrap break-all w-1/2 md:w-1/4">
+                                                {{serv.name}}
+                                            </td>
+                                            <td class="hidden md:table-cell px-6 py-4 md:w-1/4">
+                                                {{serv.lifecycleStatus}}
+                                            </td>
+                                        </tr>
+                                    } @empty {
+                                        <div class="flex justify-center w-full m-4">
+                                            <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50 dark:bg-secondary-200 dark:text-primary-50" role="alert">
+                                              <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                              </svg>
+                                              <div>
+                                                {{ 'PRODUCT_INVENTORY._no_services' | translate }}
+                                              </div>
+                                            </div>
+                                        </div>                          
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl md:text-3xl lg:text-4xl font-extrabold text-primary-100 dark:text-primary-50 text-center pb-8 pt-12">{{ 'PRODUCT_INVENTORY._resources' | translate }}</h2>
+                    <div class="bg-secondary-50 dark:bg-secondary-100 p-4 rounded-lg">
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white dark:bg-secondary-300">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">
+                                            Id
+                                        </th>
+                                        <th scope="col" class="px-6 py-3">
+                                            {{ 'OFFERINGS._name' | translate }}
+                                        </th>
+                                        <th scope="col" class="hidden md:table-cell px-6 py-3">
+                                            {{ 'OFFERINGS._status' | translate }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (res of selectedResources; track res.id) {
+                                        <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
+                                            <td class="px-6 py-4 text-wrap break-all w-1/2 md:w-1/4">
+                                                <a (click)="selectResource(res.id)" class="cursor-pointer font-medium text-primary-100 dark:text-primary-50 hover:underline">{{res.id}}</a>                               
+                                            </td>
+                                            <td class="px-6 py-4 text-wrap break-all w-1/2 md:w-1/4">
+                                                {{res.name}}
+                                            </td>
+                                            <td class="hidden md:table-cell px-6 py-4 md:w-1/4">
+                                                {{res.lifecycleStatus}}
+                                            </td>
+                                        </tr>
+                                    } @empty {
+                                        <div class="flex justify-center w-full m-4">
+                                            <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50 dark:bg-secondary-200 dark:text-primary-50" role="alert">
+                                              <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                              </svg>
+                                              <div>
+                                                  {{ 'PRODUCT_INVENTORY._no_resources' | translate }}
+                                              </div>
+                                            </div>
+                                        </div>                          
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 
                 @if(selectedProduct.productCharacteristic != undefined && selectedProduct.productCharacteristic.length>0) {
