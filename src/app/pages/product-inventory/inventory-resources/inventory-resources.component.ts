@@ -23,6 +23,7 @@ export class InventoryResourcesComponent implements OnInit {
   protected readonly faSwatchbook = faSwatchbook;
 
   @Input() resourceId: any = undefined;
+  @Input() prodId: any = undefined;
 
   partyId:any='';
   loading: boolean = false;
@@ -111,7 +112,12 @@ export class InventoryResourcesComponent implements OnInit {
   }
 
   back(){
-    this.showDetails=false;
+    if(this.prodId!=undefined){
+      this.eventMessage.emitOpenProductInvDetails(this.prodId);
+      this.showDetails=false;
+    } else {
+      this.showDetails=false;
+    }    
   }
 
   onStateFilterChange(filter:string){

@@ -8,7 +8,7 @@ export interface EventMessage {
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
   'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
   'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession' | 'CloseCartCard'|
-  'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails';
+  'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails' | 'OpenProductInvDetails';
   text?: string,
   value?: object | boolean
 }
@@ -162,7 +162,11 @@ export class EventMessageService {
     this.eventMessageSubject.next({type: 'OpenServiceDetails', value: id})
   }
 
-  emitOpenResourceDetails(id:any){
+  emitOpenResourceDetails(id:object){
     this.eventMessageSubject.next({type: 'OpenResourceDetails', value: id})
+  }
+
+  emitOpenProductInvDetails(id:any){
+    this.eventMessageSubject.next({type: 'OpenProductInvDetails', value: id})
   }
 }

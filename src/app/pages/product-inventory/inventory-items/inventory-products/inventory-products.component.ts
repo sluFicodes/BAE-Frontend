@@ -28,6 +28,8 @@ export class InventoryProductsComponent implements OnInit {
   protected readonly faSort = faSort;
   protected readonly faSwatchbook = faSwatchbook;
 
+  @Input() prodId: any = undefined;
+
   inventory:any[] = [];
   nextInventory:any[] =[];
   partyId:any='';
@@ -55,6 +57,7 @@ export class InventoryProductsComponent implements OnInit {
   showError:boolean=false;
   showDetails:boolean=false;
   checkCustom:boolean=false;
+  checkFrom:boolean=true;
 
   constructor(
     private inventoryService: ProductInventoryServiceService,
@@ -75,6 +78,9 @@ export class InventoryProductsComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.prodId==undefined){
+      this.checkFrom=false;
+    }
     this.initInventory();
   }
 
@@ -149,7 +155,7 @@ export class InventoryProductsComponent implements OnInit {
       "partyId": this.partyId
     }
     
-    this.paginationService.getItemsPaginated(this.page, this.INVENTORY_LIMIT, next, this.inventory, this.nextInventory, options,
+    await this.paginationService.getItemsPaginated(this.page, this.INVENTORY_LIMIT, next, this.inventory, this.nextInventory, options,
       this.paginationService.getInventory.bind(this.paginationService)).then(data => {
       this.page_check=data.page_check;      
       this.inventory=data.items;
@@ -158,6 +164,11 @@ export class InventoryProductsComponent implements OnInit {
       this.loading=false;
       this.loading_more=false;
       initFlowbite();
+      if(this.prodId!=undefined && this.checkFrom){
+        let idx = this.inventory.findIndex(element => element.id == this.prodId)
+        this.selectProduct(this.inventory[idx])
+        this.checkFrom=false;
+      }
     })
   }
 
@@ -222,14 +233,18 @@ export class InventoryProductsComponent implements OnInit {
 
   selectProduct(prod:any){
     this.selectedProduct=prod;
+    console.log('selecting prod')
+    console.log(this.selectedProduct)
     this.selectedResources=[];
     this.selectedServices=[];
-    for(let i=0; i<this.selectedProduct.product.productPrice?.length;i++){
-      if(this.selectedProduct.product.productPrice[i].priceType == 'custom'){
+    for(let i=0; i<this.selectedProduct.productPrice?.length;i++){
+      if(this.selectedProduct.productPrice[i].priceType == 'custom'){
         this.checkCustom=true;
       }
     }
-    this.api.getProductSpecification(prod.product.productSpecification.id).then(spec => {
+    console.log('is prod spec undefined?')
+    console.log(this.selectedProduct.product)
+    this.api.getProductSpecification(this.selectedProduct.product.productSpecification.id).then(spec => {
       if(spec.serviceSpecification != undefined){
         for(let j=0; j < spec.serviceSpecification.length; j++){
           this.api.getServiceSpec(spec.serviceSpecification[j].id).then(serv => {
@@ -257,11 +272,11 @@ export class InventoryProductsComponent implements OnInit {
   }
 
   selectService(id:any){
-    this.eventMessage.emitOpenServiceDetails(id);
+    this.eventMessage.emitOpenServiceDetails({serviceId: id, prodId: this.selectedProduct.id});
   }
 
   selectResource(id:any){
-    this.eventMessage.emitOpenResourceDetails(id);
+    this.eventMessage.emitOpenResourceDetails({resourceId: id, prodId: this.selectedProduct.id});
   }
 
 }

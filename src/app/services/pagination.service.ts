@@ -428,9 +428,9 @@ export class PaginationService {
   async getOffers(inventory:any[]): Promise<any[]> {
     try{
       for(let i=0; i<inventory.length; i++){
-        this.api.getProductById(inventory[i].productOffering.id).then(prod=> {           
+        let prod = await this.api.getProductById(inventory[i].productOffering.id)           
           let attachment: any[]= []
-          this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
+          let spec = await this.api.getProductSpecification(prod.productSpecification.id)
             if(spec.attachment){
               attachment = spec.attachment
             }          
@@ -457,7 +457,7 @@ export class PaginationService {
               } else {
                 if(prod.productOfferingPrice){
                   if(prod.productOfferingPrice.length==1){
-                    this.api.getProductPrice(prod.productOfferingPrice[0].id).then(price => {
+                    let price = await this.api.getProductPrice(prod.productOfferingPrice[0].id)
                       console.log(price)
                       inventory[i]['price']={
                         "price": '',
@@ -465,13 +465,10 @@ export class PaginationService {
                         "priceType": price.priceType,
                         "text": ''
                       }
-                    })
                   }
                 }
               }
             }
-          })
-        })
       }
     } finally {
       return inventory

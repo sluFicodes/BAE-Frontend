@@ -16,6 +16,7 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
   show_orders:boolean = false;
   openServiceId:any=undefined;
   openResourceId:any=undefined;
+  openProdId:any=undefined;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -23,12 +24,18 @@ export class ProductInventoryComponent implements OnInit, AfterViewInit {
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'OpenServiceDetails') {
-        this.openServiceId=ev.value;       
+        this.openServiceId=(ev.value as any)?.serviceId;
+        this.openProdId=(ev.value as any)?.prodId; 
         this.getServices();
       }
       if(ev.type === 'OpenResourceDetails'){
-        this.openResourceId=ev.value;
+        this.openResourceId=(ev.value as any)?.resourceId;
+        this.openProdId=(ev.value as any)?.prodId;
         this.getResources();
+      }
+      if(ev.type === 'OpenProductInvDetails'){
+        this.openProdId=ev.value;
+        this.goToOffers();
       }
     })
   }
