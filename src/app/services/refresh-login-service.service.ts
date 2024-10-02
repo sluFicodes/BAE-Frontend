@@ -61,7 +61,7 @@ export class RefreshLoginServiceService {
         console.log(err)
       })
 
-      this.router.navigate(['/search']).then(() => {
+      this.router.navigate(['/dashboard']).then(() => {
         console.log('LOGOUT MADE')
         window.location.reload()
       }).catch((err) => {
