@@ -14,7 +14,7 @@ import { AdminComponent } from "./pages/admin/admin.component";
 import { AuthGuard } from './guard/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/search', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent
