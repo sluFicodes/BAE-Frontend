@@ -29,6 +29,7 @@ export const environment = {
     CHAT_API: 'https://eng-gpt.dome-marketplace-sbx.org/predict',
     SIOP_INFO: {
         enabled: false,
+        isRedirection: false,
         pollPath: "",
         pollCertPath: "",
         clientID: "",
@@ -39,7 +40,7 @@ export const environment = {
     MATOMO_TRACKER_URL: "",
     MATOMO_SITE_ID: "",
     TICKETING_SYSTEM_URL: "",
-    KNOWLEDGE_BASE_URL: "",
+    KNOWLEDGE_BASE_URL: "https://knowledgebase.dome-marketplace.org/",
     SEARCH_ENABLED: true,
     PURCHASE_ENABLED: true,
     DOME_TRUST_LINK: ""

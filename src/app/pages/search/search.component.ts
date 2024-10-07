@@ -8,9 +8,13 @@ import { PaginationService } from 'src/app/services/pagination.service'
 import {LocalStorageService} from "../../services/local-storage.service";
 import {Category} from "../../models/interfaces";
 import {EventMessageService} from "../../services/event-message.service";
+import { LoginServiceService } from "src/app/services/login-service.service"
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { LoginInfo } from 'src/app/models/interfaces';
+import * as moment from 'moment';
 
 @Component({
   selector: 'bae-search',
@@ -35,8 +39,10 @@ export class SearchComponent implements OnInit {
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private router: Router,
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
+    private loginService: LoginServiceService,
     private paginationService: PaginationService) {
   }
 
@@ -46,7 +52,7 @@ export class SearchComponent implements OnInit {
     /*await this.api.slaCheck().then(data => {  
       console.log(data)
     })*/
-    
+       
     if(this.route.snapshot.paramMap.get('keywords')){
       this.keywords = this.route.snapshot.paramMap.get('keywords');
       this.searchField.setValue(this.keywords);

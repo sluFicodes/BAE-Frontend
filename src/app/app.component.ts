@@ -18,7 +18,7 @@ import * as moment from 'moment';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'YUMKET deployed by the DOME Project';
+  title = 'DOME Marketplace';
   showPanel = false;
 
   constructor(private translate: TranslateService,
@@ -30,7 +30,13 @@ export class AppComponent implements OnInit {
               private refreshApi: RefreshLoginServiceService) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('es');
-    this.translate.use('es');
+    let currLang = this.localStorage.getItem('current_language')
+    if(!currLang || currLang == null) {
+      this.localStorage.setItem('current_language', '');
+      this.translate.use('es');
+    } else {
+      this.translate.use(currLang);
+    }
     if(!this.localStorage.getObject('selected_categories'))
       this.localStorage.setObject('selected_categories', []);
 

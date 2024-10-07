@@ -25,6 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 import { initFlowbite } from 'flowbite';
 import { QrVerifierService } from 'src/app/services/qr-verifier.service';
 import * as uuid from 'uuid';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'bae-header',
@@ -39,6 +40,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
   constructor(themeToggleDarkIcon: ElementRef,
               themeToggleLightIcon: ElementRef,
+              private translate: TranslateService,
               private localStorage: LocalStorageService,
               private api: ApiServiceService,
               private loginService: LoginServiceService,
@@ -54,6 +56,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   qrWindow: Window | null = null;
   statePair:string
   catalogs: any[] | undefined  = [];
+  langs: any[] = [];
+  defaultLang:any;
   showCart:boolean=false;
   is_logged:boolean=false;
   showLogin:boolean=false;
@@ -70,6 +74,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   ticketing: string = environment.TICKETING_SYSTEM_URL
   public static BASE_URL: String = environment.BASE_URL;
   isNavBarOpen:boolean = false;
+  flagDropdownOpen:boolean=false;
 
   ngOnDestroy(): void {
       this.qrWindow?.close()
@@ -102,6 +107,18 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
 
   async ngOnInit(){
+    this.langs = this.translate.getLangs();
+    console.log('langs')
+    console.log(this.langs)
+    //this.defaultLang = this.translate.getDefaultLang();
+    let currLang = this.localStorage.getItem('current_language')
+    if(!currLang || currLang == null) {
+      this.defaultLang = this.translate.getDefaultLang();
+    } else {
+      this.defaultLang = currLang;
+    }
+    console.log('default')
+    console.log(this.defaultLang)
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     console.log(aux)
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
@@ -256,7 +273,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     this.username='';
     this.email='';
     this.usercharacters='';
-    this.router.navigate(['/dashboard']);
+    if(this.router.url === '/dashboard'){
+      window.location.reload();
+    } else {
+      this.router.navigate(['/dashboard']);
+    }    
     await this.loginService.logout();    
     this.cdr.detectChanges();
   }
@@ -332,8 +353,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
       console.group(finalUrl)
 
-      this.qrWindow = this.qrVerifier.launchPopup(`${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${this.statePair}&client_callback=${finalUrl}&client_id=${environment.SIOP_INFO.clientID}`,  'Scan QR code',  500, 500);
-      this.initChecking()
+      const verifierUrl = `${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${this.statePair}&client_callback=${finalUrl}&client_id=${environment.SIOP_INFO.clientID}`
+
+      if (environment.SIOP_INFO.isRedirection) {
+        window.location.href = verifierUrl
+      } else {
+        this.qrWindow = this.qrVerifier.launchPopup(verifierUrl,  'Scan QR code',  500, 500);
+        this.initChecking()
+      }
     }
     else if (environment.SIOP_INFO.enabled === false){
       window.location.replace(`${environment.BASE_URL}` +  '/login')
@@ -346,6 +373,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
   toggleNavBar() {
     this.isNavBarOpen = !this.isNavBarOpen;
+  }
+
+  switchLanguage(language: string) {
+    this.translate.use(language);    
+    this.localStorage.setItem('current_language', language);
+    this.defaultLang=language;
   }
 
   protected readonly faCartShopping = faCartShopping;

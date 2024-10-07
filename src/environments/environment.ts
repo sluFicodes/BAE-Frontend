@@ -30,6 +30,7 @@ export const environment = {
     CHAT_API: 'https://85.215.243.214:5000/predict',
     SIOP_INFO: {
         enabled: false,
+        isRedirection: false,
         pollPath: "",
         pollCertPath: "",
         clientID: "",

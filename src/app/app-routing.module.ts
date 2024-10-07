@@ -59,7 +59,7 @@ const routes: Routes = [
   },
   { path: 'admin',
   component: AdminComponent,
-  canActivate: [AuthGuard], data: { roles: ['admin'] }
+  canActivate: [AuthGuard], data: { roles: ['admin', 'certifier'] }
   }
 ]
 

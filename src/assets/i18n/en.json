@@ -165,7 +165,7 @@
         "_rights": "All Rights Reserved"
     },
     "HEADER": {
-        "_marketplace": "MARKETPLACE",
+        "_marketplace": "DOME MARKETPLACE",
         "_open_menu": "Open main menu",
         "_home": "Home",
         "_catalogs": "Catalogues",
@@ -185,7 +185,11 @@
         "_knowledge": "Knowledge Base",
         "_ticketing": "Ticketing System",
         "_change_session": "Change session",
-        "_admin": "Administration"
+        "_admin": "Administration",
+        "_publish": "Publish your product",
+        "_register": "Register",
+        "_about": "About",
+        "_info": "Info"
     },
     "PRODUCT_DETAILS": {
         "_back": "Back",
