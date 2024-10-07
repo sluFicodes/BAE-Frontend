@@ -42,5 +42,8 @@ export const environment = {
     KNOWLEDGE_BASE_URL: "",
     SEARCH_ENABLED: true,
     PURCHASE_ENABLED: false,
-    DOME_TRUST_LINK: "https://dome-certification.dome-marketplace.org"
+    DOME_TRUST_LINK: "https://dome-certification.dome-marketplace.org",
+    DOME_ABOUT_LINK: '',
+    DOME_REGISTER_LINK: '',
+    DOME_PUBLISH_LINK:''
 };

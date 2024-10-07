@@ -43,5 +43,8 @@ export const environment = {
     KNOWLEDGE_BASE_URL: "https://knowledgebase.dome-marketplace.org/",
     SEARCH_ENABLED: true,
     PURCHASE_ENABLED: true,
-    DOME_TRUST_LINK: ""
+    DOME_TRUST_LINK: "",
+    DOME_ABOUT_LINK: '',
+    DOME_REGISTER_LINK: '',
+    DOME_PUBLISH_LINK:''
 };
