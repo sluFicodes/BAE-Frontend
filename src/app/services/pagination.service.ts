@@ -55,6 +55,9 @@ export class PaginationService {
       if("orders" in options){
         params.push(options.orders)
       }
+      if("role" in options){
+        params.push(options.role)
+      }
 
       if(next == false){
         items=[];
@@ -373,9 +376,9 @@ export class PaginationService {
     }
   }
 
-  async getOrders(page:number,filters:Category[],partyId:any,selectedDate:any,orders:any[]): Promise<any[]> {      
+  async getOrders(page:number,filters:Category[],partyId:any,selectedDate:any,orders:any[],role:any): Promise<any[]> {      
     try{
-      orders = await this.orderService.getProductOrders(partyId,page,filters,selectedDate)
+      orders = await this.orderService.getProductOrders(partyId,page,filters,selectedDate,role)
       for(let i=0;i<orders.length;i++){
         let items:any[] = [];
         let bill = await this.accountService.getBillingAccountById(orders[i].billingAccount.id)

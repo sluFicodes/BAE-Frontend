@@ -863,6 +863,7 @@
         "_filter_role": "Filter by role",
         "_seller": "Seller",
         "_owner": "Owner",
+        "_customer": "Customer",
         "_role": "Role"
     },
     "ADMIN":{
