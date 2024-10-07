@@ -340,24 +340,30 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     if (environment.SIOP_INFO.enabled === true && this.qrVerifier.intervalId === undefined){
       this.statePair = uuid.v4()
 
-      let callbackUrl = environment.SIOP_INFO.callbackURL
-
-      let originalUrl = new URL(callbackUrl);
-      let newUrl = new URL(window.location.href);
-
-      newUrl.pathname = originalUrl.pathname;
-      newUrl.search = originalUrl.search
-
-      // Get the final URL string
-      let finalUrl = newUrl.toString();
-
-      console.group(finalUrl)
-
-      const verifierUrl = `${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${this.statePair}&client_callback=${finalUrl}&client_id=${environment.SIOP_INFO.clientID}`
+      let verifierUrl = `${environment.SIOP_INFO.verifierHost}${environment.SIOP_INFO.verifierQRCodePath}?state=${this.statePair}&client_id=${environment.SIOP_INFO.clientID}`
 
       if (environment.SIOP_INFO.isRedirection) {
+        // New verifier format
+        let newUrl = new URL(window.location.href)
+        newUrl.pathname = environment.SIOP_INFO.requestUri
+
+        let finalUrl = newUrl.toString()
+
+        verifierUrl = `${verifierUrl}&response_type=code&request_uri=${finalUrl}&scope=openid%20learcredential`
         window.location.href = verifierUrl
       } else {
+        // Old verifier format
+        let originalUrl = new URL(environment.SIOP_INFO.callbackURL);
+        let newUrl = new URL(window.location.href);
+
+        newUrl.pathname = originalUrl.pathname;
+        newUrl.search = originalUrl.search
+
+        // Get the final URL string
+        let finalUrl = newUrl.toString();
+        console.group(finalUrl)
+
+        verifierUrl = `${verifierUrl}&client_callback=${finalUrl}`
         this.qrWindow = this.qrVerifier.launchPopup(verifierUrl,  'Scan QR code',  500, 500);
         this.initChecking()
       }
