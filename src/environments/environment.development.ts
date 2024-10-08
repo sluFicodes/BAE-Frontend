@@ -18,6 +18,8 @@ export const environment = {
     PRODUCT_LIMIT: 6,
     CATALOG_LIMIT: 8,
     INVENTORY_LIMIT: 6,
+    INVENTORY_RES_LIMIT: 6,
+    INVENTORY_SERV_LIMIT: 6,
     PROD_SPEC_LIMIT: 6,
     SERV_SPEC_LIMIT: 6,
     RES_SPEC_LIMIT: 6,
@@ -41,6 +43,9 @@ export const environment = {
     TICKETING_SYSTEM_URL: "",
     KNOWLEDGE_BASE_URL: "https://knowledgebase.dome-marketplace.org/",
     SEARCH_ENABLED: true,
-    PURCHASE_ENABLED: false,
-    DOME_TRUST_LINK: ""
+    PURCHASE_ENABLED: true,
+    DOME_TRUST_LINK: "",
+    DOME_ABOUT_LINK: '',
+    DOME_REGISTER_LINK: '',
+    DOME_PUBLISH_LINK:''
 };

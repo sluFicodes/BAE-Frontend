@@ -15,6 +15,7 @@ import { initFlowbite } from 'flowbite';
 import {EventMessageService} from "src/app/services/event-message.service";
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
+import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
 
 @Component({
   selector: 'order-info',
@@ -40,6 +41,12 @@ export class OrderInfoComponent implements OnInit {
   ORDER_LIMIT: number = environment.ORDER_LIMIT;
   filters: any[]=[];
   check_custom:boolean=false;
+  isSeller:boolean=false;
+  role:any='Customer'
+
+  protected readonly faIdCard = faIdCard;
+  protected readonly faSort = faSort;
+  protected readonly faSwatchbook = faSwatchbook;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -80,9 +87,21 @@ export class OrderInfoComponent implements OnInit {
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       if(aux.logged_as==aux.id){
         this.partyId = aux.partyId;
+        let userRoles = aux.roles.map((elem: any) => {
+          return elem.name
+        })
+        if (userRoles.includes("seller")) {
+          this.isSeller=true;
+        }
       } else {
         let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as);
         this.partyId = loggedOrg.partyId;
+        let orgRoles = loggedOrg.roles.map((elem: any) => {
+          return elem.name
+        })
+        if (orgRoles.includes("seller")) {
+          this.isSeller=true;
+        }
       }
       //this.partyId = aux.partyId;
       this.page=0;
@@ -114,7 +133,8 @@ export class OrderInfoComponent implements OnInit {
       "filters": this.filters,
       "partyId": this.partyId,
       "selectedDate": this.selectedDate,
-      "orders": this.orders
+      "orders": this.orders,
+      "role": this.role
     }
 
     this.paginationService.getItemsPaginated(this.page, this.ORDER_LIMIT, next, this.orders,this.nextOrders, options,
@@ -225,6 +245,11 @@ export class OrderInfoComponent implements OnInit {
     console.log(order)
     this.showOrderDetails=true;
     this.orderToShow=order;
+  }
+
+  async onRoleChange(event: any) {
+    this.role=event.target.value;
+    await this.getOrders(false);
   }
 
 }

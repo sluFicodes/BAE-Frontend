@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ProductInventoryComponent } from './pages/product-inventory/product-inventory.component';
+import { ProductInvDetailComponent } from './pages/product-inventory/inventory-items/product-inv-detail/product-inv-detail.component';
 import { SearchComponent } from "./pages/search/search.component";
 import { ProductDetailsComponent } from "./pages/product-details/product-details.component";
 import { SearchCatalogComponent } from "./pages/search-catalog/search-catalog.component";
@@ -12,9 +13,10 @@ import { UserProfileComponent } from "./pages/user-profile/user-profile.componen
 import { SellerOfferingsComponent } from "./pages/seller-offerings/seller-offerings.component";
 import { AdminComponent } from "./pages/admin/admin.component";
 import { AuthGuard } from './guard/auth.guard';
+import { OrganizationDetailsComponent } from "./pages/organization-details/organization-details.component"
 
 const routes: Routes = [
-  { path: '', redirectTo: '/search', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent
@@ -25,6 +27,9 @@ const routes: Routes = [
   },
   { path: 'search/:id',
     component: ProductDetailsComponent
+  },
+  { path: 'org-details/:id',
+    component: OrganizationDetailsComponent
   },
   { path: 'search/catalogue/:id',
   component: SearchCatalogComponent
@@ -40,6 +45,9 @@ const routes: Routes = [
   },
   { path: 'product-inventory',
   component: ProductInventoryComponent
+  },
+  { path: 'product-inventory/:id',
+  component: ProductInvDetailComponent
   },
   { path: 'profile',
   component: UserProfileComponent,

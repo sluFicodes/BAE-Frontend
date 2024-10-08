@@ -61,7 +61,9 @@ export class CategoriesFilterComponent implements OnInit {
 
   async ngOnInit() {
     this.selected = this.localStorage.getObject('selected_categories') as Category[] || [] ;
-    this.checkedCategories = this.selected.map(i => i.id);
+    for(let i=0; i<this.selected.length;i++){
+      this.checkedCategories.push(this.selected[i].id)
+    }
     console.log('selected categories')
     console.log(this.selected)
     if(this.catalogId!=undefined){

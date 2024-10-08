@@ -13,6 +13,7 @@ import { certifications } from 'src/app/models/certification-standards.const'
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { LoginInfo, cartProduct,productSpecCharacteristicValueCart } from '../../models/interfaces';
 import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
+import { AccountServiceService } from 'src/app/services/account-service.service';
 import {EventMessageService} from "../../services/event-message.service";
 import { jwtDecode } from "jwt-decode";
 import * as moment from 'moment';
@@ -69,6 +70,8 @@ export class ProductDetailsComponent implements OnInit {
   showTermsMore:boolean=false;
   PURCHASE_ENABLED: boolean = environment.PURCHASE_ENABLED;
 
+  orgInfo:any=undefined;
+
   protected readonly faScaleBalanced = faScaleBalanced;
   protected readonly faArrowProgress = faArrowProgress;
   protected readonly faArrowRightArrowLeft = faArrowRightArrowLeft;
@@ -95,6 +98,7 @@ export class ProductDetailsComponent implements OnInit {
     private localStorage: LocalStorageService,
     private cartService: ShoppingCartServiceService,
     private eventMessage: EventMessageService,
+    private accService: AccountServiceService,
     private location: Location
   ) {
     this.showTermsMore=false;
@@ -182,7 +186,7 @@ export class ProductDetailsComponent implements OnInit {
       console.log(prod)
       this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
         this.prodSpec=spec;
-        
+        this.getOwner();
         let attachment = spec.attachment
         console.log(spec.attachment)
         let prodPrices: any[] | undefined= prod.productOfferingPrice;
@@ -671,6 +675,26 @@ export class ProductDetailsComponent implements OnInit {
 
   goToLink(url: any){
     window.open(url, "_blank");
+  }
+
+  getOwner(){
+    let parties = this.prodSpec?.relatedParty;
+    if(parties)
+    for(let i=0; i<parties.length;i++){
+      if(parties[i].role=='Owner'){
+        if(parties[i].id.includes('organization')){
+          this.accService.getOrgInfo(parties[i].id).then(org => {
+            this.orgInfo=org;
+            console.log(this.orgInfo)
+          })
+        }
+      }
+    }
+  }
+
+  goToOrgDetails(id:any) {
+    //document.querySelector("body > div[modal-backdrop]")?.remove()
+    this.router.navigate(['/org-details', id]);
   }
 
 }

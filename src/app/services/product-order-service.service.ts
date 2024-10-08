@@ -24,8 +24,9 @@ export class ProductOrderService {
     return this.http.post<any>(url, prod);
   }
 
-  getProductOrders(partyId:any,page:any,filters:any[],date:any){
-    let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Customer`;
+  getProductOrders(partyId:any,page:any,filters:any[],date:any,role:any){
+    let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=${role}`;
+    //let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Seller`;
     let status=''
     if(filters.length>0){
       for(let i=0; i < filters.length; i++){

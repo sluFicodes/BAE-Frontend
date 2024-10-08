@@ -22,6 +22,9 @@ export class AppInitService {
                 environment.TICKETING_SYSTEM_URL = config.ticketingUrl;
                 environment.SEARCH_ENABLED = config.searchEnabled;
                 environment.DOME_TRUST_LINK = config.domeTrust;
+                environment.DOME_ABOUT_LINK = config.domeAbout;
+                environment.DOME_REGISTER_LINK = config.domeRegister;
+                environment.DOME_PUBLISH_LINK = config.domePublish;
                 resolve(config);
             }),
             error: (error) => {

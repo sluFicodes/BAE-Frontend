@@ -177,6 +177,9 @@
                       <li class="text-wrap break-all line-clamp-1">{{ 'CARD._last_update' | translate }}: {{productOff?.lastUpdate | date:'dd/MM/yy, HH:mm'}}</li>
                       <li class="text-wrap break-all line-clamp-1">{{ 'CARD._product_version' | translate }}: v{{prodSpec.version}}</li>
                       <li class="text-wrap break-all line-clamp-1">{{ 'CARD._id_number' | translate }}: XX</li>
+                      @if(orgInfo!=undefined){
+                        <li class="text-wrap break-all line-clamp-1">{{ 'CARD._owner' | translate }}: <a (click)="goToOrgDetails(orgInfo.id)" target="_blank" class="cursor-pointer font-medium text-primary-100 dark:text-primary-50 hover:underline">{{orgInfo.tradingName}}</a></li>
+                      }
                     </ul>
               </div>
             </div>

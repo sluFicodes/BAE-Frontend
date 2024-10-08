@@ -72,6 +72,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   roles:string[]=[];
   knowledge: string = environment.KNOWLEDGE_BASE_URL
   ticketing: string = environment.TICKETING_SYSTEM_URL
+  domeAbout: string = environment.DOME_ABOUT_LINK
+  domeRegister: string = environment.DOME_REGISTER_LINK
+  domePublish: string = environment.DOME_PUBLISH_LINK
   public static BASE_URL: String = environment.BASE_URL;
   isNavBarOpen:boolean = false;
   flagDropdownOpen:boolean=false;
@@ -273,10 +276,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     this.username='';
     this.email='';
     this.usercharacters='';
-    if(this.router.url === '/search'){
+    if(this.router.url === '/dashboard'){
       window.location.reload();
     } else {
-      this.router.navigate(['/search']);
+      this.router.navigate(['/dashboard']);
     }    
     await this.loginService.logout();    
     this.cdr.detectChanges();
