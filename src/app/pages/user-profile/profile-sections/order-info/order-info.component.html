@@ -1,87 +1,108 @@
-<!-- FILTERS -->
-<div class="flex items-end justify-end p-4 z-20">
-    <select id="dateRange" (change)="filterOrdersByDate()" [formControl]="dateRange"
-    class="mr-4 text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
-        <option selected value="month">This month</option>
-        <option value="months">Last 3 months</option>
-        <option value="year">Last year</option>
-        <option value="all">All</option>
-    </select>
-    <button id="dropdownStateButton" data-dropdown-toggle="dropdownState" (click)="$event.stopPropagation();"
-        class="text-black border border-gray-200 dark:text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-        type="button">
-        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-4 h-4 mr-2 text-gray-400" viewbox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
-        </svg>
-        {{ 'OFFERINGS._filter_state' | translate }}
-        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-    </button>
-    
-    <div id="dropdownState" class="z-20 hidden w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-        <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
-        State
-        </h6>
-        <ul class="space-y-2 text-sm" aria-labelledby="dropdownStateButton">
-        <li class="flex items-center">
-            <input id="acknowledged" type="checkbox" value="" (change)="onStateFilterChange('acknowledged')"
-            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
-            <label for="acknowledged" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-            Acknowledged
-            </label>
-        </li>
-    
-        <li class="flex items-center">
-            <input id="inProgress" type="checkbox" value="" (change)="onStateFilterChange('inProgress')"
-            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
-            <label for="inProgress" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-            In Progress
-            </label>
-        </li>
-    
-        <li class="flex items-center">
-            <input id="completed" type="checkbox" value=""  (change)="onStateFilterChange('completed')"
-            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
-            <label for="completed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-            Completed
-            </label>
-        </li>
-    
-        <li class="flex items-center">
-            <input id="failed" type="checkbox" value="" (change)="onStateFilterChange('failed')"
-            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
-            <label for="failed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-            Failed
-            </label>
-        </li>
+    <!-- FILTERS -->
+    <div class="w-full h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-secondary-100 dark:border-gray-800 border-secondary-50 border flex flex-col shadow-lg">
+        <div class="flex w-full flex-cols items-center justify-between">
+        <div class="mb-4 lg:mb-0 lg:w-1/4 p-8 justify-start">
+            <h2 class="text-xl font-bold dark:text-white">{{ 'PRODUCT_INVENTORY._search_criteria' | translate }}</h2>  
+        </div>  
+        </div>
+        <div class="flex w-full flex-col items-center lg:flex-row justify-between">
 
-        <li class="flex items-center">
-            <input id="pending" type="checkbox" value=""  (change)="onStateFilterChange('pending')"
-            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
-            <label for="pending" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-            Pending
-            </label>
-        </li>
-
-        <li class="flex items-center">
-            <input id="cancelled" type="checkbox" value="" (change)="onStateFilterChange('cancelled')"
-            class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-    
-            <label for="cancelled" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-            Cancelled
-            </label>
-        </li>
-        </ul>
+            <div class="p-8 w-full">
+                <div class="flex flex-row mb-1">
+                <fa-icon [icon]="faSwatchbook" class="fa-base text-primary-100 align-middle mr-2"></fa-icon>
+                <h2 class="text-base dark:text-white font-bold">{{ 'OFFERINGS._filter_state' | translate }}</h2>
+                </div>
+                <button id="dropdownStateButton" data-dropdown-toggle="dropdown"
+                class="text-black dark:text-white w-full justify-between shadow bg-white dark:bg-secondary-200 hover:bg-gray-100 dark:hover:bg-secondary-300 focus:ring-4 focus:outline-none focus:ring-primary-100 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center shadow-lg"
+                type="button">
+                {{ 'OFFERINGS._filter_state' | translate }}
+                <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                </button>
+                
+                <div id="dropdown" class="z-20 hidden w-fit md:w-1/5 p-3 bg-white rounded-lg shadow dark:bg-secondary-200">
+                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
+                    {{ 'OFFERINGS._status' | translate }}
+                </h6>
+                <ul class="space-y-2 text-sm" aria-labelledby="dropdownStateButton">
+                    <li class="flex items-center">
+                        <input id="acknowledged" type="checkbox" value="" (change)="onStateFilterChange('acknowledged')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="acknowledged" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Acknowledged
+                        </label>
+                    </li>
+                
+                    <li class="flex items-center">
+                        <input id="inProgress" type="checkbox" value="" (change)="onStateFilterChange('inProgress')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="inProgress" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        In Progress
+                        </label>
+                    </li>
+                
+                    <li class="flex items-center">
+                        <input id="completed" type="checkbox" value=""  (change)="onStateFilterChange('completed')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="completed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Completed
+                        </label>
+                    </li>
+                
+                    <li class="flex items-center">
+                        <input id="failed" type="checkbox" value="" (change)="onStateFilterChange('failed')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="failed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Failed
+                        </label>
+                    </li>
+            
+                    <li class="flex items-center">
+                        <input id="pending" type="checkbox" value=""  (change)="onStateFilterChange('pending')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="pending" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Pending
+                        </label>
+                    </li>
+            
+                    <li class="flex items-center">
+                        <input id="cancelled" type="checkbox" value="" (change)="onStateFilterChange('cancelled')"
+                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                
+                        <label for="cancelled" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                        Cancelled
+                        </label>
+                    </li>
+                </ul>
+                </div>
+                
+            </div>
+            @if(isSeller){
+                <div class="p-8 w-full">
+                    <div class="flex flex-row mb-1">
+                        <fa-icon [icon]="faIdCard" class="fa-base text-primary-100 align-middle mr-2"></fa-icon>
+                        <h2 class="text-base dark:text-white font-bold">{{ 'OFFERINGS._filter_role' | translate }}</h2>
+                      </div>
+                      <select id="roles" (change)="onRoleChange($event)" 
+                      class="text-black border-0 dark:text-white w-full justify-between shadow bg-white dark:bg-secondary-200 hover:bg-gray-100 dark:hover:bg-secondary-300 focus:ring-4 focus:outline-none focus:ring-primary-100 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center shadow-lg">
+                        <option class="text-left" value="Customer">{{ 'OFFERINGS._customer' | translate }}</option>
+                        <option class="text-left" value="Seller">{{ 'OFFERINGS._seller' | translate }}</option>
+                      </select>
+                </div>
+            }
+        </div>
     </div>
-    </div>        
-    <!-- END FILTERS -->
+            
+<!-- END FILTERS -->
+
+
 @if (loading && !loading_more) {
     <div role="status" class="w-3/4 md:w-4/5 h-full flex justify-center align-middle">
       <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -92,8 +113,8 @@
     </div>
 } @else {
         <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 p-8 rounded-lg">
-            <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">{{ 'PROFILE._order_list' | translate }}</h2>
-            <hr class="h-px mr-4 ml-4 bg-primary-100 dark:bg-white border-0">
+            <!-- <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">{{ 'PROFILE._order_list' | translate }}</h2>
+            <hr class="h-px mr-4 ml-4 bg-primary-100 dark:bg-white border-0">-->
                 <div class="m-4 relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">

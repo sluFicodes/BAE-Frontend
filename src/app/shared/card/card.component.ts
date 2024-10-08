@@ -15,6 +15,7 @@ type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 import {LocalStorageService} from "../../services/local-storage.service";
 import {EventMessageService} from "../../services/event-message.service";
 import { ApiServiceService } from 'src/app/services/product-service.service';
+import { AccountServiceService } from 'src/app/services/account-service.service';
 import { Modal } from 'flowbite';
 import { Router } from '@angular/router';
 import { PriceServiceService } from 'src/app/services/price-service.service';
@@ -63,6 +64,7 @@ export class CardComponent implements OnInit, AfterViewInit {
 
   errorMessage:any='';
   showError:boolean=false;
+  orgInfo:any=undefined;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -71,6 +73,7 @@ export class CardComponent implements OnInit, AfterViewInit {
     private api: ApiServiceService,
     private priceService: PriceServiceService,
     private cartService: ShoppingCartServiceService,
+    private accService: AccountServiceService,
     private router: Router
     ) {
       this.targetModal = document.getElementById('details-modal');
@@ -149,6 +152,9 @@ export class CardComponent implements OnInit, AfterViewInit {
         let domeSup = 0
         let tokenComp = []
         this.prodSpec = spec;
+        console.log('prod spec')
+        console.log(this.prodSpec)
+        this.getOwner();
 
         if(this.prodSpec.productSpecCharacteristic != undefined) {
           let vcProf = this.prodSpec.productSpecCharacteristic.find((p => {
@@ -435,6 +441,27 @@ export class CardComponent implements OnInit, AfterViewInit {
   goToProductDetails(productOff:Product| undefined) {
     document.querySelector("body > div[modal-backdrop]")?.remove()
     this.router.navigate(['/search', productOff?.id]);
+  }
+
+  goToOrgDetails(id:any) {
+    document.querySelector("body > div[modal-backdrop]")?.remove()
+    this.router.navigate(['/org-details', id]);
+  }
+
+  getOwner(){
+    let parties = this.prodSpec?.relatedParty;
+    if(parties)
+    for(let i=0; i<parties.length;i++){
+      if(parties[i].role=='Owner'){
+        if(parties[i].id.includes('organization')){
+          this.accService.getOrgInfo(parties[i].id).then(org => {
+            this.orgInfo=org;
+            console.log('orginfo')
+            console.log(this.orgInfo)
+          })
+        }
+      }
+    }
   }
 
 }

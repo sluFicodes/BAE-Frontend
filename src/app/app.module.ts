@@ -74,7 +74,10 @@ import { environment } from 'src/environments/environment';
 import { AppInitService } from './services/app-init.service';
 import { appConfigFactory } from './app-config-factory';
 import { VerificationComponent } from './pages/admin/verification/verification.component';
-
+import { InventoryResourcesComponent } from './pages/product-inventory/inventory-resources/inventory-resources.component';
+import { InventoryServicesComponent } from './pages/product-inventory/inventory-services/inventory-services.component';
+import { ProductInvDetailComponent } from './pages/product-inventory/inventory-items/product-inv-detail/product-inv-detail.component';
+import { OrganizationDetailsComponent } from './pages/organization-details/organization-details.component';
 
 @NgModule({
   declarations: [
@@ -130,7 +133,11 @@ import { VerificationComponent } from './pages/admin/verification/verification.c
     UpdateCategoryComponent,
     CategoriesRecursionListComponent,
     ContactUsComponent,
-    VerificationComponent
+    VerificationComponent,
+    InventoryResourcesComponent,
+    InventoryServicesComponent,
+    ProductInvDetailComponent,
+    OrganizationDetailsComponent
   ],
   imports: [
     BrowserModule,

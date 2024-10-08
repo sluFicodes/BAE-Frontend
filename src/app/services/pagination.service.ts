@@ -25,6 +25,9 @@ export class PaginationService {
   async getItemsPaginated(page:number, pageSize:any, next:boolean, items:any[], nextItems:any[], options:any,
     handler: (...params: any[]) => Promise<any>): Promise<any> {
 
+      console.log('options')
+      console.log(options)
+
     try {
       let params: any[] = [page];
       if("keywords" in options){
@@ -51,6 +54,9 @@ export class PaginationService {
       }
       if("orders" in options){
         params.push(options.orders)
+      }
+      if("role" in options){
+        params.push(options.role)
       }
 
       if(next == false){
@@ -370,9 +376,9 @@ export class PaginationService {
     }
   }
 
-  async getOrders(page:number,filters:Category[],partyId:any,selectedDate:any,orders:any[]): Promise<any[]> {      
+  async getOrders(page:number,filters:Category[],partyId:any,selectedDate:any,orders:any[],role:any): Promise<any[]> {      
     try{
-      orders = await this.orderService.getProductOrders(partyId,page,filters,selectedDate)
+      orders = await this.orderService.getProductOrders(partyId,page,filters,selectedDate,role)
       for(let i=0;i<orders.length;i++){
         let items:any[] = [];
         let bill = await this.accountService.getBillingAccountById(orders[i].billingAccount.id)
@@ -425,14 +431,14 @@ export class PaginationService {
   async getOffers(inventory:any[]): Promise<any[]> {
     try{
       for(let i=0; i<inventory.length; i++){
-        this.api.getProductById(inventory[i].productOffering.id).then(prod=> {           
+        let prod = await this.api.getProductById(inventory[i].productOffering.id)           
           let attachment: any[]= []
-          this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
+          let spec = await this.api.getProductSpecification(prod.productSpecification.id)
             if(spec.attachment){
               attachment = spec.attachment
             }          
             inventory[i]['product'] = {
-              id: prod.id,
+              id: inventory[i].id,
               name: prod.name,
               category: prod.category,
               description: prod.description,
@@ -454,7 +460,7 @@ export class PaginationService {
               } else {
                 if(prod.productOfferingPrice){
                   if(prod.productOfferingPrice.length==1){
-                    this.api.getProductPrice(prod.productOfferingPrice[0].id).then(price => {
+                    let price = await this.api.getProductPrice(prod.productOfferingPrice[0].id)
                       console.log(price)
                       inventory[i]['price']={
                         "price": '',
@@ -462,13 +468,10 @@ export class PaginationService {
                         "priceType": price.priceType,
                         "text": ''
                       }
-                    })
                   }
                 }
               }
             }
-          })
-        })
       }
     } finally {
       return inventory
@@ -479,6 +482,8 @@ export class PaginationService {
     let inv:any[]=[]
     try {
       let data = await this.inventoryService.getInventory(page,partyId,filters,keywords)
+      console.log('inv request')
+      console.log(data)
       inv = await this.getOffers(data);
     } finally {
       return inv

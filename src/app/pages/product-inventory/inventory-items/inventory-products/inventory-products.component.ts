@@ -15,6 +15,7 @@ type ProductOffering = components["schemas"]["ProductOffering"];
 import * as moment from 'moment';
 import { FormControl } from '@angular/forms';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
+import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
 
 @Component({
   selector: 'inventory-products',
@@ -22,6 +23,13 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
   styleUrl: './inventory-products.component.css'
 })
 export class InventoryProductsComponent implements OnInit {
+
+  protected readonly faIdCard = faIdCard;
+  protected readonly faSort = faSort;
+  protected readonly faSwatchbook = faSwatchbook;
+
+  @Input() prodId: any = undefined;
+
   inventory:any[] = [];
   nextInventory:any[] =[];
   partyId:any='';
@@ -40,9 +48,16 @@ export class InventoryProductsComponent implements OnInit {
   INVENTORY_LIMIT: number = environment.INVENTORY_LIMIT;
   searchField = new FormControl();
   keywordFilter:any=undefined;
+  selectedProduct:any;
+  selectedInv:any;
+  selectedResources:any[]=[];
+  selectedServices:any[]=[];
 
   errorMessage:any='';
   showError:boolean=false;
+  showDetails:boolean=false;
+  checkCustom:boolean=false;
+  checkFrom:boolean=true;
 
   constructor(
     private inventoryService: ProductInventoryServiceService,
@@ -63,6 +78,9 @@ export class InventoryProductsComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.prodId==undefined){
+      this.checkFrom=false;
+    }
     this.initInventory();
   }
 
@@ -102,12 +120,12 @@ export class InventoryProductsComponent implements OnInit {
     if(this.prodToRenew==true){
       this.prodToRenew=false;
       this.cdr.detectChanges();
-    }
+    }   
   }
   
   getProductImage(prod:ProductOffering) {
     let images: any[] = []
-    if(prod.attachment){
+    if(prod?.attachment){
       let profile = prod?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
       images = prod.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
       if(profile.length!=0){
@@ -119,7 +137,11 @@ export class InventoryProductsComponent implements OnInit {
 
   goToProductDetails(productOff:ProductOffering| undefined) {
     document.querySelector("body > div[modal-backdrop]")?.remove()
-    this.router.navigate(['/search', productOff?.id]);
+    //this.router.navigate(['/search', productOff?.id]);
+    console.log('info')
+    console.log(productOff)
+    this.router.navigate(['product-inventory', productOff?.id]);
+    //this.router.navigate(['product-inventory', productOff?.id]);
   }
 
   async getInventory(next:boolean){
@@ -133,7 +155,7 @@ export class InventoryProductsComponent implements OnInit {
       "partyId": this.partyId
     }
     
-    this.paginationService.getItemsPaginated(this.page, this.INVENTORY_LIMIT, next, this.inventory, this.nextInventory, options,
+    await this.paginationService.getItemsPaginated(this.page, this.INVENTORY_LIMIT, next, this.inventory, this.nextInventory, options,
       this.paginationService.getInventory.bind(this.paginationService)).then(data => {
       this.page_check=data.page_check;      
       this.inventory=data.items;
@@ -141,6 +163,12 @@ export class InventoryProductsComponent implements OnInit {
       this.page=data.page;
       this.loading=false;
       this.loading_more=false;
+      initFlowbite();
+      if(this.prodId!=undefined && this.checkFrom){
+        let idx = this.inventory.findIndex(element => element.id == this.prodId)
+        this.selectProduct(this.inventory[idx])
+        this.checkFrom=false;
+      }
     })
   }
 
@@ -171,7 +199,7 @@ export class InventoryProductsComponent implements OnInit {
     this.inventoryService.updateProduct({status: "suspended"},id).subscribe({
       next: data => {
         this.unsubscribeModal=false;
-        this.getInventory(false);              
+        this.getInventory(false);
       },
       error: error => {
           console.error('There was an error while updating!', error);
@@ -201,6 +229,54 @@ export class InventoryProductsComponent implements OnInit {
   
   renewProduct(id:any){
     console.log(id)
+  }
+
+  selectProduct(prod:any){
+    this.selectedProduct=prod;
+    console.log('selecting prod')
+    console.log(this.selectedProduct)
+    this.selectedResources=[];
+    this.selectedServices=[];
+    for(let i=0; i<this.selectedProduct.productPrice?.length;i++){
+      if(this.selectedProduct.productPrice[i].priceType == 'custom'){
+        this.checkCustom=true;
+      }
+    }
+    console.log('is prod spec undefined?')
+    console.log(this.selectedProduct.product)
+    this.api.getProductSpecification(this.selectedProduct.product.productSpecification.id).then(spec => {
+      if(spec.serviceSpecification != undefined){
+        for(let j=0; j < spec.serviceSpecification.length; j++){
+          this.api.getServiceSpec(spec.serviceSpecification[j].id).then(serv => {
+            this.selectedServices.push(serv);
+            console.log(serv)
+          })
+        }
+      }
+      if(spec.resourceSpecification != undefined){
+        for(let j=0; j < spec.resourceSpecification.length; j++){
+          this.api.getResourceSpec(spec.resourceSpecification[j].id).then(res => {
+            this.selectedResources.push(res);
+            console.log(res)
+          })
+        }
+      }
+    })
+
+    this.showDetails=true;
+    console.log(this.selectedProduct)
+  }
+
+  back(){
+    this.showDetails=false;
+  }
+
+  selectService(id:any){
+    this.eventMessage.emitOpenServiceDetails({serviceId: id, prodId: this.selectedProduct.id});
+  }
+
+  selectResource(id:any){
+    this.eventMessage.emitOpenResourceDetails({resourceId: id, prodId: this.selectedProduct.id});
   }
 
 }
