@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import {components} from "../../models/product-catalog";
 import { FastAverageColor } from 'fast-average-color';
-import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved, faAtom} from "@fortawesome/pro-solid-svg-icons";
+import {faScaleBalanced, faArrowProgress, faArrowRightArrowLeft, faObjectExclude, faSwap, faGlobe, faBook, faShieldHalved, faAtom, faClose, faEllipsis} from "@fortawesome/pro-solid-svg-icons";
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
@@ -61,8 +61,11 @@ export class CardComponent implements OnInit, AfterViewInit {
   @ViewChild('myProdImage') myProdImage!: ElementRef<HTMLImageElement>;
   check_logged:boolean=false;
   protected readonly faAtom = faAtom;
+  protected readonly faClose = faClose;
+  protected readonly faEllipsis = faEllipsis;
   PURCHASE_ENABLED: boolean = environment.PURCHASE_ENABLED;
   checkMoreCats:boolean=false;
+  closeCats:boolean=false;
   loadMoreCats:boolean=false;
 
   errorMessage:any='';
@@ -115,6 +118,7 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.showModal=false;
       this.loadMoreCats=false;
       this.checkMoreCats=true;
+      this.closeCats=false;
       this.cdr.detectChanges();
     }
     if(this.cartSelection==true){
@@ -142,8 +146,8 @@ export class CardComponent implements OnInit, AfterViewInit {
 
     this.category = this.productOff?.category?.at(0)?.name ?? 'none';
     if(this.productOff?.category!=undefined&&this.productOff?.category.length>5){
-      this.categories = this.productOff?.category.slice(0, 5);
-      this.categoriesMore = this.productOff?.category.slice(5);
+      this.categories = this.productOff?.category.slice(0, 4);
+      this.categoriesMore = this.productOff?.category.slice(4);
       this.checkMoreCats=true;
     } else {
       this.categories = this.productOff?.category;
@@ -230,6 +234,15 @@ export class CardComponent implements OnInit, AfterViewInit {
   loadMoreCategories(){
     this.loadMoreCats=!this.loadMoreCats;
     this.checkMoreCats=false;
+    this.closeCats=true;
+  }
+
+  closeCategories(){
+    this.closeCats=false;
+    this.checkMoreCats=true;
+    if(this.productOff?.category)
+    this.categories = this.productOff?.category.slice(0, 4);
+    this.loadMoreCats=!this.loadMoreCats;
   }
 
   ngAfterViewInit() {

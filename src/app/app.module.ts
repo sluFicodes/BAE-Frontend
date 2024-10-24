@@ -78,6 +78,7 @@ import { InventoryResourcesComponent } from './pages/product-inventory/inventory
 import { InventoryServicesComponent } from './pages/product-inventory/inventory-services/inventory-services.component';
 import { ProductInvDetailComponent } from './pages/product-inventory/inventory-items/product-inv-detail/product-inv-detail.component';
 import { OrganizationDetailsComponent } from './pages/organization-details/organization-details.component';
+import { FaqComponent } from './offerings/faq/faq.component';
 
 @NgModule({
   declarations: [
@@ -137,7 +138,8 @@ import { OrganizationDetailsComponent } from './pages/organization-details/organ
     InventoryResourcesComponent,
     InventoryServicesComponent,
     ProductInvDetailComponent,
-    OrganizationDetailsComponent
+    OrganizationDetailsComponent,
+    FaqComponent
   ],
   imports: [
     BrowserModule,
