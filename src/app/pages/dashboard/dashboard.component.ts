@@ -8,6 +8,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import * as moment from 'moment';
 import { interval, Subscription} from 'rxjs';
 import { RefreshLoginServiceService } from "src/app/services/refresh-login-service.service"
+import { StatsServiceService } from "src/app/services/stats-service.service"
 import { LoginServiceService } from "src/app/services/login-service.service"
 import { FormControl } from '@angular/forms';
 import { initFlowbite } from 'flowbite';
@@ -24,10 +25,17 @@ export class DashboardComponent implements OnInit {
   showContact:boolean=false;
   searchField = new FormControl();
   searchEnabled = environment.SEARCH_ENABLED;
+  domePublish: string = environment.DOME_PUBLISH_LINK
+  services: string[] = []
+  publishers: string[] = []
   categories:any[]=[];
+  currentIndexServ: number = 0;
+  currentIndexPub: number = 0;
+  delay: number = 2000;
   //loginSubscription: Subscription = new Subscription();;
   constructor(private localStorage: LocalStorageService,
               private eventMessage: EventMessageService,
+              private statsService : StatsServiceService,
               private route: ActivatedRoute,
               private router: Router,
               private api: ApiServiceService,
@@ -52,7 +60,19 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  startTagTransition() {
+    setInterval(() => {
+      this.currentIndexServ = (this.currentIndexServ + 1) % this.services.length;
+      this.currentIndexPub = (this.currentIndexPub + 1) % this.publishers.length;
+    }, this.delay);
+  }
+
   async ngOnInit() {
+    this.statsService.getStats().then(data=> {
+      this.services=data?.services;
+      this.publishers=data?.organizations;
+      this.startTagTransition();
+    })
     this.isFilterPanelShown = JSON.parse(this.localStorage.getItem('is_filter_panel_shown') as string);
     //this.route.snapshot.paramMap.get('id');
     console.log('--- route data')
@@ -114,15 +134,15 @@ export class DashboardComponent implements OnInit {
 
     this.cdr.detectChanges();
     console.log('----')
-    /*await this.api.getShoppingCart().then(data => {
-      console.log('carrito')
-      console.log(data)
-    })*/
   }
   filterSearch(event: any) {
     if(this.searchField.value!='' && this.searchField.value != null){
       this.router.navigate(['/search', {keywords: this.searchField.value}]);
     }    
+  }
+
+  goTo(path:string) {
+    this.router.navigate([path]);
   }
   
 }
