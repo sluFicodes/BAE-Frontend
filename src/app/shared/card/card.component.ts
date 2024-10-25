@@ -116,9 +116,12 @@ export class CardComponent implements OnInit, AfterViewInit {
   onClick() {
     if(this.showModal==true){
       this.showModal=false;
-      this.loadMoreCats=false;
-      this.checkMoreCats=true;
-      this.closeCats=false;
+      if(this.productOff?.category)
+      if(this.productOff?.category.length>5){
+        this.loadMoreCats=false;
+        this.checkMoreCats=true;
+        this.closeCats=false;
+      }
       this.cdr.detectChanges();
     }
     if(this.cartSelection==true){
