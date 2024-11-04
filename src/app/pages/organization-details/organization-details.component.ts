@@ -15,8 +15,8 @@ export class OrganizationDetailsComponent implements OnInit {
 
   id:any;
   orgInfo:any;
-  logo:any=undefined;
-  description:any='https://placehold.co/600x400/svg';
+  logo:any='https://placehold.co/600x400/svg';
+  description:any=undefined;
   website:any;
 
 
