@@ -1,0 +1,59 @@
+
+<div class="dark:bg-secondary-200">
+    <!-- Jumbo section -->
+    <section id="jumbo" class="w-full">
+        <div class="pt-8 pb-32 px-4 w-full text-left lg:pt-16 lg:px-12 bg-cover bg-right-bottom items-center justify-between" style="background-image: url(assets/images/bg_1_shadow.png)">
+            <div class="flex flex-row mx-auto max-w-screen-xl">
+                <div class="flex flex-col">
+                    <h1 class="mb-4 text-left text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl text-secondary-50">Let's get in touch</h1>
+                    <p class="text-left text-lg font-normal lg:text-xl text-secondary-50">We are glad you are interested in the DOME Marketplace! Please share your questions or thoughts with us and we'll get back to you shortly.</p>
+                
+                </div>
+                <div class="w-full">
+                </div>
+            </div>
+    
+        </div>
+    </section>
+    <form [formGroup]="contactForm" class="relative -top-20 items-center mx-auto max-w-screen-xl w-full items-center bg-secondary-50 dark:bg-secondary-100 rounded-lg shadow-lg p-8">
+        <h2 class="text-left text-2xl mb-2 font-bold dark:text-white">Please fill in this form to contact us</h2>
+        <div class="grid grid-cols-3 gap-4">
+            <div>
+                <label for="email" class="font-bold text-lg dark:text-white">Email</label>
+                <input formControlName="email" type="text" id="email"
+                class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
+            </div>
+            <div>
+                <label for="name" class="font-bold text-lg dark:text-white">Name</label>
+                <input formControlName="name" type="text" id="name"
+                class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
+            </div>
+            <div>
+                <label for="lastname" class="font-bold text-lg dark:text-white">Last name</label>
+                <input formControlName="lastname" type="text" id="lastname"
+                class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label for="organization" class="font-bold text-lg dark:text-white">Organization</label>
+                <input formControlName="organization" type="text" id="organization"
+                class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
+            </div>
+            <div>
+                <label for="role" class="font-bold text-lg dark:text-white">Role in organization</label>
+                <input formControlName="role" type="text" id="role"
+                class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
+            </div>
+        </div>
+        <div>
+            <label for="organization" class="font-bold text-lg dark:text-white">Message</label>
+            <textarea id="editor" formControlName="message" rows="8" class="block w-full rounded-lg mb-4 px-2 text-sm text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-secondary-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>
+        </div>
+        <a type="submit" href="mailto:info@dome-marketplace.eu?body={{contactForm.value.message}}" class="py-2 px-3 text-sm font-medium text-center text-white bg-primary-100 hover:bg-primary-50 rounded-lg focus:ring-4 focus:outline-none focus:ring-primary-50">
+            Submit
+        </a>       
+
+    </form>
+    
+    </div>

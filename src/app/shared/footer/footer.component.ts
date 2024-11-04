@@ -5,6 +5,7 @@ import {
   faAddressCard,
   faArrowRightFromBracket
 } from "@fortawesome/sharp-solid-svg-icons";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'bae-footer',
@@ -14,7 +15,11 @@ import {
 export class FooterComponent {
 
 
-  constructor() {
+  constructor(private router: Router,) {
 
+  }
+
+  goTo(path:string) {
+    this.router.navigate([path]);
   }
 }

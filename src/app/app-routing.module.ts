@@ -12,6 +12,7 @@ import {CheckoutComponent} from "./pages/checkout/checkout.component";
 import { UserProfileComponent } from "./pages/user-profile/user-profile.component";
 import { SellerOfferingsComponent } from "./pages/seller-offerings/seller-offerings.component";
 import { AdminComponent } from "./pages/admin/admin.component";
+import { ContactUsFormComponent } from "./pages/contact-us/contact-us-form.component";
 import { AuthGuard } from './guard/auth.guard';
 import { OrganizationDetailsComponent } from "./pages/organization-details/organization-details.component"
 
@@ -60,7 +61,10 @@ const routes: Routes = [
   { path: 'admin',
   component: AdminComponent,
   canActivate: [AuthGuard], data: { roles: ['admin', 'certifier'] }
-  }
+  },
+  { path: 'contact-us',
+    component: ContactUsFormComponent
+  },
 ]
 
 @NgModule({
