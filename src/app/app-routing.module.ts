@@ -39,13 +39,16 @@ const routes: Routes = [
   component: CatalogsComponent
   },
   { path: 'shopping-cart',
-  component: ShoppingCartComponent
+  component: ShoppingCartComponent,
+  canActivate: [AuthGuard], data: { roles: [] }
   },
   { path: 'checkout',
-    component: CheckoutComponent
+    component: CheckoutComponent,
+    canActivate: [AuthGuard], data: { roles: [] }
   },
   { path: 'product-inventory',
-  component: ProductInventoryComponent
+  component: ProductInventoryComponent,
+  canActivate: [AuthGuard], data: { roles: [] }
   },
   { path: 'product-inventory/:id',
   component: ProductInvDetailComponent
