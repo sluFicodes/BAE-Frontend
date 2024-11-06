@@ -642,6 +642,8 @@ export class OrgInfoComponent {
     togglePreview(){
       if(this.profileForm.value.description){
         this.description=this.profileForm.value.description;
+      } else {
+        this.description=''
       }
     }
 
