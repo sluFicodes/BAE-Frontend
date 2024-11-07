@@ -1,8 +1,8 @@
 <form novalidate="" class="grid h-full grid-cols-2 gap-5 m-4" [formGroup]="billingForm">
     <div class="col-span-2">
         <label for="title" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._title' | translate }}</label>
-        <input id="title" formControlName="name" name="title" type="text"
-        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        <input id="title" formControlName="name" name="title" type="text" [ngClass]="billingForm.get('name')?.touched && billingForm.get('name')?.invalid == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+        class="mb-2 bg-gray-50 border text-gray-900 dark:bg-secondary-300 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
     </div>
     <div>
         <label for="address.country" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._country' | translate }}</label>
@@ -31,8 +31,8 @@
     </div>
     <div class="col-span-2">
         <label for="email" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._email' | translate }}</label>
-        <input id="email" [ngClass]="billingForm.get('email')?.invalid == true && billingForm.value.email!='' ? 'border-red-600' : 'border-gray-300'" formControlName="email" name="email" type="text"
-        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        <input id="email" [ngClass]="billingForm.get('email')?.touched && billingForm.get('email')?.invalid == true && billingForm.value.email!='' ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'" formControlName="email" name="email"
+        class="mb-2 bg-gray-50 border text-gray-900 dark:bg-secondary-300 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
     </div>
     <div class="col-span-2 lg:col-span-1">
         <label for="phoneType" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._phone_type' | translate }}</label>
@@ -69,7 +69,7 @@
                         </ul>
                     </div>
                 }
-                <input id="phoneNumber" formControlName="telephoneNumber" name="phoneNumber" type="number" [ngClass]="billingForm.get('telephoneNumber')?.errors?.['invalidPhoneNumber'] == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+                <input id="phoneNumber" formControlName="telephoneNumber" name="phoneNumber" type="number" [ngClass]="billingForm.get('telephoneNumber')?.touched && billingForm.get('telephoneNumber')?.invalid == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
                 class="mb-2 bg-gray-50 border text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-secondary-300 dark:text-white">
             </div>
         </div>
