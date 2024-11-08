@@ -17,7 +17,6 @@ import { AuthGuard } from './guard/auth.guard';
 import { OrganizationDetailsComponent } from "./pages/organization-details/organization-details.component"
 
 const routes: Routes = [
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
     component: DashboardComponent
@@ -68,6 +67,7 @@ const routes: Routes = [
   { path: 'contact-us',
     component: ContactUsFormComponent
   },
+  { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
 ]
 
 @NgModule({
