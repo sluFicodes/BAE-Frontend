@@ -637,11 +637,19 @@
                                             </td>
                                             <td class="px-6 py-4 text-wrap break-all">
                                                 @for (char of prod.productSpecCharacteristicValue; track char; let last = $last) {
-                                                    @if(char.value){
-                                                        @if(!last){
-                                                            {{char.value}} (<i>{{char?.unitOfMeasure}}</i>),
+                                                    @if(char.value || char.value == 0){
+                                                        @if(char.unitOfMeasure){
+                                                            @if(!last){
+                                                                {{char.value}} (<i>{{char?.unitOfMeasure}}</i>),
+                                                            } @else {
+                                                                {{char.value}} (<i>{{char?.unitOfMeasure}}</i>)
+                                                            }
                                                         } @else {
-                                                            {{char.value}} (<i>{{char?.unitOfMeasure}}</i>)
+                                                            @if(!last){
+                                                                {{char.value}},
+                                                            } @else {
+                                                                {{char.value}}
+                                                            }
                                                         }                                                    
                                                     } @else {
                                                         @if(!last){
@@ -722,7 +730,11 @@
                                                 <div class="align-items-middle align-middle">
                                                     <input [checked]="char?.isDefault" (click)="selectDefaultChar(char,idx)" id="disabled-checked-checkbox" type="checkbox" value=""
                                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-full focus:ring-blue-500 focus:ring-2">
-                                                    <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-700 dark:text-white text-wrap break-all">{{char.value}} (<i>{{char?.unitOfMeasure}}</i>)</label>    
+                                                    @if(numberCharSelected){
+                                                        <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-700 dark:text-white text-wrap break-all">{{char.value}} (<i>{{char?.unitOfMeasure}}</i>)</label>
+                                                    } @else {
+                                                        <label for="disabled-checked-checkbox" class="ms-2 text-sm font-medium text-gray-700 dark:text-white text-wrap break-all">{{char.value}}</label>
+                                                    }    
                                                 </div>
                                                 <button (click)="removeCharValue(char,idx)" class="m-2 text-white bg-red-500 rounded-3xl">
                                                     <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -737,9 +749,9 @@
                             <label for="values" class="font-bold text-lg dark:text-white">{{ 'UPDATE_PROD_SPEC._add_values' | translate }}</label>
                             @if(stringCharSelected){
                                 <div class="flex flex-row items-center align-items-middle">
-                                    <input #stringValue type="text" id="value"
+                                    <input type="text" id="value" [(ngModel)]="stringValue"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
-                                    <button (click)="addCharValue()" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                    <button (click)="addCharValue()" [disabled]="!stringValue" [ngClass]="!stringValue ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                                         </svg>                                                                              
@@ -751,18 +763,18 @@
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._value' | translate }}
                                         </span>
-                                        <input #numberValue type="number" pattern="[0-9]*" id="value"
+                                        <input type="number" pattern="[0-9]*" id="value" [(ngModel)]="numberValue"
                                         class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
                                     <div class="flex w-full mb-2 md:mb-0">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white bg-gray-200 border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._unit' | translate }}
                                         </span>
-                                        <input #numberUnit type="text" id="value"
+                                        <input type="text" id="value" [(ngModel)]="numberUnit"
                                         class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>                           
                                     
-                                    <button (click)="addCharValue()" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                    <button (click)="addCharValue()" [disabled]="(numberValue === '' || numberValue === null || numberValue === undefined) || !numberUnit" [ngClass]="(numberValue === '' || numberValue === null || numberValue === undefined) || !numberUnit ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                                         </svg>                                                                              
@@ -774,24 +786,24 @@
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._from' | translate }}
                                         </span>
-                                        <input #fromValue type="number" pattern="[0-9]*" id="value"
+                                        <input type="number" pattern="[0-9]*" id="value" [(ngModel)]="fromValue"
                                         class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
                                     <div class="flex w-full mb-2 md:mb-0">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._to' | translate }}
                                         </span>
-                                        <input #toValue type="number" pattern="[0-9]*" id="value"
+                                        <input type="number" pattern="[0-9]*" id="value" [(ngModel)]="toValue"
                                         class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
                                     <div class="flex w-full mb-2 md:mb-0">
                                         <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
                                             {{ 'UPDATE_PROD_SPEC._unit' | translate }}
                                         </span>
-                                        <input #rangeUnit type="text" id="value"
+                                        <input type="text" id="value" [(ngModel)]="rangeUnit"
                                         class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                     </div>
-                                    <button (click)="addCharValue()" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                    <button (click)="addCharValue()" [disabled]="(fromValue === '' || fromValue === null || fromValue === undefined) || (toValue === '' || toValue === null || toValue === undefined) || !rangeUnit" [ngClass]="(fromValue === '' || fromValue === null || fromValue === undefined) || (toValue === '' || toValue === null || toValue === undefined) || !rangeUnit ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'"  type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                                         </svg>                                                                              
@@ -1511,11 +1523,19 @@
                                                 </td>
                                                 <td class="px-6 py-4 text-wrap break-all">
                                                     @for (char of prod.productSpecCharacteristicValue; track char; let last = $last) {
-                                                        @if(char.value){
-                                                            @if(!last){
-                                                                {{char.value}} (<i>{{char?.unitOfMeasure}}</i>),
+                                                        @if(char.value || char.value == 0){
+                                                            @if(char.unitOfMeasure){
+                                                                @if(!last){
+                                                                    {{char.value}} (<i>{{char?.unitOfMeasure}}</i>),
+                                                                } @else {
+                                                                    {{char.value}} (<i>{{char?.unitOfMeasure}}</i>)
+                                                                }
                                                             } @else {
-                                                                {{char.value}} (<i>{{char?.unitOfMeasure}}</i>)
+                                                                @if(!last){
+                                                                    {{char.value}},
+                                                                } @else {
+                                                                    {{char.value}}
+                                                                }
                                                             }                                                    
                                                         } @else {
                                                             @if(!last){

@@ -152,6 +152,14 @@ export class UpdateProductSpecComponent implements OnInit {
   errorMessage:any='';
   showError:boolean=false;
 
+  //CHARS
+  stringValue: string = '';
+  numberValue: string = '';
+  numberUnit: string = '';
+  fromValue: string = '';
+  toValue: string = '';
+  rangeUnit: string = '';
+
   constructor(
     private router: Router,
     private api: ApiServiceService,
@@ -188,12 +196,6 @@ export class UpdateProductSpecComponent implements OnInit {
     }
   }
 
-  @ViewChild('stringValue') charStringValue!: ElementRef;
-  @ViewChild('numberValue') charNumberValue!: ElementRef;
-  @ViewChild('numberUnit') charNumberUnit!: ElementRef;
-  @ViewChild('fromValue') charFromValue!: ElementRef;
-  @ViewChild('toValue') charToValue!: ElementRef;
-  @ViewChild('rangeUnit') charRangeUnit!: ElementRef;
   @ViewChild('attachName') attachName!: ElementRef;
   @ViewChild('imgURL') imgURL!: ElementRef;
   
@@ -377,6 +379,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    this.refreshChars();
     initFlowbite();
   }
 
@@ -392,6 +395,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    this.refreshChars();
     initFlowbite();
   }
 
@@ -476,6 +480,7 @@ export class UpdateProductSpecComponent implements OnInit {
     setTimeout(() => {        
       initFlowbite();   
     }, 100);
+    this.refreshChars();
   }
 
   addISO(iso:any){
@@ -702,6 +707,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
     this.showPreview=false;
+    this.refreshChars();
     initFlowbite();
   }
 
@@ -721,6 +727,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    this.refreshChars();
     initFlowbite();
   }
 
@@ -793,6 +800,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.showRelationships=false;
     this.showSummary=false;
     this.showPreview=false;
+    this.refreshChars();
     initFlowbite();
   }
 
@@ -868,6 +876,7 @@ export class UpdateProductSpecComponent implements OnInit {
     setTimeout(() => {        
       initFlowbite();   
     }, 100);
+    this.refreshChars();
   }
 
   removeImg(){    
@@ -941,6 +950,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.showRelationships=true;
     this.showSummary=false;
     this.showPreview=false;
+    this.refreshChars();
     initFlowbite();
   }
 
@@ -1000,6 +1010,19 @@ export class UpdateProductSpecComponent implements OnInit {
       this.prodRelationships.splice(index, 1);
     }   
     this.cdr.detectChanges(); 
+  }
+
+  refreshChars(){
+    this.stringValue= '';
+    this.numberValue = '';
+    this.numberUnit = '';
+    this.fromValue = '';
+    this.toValue = '';
+    this.rangeUnit = '';
+    this.stringCharSelected=true;
+    this.numberCharSelected=false;
+    this.rangeCharSelected=false;
+    this.creatingChars=[];
   }
 
   removeClass(elem: HTMLElement, cls:string) {
@@ -1080,12 +1103,12 @@ export class UpdateProductSpecComponent implements OnInit {
       if(this.creatingChars.length==0){
         this.creatingChars.push({
           isDefault:true,
-          value:this.charStringValue.nativeElement.value
+          value:this.stringValue as any
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
-          value:this.charStringValue.nativeElement.value
+          value:this.stringValue as any
         })
       }      
     } else if (this.numberCharSelected){
@@ -1093,14 +1116,14 @@ export class UpdateProductSpecComponent implements OnInit {
       if(this.creatingChars.length==0){
         this.creatingChars.push({
           isDefault:true,
-          value:this.charNumberValue.nativeElement.value,
-          unitOfMeasure:this.charNumberUnit.nativeElement.value
+          value:this.numberValue as any,
+          unitOfMeasure:this.numberUnit
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
-          value:this.charNumberValue.nativeElement.value,
-          unitOfMeasure:this.charNumberUnit.nativeElement.value
+          value:this.numberValue as any,
+          unitOfMeasure:this.numberUnit
         })
       } 
     }else{
@@ -1108,16 +1131,16 @@ export class UpdateProductSpecComponent implements OnInit {
       if(this.creatingChars.length==0){
         this.creatingChars.push({
           isDefault:true,
-          valueFrom:this.charFromValue.nativeElement.value,
-          valueTo:this.charToValue.nativeElement.value,
-          unitOfMeasure:this.charRangeUnit.nativeElement.value
+          valueFrom:this.fromValue as any,
+          valueTo:this.toValue as any,
+          unitOfMeasure:this.rangeUnit
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
-          valueFrom:this.charFromValue.nativeElement.value,
-          valueTo:this.charToValue.nativeElement.value,
-          unitOfMeasure:this.charRangeUnit.nativeElement.value})
+          valueFrom:this.fromValue as any,
+          valueTo:this.toValue as any,
+          unitOfMeasure:this.rangeUnit})
       } 
     }
   }
@@ -1154,6 +1177,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
+    this.refreshChars();
     this.cdr.detectChanges();
   }
 
@@ -1233,6 +1257,7 @@ export class UpdateProductSpecComponent implements OnInit {
     this.showRelationships=false;
     this.showSummary=true;
     this.showPreview=false;
+    this.refreshChars();
     initFlowbite();
   }
 
