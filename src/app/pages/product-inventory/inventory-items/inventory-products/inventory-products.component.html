@@ -104,7 +104,7 @@
                             <!-- Imagen de fondo difuminada -->
                             <div class="absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage(inv.product)}});filter: blur(20px);"></div>
                             <!-- Imagen superior -->
-                            <img [id]="'img-'+idx" class="h-5/6 w-5/6 object-contain z-10" src="{{getProductImage(inv.product)}}" alt="Descripción de la imagen">
+                            <img [id]="'img-'+idx" class="h-5/6 w-5/6 object-contain z-10 dark:text-white" src="{{getProductImage(inv.product)}}" alt="Product image">
                             </div>
                         </div>
                         
@@ -246,7 +246,7 @@
                     <div class="hidden lg:flex relative justify-center items-center w-full h-full">
                         <div class="object-contain overflow-hidden absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{getProductImage(selectedProduct.product)}});filter: blur(20px);"></div>
                         <!-- Imagen superior -->
-                        <img class="object-contain max-h-[350px] z-10 p-8" src="{{getProductImage(selectedProduct.product)}}" alt="Descripción de la imagen">
+                        <img class="object-contain max-h-[350px] z-10 p-8 dark:text-white" src="{{getProductImage(selectedProduct.product)}}" alt="Product image">
                     </div>
                 </div>
             </div>
