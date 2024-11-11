@@ -26,16 +26,16 @@
     <!-- START HEADER CARD -->
     <div class="w-full lg:h-fit mb-4 bg-secondary-50 rounded-lg dark:bg-secondary-100 dark:border-gray-800 border-secondary-50 border lg:grid lg:grid-cols-60/40">
         <div class="flex lg:hidden overflow-hidden justify-center items-center bg-white rounded-t-lg w-full">
-            <img class="rounded-t-lg object-contain" src="{{logo}}" alt="product image" />
+            <img class="rounded-t-lg object-contain dark:text-white" src="{{logo}}" alt="Organization profile image" />
         </div>
         <div class="grid grid-rows-auto p-4 md:p-8 h-fit">
             <div class="mt-2 h-fit">
                 <!--<a href="#">-->
-                <h5 class="text-3xl lg:text-4xl font-semibold tracking-tight text-primary-100 dark:text-white">{{orgInfo?.tradingName}}</h5>
+                <h5 class="text-3xl lg:text-4xl font-semibold tracking-tight text-primary-100 dark:text-white line-clamp-3 text-wrap break-all">{{orgInfo?.tradingName}}</h5>
                 <!--</a>-->
             </div>
             <div class="pt-2 line-clamp-5 h-fit">
-                <a href="{{website}}" target="_blank" class="cursor-pointer font-medium text-primary-100 dark:text-primary-50 hover:underline">{{website}}</a>
+                <a href="{{website}}" target="_blank" class="cursor-pointer font-medium text-primary-100 dark:text-primary-50 hover:underline line-clamp-2 text-wrap break-all">{{website}}</a>
             </div>
         </div>
         <div class="hidden lg:block overflow-hidden rounded-r-lg">
@@ -43,7 +43,7 @@
                 <!-- Imagen de fondo difuminada -->
                 <div class="object-contain overflow-hidden absolute inset-0 bg-cover bg-center opacity-75" style="background-image: url({{logo}});filter: blur(20px);"></div>
                 <!-- Imagen superior -->
-                <img class="object-contain max-h-[300px] z-10 p-8" src="{{logo}}" alt="Descripción de la imagen">
+                <img class="object-contain max-h-[300px] z-10 p-8 dark:text-white" src="{{logo}}" alt="Organization profile image">
             </div>
         </div>
     </div>

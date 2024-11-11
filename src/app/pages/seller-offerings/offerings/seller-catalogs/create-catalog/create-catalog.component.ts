@@ -272,6 +272,8 @@ export class CreateCatalogComponent implements OnInit {
   togglePreview(){
     if(this.generalForm.value.description){
       this.description=this.generalForm.value.description;
-    }    
+    } else {
+      this.description=''
+    }
   }
 }

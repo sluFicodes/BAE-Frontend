@@ -1546,14 +1546,20 @@ export class CreateOfferComponent implements OnInit {
     if(this.showGeneral){
       if(this.generalForm.value.description){
         this.description=this.generalForm.value.description;
+      } else {
+        this.description=''
       }
     } else if(this.showPrice) {
       if(this.priceForm.value.description){
         this.priceDescription=this.priceForm.value.description;
+      } else {
+        this.priceDescription=''
       }
     } else if(this.showLicense) {
       if(this.licenseForm.value.description){
         this.licenseDescription=this.licenseForm.value.description;
+      } else {
+        this.licenseDescription=''
       }
     } 
   }

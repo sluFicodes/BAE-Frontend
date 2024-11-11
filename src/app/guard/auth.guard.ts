@@ -37,13 +37,15 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    const hasRequiredRoles = requiredRoles.some(role => userRoles.includes(role));
+    if (requiredRoles.length != 0) {
+      const hasRequiredRoles = requiredRoles.some(role => userRoles.includes(role));
 
-    if (!hasRequiredRoles) {
-      this.router.navigate(['/dashboard']);  // Navigate to an access denied page or login page
-      return false;
+      if (!hasRequiredRoles) {
+        this.router.navigate(['/dashboard']);  // Navigate to an access denied page or login page
+        return false;
+      }
     }
-
+    
     return true;
   }
 }

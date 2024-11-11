@@ -22,7 +22,7 @@
                 <div class="flex flex-col">
                   <p class="mb-2 text-left text-lg font-normal lg:text-xl text-secondary-50">{{services.length}} verified services</p>
                   @for(serv of services;track serv;let pos = $index){
-                    <a [ngClass]="{ 'hidden': currentIndexServ !== pos }" class="text-md mb-2 font-medium inline-flex items-center px-2.5 py-0.5 rounded-md text-primary-100 bg-secondary-50 w-fit animate-fadeInOut">
+                    <a [ngClass]="{ 'hidden': currentIndexServ !== pos }" class="text-md text-wrap break-all mb-2 font-medium inline-flex items-center px-2.5 py-0.5 rounded-md text-primary-100 bg-secondary-50 w-fit animate-fadeInOut">
                       {{serv}}
                     </a>
                   }
@@ -30,7 +30,7 @@
                 <div class="flex flex-col">
                   <p class="mb-2 text-left text-lg font-normal lg:text-xl text-secondary-50">{{publishers.length}} registered publishers</p>
                   @for(pub of publishers;track pub;let pos = $index){
-                    <a [ngClass]="{ 'hidden': currentIndexPub !== pos }" class="text-md font-medium inline-flex items-center px-2.5 py-0.5 rounded-md text-primary-100 bg-secondary-50 w-fit animate-fadeInOut">
+                    <a [ngClass]="{ 'hidden': currentIndexPub !== pos }" class="text-md text-wrap break-all font-medium inline-flex items-center px-2.5 py-0.5 rounded-md text-primary-100 bg-secondary-50 w-fit animate-fadeInOut">
                       {{pub}}
                     </a>
                   }
@@ -69,7 +69,7 @@
     <!--<app-how-it-works></app-how-it-works>-->
     <bae-off-gallery></bae-off-gallery>  
     <app-platform-benefits></app-platform-benefits>  
-    <app-explore-dome></app-explore-dome>
+    <!--<app-explore-dome></app-explore-dome>-->
     <!--<app-faq></app-faq>-->
   
     <!-- @if(showContact){

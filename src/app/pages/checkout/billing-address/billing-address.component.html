@@ -1,7 +1,7 @@
 <div role="radio" aria-checked="true" tabindex="0">
   <div class="group relative cursor-pointer rounded border p-4 hover:border-primary-50 border-primary-100 shadow-sm " [ngClass]="data.selected ? 'bg-primary-50/50 dark:bg-primary-100' : 'bg-gray-100 dark:bg-secondary-300'" (click)="selectBillingAddress($event)">
-    <p class="mb-3 text-sm font-semibold capitalize text-heading dark:text-white">{{ data.name }}</p>
-    <p class="text-sm text-sub-heading dark:text-gray-200 text-wrap break-all">{{ data.postalAddress.street }}, {{ data.postalAddress.postCode }}, {{ data.postalAddress.city}}, {{ data.postalAddress.stateOrProvince }}, {{ data.postalAddress.country }}</p>
+    <p class="mb-3 text-sm font-semibold capitalize text-heading dark:text-white line-clamp-4 text-wrap break-all">{{ data.name }}</p>
+    <p class="text-sm text-sub-heading dark:text-gray-200 line-clamp-8 text-wrap break-all">{{ data.postalAddress.street }}, {{ data.postalAddress.postCode }}, {{ data.postalAddress.city}}, {{ data.postalAddress.stateOrProvince }}, {{ data.postalAddress.country }}</p>
     <div
       class="absolute top-4 flex space-x-2 opacity-0 group-hover:opacity-100 right-4">
       <button (click)="editBill=true;$event.stopPropagation();" class="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-light dark:text-white"><span
