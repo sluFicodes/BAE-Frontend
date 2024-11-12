@@ -34,6 +34,7 @@ export class SearchComponent implements OnInit {
   searchEnabled = environment.SEARCH_ENABLED;
   keywords:any=undefined;
   searchField = new FormControl();
+  showPanel = false;
 
   constructor(
     private api: ApiServiceService,
@@ -44,7 +45,12 @@ export class SearchComponent implements OnInit {
     private eventMessage: EventMessageService,
     private loginService: LoginServiceService,
     private paginationService: PaginationService) {
-  }
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'AddedFilter' || ev.type === 'RemovedFilter') {
+        this.checkPanel();
+      }
+    })
+  } 
 
   async ngOnInit() {
     this.products=[];
@@ -52,7 +58,7 @@ export class SearchComponent implements OnInit {
     /*await this.api.slaCheck().then(data => {  
       console.log(data)
     })*/
-       
+    this.checkPanel();
     if(this.route.snapshot.paramMap.get('keywords')){
       this.keywords = this.route.snapshot.paramMap.get('keywords');
       this.searchField.setValue(this.keywords);
@@ -127,6 +133,16 @@ export class SearchComponent implements OnInit {
       this.keywords=undefined;
       //let filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
       await this.getProducts(false);
+    }
+  }
+
+  checkPanel() {
+    const filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+    const oldState = this.showPanel;
+    this.showPanel = filters.length > 0;
+    if(this.showPanel != oldState) {
+      this.eventMessage.emitFilterShown(this.showPanel);
+      this.localStorage.setItem('is_filter_panel_shown', this.showPanel.toString())
     }
   }
 

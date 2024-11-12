@@ -1,4 +1,5 @@
-<section class="flex p-5">
+<bae-categories-panel class="fixed z-30 w-full top-[72px] transition transform opacity-0 duration-200" [ngClass]="showPanel ? 'opacity-100' : 'hidden'"></bae-categories-panel>
+<section class="flex p-5" [ngClass]="showPanel ? 'pt-[75px]' : ''">
   @if(showDrawer){
     <div (click)="$event.stopPropagation();" [ngClass]="showDrawer ? 'backdrop-blur-sm': ''" class="fixed h-screen w-3/4 top-0 left-0 z-40 p-4 overflow-y-auto bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label">
       <button type="button" (click)="showDrawer=!showDrawer" aria-controls="drawer-example" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white" >

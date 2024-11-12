@@ -28,6 +28,11 @@ export class SearchCatalogComponent implements OnInit{
     private router: Router,
     private paginationService: PaginationService
   ) {
+    this.eventMessage.messages$.subscribe(ev => {
+      if(ev.type === 'AddedFilter' || ev.type === 'RemovedFilter') {
+        this.checkPanel();
+      }
+    })
   }
 
   id:any;
@@ -41,9 +46,11 @@ export class SearchCatalogComponent implements OnInit{
   PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
   showDrawer:boolean=false;
   searchEnabled = environment.SEARCH_ENABLED;
+  showPanel = false;
 
   async ngOnInit() {
     initFlowbite();
+    this.checkPanel();
     this.id = this.route.snapshot.paramMap.get('id');
     this.api.getCatalog(this.id).then(catalog => {
       this.catalog=catalog;
@@ -97,5 +104,15 @@ export class SearchCatalogComponent implements OnInit{
 
   async next(){
     await this.getProducts(true);
+  }
+
+  checkPanel() {
+    const filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
+    const oldState = this.showPanel;
+    this.showPanel = filters.length > 0;
+    if(this.showPanel != oldState) {
+      this.eventMessage.emitFilterShown(this.showPanel);
+      this.localStorage.setItem('is_filter_panel_shown', this.showPanel.toString())
+    }
   }
 }
