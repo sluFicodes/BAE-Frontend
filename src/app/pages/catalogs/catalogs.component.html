@@ -91,7 +91,7 @@
 
 <!-- Main modal -->
 @if (showDesc){
-  <div id="details-modal" [ngClass]="showDesc ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full rounded-lg shadow-2xl">
+  <div id="details-modal" [ngClass]="showDesc ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full rounded-lg shadow-2xl">
     <div class="relative w-full max-w-7xl max-h-full rounded-t-lg">
         <!-- Modal content -->
       <div class="relative sm:m-8 bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom rounded-lg" (click)="$event.stopPropagation();">
