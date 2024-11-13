@@ -138,7 +138,7 @@
                     <form class="m-4 md:grid md:grid-cols-2 gap-4" [formGroup]="generalForm">
                         <div>
                             <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_PROD_SPEC._product_name' | translate }}</label>
-                            <input formControlName="name" type="text" id="prod-name"
+                            <input formControlName="name" type="text" id="prod-name" maxLength="100"
                             [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
                             class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                             <label for="prod-version" class="font-bold text-lg dark:text-white">{{ 'CREATE_PROD_SPEC._product_version' | translate }}</label>
@@ -585,7 +585,7 @@
                         <form class="m-4 grid grid-cols-2 gap-4" [formGroup]="charsForm">
                             <div>
                                 <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_PROD_SPEC._product_name' | translate }}</label>
-                                <input formControlName="name" type="text" id="prod-name" 
+                                <input formControlName="name" type="text" id="prod-name" maxLength="100"
                                 class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 
                             </div>

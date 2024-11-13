@@ -136,7 +136,7 @@
                 <form class="m-4 md:grid md:grid-cols-2 gap-4" [formGroup]="generalForm">
                     <div>
                         <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>
-                        <input formControlName="name" type="text" id="prod-name"
+                        <input formControlName="name" type="text" id="prod-name" maxLength="100"
                         [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
                         class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                    
                     </div>
@@ -1100,7 +1100,7 @@
                         <form class="xl:grid xl:grid-cols-80/20 xl:gap-4 m-4" [formGroup]="priceForm" (change)="checkValidPrice()">
                             <div>
                                 <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>                               
-                                <input formControlName="name" type="text" id="name" (change)="checkValidPrice()"                                   
+                                <input formControlName="name" type="text" id="name" (change)="checkValidPrice()" maxLength="100"                         
                                     [ngClass]="priceForm.controls.name.errors?.['invalidName'] ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200 mb-2'"
                                     class="bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 @if(priceForm.controls.name.errors?.['invalidName']){
@@ -1608,7 +1608,7 @@
             <form class="lg:grid lg:grid-cols-80/20 gap-4 m-4 p-4" [formGroup]="priceForm" (change)="checkValidPrice()">
                 <div>
                     <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>
-                    <input formControlName="name" type="text" id="name" (change)="checkValidPrice()"
+                    <input formControlName="name" type="text" id="name" (change)="checkValidPrice()" maxLength="100"
                     [ngClass]="priceForm.controls.name.errors?.['invalidName'] ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200 mb-2'"
                     class="bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     @if(priceForm.controls.name.errors?.['invalidName']){

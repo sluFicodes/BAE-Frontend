@@ -56,7 +56,7 @@ export class UpdateOfferComponent implements OnInit{
 
   //OFFER GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]),
     description: new FormControl(''),
   });
@@ -137,7 +137,7 @@ export class UpdateOfferComponent implements OnInit{
   customSelected:boolean=true;
   validPriceCheck:boolean=true;
   priceForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     price: new FormControl('', [Validators.required]),
     description: new FormControl(''),
     usageUnit: new FormControl(''),

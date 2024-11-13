@@ -58,7 +58,7 @@
                 <h2 class="text-3xl font-bold text-primary-100 dark:text-white ml-4">{{ 'CREATE_CATALOG._general' | translate }}</h2>
                     <form class="m-4 gap-4" [formGroup]="generalForm">
                         <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_CATALOG._name' | translate }}</label>
-                        <input formControlName="name" type="text" id="prod-name"
+                        <input formControlName="name" type="text" id="prod-name" maxLength="100"
                         [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
                         class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                         

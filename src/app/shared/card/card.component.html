@@ -14,7 +14,7 @@
 
   <div class="flex-1 h-full bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
     <div class="flex-1 h-full px-5 py-5 bg-secondary-50/95 dark:bg-secondary-100/95 rounded-lg">
-      <div class="overflow-y-hidden">
+      <div class="overflow-y-hidden overflow-x-hidden">
       <a class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 mr-2"
       [ngClass]="complianceLevel == 1 ? 'bg-red-200 text-red-700' : complianceLevel == 2 ? 'bg-yellow-200 text-yellow-700' : 'bg-green-200 text-green-700'">
       <fa-icon [icon]="faAtom" class="mr-2" [ngClass]="complianceLevel == 1 ? 'text-red-700' : complianceLevel == 2 ? 'text-yellow-700' : 'text-green-700'"></fa-icon>
@@ -102,13 +102,13 @@
             <!-- START HEADER CARD -->
             <div class="w-full mb-4 rounded-t-lg grid grid-cols-80/20 lg:grid-cols-60/40">
 
-              <div class="flex flex-col p-4">
+              <div class="flex flex-col p-4 overflow-x-hidden">
                   <h5 class="md:text-3xl lg:text-4xl font-semibold tracking-tight text-primary-100 dark:text-primary-50 text-wrap break-all">{{productOff?.name}}</h5>
                   <div class="grid grid-cols-2">
                       <div class="min-h-19 pt-2 text-gray-500 dark:text-gray-400">V: {{productOff?.version || 'latest'}}</div>
                   </div>
 
-                  <div>
+                  <div class="overflow-x-hidden">
                     <a class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md mb-2 mr-2"
                     [ngClass]="complianceLevel==1 ? 'bg-red-200 text-red-700' : complianceLevel==2 ? 'bg-yellow-200 text-yellow-700' : 'bg-green-200 text-green-700'">
                     <fa-icon [icon]="faAtom" class="mr-2" [ngClass]="complianceLevel==1 ? 'text-red-700' : complianceLevel==2 ? 'text-yellow-700' : 'text-green-700'"></fa-icon>
@@ -205,7 +205,7 @@
                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                 </svg>
-                </button>
+              </button>
             </div>
         </div>
     </div>

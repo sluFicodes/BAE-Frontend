@@ -64,7 +64,7 @@ export class UpdateProductSpecComponent implements OnInit {
 
   //PRODUCT GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     brand: new FormControl('', [Validators.required]),
     version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]),
     number: new FormControl(''),
@@ -74,7 +74,7 @@ export class UpdateProductSpecComponent implements OnInit {
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;

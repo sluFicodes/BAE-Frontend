@@ -29,14 +29,18 @@
           <span class="sr-only">Loading...</span>
         </div>
       } @else {
-        <div class="w-full grid grid-cols-2 gap-4  sm:grid-cols-3 lg:grid-cols-4">
+        <div class="w-full p-4 md:grid md:grid-cols-2 gap-4 lg:grid-cols-4">
 
             @for (cat of catalogs; track cat.id) {
 
-                <div (click)="goToCatalogSearch(cat.id)" class="block cursor-pointer rounded-lg bg-cover" style="background-image: url(assets/logos/dome-logo-element-colour.png);" >
+                <div (click)="goToCatalogSearch(cat.id)" class="block cursor-pointer rounded-lg bg-cover mb-4 md:mb-0" style="background-image: url(assets/logos/dome-logo-element-colour.png);" >
                     <div class="block w-full h-full p-6 bg-opacity-100 bg-secondary-50 rounded-lg dark:bg-secondary-100 bg-secondary-50/90 dark:bg-secondary-100/90 bg-cover">
-                        <h5 class="text-2xl font-bold line-clamp-2 tracking-tight text-primary-100 dark:text-white text-wrap break-all">{{cat.name}}</h5>
-                        <markdown class="line-clamp-4 text-wrap break-all dark:text-white text-gray-900" [data]="cat.description ? cat.description : 'CATALOGS._no_desc' | translate"></markdown>
+                        <h5 class="text-2xl font-bold tracking-tight line-clamp-4 text-primary-100 dark:text-white text-wrap break-all">{{cat.name}}</h5>
+                        <markdown class="line-clamp-[8] text-wrap break-all dark:text-white text-gray-900" [data]="cat.description ? cat.description : 'CATALOGS._no_desc' | translate"></markdown>
+                        <!--<a (click)="showFullDesc(cat);$event.stopPropagation();" class="text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded-md text-secondary-50 bg-primary-100 dark:bg-secondary-50 dark:text-primary-100 mb-2">
+                          <fa-icon [icon]="faEye" class="text-primary-50 mr-2"></fa-icon>
+                          {{'CATALOGS._view_details' | translate}}
+                        </a>-->
                         <hr class="h-px my-1 bg-primary-100 border-0 dark:bg-primary-100">
                         <div class="">
                           @for(category of cat.category; track category.id) {
@@ -45,7 +49,17 @@
                             <span class="inline-block bg-blue-300 text-primary-100 text-xs font-bold me-2 px-2.5 py-0.5 rounded-full w-fit text-wrap break-all">{{'CATALOGS._no_cat' | translate}}</span>                            
                           }
                         </div>
-
+                        <div class="flex justify-center">
+                          <button (click)="showFullDesc(cat);$event.stopPropagation();" type="button" class="flex mt-2 items-center align-items-bottom text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-100 dark:hover:bg-primary-50 dark:focus:ring-primary-100 mr-1">
+                            <svg class="w-[18px] h-[18px] text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
+                              <g stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                                <path d="M10 13c4.97 0 9-2.686 9-6s-4.03-6-9-6-9 2.686-9 6 4.03 6 9 6Z"/>
+                              </g>
+                            </svg>
+                            {{ 'CARD._details' | translate }}
+                          </button>
+                        </div>
                     </div>
                 </div>
 
@@ -74,3 +88,37 @@
         </div>
       }
 </div>
+
+<!-- Main modal -->
+@if (showDesc){
+  <div id="details-modal" [ngClass]="showDesc ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full rounded-lg shadow-2xl">
+    <div class="relative w-full max-w-7xl max-h-full rounded-t-lg">
+        <!-- Modal content -->
+      <div class="relative sm:m-8 bg-white rounded-lg shadow dark:border-gray-600 dark:bg-secondary-100 bg-cover bg-right-bottom rounded-lg" (click)="$event.stopPropagation();">
+
+          <!-- START HEADER CARD -->
+          <div class="w-full rounded-t-lg p-4">
+              <h5 class="md:text-3xl lg:text-4xl font-semibold tracking-tight text-primary-100 dark:text-primary-50 text-wrap break-all">{{showingCat?.name}}</h5>
+          </div>
+          <hr class="h-px my-1 bg-primary-100 border-0 dark:bg-primary-100">
+        <!-- END HEADER CARD -->
+
+        <div class="p-4">
+          <div class="justify-start">            
+              <div class="max-h-[300px] overflow-y-auto mb-4 p-4">
+                <markdown class="min-h-19 h-19 dark:text-secondary-50 text-wrap break-all" [data]="showingCat.description ? showingCat.description : 'CATALOGS._no_desc' | translate"></markdown>
+              </div> 
+          </div>
+        </div>
+        <hr class="h-px my-1 bg-primary-100 border-0 dark:bg-primary-100">
+        <div class="p-4">
+          @for(category of showingCat.category; track category.id) {
+            <span class="inline-block bg-blue-300 text-primary-100 text-xs font-bold me-2 px-2.5 py-0.5 rounded-full w-fit text-wrap break-all">{{category.name}}</span>
+          } @empty {
+            <span class="inline-block bg-blue-300 text-primary-100 text-xs font-bold me-2 px-2.5 py-0.5 rounded-full w-fit text-wrap break-all">{{'CATALOGS._no_cat' | translate}}</span>                            
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

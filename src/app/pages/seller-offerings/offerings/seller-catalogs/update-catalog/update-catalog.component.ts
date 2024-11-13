@@ -38,7 +38,7 @@ export class UpdateCatalogComponent implements OnInit {
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     description: new FormControl(''),
   });
   catStatus:any='Active';
