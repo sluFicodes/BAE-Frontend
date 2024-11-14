@@ -334,7 +334,7 @@
     </div>
 }
 @if(showError){
-    <error-message class="fixed w-fit top-1/2 left-1/2 z-50" [message]="errorMessage"></error-message>
+    <error-message class="flex justify-center items-center fixed w-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" [message]="errorMessage"></error-message>
 }
 @if(showEditMedium){
 <div id="edit-medium-modal" [ngClass]="showEditMedium ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-40 justify-center items-center w-full md:inset-0 h-fit lg:h-[calc(100%)] max-h-full shadow-2xl">

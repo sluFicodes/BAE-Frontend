@@ -67,6 +67,7 @@ export class OrgInfoComponent {
   imgPreview:any='';
   attFileName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9 _.-]*')]);
   attImageName = new FormControl('', [Validators.required, Validators.pattern('^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp)$')])
+  filenameRegex = /^[A-Za-z_.-]+$/;
 
   @ViewChild('imgURL') imgURL!: ElementRef;
 
@@ -497,6 +498,15 @@ export class OrgInfoComponent {
                 contentType: file.type,
                 isPublic: true
               }
+              if(!this.isValidFilename(fileBody.content.name)){
+                this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
               this.attachmentService.uploadFile(fileBody).subscribe({
                 next: data => {
                     console.log(data)
@@ -543,6 +553,10 @@ export class OrgInfoComponent {
         console.log(droppedFile.relativePath, fileEntry);
       }
     }
+  }
+
+  isValidFilename(filename: string): boolean {
+    return this.filenameRegex.test(filename);
   }
  
   public fileOver(event: any){
