@@ -256,10 +256,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     this.cdr.detectChanges();    
   }
 
-  goToMyOfferings(){
-    window.location.href=`${HeaderComponent.BASE_URL}/#/stock/offering?status=Active,Launched`;
-  }
-
   async toggleLogin(){
     console.log('login')
     this.showLogin=true;
@@ -348,7 +344,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
       if (environment.SIOP_INFO.isRedirection) {
         // New verifier format
-        let newUrl = new URL(window.location.href)
+        let oldUrl = new URL(window.location.href)
+        let newUrl = new URL(oldUrl.origin)
         newUrl.pathname = environment.SIOP_INFO.requestUri
 
         let finalUrl = newUrl.toString()
