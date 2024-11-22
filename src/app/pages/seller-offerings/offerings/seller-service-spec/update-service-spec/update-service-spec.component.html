@@ -417,7 +417,7 @@
                                 }
                             </div>
                         }
-                        <label for="values" class="font-bold text-lg dark:text-white">{{ 'UPDATE_SERV_SPEC._add_values' | translate }}</label>
+                        <label for="values" [ngClass]="rangeCharSelected && creatingChars.length==1 ? 'hidden' : ''" class="font-bold text-lg dark:text-white">{{ 'UPDATE_SERV_SPEC._add_values' | translate }}</label>
                         @if(stringCharSelected){
                             <div class="flex flex-row items-center align-items-middle">
                                 <input type="text" id="value" [(ngModel)]="stringValue"
@@ -451,7 +451,7 @@
                                     </svg>                                                                              
                                 </button> 
                             </div>
-                        } @else if (rangeCharSelected){
+                        } @else if (rangeCharSelected && creatingChars.length==0){
                             <div class="flex flex-col md:flex-row items-center align-items-middle">
                                 <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md">
