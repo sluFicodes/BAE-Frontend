@@ -41,14 +41,14 @@ export class UpdateServiceSpecComponent implements OnInit {
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     description: new FormControl(''),
   });
   servStatus:any;
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;

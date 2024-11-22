@@ -27,7 +27,7 @@
     <div class="col-span-2">
         <label for="address.street_address" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._street' | translate }}</label>
         <textarea id="address.street_address" formControlName="street" name="address.street_address"
-        class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="4"></textarea>
+        class="mb-2 min-h-fit bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="4"></textarea>
     </div>
     <div class="col-span-2">
         <label for="email" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._email' | translate }}</label>
@@ -116,5 +116,5 @@
     </div>
 }
 @if(showError){
-    <error-message class="fixed w-fit top-1/2 left-1/2 z-50" [message]="errorMessage"></error-message>
+    <error-message class="flex justify-center items-center fixed w-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" [message]="errorMessage"></error-message>
 }

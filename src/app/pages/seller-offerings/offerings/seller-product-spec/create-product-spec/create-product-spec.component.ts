@@ -71,7 +71,7 @@ export class CreateProductSpecComponent implements OnInit {
 
   //PRODUCT GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     brand: new FormControl('', [Validators.required]),
     version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]),
     number: new FormControl(''),
@@ -80,7 +80,7 @@ export class CreateProductSpecComponent implements OnInit {
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;
@@ -163,6 +163,8 @@ export class CreateProductSpecComponent implements OnInit {
   fromValue: string = '';
   toValue: string = '';
   rangeUnit: string = '';
+
+  filenameRegex = /^[A-Za-z_.-]+$/;
 
   constructor(
     private router: Router,
@@ -408,6 +410,15 @@ export class CreateProductSpecComponent implements OnInit {
                 contentType: file.type,
                 isPublic: true
               }
+              if(!this.isValidFilename(fileBody.content.name)){
+                this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
               if(this.showCompliance){
                 const index = this.selectedISOS.findIndex(item => item.name === sel.name);
                 this.attachmentService.uploadFile(fileBody).subscribe({
@@ -494,6 +505,10 @@ export class CreateProductSpecComponent implements OnInit {
         console.log(droppedFile.relativePath, fileEntry);
       }
     }
+  }
+
+  isValidFilename(filename: string): boolean {
+    return this.filenameRegex.test(filename);
   }
  
   public fileOver(event: any){

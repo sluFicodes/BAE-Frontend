@@ -136,7 +136,7 @@
                 <form class="m-4 md:grid md:grid-cols-2 gap-4" [formGroup]="generalForm">
                     <div>
                         <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>
-                        <input formControlName="name" type="text" id="prod-name"
+                        <input formControlName="name" type="text" id="prod-name" maxLength="100"
                         [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
                         class="mb-2 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                    
                     </div>
@@ -319,7 +319,7 @@
                                     <markdown class="text-gray-800 dark:text-gray-200 text-wrap break-all" [data]="description"></markdown>
                                 
                             }@else{
-                                <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
+                                <textarea id="editor" formControlName="description" rows="8" class="block w-full min-h-fit px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
                             }
                             @if(showEmoji){
                                 <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
@@ -831,7 +831,7 @@
                                                 <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="licenseDescription"></markdown>
                                             
                                         }@else{
-                                            <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
+                                            <textarea id="editor" formControlName="description" rows="8" class="block w-full min-h-fit px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
                                         }
                                         @if(showEmoji){
                                             <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
@@ -1100,7 +1100,7 @@
                         <form class="xl:grid xl:grid-cols-80/20 xl:gap-4 m-4" [formGroup]="priceForm" (change)="checkValidPrice()">
                             <div>
                                 <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>                               
-                                <input formControlName="name" type="text" id="name" (change)="checkValidPrice()"                                   
+                                <input formControlName="name" type="text" id="name" (change)="checkValidPrice()" maxLength="100"                         
                                     [ngClass]="priceForm.controls.name.errors?.['invalidName'] ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200 mb-2'"
                                     class="bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 @if(priceForm.controls.name.errors?.['invalidName']){
@@ -1246,7 +1246,7 @@
                                                 <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="priceDescription"></markdown>
                                             
                                         }@else{
-                                            <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 border-0 dark:text-gray-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>
+                                            <textarea id="editor" formControlName="description" rows="8" class="block w-full min-h-fit px-0 text-sm text-gray-800 border-0 dark:text-gray-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>
                                         }
                                         @if(showEmoji){
                                             <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
@@ -1299,7 +1299,7 @@
                                         </div>
 
                                         <label for="description" class="font-bold text-lg col-span-2 dark:text-white">{{ 'UPDATE_OFFER._description' | translate }}</label>
-                                        <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                        <textarea id="description" formControlName="description" rows="4" class="col-span-2 min-h-fit block p-2.5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>
                                 
                                     </div>
                                 } @else if(discountSelected){
@@ -1340,7 +1340,7 @@
                                                 class="bg-gray-50 border-r border-gray-300 text-gray-900 text-sm dark:bg-secondary-300 dark:border-secondary-200 dark:text-white rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
                                             </div>
                                             <label for="description" class="font-bold text-lg col-span-2 dark:text-white">{{ 'UPDATE_OFFER._description' | translate }}</label>
-                                            <textarea id="description" formControlName="description" rows="4" class="col-span-2 block p-2.5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>    
+                                            <textarea id="description" formControlName="description" rows="4" class="col-span-2 min-h-fit block p-2.5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"></textarea>    
                                         </div>                                    
                                     </div>
                                 }
@@ -1591,7 +1591,7 @@
 
 @if(editPrice){
     <div id="edit-price-modal" [ngClass]="editPrice ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true"
-    class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full shadow-2xl">
+    class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full shadow-2xl">
         <div class="w-full lg:w-3/4 xl:w-1/2 relative bg-secondary-50 dark:bg-secondary-200 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
             <!-- Modal header -->
             <div class="flex items-center justify-between pr-2 pt-2 rounded-t dark:border-gray-600">
@@ -1608,7 +1608,7 @@
             <form class="lg:grid lg:grid-cols-80/20 gap-4 m-4 p-4" [formGroup]="priceForm" (change)="checkValidPrice()">
                 <div>
                     <label class="font-bold text-lg dark:text-white">{{ 'UPDATE_OFFER._name' | translate }}</label>
-                    <input formControlName="name" type="text" id="name" (change)="checkValidPrice()"
+                    <input formControlName="name" type="text" id="name" (change)="checkValidPrice()" maxLength="100"
                     [ngClass]="priceForm.controls.name.errors?.['invalidName'] ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200 mb-2'"
                     class="bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     @if(priceForm.controls.name.errors?.['invalidName']){
@@ -1755,7 +1755,7 @@
                                     <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="priceDescription"></markdown>
                                 
                             }@else{
-                                <textarea id="editor" formControlName="description" rows="8" class="block w-full px-0 text-sm text-gray-800 border-0 dark:text-gray-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>
+                                <textarea id="editor" formControlName="description" rows="8" class="block w-full min-h-fit px-0 text-sm text-gray-800 border-0 dark:text-gray-200 bg-white dark:bg-secondary-300" placeholder="Add product description..." ></textarea>
                             }
                             @if(showEmoji){
                                 <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
@@ -1777,7 +1777,7 @@
     </div>
 }
 @if(showError){
-    <error-message class="fixed w-fit top-1/2 left-1/2" [message]="errorMessage"></error-message>
+    <error-message class="flex justify-center items-center fixed w-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" [message]="errorMessage"></error-message>
 }
 
 

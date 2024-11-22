@@ -6,7 +6,7 @@
           @if (category.children) {
             @if (category.children.length != 0) {
               <div [ngClass]="checkClasses($first,$last,category)">
-                <span class="text-left justify-start">{{ category?.name }}</span>
+                <span class="text-left justify-start text-wrap break-all">{{ category?.name }}</span>
                 <div class="justify-end inline-flex">
                   <div class="justify-end" (click)="onClick(category)">
                     <input [checked]="isCheckedCategory(category)" type="checkbox" value="" class="hidden peer">

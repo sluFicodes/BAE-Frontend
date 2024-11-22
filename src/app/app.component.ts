@@ -40,12 +40,12 @@ export class AppComponent implements OnInit {
     if(!this.localStorage.getObject('selected_categories'))
       this.localStorage.setObject('selected_categories', []);
 
-    this.eventMessage.messages$.subscribe(ev => {
+    /*this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'AddedFilter' || ev.type === 'RemovedFilter') {
         this.checkPanel();
       }
 
-    })
+    })*/
 
   }
   ngOnInit(): void {
@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
       this.localStorage.setObject('cart_items', []);
     if(!this.localStorage.getObject('login_items'))
       this.localStorage.setObject('login_items', {});
-    this.checkPanel();
+    //this.checkPanel();
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'LoginProcess') {
         this.refreshApi.stopInterval();
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  checkPanel() {
+  /*checkPanel() {
     const filters = this.localStorage.getObject('selected_categories') as Category[] || [] ;
     const oldState = this.showPanel;
     this.showPanel = filters.length > 0;
@@ -93,5 +93,5 @@ export class AppComponent implements OnInit {
       this.eventMessage.emitFilterShown(this.showPanel);
       this.localStorage.setItem('is_filter_panel_shown', this.showPanel.toString())
     }
-  }
+  }*/
 }

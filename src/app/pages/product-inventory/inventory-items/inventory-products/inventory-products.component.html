@@ -110,7 +110,7 @@
                         
                         <div class="bg-cover bg-right-bottom bg-opacity-25 rounded-lg" style="background-image: url(assets/logos/dome-logo-element-colour.png)">
                             <div class="px-5 py-5 bg-secondary-50/95 dark:bg-secondary-100/95 rounded-lg">
-                            <div class="h-[30px] overflow-y-hidden">
+                            <div class="h-[30px] overflow-y-hidden overflow-x-hidden">
                             @for (cat of inv.product?.category; track cat.id) {
                                 <bae-badge class="ml-2" [category]=cat></bae-badge>
                             }
@@ -528,5 +528,5 @@
     </div>
   }
 @if(showError){
-    <error-message class="fixed w-fit top-1/2 left-1/2 z-50" [message]="errorMessage"></error-message>
+    <error-message class="flex justify-center items-center fixed w-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" [message]="errorMessage"></error-message>
 }

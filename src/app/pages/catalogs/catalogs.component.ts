@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { PaginationService } from 'src/app/services/pagination.service';
+import {faEye} from "@fortawesome/pro-regular-svg-icons";
 import { Router } from '@angular/router';
 import {components} from "../../models/product-catalog";
 type Catalog = components["schemas"]["Catalog"];
@@ -22,6 +23,9 @@ export class CatalogsComponent implements OnInit{
   page_check:boolean = true;
   filter:any=undefined;
   searchField = new FormControl();
+  protected readonly faEye = faEye;
+  showDesc:boolean=false;
+  showingCat:any;
   
   constructor(
     private router: Router,
@@ -29,6 +33,14 @@ export class CatalogsComponent implements OnInit{
     private cdr: ChangeDetectorRef,
     private paginationService: PaginationService
   ) {
+  }
+
+  @HostListener('document:click')
+  onClick() {
+    if(this.showDesc==true){
+      this.showDesc=false;
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnInit() {
@@ -80,6 +92,11 @@ export class CatalogsComponent implements OnInit{
 
   async next(){
     await this.getCatalogs(true);
+  }
+
+  showFullDesc(cat:any){
+    this.showDesc=true;
+    this.showingCat=cat;
   }
 
 }
