@@ -130,10 +130,11 @@ export class CreateOfferComponent implements OnInit {
 
   //PRICE
   currencies=currencies;
-  createdPrices:ProductOfferingPriceRefOrValue[]=[];
+  createdPrices:ProductOfferingPrice[]=[];
   postedPrices:any[]=[];
   creatingPrice:any;
   priceDescription:string='';
+  priceComponentDescription:string='';
   showCreatePrice:boolean=false;
   toggleOpenPrice:boolean=false;
   oneTimeSelected:boolean=true;
@@ -145,7 +146,7 @@ export class CreateOfferComponent implements OnInit {
   priceForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     price: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
+    description: new FormControl('')
   });
   priceAlterForm = new FormGroup({
     price: new FormControl('', [Validators.required]),
@@ -163,6 +164,33 @@ export class CreateOfferComponent implements OnInit {
   priceToUpdate:any;
   selectedPriceType:any='CUSTOM';
   editPrice:boolean=false;
+  showPriceComponents:boolean=false;
+
+  //PRICECOMPONENT
+  selectedCharacteristic:any;
+  selectedCharacteristicVal:any
+  showValueSelect:boolean=false;
+  isDiscount:boolean=false;
+  priceComponentForm = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    price: new FormControl('', [Validators.required]),
+    description: new FormControl(''),
+    recurring: new FormControl(''),
+    unit: new FormControl(''),
+  });
+  discountForm = new FormGroup({
+    amount: new FormControl(''),
+    percentage: new FormControl(''),
+    duration: new FormControl(''),
+    period: new FormControl(''),
+  });
+  createdPriceComponents:any[]=[];
+  createdPriceProfile:any;
+  hideStringCharOption:boolean=true;
+
+  //PRICEPROFILE
+  showProfile:boolean=false;
+  editProfile:boolean=false;
 
   errorMessage:any='';
   showError:boolean=false;
@@ -206,10 +234,172 @@ export class CreateOfferComponent implements OnInit {
       this.showEmoji=false;
       this.cdr.detectChanges();
     }
+    if(this.showPriceComponents==true){
+      this.showPriceComponents=false;
+      this.cdr.detectChanges();
+    }
+    if(this.showProfile==true){
+      this.showProfile=false;
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnInit() {
     this.initPartyInfo();
+  }
+
+  showDrawerPriceComp(){
+    this.isDiscount=false;
+    this.oneTimeSelected=true;
+    this.recurringSelected=false;
+    this.usageSelected=false;
+    this.customSelected=false;
+
+    this.showPriceComponents=!this.showPriceComponents;
+    console.log(this.selectedProdSpec)
+    console.log('drawer')
+    initFlowbite()
+  }
+
+  createPriceComponent(){
+    let pricecomponent:ProductOfferingPrice = {
+      id: uuidv4(),
+      name: this.priceComponentForm.value.name ? this.priceComponentForm.value.name : '',
+      description: this.priceComponentForm.value.description ? this.priceComponentForm.value.description : '',
+      price: {
+        unit: this.selectedPriceUnit,
+        value: 0
+      },
+      priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : 'one time',
+      prodSpecCharValueUse: [{
+        id: this.selectedCharacteristic.id,
+        name: this.selectedCharacteristic.name,
+        productSpecCharacteristicValue: [this.selectedCharacteristicVal]
+      }]
+    }
+    if(this.recurringSelected){
+      console.log('recurring')
+      if(this.priceComponentForm.value.recurring)
+      pricecomponent.recurringChargePeriodType=this.priceComponentForm.value.recurring;
+    }
+    if(this.usageSelected){
+      console.log('usage')
+      if(this.priceComponentForm.value.unit)
+      pricecomponent.unitOfMeasure= {
+        amount: 1,
+        units: this.priceComponentForm.value.unit
+      }
+    }
+    if(this.isDiscount && this.discountForm.value.amount){
+      let discount:ProductOfferingPrice = {
+        id: uuidv4(),
+        name: 'discount',
+        priceType: 'discount',
+        percentage: this.discountSelected ? parseFloat(this.discountForm.value.amount) : 0,
+        validFor: {
+          startDateTime: moment().toISOString(),
+          endDateTime:  moment().toISOString()
+        },
+        //recurringChargePeriod: this.discountForm.value.duration ? this.discountForm.value.duration : '',
+      };
+      pricecomponent['popRelationship'] = [{
+        id: discount.id,
+        name: discount.name        
+      }]
+    }
+    console.log(pricecomponent)
+    this.createdPriceComponents.push(pricecomponent)
+    this.showPriceComponents=!this.showPriceComponents;
+    this.priceComponentForm.reset();
+    this.discountForm.reset();
+  }
+
+  changePriceProfileCharValue(char:any,event:any){
+    const index = this.createdPriceProfile.findIndex((item: { id: any; }) => item.id === char.id);
+    const innerIndex = this.createdPriceProfile[index].productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (event.target.value).toString());    
+    console.log(innerIndex)
+    for(let i=0;i<this.createdPriceProfile[index].productSpecCharacteristicValue.length;i++){      
+      if(i==innerIndex){
+        this.createdPriceProfile[index].productSpecCharacteristicValue[i].isDefault=true;
+      } else {
+        this.createdPriceProfile[index].productSpecCharacteristicValue[i].isDefault=false;
+      }
+    }
+    console.log(this.createdPriceProfile)
+  }
+
+  cancelPriceComponent(){
+    this.showPriceComponents=!this.showPriceComponents;
+    this.priceComponentForm.reset();
+    this.discountForm.reset();
+  }
+
+  createPriceProfile(){
+    this.showProfile=!this.showProfile;
+    this.editProfile=!this.editProfile;
+  }
+
+  cancelPriceProfile(){
+    this.showProfile=!this.showProfile;
+    this.createdPriceProfile=this.selectedProdSpec.productSpecCharacteristic;
+  }
+
+  deletePriceComp(price:any){
+    const index = this.createdPriceComponents.findIndex(item => item.id === price.id);
+    if (index !== -1) {
+      console.log('eliminar')
+      this.createdPriceComponents.splice(index, 1);
+    }   
+    this.cdr.detectChanges();
+    console.log(this.createdPriceComponents)   
+  }
+
+  editPriceComp(price:any){
+
+  }
+
+  showDrawerProfile(){
+    this.showProfile=!this.showProfile;
+    this.createdPriceProfile=this.selectedProdSpec.productSpecCharacteristic;
+    console.log('-----')
+    console.log(this.createdPriceProfile)
+    console.log('drawer')
+    initFlowbite()
+  }
+
+  hasKey(obj: any, key: string): boolean {
+    return obj?.hasOwnProperty(key);
+  }
+
+  changePriceComponentChar(event: any){
+    if(event.target.value==''){
+      this.showValueSelect=false;
+    } else {
+      this.selectedCharacteristic = this.selectedProdSpec.productSpecCharacteristic.find(
+        (char: { id: any; }) => char.id === event.target.value
+      );
+      this.cdr.detectChanges();
+      console.log('selected char')
+      console.log(this.selectedCharacteristic)  
+      console.log('-----change select')
+      console.log(this.selectedCharacteristic.productSpecCharacteristicValue)
+      if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
+        console.log('hola')
+        this.showValueSelect=false;
+      } else if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
+        this.selectedCharacteristicVal=this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
+        this.showValueSelect=true;
+      } else {
+        this.selectedCharacteristicVal=this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
+        this.showValueSelect=true;
+        this.hideStringCharOption=false;
+      }
+    }
+    initFlowbite();
+  }
+
+  changePriceComponentCharValue(event: any){
+    this.selectedCharacteristicVal=event.target.value;
   }
 
   initPartyInfo(){
@@ -373,6 +563,7 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=true;
     this.showPreview=false;
     this.clearPriceFormInfo();
+    initFlowbite();
   }
 
   saveLicense(){
@@ -504,7 +695,7 @@ export class CreateOfferComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  savePrice(){
+ /*savePrice(){
     if(this.priceForm.value.name){
       let priceToCreate: ProductOfferingPriceRefOrValue = {
         id: uuidv4(),
@@ -564,6 +755,31 @@ export class CreateOfferComponent implements OnInit {
           }
         ]
       }
+      this.createdPrices.push(priceToCreate)   
+      console.log('--- price ---')
+      console.log(this.createdPrices)      
+    }
+    this.clearPriceFormInfo();
+  }*/
+
+  savePrice(){
+    if(this.priceForm.value.name){
+      let priceToCreate: ProductOfferingPrice = {
+        id: uuidv4(),
+        name: this.priceForm.value.name,
+        description: this.priceForm.value.description ? this.priceForm.value.description : '',
+        lifecycleStatus: "Active",
+        isBundle: true ? this.createdPriceComponents.length > 1 : false
+      }
+      if(this.createdPriceComponents.length>1){
+         //referencia a los price comp
+        priceToCreate.bundledPopRelationship=this.createdPriceComponents
+      }
+      if(this.editProfile){
+        //referenia al comp profile
+        priceToCreate.prodSpecCharValueUse=this.createdPriceProfile
+      }
+      this.createdPriceComponents=[];
       this.createdPrices.push(priceToCreate)   
       console.log('--- price ---')
       console.log(this.createdPrices)      
@@ -683,7 +899,7 @@ export class CreateOfferComponent implements OnInit {
       }
       const index = this.createdPrices.findIndex(item => item.id === this.priceToUpdate.id);
       if (index !== -1) {
-        this.createdPrices[index]=priceToCreate;
+        //this.createdPrices[index]=priceToCreate;
       } 
       console.log('--- price ---')
       console.log(this.createdPrices)      
@@ -1157,14 +1373,14 @@ export class CreateOfferComponent implements OnInit {
           name: this.createdPrices[i].name,
           //percentage: 0,
           priceType: this.createdPrices[i].priceType,
-          price: {
+          /*price: {
               unit: this.createdPrices[i].price?.taxIncludedAmount?.unit,
               value: this.createdPrices[i].price?.taxIncludedAmount?.value
-          }
+          }*/
         }
         if(this.createdPrices[i].priceType == 'recurring'){
           console.log('recurring')
-          priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
+          //priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
         }
         if(this.createdPrices[i].priceType == 'usage'){
           console.log('usage')
@@ -1357,17 +1573,23 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + ' **bold text** '
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + ' **bold text** '
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + ' **bold text** '
+        }); 
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + ' **bold text** '
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' **bold text** '
       });    
     }
-
   }
 
   addItalic() {
@@ -1377,10 +1599,17 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + ' _italicized text_ '
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + ' _italicized text_ '
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + ' _italicized text_ '
+        }); 
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + ' _italicized text_ '
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1396,10 +1625,17 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + '\n- First item\n- Second item'
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n- First item\n- Second item'
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + '\n- First item\n- Second item'
+        });
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + '\n- First item\n- Second item'
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1415,16 +1651,23 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + '\n1. First item\n2. Second item'
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n1. First item\n2. Second item'
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + '\n1. First item\n2. Second item'
+        }); 
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + '\n1. First item\n2. Second item'
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n1. First item\n2. Second item'
       });    
-    } 
+    }
   }
 
   addCode(){
@@ -1434,10 +1677,17 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + '\n`code`'
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n`code`'
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + '\n`code`'
+        });
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + '\n`code`'
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1453,10 +1703,17 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + '\n```\ncode\n```'
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n```\ncode\n```'
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + '\n```\ncode\n```'
+        });
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + '\n```\ncode\n```'
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1472,10 +1729,17 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + '\n> blockquote'
       }); 
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n> blockquote'
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + '\n> blockquote'
+        });
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + '\n> blockquote'
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1491,16 +1755,23 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + ' [title](https://www.example.com) '
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + ' [title](https://www.example.com) '
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + ' [title](https://www.example.com) '
+        });
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + ' [title](https://www.example.com) '
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' [title](https://www.example.com) '
       });    
-    }  
+    } 
   } 
 
   addTable(){
@@ -1510,16 +1781,23 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
+        }); 
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
       });    
-    } 
+    }
   }
 
   addEmoji(event:any){
@@ -1530,16 +1808,23 @@ export class CreateOfferComponent implements OnInit {
         description: currentText + event.emoji.native
       });
     } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + event.emoji.native
-      });
+      if(this.showPriceComponents){
+        const currentText = this.priceComponentForm.value.description;
+        this.priceComponentForm.patchValue({
+          description: currentText + event.emoji.native
+        });
+      } else {
+        const currentText = this.priceForm.value.description;
+        this.priceForm.patchValue({
+          description: currentText + event.emoji.native
+        });
+      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + event.emoji.native
       });    
-    } 
+    }
   }
 
   togglePreview(){
@@ -1550,10 +1835,18 @@ export class CreateOfferComponent implements OnInit {
         this.description=''
       }
     } else if(this.showPrice) {
-      if(this.priceForm.value.description){
-        this.priceDescription=this.priceForm.value.description;
-      } else {
-        this.priceDescription=''
+      if(this.showPriceComponents){
+        if(this.priceComponentForm.value.description){
+          this.priceComponentDescription=this.priceComponentForm.value.description;
+        } else {
+          this.priceComponentDescription=''
+        }
+      }else{
+        if(this.priceForm.value.description){
+          this.priceDescription=this.priceForm.value.description;
+        } else {
+          this.priceDescription=''
+        }
       }
     } else if(this.showLicense) {
       if(this.licenseForm.value.description){
@@ -1561,6 +1854,6 @@ export class CreateOfferComponent implements OnInit {
       } else {
         this.licenseDescription=''
       }
-    } 
+    }
   }
 }

@@ -1662,6 +1662,7 @@ export interface components {
       /** @description Place defines the places where the products are sold or delivered. */
       place?: components["schemas"]["PlaceRef"][];
       /** @description Product Offering Prices related to this Product Offering Price, for example a price alteration such as allowance or discount */
+      //referencia al alteration
       popRelationship?: components["schemas"]["ProductOfferingPriceRelationship"][];
       price?: components["schemas"]["Money"];
       /** @description The PricingLogicAlgorithm entity represents an instantiation of an interface specification to external rating function (without a modeled behavior in SID). Some of the parameters of the interface definition may be already set (such as price per unit) and some may be gathered during the rating process from the event (such as call duration) or from ProductCharacteristicValues (such as assigned bandwidth). */
