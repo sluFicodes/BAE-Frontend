@@ -47,5 +47,8 @@ export const environment = {
     DOME_TRUST_LINK: "",
     DOME_ABOUT_LINK: '',
     DOME_REGISTER_LINK: '',
-    DOME_PUBLISH_LINK:''
+    DOME_PUBLISH_LINK:'',
+    DOME_LINKEDIN: 'https://www.linkedin.com/company/dome-marketplace/',
+    DOME_YOUTUBE: 'https://www.youtube.com/channel/UC8UiL59S0JiaYYr14w5eOzA',
+    DOME_X: 'https://x.com/DomeMarketplace'
 };
