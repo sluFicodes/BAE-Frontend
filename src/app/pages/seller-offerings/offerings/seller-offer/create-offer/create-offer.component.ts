@@ -16,6 +16,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { currencies } from 'currencies.json';
+import { certifications } from 'src/app/models/certification-standards.const';
 
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type BundledProductOffering = components["schemas"]["BundledProductOffering"];
@@ -56,9 +57,10 @@ export class CreateOfferComponent implements OnInit {
   slaDone:boolean=false;
   priceDone:boolean=false;
   finishDone:boolean=false;
+  replicationDone:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price','summary'];
-  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','summary-circle'];
+  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price','replication','summary'];
+  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','replication-circle','summary-circle'];
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
@@ -143,16 +145,7 @@ export class CreateOfferComponent implements OnInit {
   selectedPeriodAlter:any='DAILY';
   usageSelected:boolean=false;
   customSelected:boolean=false;
-  priceForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    price: new FormControl('', [Validators.required]),
-    description: new FormControl('')
-  });
-  priceAlterForm = new FormGroup({
-    price: new FormControl('', [Validators.required]),
-    condition: new FormControl(''),
-    description: new FormControl(''),
-  });
+
   validPriceCheck:boolean=true;
   selectedPriceUnit:any=currencies[0].code;
   priceTypeAlter:any='ONE TIME';
@@ -167,7 +160,8 @@ export class CreateOfferComponent implements OnInit {
   showPriceComponents:boolean=false;
 
   //PRICECOMPONENT
-  selectedCharacteristic:any;
+  selectedCharacteristic:any=undefined;
+  touchedCharCheck:boolean=false;
   selectedCharacteristicVal:any
   showValueSelect:boolean=false;
   isDiscount:boolean=false;
@@ -184,13 +178,20 @@ export class CreateOfferComponent implements OnInit {
     duration: new FormControl(''),
     period: new FormControl(''),
   });
-  createdPriceComponents:any[]=[];
+  createdPriceComponents:any[]=[];  
+  createdPriceAlterations:any[]=[];
   createdPriceProfile:any;
+  createdPriceComponentsRelatedToPlan:any[]=[];
+  createdPriceAlterationsRelatedToPlan:any[]=[];
   hideStringCharOption:boolean=true;
 
   //PRICEPROFILE
   showProfile:boolean=false;
   editProfile:boolean=false;
+
+  //REPLICATION
+  showReplication:boolean=false;
+  selectedCountries:any[]=[];
 
   errorMessage:any='';
   showError:boolean=false;
@@ -225,6 +226,23 @@ export class CreateOfferComponent implements OnInit {
       if(ev.type === 'ChangedSession') {
         this.initPartyInfo();
       }
+      if(ev.type === 'SavePricePlan') {
+        this.createdPrices.push(ev.value as ProductOfferingPrice)
+        if(this.showCreatePrice){
+          this.showCreatePrice=false;
+        }
+      }
+      if(ev.type === 'UpdatePricePlan') {
+        let price = ev.value as ProductOfferingPrice
+        const index = this.createdPrices.findIndex((item) => item.id === price.id);
+        if(index!=-1){
+          console.log('updating price values...')
+          this.createdPrices[index]=price;
+        }
+        if(this.editPrice){
+          this.editPrice=false;
+        }
+      }
     })
   }
 
@@ -246,160 +264,6 @@ export class CreateOfferComponent implements OnInit {
 
   ngOnInit() {
     this.initPartyInfo();
-  }
-
-  showDrawerPriceComp(){
-    this.isDiscount=false;
-    this.oneTimeSelected=true;
-    this.recurringSelected=false;
-    this.usageSelected=false;
-    this.customSelected=false;
-
-    this.showPriceComponents=!this.showPriceComponents;
-    console.log(this.selectedProdSpec)
-    console.log('drawer')
-    initFlowbite()
-  }
-
-  createPriceComponent(){
-    let pricecomponent:ProductOfferingPrice = {
-      id: uuidv4(),
-      name: this.priceComponentForm.value.name ? this.priceComponentForm.value.name : '',
-      description: this.priceComponentForm.value.description ? this.priceComponentForm.value.description : '',
-      price: {
-        unit: this.selectedPriceUnit,
-        value: 0
-      },
-      priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : 'one time',
-      prodSpecCharValueUse: [{
-        id: this.selectedCharacteristic.id,
-        name: this.selectedCharacteristic.name,
-        productSpecCharacteristicValue: [this.selectedCharacteristicVal]
-      }]
-    }
-    if(this.recurringSelected){
-      console.log('recurring')
-      if(this.priceComponentForm.value.recurring)
-      pricecomponent.recurringChargePeriodType=this.priceComponentForm.value.recurring;
-    }
-    if(this.usageSelected){
-      console.log('usage')
-      if(this.priceComponentForm.value.unit)
-      pricecomponent.unitOfMeasure= {
-        amount: 1,
-        units: this.priceComponentForm.value.unit
-      }
-    }
-    if(this.isDiscount && this.discountForm.value.amount){
-      let discount:ProductOfferingPrice = {
-        id: uuidv4(),
-        name: 'discount',
-        priceType: 'discount',
-        percentage: this.discountSelected ? parseFloat(this.discountForm.value.amount) : 0,
-        validFor: {
-          startDateTime: moment().toISOString(),
-          endDateTime:  moment().toISOString()
-        },
-        //recurringChargePeriod: this.discountForm.value.duration ? this.discountForm.value.duration : '',
-      };
-      pricecomponent['popRelationship'] = [{
-        id: discount.id,
-        name: discount.name        
-      }]
-    }
-    console.log(pricecomponent)
-    this.createdPriceComponents.push(pricecomponent)
-    this.showPriceComponents=!this.showPriceComponents;
-    this.priceComponentForm.reset();
-    this.discountForm.reset();
-  }
-
-  changePriceProfileCharValue(char:any,event:any){
-    const index = this.createdPriceProfile.findIndex((item: { id: any; }) => item.id === char.id);
-    const innerIndex = this.createdPriceProfile[index].productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (event.target.value).toString());    
-    console.log(innerIndex)
-    for(let i=0;i<this.createdPriceProfile[index].productSpecCharacteristicValue.length;i++){      
-      if(i==innerIndex){
-        this.createdPriceProfile[index].productSpecCharacteristicValue[i].isDefault=true;
-      } else {
-        this.createdPriceProfile[index].productSpecCharacteristicValue[i].isDefault=false;
-      }
-    }
-    console.log(this.createdPriceProfile)
-  }
-
-  cancelPriceComponent(){
-    this.showPriceComponents=!this.showPriceComponents;
-    this.priceComponentForm.reset();
-    this.discountForm.reset();
-  }
-
-  createPriceProfile(){
-    this.showProfile=!this.showProfile;
-    this.editProfile=!this.editProfile;
-  }
-
-  cancelPriceProfile(){
-    this.showProfile=!this.showProfile;
-    this.createdPriceProfile=this.selectedProdSpec.productSpecCharacteristic;
-  }
-
-  deletePriceComp(price:any){
-    const index = this.createdPriceComponents.findIndex(item => item.id === price.id);
-    if (index !== -1) {
-      console.log('eliminar')
-      this.createdPriceComponents.splice(index, 1);
-    }   
-    this.cdr.detectChanges();
-    console.log(this.createdPriceComponents)   
-  }
-
-  editPriceComp(price:any){
-
-  }
-
-  showDrawerProfile(){
-    this.showProfile=!this.showProfile;
-    this.createdPriceProfile=this.selectedProdSpec.productSpecCharacteristic;
-    console.log('-----')
-    console.log(this.createdPriceProfile)
-    console.log('drawer')
-    initFlowbite()
-  }
-
-  hasKey(obj: any, key: string): boolean {
-    return obj?.hasOwnProperty(key);
-  }
-
-  changePriceComponentChar(event: any){
-    if(event.target.value==''){
-      this.showValueSelect=false;
-    } else {
-      this.selectedCharacteristic = this.selectedProdSpec.productSpecCharacteristic.find(
-        (char: { id: any; }) => char.id === event.target.value
-      );
-      this.cdr.detectChanges();
-      console.log('selected char')
-      console.log(this.selectedCharacteristic)  
-      console.log('-----change select')
-      console.log(this.selectedCharacteristic.productSpecCharacteristicValue)
-      if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
-        console.log('hola')
-        this.showValueSelect=false;
-      } else if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
-        this.selectedCharacteristicVal=this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
-        this.showValueSelect=true;
-      } else {
-        this.selectedCharacteristicVal=this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
-        this.showValueSelect=true;
-        this.hideStringCharOption=false;
-      }
-    }
-    initFlowbite();
-  }
-
-  changePriceComponentCharValue(event: any){
-    this.selectedCharacteristicVal=event.target.value;
   }
 
   initPartyInfo(){
@@ -429,6 +293,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showReplication=false;
     this.showPreview=false;
     this.clearPriceFormInfo();
   }
@@ -444,6 +309,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showReplication=false;
     this.showPreview=false;
     this.clearPriceFormInfo();
   }
@@ -475,6 +341,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showReplication=false;
     this.showPreview=false;
     this.clearPriceFormInfo();
   }
@@ -494,6 +361,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showReplication=false;
     this.showPreview=false;
     this.clearPriceFormInfo();
   }
@@ -514,6 +382,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showReplication=false;
     this.showPreview=false;
     this.clearPriceFormInfo();
   }
@@ -545,6 +414,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=true;
     this.showPrice=false;
+    this.showReplication=false;
     this.showPreview=false;
     this.clearPriceFormInfo();
   }
@@ -562,6 +432,25 @@ export class CreateOfferComponent implements OnInit {
     this.showSLA=false;
     this.showPrice=true;
     this.showPreview=false;
+    this.showReplication=false;
+    this.clearPriceFormInfo();
+    initFlowbite();
+  }
+
+  toggleReplication(){
+    this.priceDone=true;
+    this.selectStep('replication','replication-circle');
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showSummary=false;
+    this.showProdSpec=false;
+    this.showCatalog=false;
+    this.showCategory=false;
+    this.showLicense=false;
+    this.showSLA=false;
+    this.showPrice=false;
+    this.showPreview=false;
+    this.showReplication=true;
     this.clearPriceFormInfo();
     initFlowbite();
   }
@@ -592,7 +481,7 @@ export class CreateOfferComponent implements OnInit {
     console.log(this.createdLicense.treatment)
   }
 
-  onPriceTypeSelected(event: any){
+  /*onPriceTypeSelected(event: any){
     if(event.target.value=='ONE TIME'){
       this.oneTimeSelected=true;
       this.recurringSelected=false;
@@ -693,174 +582,74 @@ export class CreateOfferComponent implements OnInit {
       }
     }
     this.cdr.detectChanges();
-  }
-
- /*savePrice(){
-    if(this.priceForm.value.name){
-      let priceToCreate: ProductOfferingPriceRefOrValue = {
-        id: uuidv4(),
-        name: this.priceForm.value.name,
-        description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",
-        priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-      }
-      if(!this.customSelected && this.priceForm.value.price){
-        priceToCreate.price = {
-          percentage: 0,
-          taxRate: 20,
-          dutyFreeAmount: {
-              unit: this.selectedPriceUnit,
-              value: 0
-          },
-          taxIncludedAmount: {
-              unit: this.selectedPriceUnit,
-              value: parseFloat(this.priceForm.value.price)
-          }
-        }
-      }
-      if(this.recurringSelected){
-        console.log('recurring')
-        priceToCreate.recurringChargePeriod=this.selectedPeriod;
-      }
-      if(this.usageSelected){
-        console.log('usage')
-        priceToCreate.unitOfMeasure= {
-          amount: 1,
-          units: this.usageUnit.nativeElement.value
-        }
-      }
-      if(this.priceComponentSelected && this.priceAlterForm.value.price){
-        priceToCreate.priceAlteration = [
-          {
-              description: this.priceAlterForm.value.description ? this.priceAlterForm.value.description : '',
-              name: "fee",
-              priceType: this.priceComponentSelected ? this.priceTypeAlter : this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-              priority: 0,
-              recurringChargePeriod: (this.priceComponentSelected && this.priceTypeAlter == 'RECURRING') ? this.selectedPeriodAlter  : '',
-              price: {
-                  percentage: this.discountSelected ? parseFloat(this.priceAlterForm.value.price) : 0,
-                  dutyFreeAmount: {
-                      unit: this.selectedPriceUnit,
-                      value: 0
-                  },
-                  taxIncludedAmount: {
-                      unit: this.selectedPriceUnit,
-                      value: this.priceComponentSelected ? parseFloat(this.priceAlterForm.value.price) : 0
-                  }
-              },
-              unitOfMeasure: {
-                  amount: 1,
-                  units: (this.priceComponentSelected && this.priceTypeAlter == 'USAGE') ? this.usageUnitAlter.nativeElement.value  : '',
-              }
-          }
-        ]
-      }
-      this.createdPrices.push(priceToCreate)   
-      console.log('--- price ---')
-      console.log(this.createdPrices)      
-    }
-    this.clearPriceFormInfo();
   }*/
-
-  savePrice(){
-    if(this.priceForm.value.name){
-      let priceToCreate: ProductOfferingPrice = {
-        id: uuidv4(),
-        name: this.priceForm.value.name,
-        description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",
-        isBundle: true ? this.createdPriceComponents.length > 1 : false
-      }
-      if(this.createdPriceComponents.length>1){
-         //referencia a los price comp
-        priceToCreate.bundledPopRelationship=this.createdPriceComponents
-      }
-      if(this.editProfile){
-        //referenia al comp profile
-        priceToCreate.prodSpecCharValueUse=this.createdPriceProfile
-      }
-      this.createdPriceComponents=[];
-      this.createdPrices.push(priceToCreate)   
-      console.log('--- price ---')
-      console.log(this.createdPrices)      
-    }
-    this.clearPriceFormInfo();
-  }
 
   removePrice(price:any){
     const index = this.createdPrices.findIndex(item => item.id === price.id);
     if (index !== -1) {
       this.createdPrices.splice(index, 1);
+      this.createdPriceComponentsRelatedToPlan.splice(index,1);
+      this.createdPriceAlterationsRelatedToPlan.splice(index,1);
     }
     this.checkCustom();
     this.clearPriceFormInfo();
   }
 
-  showUpdatePrice(price:any){
+  /*showUpdatePrice(price:any){
     this.priceToUpdate=price;
+    console.log('--updating--')
     console.log(this.priceToUpdate)
+    console.log('---------')
     this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
-    this.priceForm.controls['description'].setValue(this.priceToUpdate.description);
-    if(this.priceToUpdate.priceType!='custom'){
-      this.priceForm.controls['price'].setValue(this.priceToUpdate.price.taxIncludedAmount.value);
-      this.selectedPriceUnit=this.priceToUpdate.price.taxIncludedAmount.unit;
-    }
-    this.cdr.detectChanges();
-    console.log(this.selectedPriceUnit)
-    if(this.priceToUpdate.priceType=='one time'){
-      this.selectedPriceType='ONE TIME';
-      this.oneTimeSelected=true;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (this.priceToUpdate.priceType=='recurring'){
-      this.selectedPriceType='RECURRING';
-      this.oneTimeSelected=false;
-      this.recurringSelected=true;
-      this.usageSelected=false;
-      this.customSelected=false;
-      this.selectedPeriod=this.priceToUpdate.recurringChargePeriod;
-      this.cdr.detectChanges();
-    } else if (this.priceToUpdate.priceType=='usage'){
-      this.selectedPriceType='USAGE';
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=true;
-      this.customSelected=false;
-      //document.getElementById('usageUnitUpdate').value=this.priceToUpdate.unitOfMeasure.units;
-      this.cdr.detectChanges();
+    this.priceForm.controls['description'].setValue(this.priceToUpdate.description);    
+    if(this.priceToUpdate.isBundle==false){
+      this.selectedPriceUnit=this.priceToUpdate.price.unit;
+      let priceComp: ProductOfferingPrice = {
+        id: uuidv4(),
+        name: this.priceToUpdate.name,
+        description: this.priceToUpdate.description,
+        price: {
+          unit: this.priceToUpdate.price.unit,
+          value: this.priceToUpdate.price.value
+        },
+        priceType: this.priceToUpdate.price.priceType,
+      }
+      if(this.priceToUpdate.prodSpecCharValueUse){
+        priceComp.prodSpecCharValueUse=this.priceToUpdate.prodSpecCharValueUse;
+      }
+      if(this.priceToUpdate.priceType=='recurring'){
+        priceComp.recurringChargePeriodType=this.priceToUpdate.recurringChargePeriodType
+      }
+      if(this.priceToUpdate.priceType=='usage'){
+        priceComp.unitOfMeasure=this.priceToUpdate.unitOfMeasure
+      }
+      this.createdPriceComponents.push(priceComp)
     } else {
-      this.selectedPriceType='CUSTOM';
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=true;
-    }
-    if(this.createdPrices.length==0){
-      this.allowCustom=true;
-      this.allowOthers=true;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        console.log(this.createdPrices[i].priceType)
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
+      if(this.priceToUpdate.bundledPopRelationship){
+        for(let i=0;i<this.createdPriceComponentsRelatedToPlan.length;i++){
+          console.log(this.createdPriceComponentsRelatedToPlan)
+          const indexComp = this.createdPriceComponentsRelatedToPlan[i].findIndex((item: { id: any; }) => item.id === this.priceToUpdate.bundledPopRelationship[0].id);
+          if(indexComp!=-1){
+            console.log('entra')
+            this.createdPriceComponents=this.createdPriceComponentsRelatedToPlan[indexComp];
+            this.selectedPriceUnit=this.createdPriceComponentsRelatedToPlan[indexComp][0].price.unit;
+          }
         }
       }
-      if(check==true){
-        this.allowCustom=false;
-        this.allowOthers=true;
-      } else {
-        this.allowCustom=true;
-        this.allowOthers=false;  
+      if(this.priceToUpdate.popRelationship){
+        for(let i=0;i<this.createdPriceAlterationsRelatedToPlan.length;i++){
+          const indexAlter = this.createdPriceAlterationsRelatedToPlan[i].findIndex((item: { id: any; }) => item.id === this.priceToUpdate.popRelationship[0].id);
+          if(indexAlter!=-1){
+            this.createdPriceAlterations=this.createdPriceAlterationsRelatedToPlan[indexAlter];
+          }
+        }
       }
+      this.cdr.detectChanges();
     }
-    this.cdr.detectChanges();
-    this.validPriceCheck=false;
     this.editPrice=true;
-  }
+  }*/
 
-  updatePrice(){
+  /*updatePrice(){
     if(this.priceForm.value.name){
       console.log(this.priceToUpdate.id)
       let priceToCreate: ProductOfferingPriceRefOrValue = {
@@ -905,7 +694,7 @@ export class CreateOfferComponent implements OnInit {
       console.log(this.createdPrices)      
     }
     this.closeEditPrice();
-  }
+  }*/
 
   closeEditPrice(){
     this.clearPriceFormInfo();
@@ -913,8 +702,12 @@ export class CreateOfferComponent implements OnInit {
   }
 
   showNewPrice(){
-    this.checkCustom();
-    this.showCreatePrice=!this.showCreatePrice;    
+    this.showCreatePrice=!this.showCreatePrice;
+  }
+
+  showEditPrice(price:any){
+    this.editPrice=!this.editPrice;
+    this.priceToUpdate=price;
   }
 
   checkCustom(){
@@ -974,7 +767,7 @@ export class CreateOfferComponent implements OnInit {
     this.recurringSelected=false;    
     this.showPreview=false;
 
-    this.priceAlterForm.reset();
+    /*this.priceAlterForm.reset();
     this.priceAlterForm.controls['condition'].setValue('');
     this.priceAlterForm.controls['price'].setValue('');
     this.priceForm.reset();
@@ -987,7 +780,7 @@ export class CreateOfferComponent implements OnInit {
       this.priceForm.get(key)?.markAsUntouched();
       this.priceForm.get(key)?.updateValueAndValidity();
     });
-    this.validPriceCheck=true;
+    this.validPriceCheck=true;*/
   }
 
   onSLAMetricChange(event: any) {
@@ -1360,6 +1153,7 @@ export class CreateOfferComponent implements OnInit {
     this.showSLA=false;
     this.showPrice=false;
     this.showSummary=true;
+    this.showReplication=false;
     this.showPreview=false;
   }
 
@@ -1572,18 +1366,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + ' **bold text** '
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + ' **bold text** '
-        }); 
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + ' **bold text** '
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1598,18 +1380,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + ' _italicized text_ '
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + ' _italicized text_ '
-        }); 
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + ' _italicized text_ '
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1624,18 +1394,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n- First item\n- Second item'
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + '\n- First item\n- Second item'
-        });
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + '\n- First item\n- Second item'
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1650,18 +1408,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n1. First item\n2. Second item'
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + '\n1. First item\n2. Second item'
-        }); 
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + '\n1. First item\n2. Second item'
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1676,18 +1422,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n`code`'
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + '\n`code`'
-        });
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + '\n`code`'
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1702,18 +1436,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n```\ncode\n```'
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + '\n```\ncode\n```'
-        });
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + '\n```\ncode\n```'
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1728,18 +1450,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n> blockquote'
       }); 
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + '\n> blockquote'
-        });
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + '\n> blockquote'
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1754,18 +1464,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + ' [title](https://www.example.com) '
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + ' [title](https://www.example.com) '
-        });
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + ' [title](https://www.example.com) '
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1780,18 +1478,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
-        }); 
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1807,18 +1493,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + event.emoji.native
       });
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        const currentText = this.priceComponentForm.value.description;
-        this.priceComponentForm.patchValue({
-          description: currentText + event.emoji.native
-        });
-      } else {
-        const currentText = this.priceForm.value.description;
-        this.priceForm.patchValue({
-          description: currentText + event.emoji.native
-        });
-      }
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1833,20 +1507,6 @@ export class CreateOfferComponent implements OnInit {
         this.description=this.generalForm.value.description;
       } else {
         this.description=''
-      }
-    } else if(this.showPrice) {
-      if(this.showPriceComponents){
-        if(this.priceComponentForm.value.description){
-          this.priceComponentDescription=this.priceComponentForm.value.description;
-        } else {
-          this.priceComponentDescription=''
-        }
-      }else{
-        if(this.priceForm.value.description){
-          this.priceDescription=this.priceForm.value.description;
-        } else {
-          this.priceDescription=''
-        }
       }
     } else if(this.showLicense) {
       if(this.licenseForm.value.description){

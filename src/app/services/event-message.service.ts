@@ -8,7 +8,8 @@ export interface EventMessage {
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
   'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
   'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession' | 'CloseCartCard'|
-  'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails' | 'OpenProductInvDetails';
+  'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails' | 'OpenProductInvDetails' |
+  'SavePricePlan' | 'UpdatePricePlan';
   text?: string,
   value?: object | boolean
 }
@@ -168,5 +169,13 @@ export class EventMessageService {
 
   emitOpenProductInvDetails(id:any){
     this.eventMessageSubject.next({type: 'OpenProductInvDetails', value: id})
+  }
+
+  emitSavePricePlan(pricePlan:any){
+    this.eventMessageSubject.next({type: 'SavePricePlan', value: pricePlan})
+  }
+
+  emitUpdatePricePlan(pricePlan:any){
+    this.eventMessageSubject.next({type: 'UpdatePricePlan', value: pricePlan})
   }
 }

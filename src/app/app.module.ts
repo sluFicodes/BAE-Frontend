@@ -80,6 +80,7 @@ import { InventoryServicesComponent } from './pages/product-inventory/inventory-
 import { ProductInvDetailComponent } from './pages/product-inventory/inventory-items/product-inv-detail/product-inv-detail.component';
 import { OrganizationDetailsComponent } from './pages/organization-details/organization-details.component';
 import { FaqComponent } from './offerings/faq/faq.component';
+import { NewPricePlanComponent } from './pages/seller-offerings/offerings/seller-offer/new-price-plan/new-price-plan.component';
 
 @NgModule({
   declarations: [
@@ -141,7 +142,8 @@ import { FaqComponent } from './offerings/faq/faq.component';
     InventoryServicesComponent,
     ProductInvDetailComponent,
     OrganizationDetailsComponent,
-    FaqComponent
+    FaqComponent,
+    NewPricePlanComponent
   ],
   imports: [
     BrowserModule,
