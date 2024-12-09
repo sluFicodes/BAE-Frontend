@@ -212,6 +212,8 @@ export class UpdateOfferComponent implements OnInit{
     console.log(this.offer)
     this.initPartyInfo();
     this.populateOfferInfo();
+    console.log('offer to update')
+    console.log(this.offer)
     this.clearPriceFormInfo();
   }
 
@@ -281,7 +283,9 @@ export class UpdateOfferComponent implements OnInit{
             description: data.description,
             lifecycleStatus: data.lifecycleStatus,
             priceType: data.priceType,
-            price: {
+          }
+          if(data.priceType!='custom'){
+            data.price= {
               percentage: 0,
               taxRate: 20,
               dutyFreeAmount: {

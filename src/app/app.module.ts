@@ -81,6 +81,7 @@ import { ProductInvDetailComponent } from './pages/product-inventory/inventory-i
 import { OrganizationDetailsComponent } from './pages/organization-details/organization-details.component';
 import { FaqComponent } from './offerings/faq/faq.component';
 import { NewPricePlanComponent } from './pages/seller-offerings/offerings/seller-offer/new-price-plan/new-price-plan.component';
+import { UpdatePricePlanComponent } from './pages/seller-offerings/offerings/seller-offer/update-price-plan/update-price-plan.component';
 
 @NgModule({
   declarations: [
@@ -143,7 +144,8 @@ import { NewPricePlanComponent } from './pages/seller-offerings/offerings/seller
     ProductInvDetailComponent,
     OrganizationDetailsComponent,
     FaqComponent,
-    NewPricePlanComponent
+    NewPricePlanComponent,
+    UpdatePricePlanComponent
   ],
   imports: [
     BrowserModule,

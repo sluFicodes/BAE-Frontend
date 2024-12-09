@@ -1028,15 +1028,6 @@
                                     <th scope="col" class="hidden xl:table-cell px-6 py-3">
                                         {{ 'UPDATE_OFFER._description' | translate }}
                                     </th>
-                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
-                                        {{ 'UPDATE_OFFER._type' | translate }}
-                                    </th>
-                                    <th scope="col" class="px-6 py-3">
-                                        {{ 'UPDATE_OFFER._price' | translate }}
-                                    </th>
-                                    <th scope="col" class="hidden md:table-cell px-6 py-3">
-                                        {{ 'UPDATE_OFFER._unit' | translate }}
-                                    </th>
                                     <th scope="col" class="px-6 py-3">
                                         {{ 'UPDATE_OFFER._actions' | translate }}
                                     </th>
@@ -1050,15 +1041,6 @@
                                         </td>
                                         <td class="hidden xl:table-cell px-6 py-4 text-wrap break-all">
                                             {{price.description}}
-                                        </td>
-                                        <td class="hidden md:table-cell px-6 py-4">
-                                            {{price.priceType}}
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            {{price.price?.taxIncludedAmount?.value}}
-                                        </td>
-                                        <td class="hidden md:table-cell px-6 py-4">
-                                            {{price.price?.taxIncludedAmount?.unit}}
                                         </td>
                                         <td class="px-6 py-4 inline-flex">
                                             <button (click)="removePrice(price)" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">

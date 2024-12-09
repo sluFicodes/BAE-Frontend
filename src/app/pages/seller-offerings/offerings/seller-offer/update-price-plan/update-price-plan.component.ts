@@ -19,15 +19,12 @@ import { currencies } from 'currencies.json';
 import { certifications } from 'src/app/models/certification-standards.const';
 import {ProductOfferingPrice_DTO} from 'src/app/models/interfaces';
 
-//type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
-//type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
-
 @Component({
-  selector: 'new-price-plan',
-  templateUrl: './new-price-plan.component.html',
-  styleUrl: './new-price-plan.component.css'
+  selector: 'update-price-plan',
+  templateUrl: './update-price-plan.component.html',
+  styleUrl: './update-price-plan.component.css'
 })
-export class NewPricePlanComponent implements OnInit {
+export class UpdatePricePlanComponent implements OnInit {
 
   currencies=currencies;
   partyId:any='';
@@ -78,7 +75,7 @@ export class NewPricePlanComponent implements OnInit {
   showEmoji:boolean=false;
 
   @Input() selectedProdSpec: any | {id:''};
-  //@Input() priceToUpdate: ProductOfferingPrice_DTO | undefined;
+  @Input() priceToUpdate: ProductOfferingPrice_DTO | undefined;
 
   constructor(
     private router: Router,
@@ -127,7 +124,7 @@ export class NewPricePlanComponent implements OnInit {
         this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i])
       }
     }
-    /*if(this.priceToUpdate != undefined){
+    if(this.priceToUpdate != undefined){
       console.log('--updating--')
       console.log(this.priceToUpdate)
       console.log('---------')
@@ -135,59 +132,61 @@ export class NewPricePlanComponent implements OnInit {
       this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
       if(this.priceToUpdate.description)
       this.priceForm.controls['description'].setValue(this.priceToUpdate.description);
-      if(this.priceToUpdate.isBundle==false){
-        let pricecomponent:ProductOfferingPrice_DTO = {
-          id: uuidv4(),
-          name: this.priceToUpdate.name,
-          description: this.priceToUpdate.description,
-          price: {
-            unit: this.priceToUpdate?.price?.unit,
-            value: this.priceToUpdate?.price?.value
-          },
-          priceType:this.priceToUpdate?.priceType
-        }
-        if(this.priceToUpdate.price != undefined && this.priceToUpdate.price.unit != undefined){
-          this.selectedPriceUnit=this.priceToUpdate.price.unit
-        }     
-        if(this.priceToUpdate.prodSpecCharValueUse!=undefined){
+      if(this.priceToUpdate?.priceType=='custom'){
+        this.isDomeManaged=false;
+        this.priceToUpdate.isBundle=false;
+      } else {
+        this.isDomeManaged=true;
+        if(this.priceToUpdate.isBundle==false){
+          let pricecomponent:ProductOfferingPrice_DTO = {
+            id: uuidv4(),
+            name: this.priceToUpdate.name,
+            description: this.priceToUpdate.description,
+            price: {
+              unit: this.priceToUpdate?.price?.unit,
+              value: this.priceToUpdate?.price?.value
+            },
+            priceType:this.priceToUpdate?.priceType
+          }
+  
+          if(this.priceToUpdate.price != undefined && this.priceToUpdate.price.unit != undefined){
+            this.selectedPriceUnit=this.priceToUpdate.price.unit
+          }     
+          if(this.priceToUpdate.prodSpecCharValueUse!=undefined){
+            this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
+            this.editProfile=true;
+            pricecomponent.prodSpecCharValueUse = this.priceToUpdate.prodSpecCharValueUse
+          }
+          if(this.priceToUpdate.recurringChargePeriodType){
+            pricecomponent.recurringChargePeriodType=this.priceToUpdate.recurringChargePeriodType;
+          }
+          if(this.priceToUpdate.unitOfMeasure){
+            pricecomponent.unitOfMeasure=this.priceToUpdate.unitOfMeasure
+          }
+          if(this.priceToUpdate.popRelationship){
+            pricecomponent.popRelationship=this.priceToUpdate.popRelationship;
+          }
+          this.createdPriceComponents.push(pricecomponent)
+        } else {
+          if(this.priceToUpdate.bundledPopRelationship){
+            this.createdPriceComponents=this.priceToUpdate.bundledPopRelationship as any[];
+            if(this.priceToUpdate.bundledPopRelationship[0].price != undefined && this.priceToUpdate.bundledPopRelationship[0].price.unit != undefined){
+              this.selectedPriceUnit=this.priceToUpdate.bundledPopRelationship[0].price.unit;
+            }
+          }
           this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
           this.editProfile=true;
-          pricecomponent.prodSpecCharValueUse = this.priceToUpdate.prodSpecCharValueUse
-        }
-        if(this.priceToUpdate.recurringChargePeriodType){
-          pricecomponent.recurringChargePeriodType=this.priceToUpdate.recurringChargePeriodType;
-        }
-        if(this.priceToUpdate.unitOfMeasure){
-          pricecomponent.unitOfMeasure=this.priceToUpdate.unitOfMeasure
-        }
-        if(this.priceToUpdate.popRelationship){
-          pricecomponent.popRelationship=this.priceToUpdate.popRelationship;
-        }
-        this.createdPriceComponents.push(pricecomponent)
-      } else {
-        if(this.priceToUpdate.bundledPopRelationship){
-          this.createdPriceComponents=this.priceToUpdate.bundledPopRelationship as any[];
-          if(this.priceToUpdate.bundledPopRelationship[0].price != undefined && this.priceToUpdate.bundledPopRelationship[0].price.unit != undefined){
-            this.selectedPriceUnit=this.priceToUpdate.bundledPopRelationship[0].price.unit;
+          if(this.priceToUpdate.prodSpecCharValueUse!=undefined){
+            this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
+            this.editProfile=true;
           }
         }
-        this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
-        this.editProfile=true;
-        if(this.priceToUpdate.prodSpecCharValueUse!=undefined){
-          this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
-          this.editProfile=true;
-        }
+        this.editPrice=true;
       }
-      this.editPrice=true;
-    } else {*/
-      this.editPrice=false;
-      this.touchedCharCheck=false;
-      this.selectedCharacteristic=undefined;
-      this.selectedCharacteristicVal=undefined;
-      this.createdPriceAlterations=[];
-      this.createdPriceComponents=[];
-      this.createdPriceProfile=[];
-    //}
+
+    } else {
+      //  error 
+    }
   }
 
   showDrawerPriceComp(){
@@ -401,7 +400,7 @@ export class NewPricePlanComponent implements OnInit {
   }
 
   savePrice(){
-    /*if(this.priceToUpdate){
+    if(this.priceToUpdate){
       if(this.priceForm.value.name){
         let updatingPrice: ProductOfferingPrice_DTO = {
           id: this.priceToUpdate.id,
@@ -436,52 +435,12 @@ export class NewPricePlanComponent implements OnInit {
           this.createdPriceComponents=[];
           this.createdPriceAlterations=[];
         } else {
-          updatingPrice.priceType='CUSTOM';          
+          updatingPrice.priceType='custom';          
         }
         this.eventMessage.emitUpdatePricePlan(updatingPrice);
       }
       this.editPrice=!this.editPrice;
-      
-    } else {*/
-      if(this.priceForm.value.name){
-        let priceToCreate: ProductOfferingPrice_DTO = {
-          id: uuidv4(),
-          name: this.priceForm.value.name,
-          description: this.priceForm.value.description ? this.priceForm.value.description : '',
-          lifecycleStatus: "Active",
-          isBundle: true ? this.createdPriceComponents.length > 1 : false
-        }
-        if(this.isDomeManaged){
-          if(this.createdPriceComponents.length>1){          
-            for(let i=0;i<this.createdPriceComponents.length;i++){
-              this.createdPriceComponents[i].price.unit=this.selectedPriceUnit;
-            }
-            priceToCreate.bundledPopRelationship=this.createdPriceComponents;
-          } else {
-            priceToCreate.priceType = this.createdPriceComponents[0].priceType
-            priceToCreate.price = this.createdPriceComponents[0].price
-            if(this.createdPriceComponents[0].priceType=='recurring'){
-              priceToCreate.recurringChargePeriodType=this.createdPriceComponents[0].recurringChargePeriodType;
-            }
-            if(this.createdPriceComponents[0].priceType=='usage'){
-                priceToCreate.unitOfMeasure=this.createdPriceComponents[0].unitOfMeasure
-            }
-          }
-          if(this.editProfile){
-            priceToCreate.prodSpecCharValueUse=this.createdPriceProfile
-            this.editProfile=false;
-          }
-          for(let i=0;i<this.createdPriceComponents.length;i++){
-            this.createdPriceComponents[i].price.unit=this.selectedPriceUnit;
-          }          
-          this.createdPriceComponents=[];
-          this.createdPriceAlterations=[];
-        } else {
-          priceToCreate.priceType='custom';
-        }
-        this.eventMessage.emitSavePricePlan(priceToCreate);
-      }
-    //}
+    }
     this.clearPriceFormInfo();
   }
 
@@ -718,3 +677,4 @@ export class NewPricePlanComponent implements OnInit {
   }
 
 }
+

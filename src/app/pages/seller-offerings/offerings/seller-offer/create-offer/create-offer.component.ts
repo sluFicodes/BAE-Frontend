@@ -165,19 +165,6 @@ export class CreateOfferComponent implements OnInit {
   selectedCharacteristicVal:any
   showValueSelect:boolean=false;
   isDiscount:boolean=false;
-  priceComponentForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    price: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
-    recurring: new FormControl(''),
-    unit: new FormControl(''),
-  });
-  discountForm = new FormGroup({
-    amount: new FormControl(''),
-    percentage: new FormControl(''),
-    duration: new FormControl(''),
-    period: new FormControl(''),
-  });
   createdPriceComponents:any[]=[];  
   createdPriceAlterations:any[]=[];
   createdPriceProfile:any;
@@ -295,7 +282,6 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
   }
 
   toggleBundle(){
@@ -311,7 +297,6 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
   }
 
   toggleBundleCheck(){
@@ -343,7 +328,6 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
   }
 
   toggleCatalogs(){
@@ -363,7 +347,6 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
   }
 
   toggleCategories(){
@@ -384,7 +367,6 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
   }
 
   toggleLicense(){
@@ -399,7 +381,6 @@ export class CreateOfferComponent implements OnInit {
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
   }
 
   toggleSLA(){
@@ -416,7 +397,6 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
   }
 
   togglePrice(){
@@ -433,7 +413,6 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=true;
     this.showPreview=false;
     this.showReplication=false;
-    this.clearPriceFormInfo();
     initFlowbite();
   }
 
@@ -451,7 +430,6 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showPreview=false;
     this.showReplication=true;
-    this.clearPriceFormInfo();
     initFlowbite();
   }
 
@@ -481,306 +459,25 @@ export class CreateOfferComponent implements OnInit {
     console.log(this.createdLicense.treatment)
   }
 
-  /*onPriceTypeSelected(event: any){
-    if(event.target.value=='ONE TIME'){
-      this.oneTimeSelected=true;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (event.target.value=='RECURRING'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=true;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (event.target.value=='USAGE'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=true;
-      this.customSelected=false;
-    } else if (event.target.value=='CUSTOM'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=true;
-    }
-    this.checkValidPrice();
-  }
 
-  onPriceTypeAlterSelected(event: any){
-    this.priceTypeAlter=event.target.value;
-  }
-
-  onPriceAlterSelected(event: any){
-    if(event.target.value=='none'){
-      this.priceComponentSelected=false;
-      this.discountSelected=false;
-      this.noAlterSelected=true;
-    } else if (event.target.value=='price'){
-      this.priceComponentSelected=true;
-      this.discountSelected=false;
-      this.noAlterSelected=false;
-    } else if (event.target.value=='discount'){
-      this.priceComponentSelected=false;
-      this.discountSelected=true;
-      this.noAlterSelected=false;
-    }
-  }
-
-  onPricePeriodChange(event: any){
-    this.selectedPeriod=event.target.value;
-    this.checkValidPrice();
-  }
-
-  onPricePeriodAlterChange(event: any){
-    this.selectedPeriodAlter=event.target.value;
-    this.checkValidPrice();
-  }
-
-  onPriceUnitChange(event:any){
-    this.selectedPriceUnit=event.target.value;
-    this.checkValidPrice();
-  }
-
-  checkValidPrice(){
-    const index = this.createdPrices.findIndex(item => item.name === this.priceForm.value.name);
-    if (index !== -1) {
-      if(this.editPrice && this.createdPrices[index].name == this.priceToUpdate.name){
-        this.priceForm.controls.name.setErrors(null)
-        this.priceForm.controls.name.updateValueAndValidity();
-        if(this.customSelected && this.priceForm.value.name != ''){
-          this.validPriceCheck=false;
-        } else if (this.usageSelected){
-          if(this.usageUnitUpdate.nativeElement.value != ''){
-            this.validPriceCheck=false;
-          } else {
-            this.validPriceCheck=true;
-          }     
-        } else if(!this.priceForm.invalid){
-          this.validPriceCheck=false;
-        } else {
-          this.validPriceCheck=true;
-        }
-      } else {
-        this.priceForm.controls.name.setErrors({invalidName:true})
-        this.validPriceCheck=true;
-      }      
-    } else {
-      this.priceForm.controls.name.setErrors(null)
-      this.priceForm.controls.name.updateValueAndValidity();
-      if(this.customSelected && this.priceForm.value.name != ''){
-        this.validPriceCheck=false;
-      } else if (this.usageSelected){
-        if(this.usageUnit.nativeElement.value != ''){
-          this.validPriceCheck=false;
-        } else {
-          this.validPriceCheck=true;
-        }    
-      } else if(!this.priceForm.invalid){
-        this.validPriceCheck=false;
-      } else {
-        this.validPriceCheck=true;
-      }
-    }
-    this.cdr.detectChanges();
-  }*/
 
   removePrice(price:any){
     const index = this.createdPrices.findIndex(item => item.id === price.id);
     if (index !== -1) {
       this.createdPrices.splice(index, 1);
-      this.createdPriceComponentsRelatedToPlan.splice(index,1);
-      this.createdPriceAlterationsRelatedToPlan.splice(index,1);
     }
-    this.checkCustom();
-    this.clearPriceFormInfo();
-  }
-
-  /*showUpdatePrice(price:any){
-    this.priceToUpdate=price;
-    console.log('--updating--')
-    console.log(this.priceToUpdate)
-    console.log('---------')
-    this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
-    this.priceForm.controls['description'].setValue(this.priceToUpdate.description);    
-    if(this.priceToUpdate.isBundle==false){
-      this.selectedPriceUnit=this.priceToUpdate.price.unit;
-      let priceComp: ProductOfferingPrice = {
-        id: uuidv4(),
-        name: this.priceToUpdate.name,
-        description: this.priceToUpdate.description,
-        price: {
-          unit: this.priceToUpdate.price.unit,
-          value: this.priceToUpdate.price.value
-        },
-        priceType: this.priceToUpdate.price.priceType,
-      }
-      if(this.priceToUpdate.prodSpecCharValueUse){
-        priceComp.prodSpecCharValueUse=this.priceToUpdate.prodSpecCharValueUse;
-      }
-      if(this.priceToUpdate.priceType=='recurring'){
-        priceComp.recurringChargePeriodType=this.priceToUpdate.recurringChargePeriodType
-      }
-      if(this.priceToUpdate.priceType=='usage'){
-        priceComp.unitOfMeasure=this.priceToUpdate.unitOfMeasure
-      }
-      this.createdPriceComponents.push(priceComp)
-    } else {
-      if(this.priceToUpdate.bundledPopRelationship){
-        for(let i=0;i<this.createdPriceComponentsRelatedToPlan.length;i++){
-          console.log(this.createdPriceComponentsRelatedToPlan)
-          const indexComp = this.createdPriceComponentsRelatedToPlan[i].findIndex((item: { id: any; }) => item.id === this.priceToUpdate.bundledPopRelationship[0].id);
-          if(indexComp!=-1){
-            console.log('entra')
-            this.createdPriceComponents=this.createdPriceComponentsRelatedToPlan[indexComp];
-            this.selectedPriceUnit=this.createdPriceComponentsRelatedToPlan[indexComp][0].price.unit;
-          }
-        }
-      }
-      if(this.priceToUpdate.popRelationship){
-        for(let i=0;i<this.createdPriceAlterationsRelatedToPlan.length;i++){
-          const indexAlter = this.createdPriceAlterationsRelatedToPlan[i].findIndex((item: { id: any; }) => item.id === this.priceToUpdate.popRelationship[0].id);
-          if(indexAlter!=-1){
-            this.createdPriceAlterations=this.createdPriceAlterationsRelatedToPlan[indexAlter];
-          }
-        }
-      }
-      this.cdr.detectChanges();
-    }
-    this.editPrice=true;
-  }*/
-
-  /*updatePrice(){
-    if(this.priceForm.value.name){
-      console.log(this.priceToUpdate.id)
-      let priceToCreate: ProductOfferingPriceRefOrValue = {
-        //id: uuidv4(),
-        id: this.priceToUpdate.id,
-        name: this.priceForm.value.name,
-        description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",    
-        //percentage: 0,
-        priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom'
-      }
-      if(!this.customSelected && this.priceForm.value.price){
-        priceToCreate.price = {
-          percentage: 0,
-          taxRate: 20,
-          dutyFreeAmount: {
-              unit: this.selectedPriceUnit,
-              value: 0
-          },
-          taxIncludedAmount: {
-              unit: this.selectedPriceUnit,
-              value: parseFloat(this.priceForm.value.price)
-          }
-        }
-      }
-      if(this.recurringSelected){
-        console.log('recurring')
-        priceToCreate.recurringChargePeriod=this.selectedPeriod;
-      }
-      if(this.usageSelected){
-        console.log('usage')
-        priceToCreate.unitOfMeasure= {
-          amount: 1,
-          units: this.usageUnitUpdate.nativeElement.value
-        }
-      }
-      const index = this.createdPrices.findIndex(item => item.id === this.priceToUpdate.id);
-      if (index !== -1) {
-        //this.createdPrices[index]=priceToCreate;
-      } 
-      console.log('--- price ---')
-      console.log(this.createdPrices)      
-    }
-    this.closeEditPrice();
-  }*/
-
-  closeEditPrice(){
-    this.clearPriceFormInfo();
-    this.editPrice=false;
   }
 
   showNewPrice(){
+    this.priceToUpdate=undefined;
     this.showCreatePrice=!this.showCreatePrice;
+    this.editPrice=false;
   }
 
   showEditPrice(price:any){
     this.editPrice=!this.editPrice;
     this.priceToUpdate=price;
-  }
-
-  checkCustom(){
-    if(this.createdPrices.length==0){
-      this.allowCustom=true;
-      this.allowOthers=true;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        console.log(this.createdPrices[i].priceType)
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
-        }
-      }
-      if(check==true){
-        this.allowCustom=false;
-        this.allowOthers=true;
-      } else {
-        this.allowCustom=true;
-        this.allowOthers=false;  
-      }
-    }
-    this.clearPriceFormInfo();
-    console.log(this.customSelected)
-    this.cdr.detectChanges();
-  }
-
-  clearPriceFormInfo(){
-    console.log('clear')
-    if(this.createdPrices.length==0){
-      this.customSelected=true;
-      this.oneTimeSelected=false;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
-        }
-      }
-      if(check==true){
-        this.oneTimeSelected=true;
-        this.customSelected=false;
-      } else {
-        this.oneTimeSelected=false;
-        this.customSelected=true;        
-      }
-    }
-    this.selectedPeriod='DAILY';
-    this.selectedPeriodAlter='DAILY';
-    this.selectedPriceUnit=currencies[0].code;
-    this.priceTypeAlter='ONE TIME';
-    this.priceComponentSelected=false;
-    this.discountSelected=false;
-    this.noAlterSelected=true;
-    this.showCreatePrice=false;    
-    this.usageSelected=false;
-    this.recurringSelected=false;    
-    this.showPreview=false;
-
-    /*this.priceAlterForm.reset();
-    this.priceAlterForm.controls['condition'].setValue('');
-    this.priceAlterForm.controls['price'].setValue('');
-    this.priceForm.reset();
-    this.priceForm.controls['name'].setValue('');
-    this.priceForm.controls['price'].setValue('');
-    this.priceForm.controls['description'].setValue('');
-    // Explicitly mark all controls as pristine and untouched
-    Object.keys(this.priceForm.controls).forEach(key => {
-      this.priceForm.get(key)?.markAsPristine();
-      this.priceForm.get(key)?.markAsUntouched();
-      this.priceForm.get(key)?.updateValueAndValidity();
-    });
-    this.validPriceCheck=true;*/
+    this.showCreatePrice=false;
   }
 
   onSLAMetricChange(event: any) {
@@ -1132,7 +829,6 @@ export class CreateOfferComponent implements OnInit {
   showFinish(){
     this.priceDone=true;
     this.finishDone=true;
-    this.clearPriceFormInfo();
     this.saveLicense();
     if(this.generalForm.value.name && this.generalForm.value.version){
       this.offerToCreate={
@@ -1165,21 +861,23 @@ export class CreateOfferComponent implements OnInit {
           description: this.createdPrices[i].description,
           lifecycleStatus: this.createdPrices[i].lifecycleStatus,
           name: this.createdPrices[i].name,
-          //percentage: 0,
+          priceType: 'custom'
+          /*
+          percentage: 0,
           priceType: this.createdPrices[i].priceType,
-          /*price: {
+          price: {
               unit: this.createdPrices[i].price?.taxIncludedAmount?.unit,
               value: this.createdPrices[i].price?.taxIncludedAmount?.value
           }*/
         }
-        if(this.createdPrices[i].priceType == 'recurring'){
+        /*if(this.createdPrices[i].priceType == 'recurring'){
           console.log('recurring')
           //priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
         }
         if(this.createdPrices[i].priceType == 'usage'){
           console.log('usage')
           priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
-        }
+        }*/ 
         await this.api.postOfferingPrice(priceToCreate).subscribe({
           next: data => {
             console.log('precio')
