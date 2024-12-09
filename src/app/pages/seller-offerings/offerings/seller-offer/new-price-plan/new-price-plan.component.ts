@@ -34,6 +34,7 @@ export class NewPricePlanComponent implements OnInit {
   oneTimeSelected:boolean=true;
   recurringSelected:boolean=false;
   usageSelected:boolean=false;
+  filteredCharacteristics:any[]=[];
   selectedCharacteristic:any=undefined;
   touchedCharCheck:boolean=false;
   selectedCharacteristicVal:any
@@ -42,7 +43,7 @@ export class NewPricePlanComponent implements OnInit {
   isDomeManaged:boolean=false;
   priceForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    price: new FormControl('', [Validators.required]),
+    price: new FormControl('', ),
     description: new FormControl('')
   });
   priceComponentForm = new FormGroup({
@@ -116,70 +117,21 @@ export class NewPricePlanComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.initPartyInfo();
     this.checkPriceInfo();
+    setTimeout(() => {        
+      initFlowbite();   
+    }, 100);
   }
 
   checkPriceInfo(){
     for(let i=0;i<this.selectedProdSpec.productSpecCharacteristic.length;i++){
       if (!certifications.some(certification => certification.name === this.selectedProdSpec.productSpecCharacteristic[i].name)) {
-        this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i])
+        this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i]);
+        this.filteredCharacteristics.push(this.selectedProdSpec.productSpecCharacteristic[i]);
       }
     }
-    /*if(this.priceToUpdate != undefined){
-      console.log('--updating--')
-      console.log(this.priceToUpdate)
-      console.log('---------')
-      if(this.priceToUpdate.name)
-      this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
-      if(this.priceToUpdate.description)
-      this.priceForm.controls['description'].setValue(this.priceToUpdate.description);
-      if(this.priceToUpdate.isBundle==false){
-        let pricecomponent:ProductOfferingPrice_DTO = {
-          id: uuidv4(),
-          name: this.priceToUpdate.name,
-          description: this.priceToUpdate.description,
-          price: {
-            unit: this.priceToUpdate?.price?.unit,
-            value: this.priceToUpdate?.price?.value
-          },
-          priceType:this.priceToUpdate?.priceType
-        }
-        if(this.priceToUpdate.price != undefined && this.priceToUpdate.price.unit != undefined){
-          this.selectedPriceUnit=this.priceToUpdate.price.unit
-        }     
-        if(this.priceToUpdate.prodSpecCharValueUse!=undefined){
-          this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
-          this.editProfile=true;
-          pricecomponent.prodSpecCharValueUse = this.priceToUpdate.prodSpecCharValueUse
-        }
-        if(this.priceToUpdate.recurringChargePeriodType){
-          pricecomponent.recurringChargePeriodType=this.priceToUpdate.recurringChargePeriodType;
-        }
-        if(this.priceToUpdate.unitOfMeasure){
-          pricecomponent.unitOfMeasure=this.priceToUpdate.unitOfMeasure
-        }
-        if(this.priceToUpdate.popRelationship){
-          pricecomponent.popRelationship=this.priceToUpdate.popRelationship;
-        }
-        this.createdPriceComponents.push(pricecomponent)
-      } else {
-        if(this.priceToUpdate.bundledPopRelationship){
-          this.createdPriceComponents=this.priceToUpdate.bundledPopRelationship as any[];
-          if(this.priceToUpdate.bundledPopRelationship[0].price != undefined && this.priceToUpdate.bundledPopRelationship[0].price.unit != undefined){
-            this.selectedPriceUnit=this.priceToUpdate.bundledPopRelationship[0].price.unit;
-          }
-        }
-        this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
-        this.editProfile=true;
-        if(this.priceToUpdate.prodSpecCharValueUse!=undefined){
-          this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
-          this.editProfile=true;
-        }
-      }
-      this.editPrice=true;
-    } else {*/
       this.editPrice=false;
       this.touchedCharCheck=false;
       this.selectedCharacteristic=undefined;
@@ -187,7 +139,7 @@ export class NewPricePlanComponent implements OnInit {
       this.createdPriceAlterations=[];
       this.createdPriceComponents=[];
       this.createdPriceProfile=[];
-    //}
+      initFlowbite();
   }
 
   showDrawerPriceComp(){
@@ -715,6 +667,11 @@ export class NewPricePlanComponent implements OnInit {
         this.priceDescription=''
       }
     }
+  }
+
+  changeDomeManaged(){
+    this.isDomeManaged=!this.isDomeManaged;
+    initFlowbite();
   }
 
 }

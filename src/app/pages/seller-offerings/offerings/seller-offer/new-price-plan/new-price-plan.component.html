@@ -180,7 +180,7 @@
                     <div class="flex">
                         <label class="font-bold text-lg dark:text-white">Does this price component apply to a product characteristic?</label>
                         <div class="flex inline-flex ml-2 align-middle">
-                            <svg data-popover-target="popover-profile" class="flex self-center w-6 h-6 text-primary-100" clip-rule="evenodd" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <svg data-popover-target="popover-component-char" class="flex self-center w-6 h-6 text-primary-100" clip-rule="evenodd" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                             </svg>
                         </div>
@@ -189,7 +189,7 @@
                         <select id="type" (change)="changePriceComponentChar($event)"
                         class="mb-2 mr-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             <option value="">Select a characteristic</option>
-                            @for(char of selectedProdSpec.productSpecCharacteristic; track char){                                
+                            @for(char of filteredCharacteristics; track char){                          
                                 <option value="{{char.id}}">{{char.name}}</option>
                             }
                         </select>
@@ -199,7 +199,7 @@
                                 @if(hideStringCharOption){
                                     <option value="">Select a value</option>
                                 }                                
-                                @for(val of selectedCharacteristic.productSpecCharacteristicValue; track val){
+                                @for(val of selectedCharacteristic.productSpecCharacteristicValue; track val){                                    
                                     <option value="{{val.id}}">{{val.value}}</option>
                                 }
                             </select>
@@ -237,18 +237,18 @@
                         class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     </div>
                 }
-                <div data-popover id="popover-profile" role="tooltip" class="absolute z-20 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                <div data-popover id="popover-component-char" role="tooltip" class="absolute z-20 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
                     <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                        <h3 class="font-semibold text-gray-900 dark:text-white">{{ 'UPDATE_PROD_SPEC._how_to_verify' | translate }}</h3>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Product characteristic</h3>
                     </div>
                     <div class="px-3 py-2 inline-block">
-                        <p class="inline-block">{{ 'UPDATE_PROD_SPEC._verify_text' | translate }}
+                        <p class="inline-block">If the price component applies to a product charateristic you should select it on the following list and select its value if needed.
                         </p>
                     </div>
                     <div data-popper-arrow></div>
-                </div>
+                </div> 
 
-                <div class="flex items-center mb-4">
+                <div class="flex items-center align-items-middle mb-4">
                     <input id="default-checkbox" (change)="isDiscount=!isDiscount" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Add discount?</label>
                 </div>
@@ -258,7 +258,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="font-bold text-lg dark:text-white">Amount</label>
-                            <input formControlName="amount" class="bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                            <input formControlName="amount" class="bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                         </div>
                         <div class="flex align-items-middle items-center mb-4">
                             <input id="default-checkbox" formControlName="percentage" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -266,7 +266,7 @@
                         </div>                     
                         <div>
                             <label class="font-bold text-lg dark:text-white">Duration</label>
-                            <input formControlName="duration" class="bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+                            <input formControlName="duration" class="bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                         </div>
                         <div>
                             <label class="font-bold text-lg dark:text-white">Period</label>
@@ -284,7 +284,7 @@
                     <button type="button" (click)="cancelPriceComponent()" class="flex mr-4 text-gray-900 justify-end bg-gray-400 hover:bg-primary-50 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                         Cancel
                     </button>
-                    <button type="button" (click)="createPriceComponent()" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                    <button type="button" [disabled]="this.priceComponentForm.invalid" [ngClass]="this.priceComponentForm.invalid ? 'opacity-50' : 'hover:bg-primary-50'" (click)="createPriceComponent()" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                         Create
                     </button>
                 </div>
@@ -411,7 +411,7 @@
                 </div>
             </div>
             <div class="flex items-center mb-4">
-                <input id="default-checkbox" (change)="isDomeManaged=!isDomeManaged" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                <input id="default-checkbox" (change)="changeDomeManaged()" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                 <label for="default-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Is this price DOME managed?</label>
             </div>
             @if(isDomeManaged){
@@ -439,16 +439,6 @@
                             </button>
                         </div>
     
-                        <div data-popover id="popover-profile" role="tooltip" class="absolute z-20 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                            <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">{{ 'UPDATE_PROD_SPEC._how_to_verify' | translate }}</h3>
-                            </div>
-                            <div class="px-3 py-2 inline-block">
-                                <p class="inline-block">{{ 'UPDATE_PROD_SPEC._verify_text' | translate }}
-                                </p>
-                            </div>
-                            <div data-popper-arrow></div>
-                        </div> 
                     } @else {
                         <div class="flex justify-between">
                             <div class="flex">
@@ -465,18 +455,18 @@
                                     </svg>                                                                                                                              
                             </button>
                         </div>
-    
-                        <div data-popover id="popover-profile" role="tooltip" class="absolute z-20 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                            <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">{{ 'UPDATE_PROD_SPEC._how_to_verify' | translate }}</h3>
-                            </div>
-                            <div class="px-3 py-2 inline-block">
-                                <p class="inline-block">{{ 'UPDATE_PROD_SPEC._verify_text' | translate }}
-                                </p>
-                            </div>
-                            <div data-popper-arrow></div>
-                        </div> 
                     }
+
+                    <div data-popover id="popover-profile" role="tooltip" class="absolute z-20 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                        <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                            <h3 class="font-semibold text-gray-900 dark:text-white">Price profile</h3>
+                        </div>
+                        <div class="px-3 py-2 inline-block">
+                            <p class="inline-block">You can select and configure your product's characteristics in order to define a price profile.
+                            </p>
+                        </div>
+                        <div data-popper-arrow></div>
+                    </div> 
                 }
 
                 <div class="flex justify-between">
@@ -560,10 +550,10 @@
 
                 <div data-popover id="popover-price-components" role="tooltip" class="absolute z-20 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
                     <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                        <h3 class="font-semibold text-gray-900 dark:text-white">{{ 'UPDATE_PROD_SPEC._how_to_verify' | translate }}</h3>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Price components</h3>
                     </div>
                     <div class="px-3 py-2 inline-block">
-                        <p class="inline-block">{{ 'UPDATE_PROD_SPEC._verify_text' | translate }}
+                        <p class="inline-block">Configure different price components for your price plan.
                         </p>
                     </div>
                     <div data-popper-arrow></div>
@@ -574,7 +564,7 @@
     </form>
     
     <div class="flex w-full justify-items-center justify-center ml-4">
-        <button type="button" (click)="savePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+        <button type="button" [disabled]="this.priceForm.invalid" [ngClass]="this.priceForm.invalid ? 'opacity-50' : 'hover:bg-primary-50'" (click)="savePrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
             {{ 'CREATE_OFFER._save_price' | translate }}
             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>

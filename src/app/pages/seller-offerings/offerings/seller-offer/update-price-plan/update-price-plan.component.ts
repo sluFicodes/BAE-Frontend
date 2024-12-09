@@ -31,6 +31,7 @@ export class UpdatePricePlanComponent implements OnInit {
   oneTimeSelected:boolean=true;
   recurringSelected:boolean=false;
   usageSelected:boolean=false;
+  filteredCharacteristics:any[]=[];
   selectedCharacteristic:any=undefined;
   touchedCharCheck:boolean=false;
   selectedCharacteristicVal:any
@@ -121,7 +122,8 @@ export class UpdatePricePlanComponent implements OnInit {
   checkPriceInfo(){
     for(let i=0;i<this.selectedProdSpec.productSpecCharacteristic.length;i++){
       if (!certifications.some(certification => certification.name === this.selectedProdSpec.productSpecCharacteristic[i].name)) {
-        this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i])
+        this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i]);
+        this.filteredCharacteristics.push(this.selectedProdSpec.productSpecCharacteristic[i]);
       }
     }
     if(this.priceToUpdate != undefined){
@@ -183,9 +185,7 @@ export class UpdatePricePlanComponent implements OnInit {
         }
         this.editPrice=true;
       }
-
-    } else {
-      //  error 
+      initFlowbite();
     }
   }
 
@@ -674,6 +674,11 @@ export class UpdatePricePlanComponent implements OnInit {
         this.priceDescription=''
       }
     }
+  }
+
+  changeDomeManaged(){
+    this.isDomeManaged=!this.isDomeManaged;
+    initFlowbite();
   }
 
 }

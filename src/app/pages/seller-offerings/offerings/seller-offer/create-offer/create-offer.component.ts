@@ -282,6 +282,8 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleBundle(){
@@ -297,6 +299,8 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleBundleCheck(){
@@ -328,6 +332,8 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleCatalogs(){
@@ -347,6 +353,8 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleCategories(){
@@ -367,6 +375,8 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleLicense(){
@@ -381,6 +391,8 @@ export class CreateOfferComponent implements OnInit {
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleSLA(){
@@ -397,6 +409,8 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showReplication=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   togglePrice(){
@@ -413,6 +427,8 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=true;
     this.showPreview=false;
     this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
     initFlowbite();
   }
 
@@ -430,6 +446,8 @@ export class CreateOfferComponent implements OnInit {
     this.showPrice=false;
     this.showPreview=false;
     this.showReplication=true;
+    this.editPrice=false;
+    this.showCreatePrice=false;
     initFlowbite();
   }
 
@@ -851,6 +869,8 @@ export class CreateOfferComponent implements OnInit {
     this.showSummary=true;
     this.showReplication=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   async createOffer(){
