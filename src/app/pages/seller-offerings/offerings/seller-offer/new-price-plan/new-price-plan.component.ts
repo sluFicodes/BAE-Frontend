@@ -163,7 +163,7 @@ export class NewPricePlanComponent implements OnInit {
         if(this.priceToUpdate.bundledPopRelationship){
           this.createdPriceComponents=this.priceToUpdate.bundledPopRelationship as any[];
           if(this.priceToUpdate.bundledPopRelationship[0].price != undefined && this.priceToUpdate.bundledPopRelationship[0].price.unit != undefined){
-            this.selectedPriceUnit=this.priceToUpdate.bundledPopRelationship[0].price.unit
+            this.selectedPriceUnit=this.priceToUpdate.bundledPopRelationship[0].price.unit;
           }
         }
         this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
@@ -476,7 +476,8 @@ export class NewPricePlanComponent implements OnInit {
   clearPriceFormInfo(){
     console.log('clear')
     this.oneTimeSelected=true;
-    this.selectedPriceUnit=currencies[0].code;  
+    this.selectedPriceUnit=currencies[0].code;
+    
     this.usageSelected=false;
     this.recurringSelected=false;
 

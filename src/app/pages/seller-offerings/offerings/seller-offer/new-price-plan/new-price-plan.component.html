@@ -414,7 +414,7 @@
             <label class="font-bold text-lg dark:text-white">Currency</label>
             <select id="type" (change)="onPriceUnitChange($event)" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                 @for(curr of currencies; track curr.code){
-                    <option value="{{curr.code}}">({{curr.code}}) {{curr.name}}</option>
+                    <option value="{{curr.code}}" [selected]="curr.code === selectedPriceUnit">({{curr.code}}) {{curr.name}}</option>
                 }                                             
             </select>
             @if(!touchedCharCheck){
