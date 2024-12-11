@@ -210,6 +210,7 @@ export class NewPricePlanComponent implements OnInit {
       this.touchedCharCheck=true;
     }
     this.selectedCharacteristic=undefined;
+    this.showValueSelect=false;
     this.discountForm.reset();
   }
 
@@ -237,6 +238,8 @@ export class NewPricePlanComponent implements OnInit {
   cancelPriceComponent(){
     this.showPriceComponents=!this.showPriceComponents;
     this.priceComponentForm.reset();
+    this.selectedCharacteristic=undefined;
+    this.showValueSelect=false;
     this.discountForm.reset();
   }
 

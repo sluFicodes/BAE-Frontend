@@ -257,6 +257,7 @@ export class UpdatePricePlanComponent implements OnInit {
       this.touchedCharCheck=true;
     }
     this.selectedCharacteristic=undefined;
+    this.showValueSelect=false;
     this.discountForm.reset();
   }
 
