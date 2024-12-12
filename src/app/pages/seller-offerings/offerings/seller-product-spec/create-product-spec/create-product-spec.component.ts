@@ -164,7 +164,7 @@ export class CreateProductSpecComponent implements OnInit {
   toValue: string = '';
   rangeUnit: string = '';
 
-  filenameRegex = /^[A-Za-z_.-]+$/;
+  filenameRegex = /^[A-Za-z0-9_.-]+$/;
 
   constructor(
     private router: Router,
