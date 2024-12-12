@@ -12,8 +12,8 @@ export class ContactUsFormComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
     name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     lastname: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    organization: new FormControl('', [Validators.maxLength(100)]),
-    role: new FormControl('', [Validators.maxLength(100)]),
+    organization: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    role: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     message: new FormControl('', [Validators.required]),
   });
   
@@ -22,14 +22,11 @@ export class ContactUsFormComponent implements OnInit {
 
   sendMail() {
     let message = 'First name: '+this.contactForm.value.name+ '%0A' +
-    'Last name: '+this.contactForm.value.lastname+ '%0A';
-    if(this.contactForm.value.organization!=''){
-      message=message+'Organization: '+this.contactForm.value.organization+ '%0A';
-    }
-    if(this.contactForm.value.role!=''){
-      message=message+'Role: '+this.contactForm.value.role+ '%0A';
-    }
-    message=message+this.contactForm.value.message;
+    'Last name: '+this.contactForm.value.lastname+ '%0A' +
+    'Email: '+this.contactForm.value.email+ '%0A' +
+    'Organization: '+this.contactForm.value.organization+ '%0A' +
+    'Role: '+this.contactForm.value.role+ '%0A'+
+    this.contactForm.value.message;
 
     const mailtoLink = `mailto:info@dome-marketplace.eu?body=${message}`;
     

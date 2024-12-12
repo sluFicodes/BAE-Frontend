@@ -41,12 +41,14 @@
             <div>
                 <label for="organization" class="font-bold text-lg dark:text-white">Organization</label>
                 <input formControlName="organization" type="text" id="organization" maxLength="100"
-                class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
+                [ngClass]="(contactForm.get('organization')?.invalid == true && contactForm.value.organization!='') || (contactForm.get('organization')?.touched && contactForm.value.organization=='') ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+                class="mb-2 bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
             </div>
             <div>
                 <label for="role" class="font-bold text-lg dark:text-white">Role in organization</label>
                 <input formControlName="role" type="text" id="role" maxLength="100"
-                class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
+                [ngClass]="(contactForm.get('role')?.invalid == true && contactForm.value.role!='') || (contactForm.get('role')?.touched && contactForm.value.role=='') ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+                class="mb-2 bg-gray-50 dark:bg-secondary-300 border dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />        
             </div>
         </div>
         <div>
