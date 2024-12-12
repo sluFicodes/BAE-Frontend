@@ -46,8 +46,8 @@ export class UpdateOfferComponent implements OnInit{
   showSLA:boolean=false;
   showPrice:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price','summary'];
-  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','summary-circle'];
+  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price', 'replication', 'summary'];
+  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','replication-circle','summary-circle'];
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
@@ -157,6 +157,14 @@ export class UpdateOfferComponent implements OnInit{
   allowCustom:boolean=true;
   allowOthers:boolean=true;
 
+  //PRICEPROFILE
+  showProfile:boolean=false;
+  editProfile:boolean=false;
+
+  //REPLICATION
+  showReplication:boolean=false;
+  selectedCountries:any[]=[];
+
   errorMessage:any='';
   showError:boolean=false;
 
@@ -164,6 +172,9 @@ export class UpdateOfferComponent implements OnInit{
 
   //FINAL OFFER USING API CALL STRUCTURE
   offerToUpdate:ProductOffering_Update | undefined;
+
+  availableCountries:any[]=['Austria','Belgium','Germany','Hungary','Luxembourg','Poland','Romania','Spain']
+  availableMarketplaces:any[]=['BEIA Software Services','CloudFerro','CSI Piemonte','digitanimal','Digitel TS','DOME']
 
   @ViewChild('updatemetric') updatemetric!: ElementRef;
   @ViewChild('responsemetric') responsemetric!: ElementRef;
@@ -335,6 +346,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.showReplication=false;
     this.clearPriceFormInfo();
   }
 
@@ -350,6 +362,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.showReplication=false;
     this.clearPriceFormInfo();
   }
 
@@ -381,6 +394,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.showReplication=false;
     this.clearPriceFormInfo();
   }
 
@@ -400,6 +414,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.showReplication=false;
     this.clearPriceFormInfo();
   }
 
@@ -420,6 +435,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.showReplication=false;
     this.clearPriceFormInfo();
   }
 
@@ -435,6 +451,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
+    this.showReplication=false;
     this.clearPriceFormInfo();
   }
 
@@ -450,6 +467,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=true;
     this.showPrice=false;
     this.showPreview=false;
+    this.showReplication=false;
     this.clearPriceFormInfo();
   }
 
@@ -465,7 +483,26 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=true;
     this.showPreview=false;
+    this.showReplication=false;
     this.clearPriceFormInfo();
+  }
+
+  toggleReplication(){
+    this.selectStep('replication','replication-circle');
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showSummary=false;
+    this.showProdSpec=false;
+    this.showCatalog=false;
+    this.showCategory=false;
+    this.showLicense=false;
+    this.showSLA=false;
+    this.showPrice=false;
+    this.showPreview=false;
+    this.showReplication=true;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+    initFlowbite();
   }
 
   saveLicense(){
@@ -1714,4 +1751,10 @@ export class UpdateOfferComponent implements OnInit{
       }
     } 
   }
+
+  handleSelectionChange(items: string[]) {
+    console.log('selected items...')
+    console.log(items)
+  }
+
 }

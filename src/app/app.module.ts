@@ -82,6 +82,7 @@ import { OrganizationDetailsComponent } from './pages/organization-details/organ
 import { FaqComponent } from './offerings/faq/faq.component';
 import { NewPricePlanComponent } from './pages/seller-offerings/offerings/seller-offer/new-price-plan/new-price-plan.component';
 import { UpdatePricePlanComponent } from './pages/seller-offerings/offerings/seller-offer/update-price-plan/update-price-plan.component';
+import { MultipleSelectComponent } from './shared/multiple-select/multiple-select.component';
 
 @NgModule({
   declarations: [
@@ -145,7 +146,8 @@ import { UpdatePricePlanComponent } from './pages/seller-offerings/offerings/sel
     OrganizationDetailsComponent,
     FaqComponent,
     NewPricePlanComponent,
-    UpdatePricePlanComponent
+    UpdatePricePlanComponent,
+    MultipleSelectComponent
   ],
   imports: [
     BrowserModule,

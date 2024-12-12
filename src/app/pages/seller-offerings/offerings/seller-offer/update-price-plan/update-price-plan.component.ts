@@ -285,6 +285,8 @@ export class UpdatePricePlanComponent implements OnInit {
   cancelPriceComponent(){
     this.showPriceComponents=!this.showPriceComponents;
     this.priceComponentForm.reset();
+    this.selectedCharacteristic=undefined;
+    this.showValueSelect=false;
     this.discountForm.reset();
   }
 

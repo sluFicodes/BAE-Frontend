@@ -198,7 +198,7 @@
                             class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 @if(hideStringCharOption){
                                     <option value="">Select a value</option>
-                                }                                
+                                }  
                                 @for(val of selectedCharacteristic.productSpecCharacteristicValue; track val){                                    
                                     <option value="{{val.id}}">{{val.value}}</option>
                                 }

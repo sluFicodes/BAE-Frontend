@@ -356,48 +356,6 @@ export class NewPricePlanComponent implements OnInit {
   }
 
   savePrice(){
-    /*if(this.priceToUpdate){
-      if(this.priceForm.value.name){
-        let updatingPrice: ProductOfferingPrice_DTO = {
-          id: this.priceToUpdate.id,
-          name: this.priceForm.value.name,
-          description: this.priceForm.value.description ? this.priceForm.value.description : '',
-          lifecycleStatus: "Active",
-          isBundle: true ? this.createdPriceComponents.length > 1 : false
-        }
-        if(this.isDomeManaged){
-          if(this.createdPriceComponents.length>1){
-            for(let i=0;i<this.createdPriceComponents.length;i++){
-              this.createdPriceComponents[i].price.unit=this.selectedPriceUnit;
-            }
-             updatingPrice.bundledPopRelationship=this.createdPriceComponents;
-          } else {
-            updatingPrice.priceType = this.createdPriceComponents[0].priceType
-            updatingPrice.price = this.createdPriceComponents[0].price
-            if(this.createdPriceComponents[0].priceType=='recurring'){
-              updatingPrice.recurringChargePeriodType=this.createdPriceComponents[0].recurringChargePeriodType;
-            }
-            if(this.createdPriceComponents[0].priceType=='usage'){
-              updatingPrice.unitOfMeasure=this.createdPriceComponents[0].unitOfMeasure
-            }
-          }
-          if(this.editProfile){
-            //referenia al comp profile
-            updatingPrice.prodSpecCharValueUse=this.priceToUpdate.prodSpecCharValueUse;
-          }
-          for(let i=0;i<this.createdPriceComponents.length;i++){
-            this.createdPriceComponents[i].price.unit=this.selectedPriceUnit;
-          }          
-          this.createdPriceComponents=[];
-          this.createdPriceAlterations=[];
-        } else {
-          updatingPrice.priceType='CUSTOM';          
-        }
-        this.eventMessage.emitUpdatePricePlan(updatingPrice);
-      }
-      this.editPrice=!this.editPrice;
-      
-    } else {*/
       if(this.priceForm.value.name){
         let priceToCreate: ProductOfferingPrice_DTO = {
           id: uuidv4(),
@@ -436,7 +394,6 @@ export class NewPricePlanComponent implements OnInit {
         }
         this.eventMessage.emitSavePricePlan(priceToCreate);
       }
-    //}
     this.clearPriceFormInfo();
   }
 
