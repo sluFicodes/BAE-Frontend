@@ -25,7 +25,7 @@ export class AppInitService {
                 environment.DOME_ABOUT_LINK = config.domeAbout;
                 environment.DOME_REGISTER_LINK = config.domeRegister;
                 environment.DOME_PUBLISH_LINK = config.domePublish;
-                environment.PURCHASE_ENABLED = config.purchaseEnabled
+                environment.PURCHASE_ENABLED = config.purchaseEnabled;
                 resolve(config);
             }),
             error: (error) => {
