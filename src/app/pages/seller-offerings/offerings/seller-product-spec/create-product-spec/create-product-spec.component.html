@@ -42,6 +42,7 @@
                         <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._general_info' | translate }}</p>
                     </span>
                 </button>
+                @if(BUNDLE_ENABLED){
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
@@ -53,11 +54,12 @@
                         <p class="hidden xl:flex text-xs justify-start">{{ 'CREATE_PROD_SPEC._bundle_info' | translate }}</p>
                     </span>
                 </button>
+                }
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
                 <button id="compliance" (click)="toggleCompliance()" [disabled]="!complianceDone"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="compliance-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                        3
+                        {{ BUNDLE_ENABLED ? 3 : 2 }}
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._comp_profile' | translate }}</h3>
@@ -68,7 +70,7 @@
                 <button id="chars" (click)="toggleChars()" [disabled]="!charsDone"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="chars-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                        4
+                        {{ BUNDLE_ENABLED ? 4 : 3 }}
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._chars' | translate }}</h3>
@@ -79,7 +81,7 @@
                 <button id="resource" (click)="toggleResource()" [disabled]="!resourceDone"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="resource-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                        5
+                        {{ BUNDLE_ENABLED ? 5 : 4 }}
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._resource' | translate }}</h3>
@@ -90,7 +92,7 @@
                 <button id="service" (click)="toggleService()" [disabled]="!serviceDone"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="service-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                        6
+                        {{ BUNDLE_ENABLED ? 6 : 5 }}
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._service' | translate }}</h3>
@@ -101,7 +103,7 @@
                 <button id="attach" (click)="toggleAttach()" [disabled]="!attachDone"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="attach-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                        7
+                        {{ BUNDLE_ENABLED ? 7 : 6 }}
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._attachments' | translate }}</h3>
@@ -112,7 +114,7 @@
                 <button id="relationships" (click)="toggleRelationship()" [disabled]="!relationshipDone"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="relationships-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                        8
+                        {{ BUNDLE_ENABLED ? 8 : 7 }}
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._relationships' | translate }}</h3>
@@ -123,7 +125,7 @@
                 <button id="summary" [disabled]="!finishDone" (click)="showFinish()"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="summary-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                        9
+                        {{ BUNDLE_ENABLED ? 9 : 8 }}
                     </span>
                     <span>
                         <h3 class="flex leading-tight justify-start">{{ 'CREATE_PROD_SPEC._finish' | translate }}</h3>
@@ -263,14 +265,25 @@
                         </div>
 
                     </form>
-                    <div class="flex w-full justify-items-end justify-end">
-                        <button type="button" (click)="toggleBundle();generalDone=true;" [disabled]="!generalForm.valid" [ngClass]="!generalForm.valid ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end align-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                            {{ 'CREATE_PROD_SPEC._next' | translate }}
-                            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                            </svg>
-                        </button>
-                    </div>
+                    @if(BUNDLE_ENABLED){
+                        <div class="flex w-full justify-items-end justify-end">
+                            <button type="button" (click)="toggleBundle();generalDone=true;" [disabled]="!generalForm.valid" [ngClass]="!generalForm.valid ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end align-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                {{ 'CREATE_PROD_SPEC._next' | translate }}
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                </svg>
+                            </button>
+                        </div>
+                    }@else{
+                        <div class="flex w-full justify-items-end justify-end">
+                            <button type="button" (click)="toggleCompliance();generalDone=true;" [disabled]="!generalForm.valid" [ngClass]="!generalForm.valid ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end align-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                {{ 'CREATE_PROD_SPEC._next' | translate }}
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                </svg>
+                            </button>
+                        </div>                        
+                    }
                 }
                 @if(showBundle){
                     <h2 class="text-3xl font-bold text-primary-100 ml-4 dark:text-white">{{ 'CREATE_PROD_SPEC._bundle' | translate }}</h2>
