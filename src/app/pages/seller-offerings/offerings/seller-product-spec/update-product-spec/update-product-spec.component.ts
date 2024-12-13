@@ -254,10 +254,15 @@ export class UpdateProductSpecComponent implements OnInit {
           // Decode the token
           try {
             const decoded = jwtDecode(this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value)
+            let credential: any = null
 
             if ('verifiableCredential' in decoded) {
-              const credential: any = decoded.verifiableCredential;
+              credential = decoded.verifiableCredential;
+            } else if('vc' in decoded) {
+              credential = decoded.vc;
+            }
 
+            if (credential != null) {
               const subject = credential.credentialSubject;
 
               if ('compliance' in subject) {

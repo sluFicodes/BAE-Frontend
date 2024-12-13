@@ -183,10 +183,15 @@ export class CardComponent implements OnInit, AfterViewInit {
           if (vcProf) {
             const vcToken: any = vcProf.productSpecCharacteristicValue?.at(0)?.value
             const decoded = jwtDecode(vcToken)
+            let credential: any = null
 
             if ('verifiableCredential' in decoded) {
-              const credential: any = decoded.verifiableCredential;
+              credential = decoded.verifiableCredential;
+            } else if('vc' in decoded) {
+              credential = decoded.vc;
+            }
 
+            if (credential != null) {
               const subject = credential.credentialSubject;
 
               if ('compliance' in subject) {
