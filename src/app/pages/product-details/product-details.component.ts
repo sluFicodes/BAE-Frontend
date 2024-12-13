@@ -202,12 +202,16 @@ export class ProductDetailsComponent implements OnInit {
             })
           }
         }
-        if(this.prodSpec.productSpecCharacteristic != undefined){
-          this.prodSpec.productSpecCharacteristic.forEach((char: any) => {
-            this.prodChars.push(char);
-          });
+
+        if(this.prodSpec.productSpecCharacteristic != undefined) {
+          // Avoid displaying the compliance credential
+          this.prodChars = this.prodSpec.productSpecCharacteristic.filter((char: any) => {
+            return char.name != 'Compliance:VC'
+          })
+
           console.log('-- prod spec')
           console.log(this.prodSpec.productSpecCharacteristic)
+
           for(let i=0; i<certifications.length; i++){
             if(certifications[i].domesupported==true){
               this.complianceProf.push(certifications[i])
