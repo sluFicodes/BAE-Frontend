@@ -129,8 +129,14 @@ export class NewPricePlanComponent implements OnInit {
   checkPriceInfo(){
     for(let i=0;i<this.selectedProdSpec.productSpecCharacteristic.length;i++){
       if (!certifications.some(certification => certification.name === this.selectedProdSpec.productSpecCharacteristic[i].name)) {
-        this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i]);
-        this.filteredCharacteristics.push(this.selectedProdSpec.productSpecCharacteristic[i]);
+        let prod = this.selectedProdSpec.productSpecCharacteristic[i];
+        prod.productSpecification={
+          id: this.selectedProdSpec.id,
+          href: this.selectedProdSpec.id,
+          name: this.selectedProdSpec.name
+        }
+        this.createdPriceProfile.push(prod);
+        this.filteredCharacteristics.push(prod);
       }
     }
       this.editPrice=false;
@@ -170,7 +176,12 @@ export class NewPricePlanComponent implements OnInit {
       pricecomponent.prodSpecCharValueUse = [{
         id: this.selectedCharacteristic.id,
         name: this.selectedCharacteristic.name,
-        productSpecCharacteristicValue: [{value:this.selectedCharacteristicVal}]
+        productSpecCharacteristicValue: [{value:this.selectedCharacteristicVal}],
+        productSpecification: {
+          id: this.selectedProdSpec.id,
+          href: this.selectedProdSpec.id,
+          name: this.selectedProdSpec.name
+        }
       }]
     }
     if(this.recurringSelected){
@@ -281,7 +292,13 @@ export class NewPricePlanComponent implements OnInit {
     this.createdPriceProfile=[];
     for(let i=0;i<this.selectedProdSpec.productSpecCharacteristic.length;i++){
       if (!certifications.some(certification => certification.name === this.selectedProdSpec.productSpecCharacteristic[i].name)) {
-        this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i])
+        let prod = this.selectedProdSpec.productSpecCharacteristic[i];
+        prod.productSpecification={
+          id: this.selectedProdSpec.id,
+          href: this.selectedProdSpec.id,
+          name: this.selectedProdSpec.name
+        }
+        this.createdPriceProfile.push(prod)
       }
     }
   }
@@ -323,7 +340,13 @@ export class NewPricePlanComponent implements OnInit {
       this.createdPriceProfile=[];
       for(let i=0;i<this.selectedProdSpec.productSpecCharacteristic.length;i++){
         if (!certifications.some(certification => certification.name === this.selectedProdSpec.productSpecCharacteristic[i].name)) {
-          this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i])
+          let prod = this.selectedProdSpec.productSpecCharacteristic[i];
+          prod.productSpecification={
+            id: this.selectedProdSpec.id,
+            href: this.selectedProdSpec.id,
+            name: this.selectedProdSpec.name
+          }
+          this.createdPriceProfile.push(prod)
         }
       }
     }    
@@ -406,7 +429,7 @@ export class NewPricePlanComponent implements OnInit {
             }
           }
           if(this.editProfile){
-            priceToCreate.prodSpecCharValueUse=this.createdPriceProfile
+            priceToCreate.prodSpecCharValueUse=this.createdPriceProfile;
             this.editProfile=false;
           }
           for(let i=0;i<this.createdPriceComponents.length;i++){

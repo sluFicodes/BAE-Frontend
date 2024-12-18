@@ -607,24 +607,6 @@ export class CreateOfferComponent implements OnInit {
   }
 
   getCategories(){
-    /*this.api.getCatalog(this.selectedCatalog.id).then(data => {
-      if(data.category){
-        for (let i=0; i<data.category.length; i++){
-          this.api.getCategoryById(data.category[i].id).then(categoryInfo => {
-            this.findChildrenByParent(categoryInfo);
-          })
-        }
-        initFlowbite();
-      } else {
-        this.api.getCategories().then(data => {
-          for(let i=0; i < data.length; i++){
-            this.findChildren(data[i],data)
-          }
-          this.cdr.detectChanges();
-          initFlowbite();
-        })           
-      }
-    })*/
     console.log('Getting categories...')
     this.api.getLaunchedCategories().then(data => {      
       for(let i=0; i < data.length; i++){
@@ -877,7 +859,6 @@ export class CreateOfferComponent implements OnInit {
 
   async createOffer(){
     this.postedPrices=[];
-    let apiCalls: any[] = [];
     if(this.createdPrices.length>0){
       for(let i=0; i < this.createdPrices.length; i++){
         if(this.createdPrices[i].isBundle==true){
@@ -1018,7 +999,7 @@ export class CreateOfferComponent implements OnInit {
             priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
           }
           if(this.createdPrices[i].prodSpecCharValueUse){
-            priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse
+            priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse;
           }
           this.api.postOfferingPrice(priceToCreate).subscribe({
             next: data => {
