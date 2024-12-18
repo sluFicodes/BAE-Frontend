@@ -223,10 +223,10 @@
                     <div class="flex flex-row">                        
                         <input formControlName="recurring" type="number" pattern="[0-9]"                      
                         class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-l border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-l-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                        <select id="type" class="bg-gray-50 dark:bg-secondary-300 text-gray-900 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
-                            <option value="day">Day</option>
-                            <option value="week">Week</option>
-                            <option value="month">Month</option>                             
+                        <select id="type" formControlName="recurringPeriod" class="bg-gray-50 dark:bg-secondary-300 text-gray-900 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
+                            <option selected value="daily">Day</option>
+                            <option value="weekly">Week</option>
+                            <option value="monthly">Month</option>                             
                         </select>
                     </div>
                 }
@@ -271,10 +271,10 @@
                         <div>
                             <label class="font-bold text-lg dark:text-white">Period</label>
                             <select formControlName="period" id="type" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option value="day">Day</option>
-                                <option value="week">Week</option>
-                                <option value="month">Month</option>
-                                <option value="year">Year</option>                                          
+                                <option selected value="daily">Day</option>
+                                <option value="weekly">Week</option>
+                                <option value="monthly">Month</option>
+                                <option value="yearly">Year</option>                                          
                             </select>
                         </div>
                     </div>
@@ -284,7 +284,7 @@
                     <button type="button" (click)="cancelPriceComponent()" class="flex mr-4 text-gray-900 justify-end bg-gray-400 hover:bg-primary-50 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                         Cancel
                     </button>
-                    <button type="button" [disabled]="this.priceComponentForm.invalid" [ngClass]="this.priceComponentForm.invalid ? 'opacity-50' : 'hover:bg-primary-50'" (click)="createPriceComponent()" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                    <button type="button" (click)="createPriceComponent()" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                         Create
                     </button>
                 </div>

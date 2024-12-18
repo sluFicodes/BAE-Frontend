@@ -17,6 +17,8 @@ import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { currencies } from 'currencies.json';
 import { certifications } from 'src/app/models/certification-standards.const';
+import {ProductOfferingPrice_DTO} from 'src/app/models/interfaces';
+import { lastValueFrom } from 'rxjs';
 
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type BundledProductOffering = components["schemas"]["BundledProductOffering"];
@@ -132,7 +134,7 @@ export class CreateOfferComponent implements OnInit {
 
   //PRICE
   currencies=currencies;
-  createdPrices:ProductOfferingPrice[]=[];
+  createdPrices:ProductOfferingPrice_DTO[]=[];
   postedPrices:any[]=[];
   creatingPrice:any;
   priceDescription:string='';
@@ -214,13 +216,13 @@ export class CreateOfferComponent implements OnInit {
         this.initPartyInfo();
       }
       if(ev.type === 'SavePricePlan') {
-        this.createdPrices.push(ev.value as ProductOfferingPrice)
+        this.createdPrices.push(ev.value as ProductOfferingPrice_DTO)
         if(this.showCreatePrice){
           this.showCreatePrice=false;
         }
       }
       if(ev.type === 'UpdatePricePlan') {
-        let price = ev.value as ProductOfferingPrice
+        let price = ev.value as ProductOfferingPrice_DTO
         const index = this.createdPrices.findIndex((item) => item.id === price.id);
         if(index!=-1){
           console.log('updating price values...')
@@ -875,59 +877,179 @@ export class CreateOfferComponent implements OnInit {
 
   async createOffer(){
     this.postedPrices=[];
+    let apiCalls: any[] = [];
     if(this.createdPrices.length>0){
       for(let i=0; i < this.createdPrices.length; i++){
-        let priceToCreate: ProductOfferingPrice = {
-          description: this.createdPrices[i].description,
-          lifecycleStatus: this.createdPrices[i].lifecycleStatus,
-          name: this.createdPrices[i].name,
-          priceType: 'custom'
-          /*
-          percentage: 0,
-          priceType: this.createdPrices[i].priceType,
-          price: {
-              unit: this.createdPrices[i].price?.taxIncludedAmount?.unit,
-              value: this.createdPrices[i].price?.taxIncludedAmount?.value
-          }*/
-        }
-        /*if(this.createdPrices[i].priceType == 'recurring'){
-          console.log('recurring')
-          //priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
-        }
-        if(this.createdPrices[i].priceType == 'usage'){
-          console.log('usage')
-          priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
-        }*/ 
-        await this.api.postOfferingPrice(priceToCreate).subscribe({
-          next: data => {
-            console.log('precio')
-            console.log(data)
-            this.createdPrices[i].id=data.id;
-            if(i==this.createdPrices.length-1){
-              this.saveOfferInfo();
-            }            
-          },
-          error: error => {
-            console.error('There was an error while creating offers price!', error);
-            if(error.error.error){
-              console.log(error)
-              this.errorMessage='Error: '+error.error.error;
-            } else {
-              this.errorMessage='There was an error while creating offers price!';
+        if(this.createdPrices[i].isBundle==true){
+          let components=this.createdPrices[i].bundledPopRelationship;
+          let compRel:any[]=[];
+          if(components != undefined){
+            for(let j=0;j<components.length;j++){
+              //Creating price component
+              let priceCompToCreate: ProductOfferingPrice = {        
+                name: components[j].name,
+                description: components[j].description,
+                lifecycleStatus: components[j].lifecycleStatus,
+                priceType: components[j].priceType,
+                price: {
+                  unit: components[j]?.price?.unit,
+                  value: components[j]?.price?.value
+                }
+              }
+              if(components[j].priceType=='recurring'){
+                priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+              }
+              if(components[j].priceType=='usage'){
+                priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+              }
+              if(components[j].prodSpecCharValueUse){
+                priceCompToCreate.prodSpecCharValueUse=components[j].prodSpecCharValueUse
+              }
+              let priceAlterations = components[j].popRelationship;
+              if(priceAlterations != undefined){
+                //Creating price alteration
+                let priceAlterToCreate: ProductOfferingPrice ={
+                  name: priceAlterations[0]?.name,
+                  priceType: priceAlterations[0]?.priceType,
+                  validFor: priceAlterations[0]?.validFor,
+                }
+                if(priceAlterations[0].percentage){
+                  priceAlterToCreate.percentage = priceAlterations[0]?.percentage;
+                } else {
+                  priceAlterToCreate.price = priceAlterations[0]?.price;
+                }
+                try{
+                  let priceAlterCreated = await lastValueFrom(this.api.postOfferingPrice(priceAlterToCreate))
+                  console.log('price Alteration')
+                  console.log(priceAlterCreated)
+                  priceCompToCreate.popRelationship=[{
+                    id: priceAlterCreated.id,
+                    href: priceAlterCreated.id,
+                    name: priceAlterCreated.name
+                  }]
+                } catch (error:any) {
+                  console.error('There was an error while creating offers price!', error);
+                  if(error.error.error){
+                    console.log(error)
+                    this.errorMessage='Error: '+error.error.error;
+                  } else {
+                    this.errorMessage='There was an error while creating offers price!';
+                  }
+                  this.showError=true;
+                  setTimeout(() => {
+                    this.showError = false;
+                  }, 3000);     
+                }
+              }
+              try{
+                let priceCompCreated = await lastValueFrom(this.api.postOfferingPrice(priceCompToCreate))
+                compRel.push({
+                  id: priceCompCreated.id,
+                  href: priceCompCreated.id,
+                  name: priceCompCreated.name
+                }) 
+                console.log('componente')
+                console.log(priceCompCreated)
+              } catch (error:any) {
+                console.error('There was an error while creating offers price!', error);
+                if(error.error.error){
+                  console.log(error)
+                  this.errorMessage='Error: '+error.error.error;
+                } else {
+                  this.errorMessage='There was an error while creating offers price!';
+                }
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);     
+              }
             }
-            this.showError=true;
-            setTimeout(() => {
-              this.showError = false;
-            }, 3000);
+            //Creating price plan
+            let priceToCreate: ProductOfferingPrice = {
+              name: this.createdPrices[i].name,
+              isBundle: true,
+              description: this.createdPrices[i].description,
+              lifecycleStatus: this.createdPrices[i].lifecycleStatus,
+              bundledPopRelationship: compRel
+            }
+            try{
+              let pricePlanCreated = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
+              console.log('precio')
+              console.log(pricePlanCreated)
+              this.createdPrices[i].id=pricePlanCreated.id;
+              if(i==this.createdPrices.length-1){
+                this.saveOfferInfo();
+              }
+            } catch (error:any){
+              console.error('There was an error while creating offers price!', error);
+              if(error.error.error){
+                console.log(error)
+                this.errorMessage='Error: '+error.error.error;
+              } else {
+                this.errorMessage='There was an error while creating offers price!';
+              }
+              this.showError=true;
+              setTimeout(() => {
+                this.showError = false;
+              }, 3000);
+            }
+        }
+        }else{  
+          //Not bundled price plan        
+          let priceToCreate: ProductOfferingPrice = {
+            name: this.createdPrices[i].name,
+            isBundle: false,
+            description: this.createdPrices[i].description,
+            lifecycleStatus: this.createdPrices[i].lifecycleStatus,
+            priceType: this.createdPrices[i].priceType,   
           }
-        });
+          if(this.createdPrices[i].priceType!='custom'){
+            priceToCreate.price= {
+              unit: this.createdPrices[i]?.price?.unit,
+              value: this.createdPrices[i]?.price?.value
+            }
+          }
+          if(this.createdPrices[i].priceType=='recurring'){
+            priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriodType;
+            priceToCreate.recurringChargePeriodLength=this.createdPrices[i].recurringChargePeriodLength;
+          }
+          if(this.createdPrices[i].priceType=='usage'){
+            priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
+          }
+          if(this.createdPrices[i].prodSpecCharValueUse){
+            priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse
+          }
+          this.api.postOfferingPrice(priceToCreate).subscribe({
+            next: data => {
+              console.log('precio')
+              console.log(data)
+              this.createdPrices[i].id=data.id;
+              if(i==this.createdPrices.length-1){
+                this.saveOfferInfo();
+              }            
+            },
+            error: error => {
+              console.error('There was an error while creating offers price!', error);
+              if(error.error.error){
+                console.log(error)
+                this.errorMessage='Error: '+error.error.error;
+              } else {
+                this.errorMessage='There was an error while creating offers price!';
+              }
+              this.showError=true;
+              setTimeout(() => {
+                this.showError = false;
+              }, 3000);
+            }
+          });
+        }
       }
     } else {
       this.createdPrices=[];
       this.saveOfferInfo();
     }
     console.log(this.offerToCreate)
-
   }
 
   saveOfferInfo(){

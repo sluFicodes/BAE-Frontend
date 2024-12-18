@@ -81,10 +81,66 @@ export interface ProductOfferingPrice_DTO {
         id?: string;
         href?: string;
         name?: string;
+        description?: string;
+        priceType?: string;
+        lifecycleStatus: string;
+        recurringChargePeriodLength?: number;
+        recurringChargePeriodType?: string;
         price?: {
           unit?: string;
           value?: number;
-        }
+        };
+        unitOfMeasure?: {
+          amount?: number;
+          units?: string;
+        };
+        popRelationship?: {
+          id?: string;
+          href?: string;
+          name?: string;
+          relationshipType?: string;
+          role?: string;
+          percentage?: number;
+          priceType?: string;
+          price?: {
+            unit?: string;
+            value?: number;
+          };
+          validFor?: {
+            endDateTime?: string;
+            startDateTime?: string;}
+        }[]
+        prodSpecCharValueUse?: [
+          {
+            id?: string;
+            description?: string;
+            maxCardinality?: number;
+            minCardinality?: number;
+            name?: string;
+            valueType?: string;
+            productSpecCharacteristicValue: {
+              isDefault?: boolean;
+              rangeInterval?: string;
+              regex?: string;
+              unitOfMeasure?: string;
+              valueFrom?: number;
+              valueTo?: number;
+              valueType?: string;
+              validFor?: {endDateTime:string; startDateTime:string};
+              value: any
+            }[]
+            productSpecification?: {
+              id: string;
+              href?: string;
+              name?: string;
+              version?: string;
+            }
+            validFor?: {
+              endDateTime?: string;
+              startDateTime?: string;
+            }
+          }
+        ]
     }[]
     constraint?: {
       id: string;
@@ -132,7 +188,7 @@ export interface ProductOfferingPrice_DTO {
           valueFrom?: number;
           valueTo?: number;
           valueType?: string;
-          validFor: {endDateTime:string; startDateTime:string};
+          validFor?: {endDateTime:string; startDateTime:string};
           value: any
         }[]
         productSpecification?: {

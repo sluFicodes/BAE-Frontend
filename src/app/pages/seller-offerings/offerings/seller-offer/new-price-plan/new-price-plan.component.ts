@@ -50,14 +50,15 @@ export class NewPricePlanComponent implements OnInit {
     name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     price: new FormControl('', [Validators.required]),
     description: new FormControl(''),
+    recurringPeriod: new FormControl(''),
     recurring: new FormControl(''),
     unit: new FormControl(''),
   });
   discountForm = new FormGroup({
-    amount: new FormControl(''),
+    amount: new FormControl('', [Validators.required,Validators.pattern("^[0-9]*$")]),
     percentage: new FormControl(''),
-    duration: new FormControl(''),
-    period: new FormControl(''),
+    duration: new FormControl('',[Validators.required]),
+    period: new FormControl('',[Validators.required]),
   });
   priceDescription:string='';
   priceComponentDescription:string='';
@@ -169,13 +170,15 @@ export class NewPricePlanComponent implements OnInit {
       pricecomponent.prodSpecCharValueUse = [{
         id: this.selectedCharacteristic.id,
         name: this.selectedCharacteristic.name,
-        productSpecCharacteristicValue: [this.selectedCharacteristicVal]
+        productSpecCharacteristicValue: [{value:this.selectedCharacteristicVal}]
       }]
     }
     if(this.recurringSelected){
       console.log('recurring')
       if(this.priceComponentForm.value.recurring)
-      pricecomponent.recurringChargePeriodType=this.priceComponentForm.value.recurring;
+      pricecomponent.recurringChargePeriodLength=Number(this.priceComponentForm.value.recurring);
+      if(this.priceComponentForm.value?.recurringPeriod)
+      pricecomponent.recurringChargePeriodType=this.priceComponentForm.value.recurringPeriod;
     }
     if(this.usageSelected){
       console.log('usage')
@@ -185,23 +188,25 @@ export class NewPricePlanComponent implements OnInit {
         units: this.priceComponentForm.value.unit
       }
     }
-    if(this.isDiscount && this.discountForm.value.amount){
+    if(this.isDiscount && this.discountForm.value.amount && this.discountForm.value.duration && this.discountForm.value.period){
       let discount:ProductOfferingPrice_DTO = {
         id: uuidv4(),
         name: 'discount',
         priceType: 'discount',
-        percentage: this.discountSelected ? parseFloat(this.discountForm.value.amount) : 0,
         validFor: {
           startDateTime: moment().toISOString(),
-          endDateTime:  moment().toISOString()
+          endDateTime: this.addToISOString(Number(this.discountForm.value.duration),this.discountForm.value.period)
         },
-        //recurringChargePeriod: this.discountForm.value.duration ? this.discountForm.value.duration : '',
       };
-      this.createdPriceAlterations.push(discount);
-      pricecomponent['popRelationship'] = [{
-        id: discount.id,
-        name: discount.name   
-      }]
+      if(this.discountSelected){
+        discount.percentage = parseFloat(this.discountForm.value.amount)
+      } else {
+        discount.price = {
+          unit: this.selectedPriceUnit,
+          value: parseFloat(this.discountForm.value.amount)
+        }
+      }
+      pricecomponent['popRelationship'] = [discount];
     }
     this.createdPriceComponents.push(pricecomponent)
     this.showPriceComponents=!this.showPriceComponents;
@@ -212,6 +217,25 @@ export class NewPricePlanComponent implements OnInit {
     this.selectedCharacteristic=undefined;
     this.showValueSelect=false;
     this.discountForm.reset();
+  }
+
+  addToISOString(duration: number, unit: string): string {
+    // Mapping between custom units and Moment.js valid units
+    const unitMapping: { [key: string]: moment.unitOfTime.DurationConstructor } = {
+      daily: 'days',
+      weekly: 'weeks',
+      monthly: 'months',
+      yearly: 'years',
+    };
+  
+    // Validate the unit and map to Moment.js DurationConstructor
+    const validUnit = unitMapping[unit.toLowerCase()];
+    
+    if (validUnit) {
+      return moment().add(duration, validUnit).toISOString();
+    } else {
+      throw new Error(`Invalid unit: ${unit}. Must be one of daily, weekly, monthly, or yearly.`);
+    }
   }
 
   changePriceProfileCharValue(char:any,event:any){
@@ -375,6 +399,7 @@ export class NewPricePlanComponent implements OnInit {
             priceToCreate.price = this.createdPriceComponents[0].price
             if(this.createdPriceComponents[0].priceType=='recurring'){
               priceToCreate.recurringChargePeriodType=this.createdPriceComponents[0].recurringChargePeriodType;
+              priceToCreate.recurringChargePeriodLength=this.createdPriceComponents[0].recurringChargePeriodLength;
             }
             if(this.createdPriceComponents[0].priceType=='usage'){
                 priceToCreate.unitOfMeasure=this.createdPriceComponents[0].unitOfMeasure
@@ -393,7 +418,9 @@ export class NewPricePlanComponent implements OnInit {
           priceToCreate.priceType='custom';
         }
         this.eventMessage.emitSavePricePlan(priceToCreate);
+        console.log(priceToCreate);
       }
+      
     this.clearPriceFormInfo();
   }
 
