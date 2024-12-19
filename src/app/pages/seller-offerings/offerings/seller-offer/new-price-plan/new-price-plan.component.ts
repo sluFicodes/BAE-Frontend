@@ -119,6 +119,8 @@ export class NewPricePlanComponent implements OnInit {
   }
 
   ngOnInit() {    
+    console.log('selected----')
+    console.log(this.selectedProdSpec)
     this.initPartyInfo();
     this.checkPriceInfo();
     setTimeout(() => {        
