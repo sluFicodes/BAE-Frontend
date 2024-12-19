@@ -41,7 +41,8 @@ export class UpdateProductSpecComponent implements OnInit {
   PROD_SPEC_LIMIT: number = environment.PROD_SPEC_LIMIT;
   SERV_SPEC_LIMIT: number = environment.SERV_SPEC_LIMIT;
   RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
-  DOME_TRUST_LINK: string = environment.DOME_TRUST_LINK
+  DOME_TRUST_LINK: string = environment.DOME_TRUST_LINK;
+  BUNDLE_ENABLED: boolean= environment.BUNDLE_ENABLED;
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
@@ -160,7 +161,7 @@ export class UpdateProductSpecComponent implements OnInit {
   toValue: string = '';
   rangeUnit: string = '';
 
-  filenameRegex = /^[A-Za-z_.-]+$/;
+  filenameRegex = /^[A-Za-z0-9_.-]+$/;
 
   constructor(
     private router: Router,
@@ -253,10 +254,15 @@ export class UpdateProductSpecComponent implements OnInit {
           // Decode the token
           try {
             const decoded = jwtDecode(this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue[0].value)
+            let credential: any = null
 
             if ('verifiableCredential' in decoded) {
-              const credential: any = decoded.verifiableCredential;
+              credential = decoded.verifiableCredential;
+            } else if('vc' in decoded) {
+              credential = decoded.vc;
+            }
 
+            if (credential != null) {
               const subject = credential.credentialSubject;
 
               if ('compliance' in subject) {

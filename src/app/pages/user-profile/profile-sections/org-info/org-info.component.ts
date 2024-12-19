@@ -67,7 +67,7 @@ export class OrgInfoComponent {
   imgPreview:any='';
   attFileName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9 _.-]*')]);
   attImageName = new FormControl('', [Validators.required, Validators.pattern('^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp)$')])
-  filenameRegex = /^[A-Za-z_.-]+$/;
+  filenameRegex = /^[A-Za-z0-9_.-]+$/;
 
   @ViewChild('imgURL') imgURL!: ElementRef;
 

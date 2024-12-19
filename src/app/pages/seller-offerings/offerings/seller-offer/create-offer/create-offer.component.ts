@@ -37,6 +37,7 @@ export class CreateOfferComponent implements OnInit {
   PROD_SPEC_LIMIT: number = environment.PROD_SPEC_LIMIT;
   PRODUCT_LIMIT: number = environment.PRODUCT_LIMIT;
   CATALOG_LIMIT: number= environment.CATALOG_LIMIT;
+  BUNDLE_ENABLED: boolean= environment.BUNDLE_ENABLED;
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;

@@ -202,12 +202,16 @@ export class ProductDetailsComponent implements OnInit {
             })
           }
         }
-        if(this.prodSpec.productSpecCharacteristic != undefined){
-          this.prodSpec.productSpecCharacteristic.forEach((char: any) => {
-            this.prodChars.push(char);
-          });
+
+        if(this.prodSpec.productSpecCharacteristic != undefined) {
+          // Avoid displaying the compliance credential
+          this.prodChars = this.prodSpec.productSpecCharacteristic.filter((char: any) => {
+            return char.name != 'Compliance:VC'
+          })
+
           console.log('-- prod spec')
           console.log(this.prodSpec.productSpecCharacteristic)
+
           for(let i=0; i<certifications.length; i++){
             if(certifications[i].domesupported==true){
               this.complianceProf.push(certifications[i])
@@ -281,10 +285,15 @@ export class ProductDetailsComponent implements OnInit {
           if (vcProf) {
             const vcToken: any = vcProf.productSpecCharacteristicValue?.at(0)?.value
             const decoded = jwtDecode(vcToken)
+            let credential: any = null
 
             if ('verifiableCredential' in decoded) {
-              const credential: any = decoded.verifiableCredential;
+              credential = decoded.verifiableCredential;
+            } else if('vc' in decoded) {
+              credential = decoded.vc;
+            }
 
+            if (credential != null) {
               const subject = credential.credentialSubject;
 
               if ('compliance' in subject) {
