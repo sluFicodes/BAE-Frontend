@@ -215,10 +215,19 @@ export class UpdatePricePlanComponent implements OnInit {
       priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : 'one time'
     }
     if(this.selectedCharacteristic!=undefined){
+      let charVal:any={value:this.selectedCharacteristicVal}
+      const charIdx = this.selectedCharacteristic.productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (this.selectedCharacteristicVal).toString());
+      if(charIdx!=-1){
+        if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[charIdx]){
+          charVal={value:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].value,unitOfMeasure:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].unitOfMeasure}
+        }else{
+          charVal={value:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].value}
+        }
+      }
       pricecomponent.prodSpecCharValueUse = [{
         id: this.selectedCharacteristic.id,
         name: this.selectedCharacteristic.name,
-        productSpecCharacteristicValue: [{value:this.selectedCharacteristicVal}]
+        productSpecCharacteristicValue: [charVal]
       }]
     }
     if(this.recurringSelected){
