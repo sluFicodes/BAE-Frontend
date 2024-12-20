@@ -231,10 +231,10 @@ export class NewPricePlanComponent implements OnInit {
   addToISOString(duration: number, unit: string): string {
     // Mapping between custom units and Moment.js valid units
     const unitMapping: { [key: string]: moment.unitOfTime.DurationConstructor } = {
-      daily: 'days',
-      weekly: 'weeks',
-      monthly: 'months',
-      yearly: 'years',
+      day: 'days',
+      week: 'weeks',
+      month: 'months',
+      year: 'years',
     };
   
     // Validate the unit and map to Moment.js DurationConstructor
@@ -243,7 +243,7 @@ export class NewPricePlanComponent implements OnInit {
     if (validUnit) {
       return moment().add(duration, validUnit).toISOString();
     } else {
-      throw new Error(`Invalid unit: ${unit}. Must be one of daily, weekly, monthly, or yearly.`);
+      throw new Error(`Invalid unit: ${unit}. Must be one of day, week, month, or year.`);
     }
   }
 

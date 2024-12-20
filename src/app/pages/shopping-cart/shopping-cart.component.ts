@@ -237,36 +237,24 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
           "id": this.items[i].id,
           "action": "add",
           "state": "acknowledged",
+          "itemTotalPrice":[
+            {
+               "productOfferingPrice": {
+                  "id": this.items[i].options.pricing?.id,
+                  "href": this.items[i].options.pricing?.href,
+              }
+            }
+         ],
           "productOffering": {
               "id": this.items[i].id,
               "href": this.items[i].id
           },
           "product": {
-            "productCharacteristic": char,
-            "productPrice": [
-              {
-                  "description": this.items[i].options.pricing?.description,
-                  "name": this.items[i].options.pricing?.name,
-                  "price": {
-                      "taxIncludedAmount": {
-                          "value": this.items[i].options.pricing?.price?.value,
-                          "unit": this.items[i].options.pricing?.price?.unit
-                      },
-                      "taxRate": this.TAX_RATE
-                  },
-                  "priceType": this.items[i].options.pricing?.priceType,
-                  "recurringChargePeriod": this.items[i].options.pricing?.recurringChargePeriodType != undefined ? this.items[i].options.pricing?.recurringChargePeriodType : '',
-                  "unitOfMeasure": this.items[i].options.pricing?.unitOfMeasure != undefined ? this.items[i].options.pricing?.unitOfMeasure?.units : '',
-                  "id": this.items[i].options.pricing?.id,
-                  "productOfferingPrice": {
-                      "id": this.items[i].options.pricing?.id,
-                      "href": this.items[i].options.pricing?.href,
-                  }
-              }
-            ]
+            "productCharacteristic": char
         }
       })
     }
+
     let productOrder = {
       "state": "acknowledged",
       "productOrderItem": products,
