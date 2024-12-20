@@ -955,6 +955,9 @@ export class CreateOfferComponent implements OnInit {
               lifecycleStatus: this.createdPrices[i].lifecycleStatus,
               bundledPopRelationship: compRel
             }
+            if(this.createdPrices[i].prodSpecCharValueUse){
+              priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse
+            }
             try{
               let pricePlanCreated = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
               console.log('precio')

@@ -309,7 +309,7 @@ export class UpdatePricePlanComponent implements OnInit {
   changeRangeProfileValue(char:any,event:any){
     const index = this.createdPriceProfile.findIndex((item: { id: any; }) => item.id === char.id);
     //Set range value
-    this.createdPriceProfile[index].productSpecCharacteristicValue[0].value=event.target.value;
+    this.createdPriceProfile[index].productSpecCharacteristicValue[0].value=Number(event.target.value);
     console.log(this.createdPriceProfile[index]) 
   }
 
