@@ -184,8 +184,6 @@ export class OrgInfoComponent {
     }
     
     let profile = {
-      "id": this.partyId,
-      "href": this.partyId,
       "tradingName": this.profileForm.value.name,
       "contactMedium": mediums,
       "partyCharacteristic": chars
