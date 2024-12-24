@@ -83,6 +83,7 @@ import { FaqComponent } from './offerings/faq/faq.component';
 import { NewPricePlanComponent } from './pages/seller-offerings/offerings/seller-offer/new-price-plan/new-price-plan.component';
 import { UpdatePricePlanComponent } from './pages/seller-offerings/offerings/seller-offer/update-price-plan/update-price-plan.component';
 import { MultipleSelectComponent } from './shared/multiple-select/multiple-select.component';
+import {CharacteristicComponent} from "./shared/characteristic/characteristic.component";
 
 @NgModule({
   declarations: [
@@ -149,33 +150,34 @@ import { MultipleSelectComponent } from './shared/multiple-select/multiple-selec
     UpdatePricePlanComponent,
     MultipleSelectComponent
   ],
-  imports: [
-    BrowserModule,
-    FontAwesomeModule,
-    SharedModule,
-    AppRoutingModule,
-    NgOptimizedImage,
-    FaIconComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    PickerComponent,
-    NgxFileDropModule,
-    ChatbotWidgetComponent,
-    MarkdownModule.forRoot(),
-    TranslateModule.forRoot({
-      defaultLanguage: 'en',
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    CategoriesPanelComponent,
-    MatomoModule.forRoot({
-      mode: MatomoInitializationMode.AUTO_DEFERRED
-    }),
-    MatomoRouterModule
-  ],
+    imports: [
+        BrowserModule,
+        FontAwesomeModule,
+        SharedModule,
+        AppRoutingModule,
+        NgOptimizedImage,
+        FaIconComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        PickerComponent,
+        NgxFileDropModule,
+        ChatbotWidgetComponent,
+        MarkdownModule.forRoot(),
+        TranslateModule.forRoot({
+            defaultLanguage: 'en',
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        CategoriesPanelComponent,
+        MatomoModule.forRoot({
+            mode: MatomoInitializationMode.AUTO_DEFERRED
+        }),
+        MatomoRouterModule,
+        CharacteristicComponent
+    ],
   providers: [
     AppInitService,
     {

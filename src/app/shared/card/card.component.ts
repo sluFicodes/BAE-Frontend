@@ -72,6 +72,11 @@ export class CardComponent implements OnInit, AfterViewInit {
   showError:boolean=false;
   orgInfo:any=undefined;
 
+  selectedPricePlanId: string | null = null;
+  selectedPricePlan:any = null;
+
+
+
   constructor(
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
@@ -92,7 +97,7 @@ export class CardComponent implements OnInit, AfterViewInit {
           if(ev.value!=undefined){
             this.lastAddedProd=ev.value;
             this.toastVisibility=true;
-    
+
             this.cdr.detectChanges();
             //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
             let element = document.getElementById("progress-bar")
@@ -106,7 +111,7 @@ export class CardComponent implements OnInit, AfterViewInit {
               }, 3500);
             }
           }
-  
+
           this.cdr.detectChanges();
         }
       })
@@ -155,7 +160,7 @@ export class CardComponent implements OnInit, AfterViewInit {
     } else {
       this.categories = this.productOff?.category;
       this.checkMoreCats=false;
-    }    
+    }
     //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
     //  this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
     let profile = this.productOff?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
@@ -415,8 +420,6 @@ export class CardComponent implements OnInit, AfterViewInit {
       } else {
         this.selected_price=this.productOff?.productOfferingPrice[0]
       }
-
-      this.cdr.detectChanges();
     }
 
     if(this.productOff?.productOfferingTerm != undefined){
@@ -426,7 +429,17 @@ export class CardComponent implements OnInit, AfterViewInit {
         this.check_terms=true;
       }
     }
+    this.prepareOffData();
 
+    if (this.check_prices==false && this.check_char == false && this.check_terms == false){
+      this.addProductToCart(this.productOff,false);
+    } else {
+      this.cartSelection=true;
+      this.cdr.detectChanges();
+    }
+  }
+
+  prepareOffData() {
     if(this.prodSpec.productSpecCharacteristic != undefined){
       for(let i=0; i<this.prodSpec.productSpecCharacteristic.length; i++){
         let charvalue = this.prodSpec.productSpecCharacteristic[i].productSpecCharacteristicValue;
@@ -438,21 +451,15 @@ export class CardComponent implements OnInit, AfterViewInit {
             if(charvalue[j]?.isDefault == true){
               this.selected_chars.push(
                 {
-                "characteristic": this.prodSpec.productSpecCharacteristic[i],
-                "value": charvalue[j]
-              });
+                  "characteristic": this.prodSpec.productSpecCharacteristic[i],
+                  "value": charvalue[j]
+                });
             }
           }
         }
       }
+      console.log('Calculando characteristics...')
       console.log(this.selected_chars)
-    }
-
-    if (this.check_prices==false && this.check_char == false && this.check_terms == false){
-      this.addProductToCart(this.productOff,false);
-    } else {
-      this.cartSelection=true;      
-      this.cdr.detectChanges();
     }
   }
 
@@ -504,4 +511,16 @@ export class CardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  onPricePlanSelected(pricePlan:any) {
+    console.log(pricePlan.id);
+    this.selectedPricePlanId = pricePlan.id;
+    this.selectedPricePlan = pricePlan;
+  }
+
+  onValueChange(event: { characteristicId: string; selectedValue: any }): void {
+    //this.form.get(event.characteristicId)?.setValue(event.selectedValue);
+    console.log('Selected Value:', event);
+  }
+
+  protected readonly JSON = JSON;
 }
