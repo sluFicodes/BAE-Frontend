@@ -388,6 +388,7 @@ export class NewPricePlanComponent implements OnInit {
         this.partyId = loggedOrg.partyId
       }
     }
+    initFlowbite();
   }
 
   savePrice(){
@@ -425,8 +426,10 @@ export class NewPricePlanComponent implements OnInit {
           }          
           this.createdPriceComponents=[];
           this.createdPriceAlterations=[];
+          initFlowbite();
         } else {
           priceToCreate.priceType='custom';
+          initFlowbite();
         }
         this.eventMessage.emitSavePricePlan(priceToCreate);
         console.log(priceToCreate);
