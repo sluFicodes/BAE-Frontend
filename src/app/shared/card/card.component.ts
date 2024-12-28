@@ -35,6 +35,8 @@ import { environment } from 'src/environments/environment';
 export class CardComponent implements OnInit, AfterViewInit {
 
   @Input() productOff: Product | undefined;
+  @Input() cardId: number;
+
   category: string = 'none';
   categories: any[] | undefined  = [];
   categoriesMore: any[] | undefined  = [];
@@ -237,6 +239,8 @@ export class CardComponent implements OnInit, AfterViewInit {
       "text": result.text
     }
 
+    this.prepareOffData();
+
     this.cdr.detectChanges();
   }
 
@@ -429,7 +433,7 @@ export class CardComponent implements OnInit, AfterViewInit {
         this.check_terms=true;
       }
     }
-    this.prepareOffData();
+    //this.prepareOffData();
 
     if (this.check_prices==false && this.check_char == false && this.check_terms == false){
       this.addProductToCart(this.productOff,false);
@@ -520,6 +524,16 @@ export class CardComponent implements OnInit, AfterViewInit {
   onValueChange(event: { characteristicId: string; selectedValue: any }): void {
     //this.form.get(event.characteristicId)?.setValue(event.selectedValue);
     console.log('Selected Value:', event);
+  }
+
+  isDrawerOpen = false;
+  openDrawer(): void {
+    if(this.showModal) this.showModal = false;
+    this.isDrawerOpen = true;
+  }
+
+  closeDrawer(): void {
+    this.isDrawerOpen = false;
   }
 
   protected readonly JSON = JSON;

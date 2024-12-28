@@ -109,7 +109,7 @@ export class ProductDetailsComponent implements OnInit {
         if(ev.value!=undefined){
           this.lastAddedProd=ev.value;
           this.toastVisibility=true;
-  
+
           this.cdr.detectChanges();
           //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
           let element = document.getElementById("progress-bar")
@@ -129,14 +129,14 @@ export class ProductDetailsComponent implements OnInit {
     })
   }
 
-  @HostListener('window:scroll', ['$event']) 
+  @HostListener('window:scroll', ['$event'])
   updateTabs(event:any) {
     let tabs_container = document.getElementById('tabs-container');
     let tabsOffset = 0;
     if(tabs_container){
       tabsOffset=tabs_container.offsetHeight
     }
-    let details_container = document.getElementById('details-container')    
+    let details_container = document.getElementById('details-container')
     let chars_container = document.getElementById('chars-container')
     let attach_container = document.getElementById('attach-container')
     let agreements_container = document.getElementById('agreements-container')
@@ -180,7 +180,7 @@ export class ProductDetailsComponent implements OnInit {
     window.scrollTo(0, 0);
     this.id = this.route.snapshot.paramMap.get('id');
     console.log('--- Details ID:')
-    console.log(this.id)    
+    console.log(this.id)
     this.api.getProductById(this.id).then(prod => {
       console.log('prod')
       console.log(prod)
@@ -243,7 +243,7 @@ export class ProductDetailsComponent implements OnInit {
             })
           }
         }
-        
+
         console.log('serv specs')
         console.log(this.serviceSpecs)
         this.productOff={
@@ -400,7 +400,7 @@ export class ProductDetailsComponent implements OnInit {
     if (this.check_prices==false && this.check_char == false && this.check_terms == false){
       this.addProductToCart(this.productOff,false);
     } else {
-      this.cartSelection=true;      
+      this.cartSelection=true;
       this.cdr.detectChanges();
     }
   }
@@ -527,7 +527,7 @@ export class ProductDetailsComponent implements OnInit {
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
-  }  
+  }
 
   hideCartSelection(){
     this.cartSelection=false;
@@ -679,7 +679,7 @@ export class ProductDetailsComponent implements OnInit {
       document?.getElementById('terms-markdown')?.classList.add('line-clamp-5')
     }
     this.showTermsMore=!this.showTermsMore;
-    
+
   }
 
   goToLink(url: any){
@@ -704,6 +704,15 @@ export class ProductDetailsComponent implements OnInit {
   goToOrgDetails(id:any) {
     //document.querySelector("body > div[modal-backdrop]")?.remove()
     this.router.navigate(['/org-details', id]);
+  }
+
+  isDrawerOpen = false;
+  openDrawer(): void {
+    this.isDrawerOpen = true;
+  }
+
+  closeDrawer(): void {
+    this.isDrawerOpen = false;
   }
 
 }

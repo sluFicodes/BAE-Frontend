@@ -84,6 +84,7 @@ import { NewPricePlanComponent } from './pages/seller-offerings/offerings/seller
 import { UpdatePricePlanComponent } from './pages/seller-offerings/offerings/seller-offer/update-price-plan/update-price-plan.component';
 import { MultipleSelectComponent } from './shared/multiple-select/multiple-select.component';
 import {CharacteristicComponent} from "./shared/characteristic/characteristic.component";
+import {PricePlanDrawerComponent} from "./shared/price-plan-drawer/price-plan-drawer.component";
 
 @NgModule({
   declarations: [
@@ -176,7 +177,8 @@ import {CharacteristicComponent} from "./shared/characteristic/characteristic.co
             mode: MatomoInitializationMode.AUTO_DEFERRED
         }),
         MatomoRouterModule,
-        CharacteristicComponent
+        CharacteristicComponent,
+        PricePlanDrawerComponent
     ],
   providers: [
     AppInitService,
