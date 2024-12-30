@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import {components} from "../models/product-catalog";
 import {TYPES} from "../models/types.const"
+import {delay, Observable, of} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import { v4 as uuidv4 } from 'uuid';
+
 type ProductOffering = components["schemas"]["ProductOffering"];
 
 @Injectable({
@@ -8,7 +12,7 @@ type ProductOffering = components["schemas"]["ProductOffering"];
 })
 export class PriceServiceService {
 
-  constructor() { }
+  constructor(private http: HttpClient) {}
 
   formatCheapestPricePlan(prod:ProductOffering|undefined) {
     var result = {},
@@ -26,7 +30,7 @@ export class PriceServiceService {
           return result
         } else if (prod.productOfferingPrice.length > 0){
           pricePlans = prod.productOfferingPrice.filter(p => p.priceType === TYPES.PRICE.ONE_TIME);
-  
+
           if (pricePlans.length > 0) {
             //One time price plans
               for (var i = 0; i < pricePlans.length; i++) {
@@ -56,7 +60,7 @@ export class PriceServiceService {
                 'priceType': pricePlans[0]?.priceType,
                 'price': pricePlans[0]?.price?.value,
                 'unit': pricePlans[0]?.price?.unit,
-                'text': pricePlans[0]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? pricePlans[0]?.recurringChargePeriodType : pricePlans[0]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ '+ pricePlans[0]?.unitOfMeasure?.units : ''         
+                'text': pricePlans[0]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? pricePlans[0]?.recurringChargePeriodType : pricePlans[0]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ '+ pricePlans[0]?.unitOfMeasure?.units : ''
               }
           }
         } else {
@@ -65,7 +69,7 @@ export class PriceServiceService {
             'price': 0,
             'unit': '',
             'text': ''
-          }        
+          }
         }
       }
     }
@@ -80,10 +84,23 @@ export class PriceServiceService {
           'priceType': prod.productOfferingPrice[i]?.priceType,
           'price': prod.productOfferingPrice[i]?.price?.value,
           'unit': prod.productOfferingPrice[i]?.price?.unit,
-          'text': prod.productOfferingPrice[i]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? prod.productOfferingPrice[i]?.recurringChargePeriodType : prod.productOfferingPrice[i]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ '+ prod.productOfferingPrice[i]?.unitOfMeasure?.units : ''         
+          'text': prod.productOfferingPrice[i]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.RECURRING ? prod.productOfferingPrice[i]?.recurringChargePeriodType : prod.productOfferingPrice[i]?.priceType?.toLocaleLowerCase() == TYPES.PRICE.USAGE ? '/ '+ prod.productOfferingPrice[i]?.unitOfMeasure?.units : ''
         })
       }
     }
     return result;
+  }
+
+  calculatePrice(pricePlan: any, characteristics: any) {
+    console.log('Simulating HTTP call with payload:', { pricePlan, characteristics });
+
+    // Devuelve un JSON tras 1 segundo
+    const mockResponse = {
+      'Upfront Fee': 100,
+      'Monthly Fee': 20,
+      'Weekly Fee': 5,
+      'Single Payment': 50,
+    };
+    return of(mockResponse).pipe(delay(1000));
   }
 }

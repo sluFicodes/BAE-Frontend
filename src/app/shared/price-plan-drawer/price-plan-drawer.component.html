@@ -14,7 +14,9 @@
      [ngClass]="width"
      tabindex="-1"
      aria-labelledby="drawer-add-to-cart-label">
-  <div class="flex-1 p-4 overflow-y-auto">
+
+  <!-- Scrollable content -->
+  <form [formGroup]="form" class="flex-1 p-4 overflow-y-auto">
     <h5 id="drawer-right-label" class="inline-flex items-center mb-4 text-base font-semibold text-primary-100 dark:text-gray-400"><svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
       <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
     </svg>Adding {{productOff?.name}} to cart</h5>
@@ -26,13 +28,14 @@
       </svg>
       <span class="sr-only">Close menu</span>
     </button>
+
     <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">In order to add <b>{{productOff?.name}}</b> to your cart you have to select the price model and the set of characteristics you prefer.</p>
     <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">Please, firstly select the price plan:</p>
     @for (pp of productOff?.productOfferingPrice; track pp.id){
       <div class="price-plan flex flex-col rounded-lg border border-dashed border-primary-100 bg-white p-2 m-2 gap-1 cursor-pointer hover:bg-sky-50 transition-all duration-200"
            [ngClass]="{
-                  'border-primary-100 border': pp.id !== selectedPricePlanId,
-                   'border-transparent outline outline-2 outline-teal-500 bg-teal-50': pp.id === selectedPricePlanId
+                  'border-primary-100 border': pp.id !== form.get('selectedPricePlan')?.value,
+                   'border-transparent outline outline-2 outline-teal-500 bg-teal-50': pp.id === form.get('selectedPricePlan')?.value
             }"
            (click)="onPricePlanSelected(pp)">
         <div class="text-base font-semibold text-primary-100 dark:text-gray-400 flex justify-between content-center">
@@ -47,30 +50,79 @@
       <div>No plan prices currently available</div>
     }
 
-    @if (selectedPricePlan) {
-      @if (selectedPricePlan.prodSpecCharValueUse) {
+    @if (form.get('selectedPricePlan')?.value) {
+      @if (hasProfile) {
         <p class="mt-6 text-sm text-gray-500 dark:text-gray-400">This price plan has an associate profile. That means that the following characteristics are already set for you.</p>
         <div class="rounded-lg border border-dashed border-primary-100 bg-white p-2 m-2 dark:bg-gray-800">
-          @for (ch of selectedPricePlan.prodSpecCharValueUse ; track ch.id) {
+          @for (ch of characteristics ; track ch.id) {
             <app-characteristic [characteristic]="ch" [readOnly]="true" (valueChange)="onValueChange($event)"></app-characteristic>
           }
         </div>
       } @else {
         <p class="mt-6 text-sm text-gray-500 dark:text-gray-400">Please select the characteristics you need to suit this offer to you.</p>
         <div class="rounded-lg border border-dashed border-primary-100 bg-white p-2 m-2 dark:bg-gray-800">
-          @for (ch of prodSpec.productSpecCharacteristic ; track ch.id) {
+          @for (ch of characteristics ; track ch.id) {
             <app-characteristic [characteristic]="ch" [readOnly]="false" (valueChange)="onValueChange($event)"></app-characteristic>
           }
         </div>
       }
     }
-  </div>
-  <div class="mt-auto p-4 w-full grid grid-cols-1 gap-4 bg-primary-100 text-primary-50">
-    <div>
+    @if (form.get('selectedPricePlan')?.value && form.get('characteristics')?.valid) {
+      <div class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+        <markdown class="text-gray-500 dark:text-gray-400 text-wrap break-all" [data]="tsAndCs.description"></markdown>
+        <div class="flex items-center">
+          <input type="checkbox" id="tsAccepted" class="mr-2" formControlName="tsAccepted">
+          <label for="tsAccepted" class="text-sm">I accept the terms and conditions</label>
+        </div>
+      </div>
+    }
+  </form>
 
-    </div>
-    <a href="#" class="flex items-center justify-center gap-x-2 px-4 py-2 text-sm font-medium text-center text-white bg-green-400 hover:bg-green-500 rounded-lg focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Add to cart <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-    </svg></a>
+
+  <div class="mt-auto p-4 w-full grid grid-cols-1 gap-4 bg-primary-100 text-white overflow-hidden transition-all duration-300 ease-in-out">
+    @if (isLoading) {
+      <div role="status">
+        <svg
+          aria-hidden="true"
+          class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08163 50.5908C9.08163 74.0305 26.5603 91.5092 50 91.5092C73.4397 91.5092 90.9184 74.0305 90.9184 50.5908C90.9184 27.1511 73.4397 9.67243 50 9.67243C26.5603 9.67243 9.08163 27.1511 9.08163 50.5908Z"
+            fill="currentColor"
+          />
+          <path
+            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5531C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7236 75.2124 7.41289C69.5422 4.10218 63.2754 1.94025 56.7226 1.0519C51.7666 0.367443 46.7392 0.44645 41.8357 1.27873C39.367 1.69499 37.845 4.19778 38.4821 6.62326C39.1192 9.04873 41.5723 10.4813 44.0609 10.1066C47.851 9.53687 51.7191 9.47254 55.5402 10.0039C60.864 10.7506 65.9921 12.6349 70.6331 15.5398C75.274 18.4447 79.3324 22.3039 82.5849 26.8796C85.1253 30.4771 87.1292 34.4217 88.5286 38.585C89.2857 40.9124 91.5428 41.8781 93.9676 41.0409Z"
+            fill="currentFill"
+          />
+        </svg>
+        <span class="sr-only">Loading price...</span>
+      </div>
+    } @else if (price) {
+      <div class="text-sm text-white dark:text-primary-100">
+        @for (key of objectKeys(price); track key) {
+          <div class="flex justify-between mb-2">
+            <span class="font-medium capitalize">{{ key }}:</span>
+            <span class="font-bold">{{ price[key] | currency:'EUR' }}</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <p class="text-sm text-white dark:text-gray-400">Please, select a price plan and see its price</p>
+    }
+    <button
+      type="button"
+      [disabled]="!isFormValid()"
+      [class.opacity-50]="!isFormValid()"
+      [class.cursor-not-allowed]="!isFormValid()"
+      (click)="createOrder()"
+      class="flex items-center justify-center gap-x-2 px-4 py-2 text-sm font-medium text-center text-white bg-green-400 hover:bg-green-500 rounded-lg focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+      Add to cart
+      <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+      </svg>
+    </button>
   </div>
 </div>
