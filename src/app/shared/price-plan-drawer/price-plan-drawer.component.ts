@@ -34,18 +34,14 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
 
-  selectedPricePlanId: string | null = null;
   selectedPricePlan:any = null;
   isLoading = false; // Loading prices or not
   price: Record<string, number> | null = null; // Object with multiple types of prices (MOCK)
   tsAndCs: ProductOfferingTerm;
   hasProfile: boolean = false;
+  isCustom: boolean = false;
 
   characteristics: ProductSpecificationCharacteristic[] = []; // Características dinámicas
-
-  // Validation flags
-  isPricePlanSelected: boolean = false;
-  areCharacteristicsSelected: boolean = false;
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscape(event: KeyboardEvent): void {
@@ -85,9 +81,10 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
 
   // Handle price plan selection
   onPricePlanSelected(pricePlan: any): void {
-    this.form.get('selectedPricePlan')?.setValue(pricePlan.id);
+    this.form.get('selectedPricePlan')?.setValue(pricePlan);
 
-    // Determinar características basadas en el price plan seleccionado
+    // Set chars based on selected price plan
+    this.isCustom = pricePlan.priceType === 'custom';
     if (pricePlan.prodSpecCharValueUse) {
       this.characteristics = pricePlan.prodSpecCharValueUse;
       this.hasProfile = true;
@@ -163,7 +160,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     const formValues = this.form.value;
     const orderPayload = {
       productId: this.productOff?.id,
-      pricePlanId: formValues.selectedPricePlan,
+      pricePlan: formValues.selectedPricePlan,
       characteristics: formValues.characteristics,
       tsAccepted: formValues.tsAccepted,
       priceSummary: this.price

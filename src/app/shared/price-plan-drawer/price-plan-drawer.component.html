@@ -100,6 +100,10 @@
         </svg>
         <span class="sr-only">Loading price...</span>
       </div>
+    } @else if (isCustom){
+      <div class="text-sm text-white dark:text-primary-100">
+        <p>This offer includes a custom price plan. This implies that the service price plan has been created externally to the DOME Marketplace and is entirely determined by the service provider. The final price will be calculated after the product order is submitted to the service provider.</p>
+      </div>
     } @else if (price) {
       <div class="text-sm text-white dark:text-primary-100">
         @for (key of objectKeys(price); track key) {
@@ -110,7 +114,7 @@
         }
       </div>
     } @else {
-      <p class="text-sm text-white dark:text-gray-400">Please, select a price plan and see its price</p>
+      <p class="text-sm text-white dark:text-gray-400">Please, select a price plan to get its price</p>
     }
     <button
       type="button"
