@@ -91,6 +91,8 @@ export class CartDrawerComponent implements OnInit{
 
   getPrice(item: any) {
     if(item.options.pricing != undefined){
+      console.log('PRECIO----')
+      console.log(item.options.pricing)
       if(item.options.pricing.priceType=='custom'){
         this.check_custom=true;
         return null
@@ -107,7 +109,15 @@ export class CartDrawerComponent implements OnInit{
     }
   }
 
-  getTotalPrice() {
+  get objectKeys() {
+    return Object.keys;
+  }
+
+  getPricingValue(pricing: Record<string, any>, key: string): any {
+    return pricing[key];
+  }
+
+  /*getTotalPrice() {
     this.totalPrice = [];
     let insertCheck = false;
     this.check_custom=false;
@@ -143,6 +153,42 @@ export class CartDrawerComponent implements OnInit{
         }
       }
     }
+    console.log(this.totalPrice)
+  }*/
+
+  getTotalPrice() {
+    this.totalPrice = [];
+    let insertCheck = false;
+    this.check_custom=false;
+    this.cdr.detectChanges();
+    let priceInfo: any = {
+      'Upfront Fee': 0,
+      'Monthly Fee': 0,
+      'Weekly Fee': 0,
+      'Single Payment': 0,
+    };
+    for (let i = 0; i < this.items.length; i++) {
+      let price = this.items[i].options.pricing
+      if(price != undefined){
+        if('Upfront Fee' in price){ 
+          priceInfo['Upfront Fee']=priceInfo['Upfront Fee']+price['Upfront Fee']
+        }
+        if('Monthly Fee' in price){ 
+          priceInfo['Monthly Fee']=priceInfo['Monthly Fee']+price['Monthly Fee']
+        }
+        if('Weekly Fee' in price){ 
+          priceInfo['Weekly Fee']=priceInfo['Weekly Fee']+price['Weekly Fee']
+        }
+        if('Single Payment' in price){ 
+          priceInfo['Single Payment']=priceInfo['Single Payment']+price['Single Payment']
+        }
+        if('Custom' in price){
+          this.check_custom=true;
+        }
+        //this.totalPrice.push(priceInfo);
+      }
+    }
+    this.totalPrice.push(priceInfo);
     console.log(this.totalPrice)
   }
 

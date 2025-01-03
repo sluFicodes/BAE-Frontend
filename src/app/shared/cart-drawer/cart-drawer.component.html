@@ -1,6 +1,6 @@
 
 <!-- drawer component -->
-<div id="cart-drawer" (click)="$event.stopPropagation();"  class="h-full" tabindex="-1" aria-labelledby="cart-drawer-label" aria-hidden="true">
+<div id="cart-drawer" (click)="$event.stopPropagation();"  class="h-full flex flex-col" tabindex="-1" aria-labelledby="cart-drawer-label" aria-hidden="true">
    <fa-icon class="mr-2 text-gray-500 dark:text-gray-400" [icon]="faCartShopping"></fa-icon>
    <h3 id="cart-drawer-label" class="inline-flex items-center text-base font-semibold text-gray-500 dark:text-gray-400 text-xl" aria-hidden="true">
       {{ 'CART_DRAWER._title' | translate }}
@@ -13,28 +13,35 @@
       <span class="sr-only">{{ 'CART_DRAWER._close' | translate }}</span>
    </button>
 
-   <div class="h-3/4 grid grid-flow-row auto-rows-max overflow-y-auto  p-2">
+   <div class="flex-1 w-full grid grid-flow-row auto-rows-max overflow-y-auto p-2">
       @if(items.length > 0){
          @for (item of items; track item) {
-            <div class="flex justify-between w-full mt-2 mb-2 rounded-lg bg-secondary-50/95 dark:bg-gray-700 dark:border-gray-800 border-secondary-50 border">
-               <button type="button" (click)="deleteProduct(item)" class="flex p-2 box-decoration-clone">
-                  @if (item.image) {
-                     <img class="rounded-t-lg w-fit h-[100px]" src="{{item.image}}" alt="">
-                  } @else {
-                     <img class="rounded-t-lg w-fit h-[100px]" src="https://placehold.co/600x400/svg" alt="">
-                  }
-               </button>
-               <div class="p-2 flex items-center w-2/3">
-                  <p class="text-lg text-gray-700 dark:text-gray-400 text-wrap break-all">{{item.name}}</p>
-               </div>               
-               <div class="p-2 flex items-center">
-                  @if (item.options.pricing) {
-                     <div class="flex place-content-center flex-col">
-                        <span class="text-3xl font-bold text-gray-900 dark:text-primary-50 mr-3">{{getPrice(item)?.price}} {{getPrice(item)?.unit}}</span>
-                        <span class="text-xs dark:text-primary-50">{{getPrice(item)?.text}}</span>
-                      </div>
-                  }
+            <div class="flex mt-2 mb-2 rounded-lg bg-secondary-50/95 dark:bg-gray-700 dark:border-gray-800 border-secondary-50 border">
+               <div class="flex flex-col">
+                  <div class="flex justify-between w-full">
+                     <button type="button" (click)="deleteProduct(item)" class="flex p-2 box-decoration-clone">
+                        @if (item.image) {
+                           <img class="rounded-t-lg w-fit h-[100px]" src="{{item.image}}" alt="">
+                        } @else {
+                           <img class="rounded-t-lg w-fit h-[100px]" src="https://placehold.co/600x400/svg" alt="">
+                        }
+                     </button>
+                     <div class="p-2 flex items-center w-2/3">
+                        <p class="text-lg text-gray-700 dark:text-gray-400 text-wrap break-all">{{item.name}}</p>
+                     </div>
+                  </div>              
+                  <div class="p-2 flex items-center flex-row">
+                        @if (item.options.pricing) {
+                        @for (key of objectKeys(item.options.pricing); track key) {
+                           <div  class="flex place-content-center flex-col">
+                             <span class="font-bold text-gray-900 dark:text-primary-50 mr-3">{{ key }}:</span>
+                             <span class="text-xs dark:text-primary-50">{{ getPricingValue(item.options.pricing, key) | currency:'EUR' }}</span>
+                           </div>
+                         }
+                        }
+                  </div>
                </div>
+               
                <div class="p-2 flex items-center">
                   <button type="button" (click)="deleteProduct(item)" class="h-fit text-blue-700 hover:bg-gray-300 hover:text-white focus:ring-4 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:text-blue-500 dark:hover:text-white dark:hover:bg-gray-600">
                      <svg class="w-[12px] h-[12px] text-gray-700 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -51,28 +58,37 @@
       }
 
    </div>
-   
-   <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
-   <div class="flex block">
-      <p class="flex float-left w-1/2 ml-2 text-sm text-gray-500 dark:text-gray-400">{{ 'CART_DRAWER._subtotal' | translate }}:</p>
+
+   <div class="mt-auto p-4 w-full grid grid-cols-1 gap-4 overflow-y-hidden">
       <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
-         <div class="flex grid grid-cols-1 grid-flow-row w-1/2">
-            @for (price of totalPrice; track price) {
-               <p class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{price.price}} {{price.unit}} {{price.text}}</p>
-            } @empty {
-               @if(check_custom){
-                  <span class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{ 'SHOPPING_CART._calculated' | translate }}</span>
-                } @else {
-                  <span class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{ 'SHOPPING_CART._free' | translate }}</span>
-                } 
-            }
-         </div>
-   </div>  
-   
-   <button (click)="goToShoppingCart();"  type="button" class="mt-2 w-full flex items-center justify-start text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-      <svg class="rtl:rotate-180 w-3.5 h-3.5 mr-2 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+      <p class="flex float-left w-1/2 text-sm text-gray-500 dark:text-gray-400">{{ 'CART_DRAWER._subtotal' | translate }}:</p>
+      <div class="text-sm">
+         @for (price of totalPrice; track price) {
+            <!--<p class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{price.price}} {{price.unit}} {{price.text}}</p>-->
+            @if (price) {
+               @for (key of objectKeys(price); track key) {
+           <div class="flex justify-between mb-2 text-gray-900 dark:text-primary-50">
+             <span class="font-medium capitalize">{{ key }}:</span>
+             <span class="font-bold">{{ getPricingValue(price, key) | currency:'EUR' }}</span>
+           </div>
+         }
+      }
+   } @empty {
+      @if(check_custom){
+         <span class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{ 'SHOPPING_CART._calculated' | translate }}</span>
+         } @else {
+         <span class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{ 'SHOPPING_CART._free' | translate }}</span>
+         } 
+   }
+       </div>
+
+   <button (click)="goToShoppingCart();"  type="button" 
+   class="flex sticky w-full items-center justify-center gap-x-2 px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+   <svg class="rtl:rotate-180 w-3.5 h-3.5 mr-2 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
       </svg>
       {{ 'CART_DRAWER._purchase' | translate }}
     </button>
+
+   </div>
 </div>

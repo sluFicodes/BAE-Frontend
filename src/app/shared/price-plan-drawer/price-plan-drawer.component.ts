@@ -5,10 +5,14 @@ import {components} from "../../models/product-catalog";
 import {CurrencyPipe, NgClass} from "@angular/common";
 import {PriceServiceService} from "../../services/price-service.service";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
+import {EventMessageService} from "../../services/event-message.service";
+import { cartProduct } from 'src/app/models/interfaces';
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type ProductOfferingTerm = components["schemas"]["ProductOfferingTerm"];
-type ProductSpecificationCharacteristic = components["schemas"]["ProductSpecificationCharacteristic"]
+type ProductSpecificationCharacteristic = components["schemas"]["ProductSpecificationCharacteristic"];
+type AttachmentRefOrValue = components["schemas"]["AttachmentRefOrValue"];
 
 
 @Component({
@@ -40,6 +44,8 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   tsAndCs: ProductOfferingTerm;
   hasProfile: boolean = false;
   isCustom: boolean = false;
+  images: AttachmentRefOrValue[]  = [];
+  toastVisibility: boolean = false;
 
   characteristics: ProductSpecificationCharacteristic[] = []; // Características dinámicas
 
@@ -50,7 +56,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     }
   }
 
-  constructor(private fb: FormBuilder, private priceService: PriceServiceService) {
+  constructor(private fb: FormBuilder, private priceService: PriceServiceService,private cartService: ShoppingCartServiceService,private eventMessage: EventMessageService,) {
     // Crear el formulario padre
     this.form = this.fb.group({
       selectedPricePlan: [null, Validators.required], // Plan de precios seleccionado
@@ -66,6 +72,14 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
 
     // Configurar los términos y condiciones
     this.tsAndCs = this.productOff?.productOfferingTerm?.[0] || { description: '' };
+    let profile = this.productOff?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
+    console.log('profile...')
+    console.log(profile)
+    if(profile.length==0){
+      this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
+    } else {
+      this.images = profile;
+    }
   }
 
   ngOnDestroy(): void {
@@ -151,7 +165,11 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     });
   }
 
-  createOrder(): void {
+  getProductImage() {
+    return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
+  }
+
+  async createOrder() { 
     if (this.form.invalid) {
       console.error('Form is invalid');
       return;
@@ -165,6 +183,29 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
       tsAccepted: formValues.tsAccepted,
       priceSummary: this.price
     };
+
+    let prodOptions = {
+      "id": this.productOff?.id,
+      "name":  this.productOff?.name,
+      "image": this.getProductImage(),
+      "href": this.productOff?.href,
+      "options": {
+        "characteristics": formValues.characteristics,
+        "pricing": this.price
+      },
+      "termsAccepted": formValues.tsAccepted
+    }
+
+    await this.cartService.addItemShoppingCart(prodOptions).subscribe({
+      next: data => {
+          console.log(data)
+          console.log('Update successful');
+      },
+      error: error => {
+          console.error('There was an error while updating!', error);
+      }
+    });
+    this.eventMessage.emitAddedCartItem(this.productOff as cartProduct);
 
     console.log('Order Payload:', orderPayload);
     this.onClose();
