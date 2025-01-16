@@ -146,13 +146,15 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   get objectKeys() {
     return Object.keys;
   }
+  hasKey(obj: any, key: string): boolean {
+    return key in obj;
+  }
   // Método para calcular el precio usando el servicio
   calculatePrice(): void {
     const selectedPricePlan = this.form.get('selectedPricePlan')?.value;
     const selectedCharacteristics = this.form.get('characteristics')?.value;
 
     //PROD is an OrderItem
-
     let prod = {
       "id": this.productOff?.id,
       "action": "add",

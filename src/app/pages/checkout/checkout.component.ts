@@ -77,6 +77,10 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
+  hasKey(obj: any, key: string): boolean {
+    return key in obj;
+  }
+
   getPrice(item: any) {
     if(item.options.pricing != undefined){
       if(item.options.pricing.priceType=='custom'){

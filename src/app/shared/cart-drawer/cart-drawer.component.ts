@@ -156,17 +156,15 @@ export class CartDrawerComponent implements OnInit{
     console.log(this.totalPrice)
   }*/
 
+  hasKey(obj: any, key: string): boolean {
+    return key in obj;
+  }
+
   getTotalPrice() {
     this.totalPrice = [];
     let insertCheck = false;
     this.check_custom=false;
     this.cdr.detectChanges();
-    let priceInfo: any = {
-      'priceType': '',
-      'price': 0,
-      'unit': '',
-      'text': ''
-    };
     for (let i = 0; i < this.items.length; i++) {
       let price = this.items[i].options.pricing
       console.log(this.items[i].options.pricing)
