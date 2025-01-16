@@ -3,6 +3,7 @@ import {components} from "../models/product-catalog";
 import {TYPES} from "../models/types.const"
 import {delay, Observable, of} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import { lastValueFrom, map } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
 type ProductOffering = components["schemas"]["ProductOffering"];
@@ -91,16 +92,22 @@ export class PriceServiceService {
     return result;
   }
 
-  calculatePrice(pricePlan: any, characteristics: any) {
-    console.log('Simulating HTTP call with payload:', { pricePlan, characteristics });
+  calculatePrice(prod: any) {
+    console.log('Simulating HTTP call with payload:', prod);
+    let url = `http://localhost:8181/price/order/`;
+    return this.http.post<any>(url,prod);
 
     // Devuelve un JSON tras 1 segundo
-    const mockResponse = {
-      'Upfront Fee': 100,
-      'Monthly Fee': 20,
-      'Weekly Fee': 5,
-      'Single Payment': 50,
-    };
+    const mockResponse = [
+      { 'priceType': 'One Time',
+        'price': 1500,
+        'unit': 'Euro',
+        'text': 'One Time Price 1500 Euro'},
+      { 'priceType': 'Usage',
+        'price': 1,
+        'unit': 'Euro',
+        'text': 'Usage Price 1 Euro per test'},
+    ];
     return of(mockResponse).pipe(delay(1000));
   }
 }

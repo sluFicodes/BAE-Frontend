@@ -8,6 +8,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
 import {EventMessageService} from "../../services/event-message.service";
 import { cartProduct } from 'src/app/models/interfaces';
+import { v4 as uuidv4 } from 'uuid';
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type ProductOfferingTerm = components["schemas"]["ProductOfferingTerm"];
@@ -40,7 +41,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
 
   selectedPricePlan:any = null;
   isLoading = false; // Loading prices or not
-  price: Record<string, number> | null = null; // Object with multiple types of prices (MOCK)
+  price: any[] = []; // Object with multiple types of prices (MOCK)
   tsAndCs: ProductOfferingTerm;
   hasProfile: boolean = false;
   isCustom: boolean = false;
@@ -150,11 +151,44 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     const selectedPricePlan = this.form.get('selectedPricePlan')?.value;
     const selectedCharacteristics = this.form.get('characteristics')?.value;
 
+    //PROD is an OrderItem
+
+    let prod = {
+      "id": this.productOff?.id,
+      "action": "add",
+      "productOffering": {
+        "id": this.productOff?.id,
+        "href": this.productOff?.id
+      },
+      "itemTotalPrice": [{
+        "productOfferingPrice": [{
+          "id": selectedPricePlan.id,
+          "href": selectedPricePlan.href
+        }]
+      }],
+      "product": {
+        "productCharacteristic": selectedCharacteristics
+      }
+    }
+    let orderItems = [];
+    orderItems.push(prod);
+
+    let prodOrder = {
+      "id": uuidv4(),
+      "productOrderItem":orderItems
+    }
+
     if (!selectedPricePlan) return;
 
+    console.log('--- prod ---')
+    console.log(prod)
+    console.log('--- prod ---')
+
     this.isLoading = true;
-    this.priceService.calculatePrice(selectedPricePlan, selectedCharacteristics).subscribe({
+    this.priceService.calculatePrice(prodOrder).subscribe({
       next: (response) => {
+        console.log('calculate price...')
+        console.log(response)
         this.price = response; // Updates the price
         this.isLoading = false; // Hides spinner
       },
@@ -205,7 +239,8 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
           console.error('There was an error while updating!', error);
       }
     });
-    this.eventMessage.emitAddedCartItem(this.productOff as cartProduct);
+    prodOptions.options.pricing=this.price
+    this.eventMessage.emitAddedCartItem(prodOptions as cartProduct);
 
     console.log('Order Payload:', orderPayload);
     this.onClose();

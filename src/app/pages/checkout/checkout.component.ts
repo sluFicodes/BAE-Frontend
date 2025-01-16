@@ -28,7 +28,7 @@ export class CheckoutComponent implements OnInit {
   public static BASE_URL: String = environment.BASE_URL;
   PURCHASE_ENABLED: boolean = environment.PURCHASE_ENABLED;
   TAX_RATE: number = environment.TAX_RATE;
-  items: cartProduct[] = [];
+  items: any[] = [];
   totalPrice: any;
   showBackDrop: boolean = true;
   billingAddresses: billingAccountCart[] = [];

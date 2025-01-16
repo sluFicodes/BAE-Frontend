@@ -17,7 +17,7 @@
       @if(items.length > 0){
          @for (item of items; track item) {
             <div class="flex mt-2 mb-2 rounded-lg bg-secondary-50/95 dark:bg-gray-700 dark:border-gray-800 border-secondary-50 border">
-               <div class="flex flex-col">
+               <div class="flex flex-col w-full">
                   <div class="flex justify-between w-full">
                      <button type="button" (click)="deleteProduct(item)" class="flex p-2 box-decoration-clone">
                         @if (item.image) {
@@ -27,19 +27,21 @@
                         }
                      </button>
                      <div class="p-2 flex items-center w-2/3">
-                        <p class="text-lg text-gray-700 dark:text-gray-400 text-wrap break-all">{{item.name}}</p>
+                        <p class="text-lg text-gray-700 dark:text-gray-400 line-clamp-4 text-wrap break-all">{{item.name}}</p>
                      </div>
-                  </div>              
+                  </div> 
                   <div class="p-2 flex items-center flex-row">
-                        @if (item.options.pricing) {
-                        @for (key of objectKeys(item.options.pricing); track key) {
-                           <div  class="flex place-content-center flex-col">
-                             <span class="font-bold text-gray-900 dark:text-primary-50 mr-3">{{ key }}:</span>
-                             <span class="text-xs dark:text-primary-50">{{ getPricingValue(item.options.pricing, key) | currency:'EUR' }}</span>
+                     @if (item.options.pricing) {
+                        <div class="items-center text-sm text-white">
+                           @for (price of item.options.pricing; track price) {
+                              <div class="flex place-content-center flex-col">
+                                 <span class="font-bold text-gray-900 dark:text-primary-50 mr-3">{{ price['priceType'] }}:</span>
+                                 <span class="text-xs text-gray-900 dark:text-primary-50">{{ price['text'] }}</span>
+                              </div>
+                           }
                            </div>
-                         }
-                        }
-                  </div>
+                     }
+                     </div>
                </div>
                
                <div class="p-2 flex items-center">
@@ -60,27 +62,6 @@
    </div>
 
    <div class="mt-auto p-4 w-full grid grid-cols-1 gap-4 overflow-y-hidden">
-      <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
-      <p class="flex float-left w-1/2 text-sm text-gray-500 dark:text-gray-400">{{ 'CART_DRAWER._subtotal' | translate }}:</p>
-      <div class="text-sm">
-         @for (price of totalPrice; track price) {
-            <!--<p class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{price.price}} {{price.unit}} {{price.text}}</p>-->
-            @if (price) {
-               @for (key of objectKeys(price); track key) {
-           <div class="flex justify-between mb-2 text-gray-900 dark:text-primary-50">
-             <span class="font-medium capitalize">{{ key }}:</span>
-             <span class="font-bold">{{ getPricingValue(price, key) | currency:'EUR' }}</span>
-           </div>
-         }
-      }
-   } @empty {
-      @if(check_custom){
-         <span class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{ 'SHOPPING_CART._calculated' | translate }}</span>
-         } @else {
-         <span class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-400">{{ 'SHOPPING_CART._free' | translate }}</span>
-         } 
-   }
-       </div>
 
    <button (click)="goToShoppingCart();"  type="button" 
    class="flex sticky w-full items-center justify-center gap-x-2 px-4 py-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">

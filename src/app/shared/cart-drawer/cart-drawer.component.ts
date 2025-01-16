@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 })
 export class CartDrawerComponent implements OnInit{
   protected readonly faCartShopping = faCartShopping;
-  items: cartProduct[] = [];
+  items: any[] = [];
   totalPrice:any;
   showBackDrop:boolean=true;
   check_custom:boolean=false;
@@ -162,33 +162,20 @@ export class CartDrawerComponent implements OnInit{
     this.check_custom=false;
     this.cdr.detectChanges();
     let priceInfo: any = {
-      'Upfront Fee': 0,
-      'Monthly Fee': 0,
-      'Weekly Fee': 0,
-      'Single Payment': 0,
+      'priceType': '',
+      'price': 0,
+      'unit': '',
+      'text': ''
     };
     for (let i = 0; i < this.items.length; i++) {
       let price = this.items[i].options.pricing
+      console.log(this.items[i].options.pricing)
       if(price != undefined){
-        if('Upfront Fee' in price){ 
-          priceInfo['Upfront Fee']=priceInfo['Upfront Fee']+price['Upfront Fee']
-        }
-        if('Monthly Fee' in price){ 
-          priceInfo['Monthly Fee']=priceInfo['Monthly Fee']+price['Monthly Fee']
-        }
-        if('Weekly Fee' in price){ 
-          priceInfo['Weekly Fee']=priceInfo['Weekly Fee']+price['Weekly Fee']
-        }
-        if('Single Payment' in price){ 
-          priceInfo['Single Payment']=priceInfo['Single Payment']+price['Single Payment']
-        }
-        if('Custom' in price){
-          this.check_custom=true;
-        }
+        this.totalPrice=price;
         //this.totalPrice.push(priceInfo);
       }
     }
-    this.totalPrice.push(priceInfo);
+    //this.totalPrice.push(priceInfo);
     console.log(this.totalPrice)
   }
 

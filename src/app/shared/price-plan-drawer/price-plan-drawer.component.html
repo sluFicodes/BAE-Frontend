@@ -17,7 +17,7 @@
 
   <!-- Scrollable content -->
   <form [formGroup]="form" class="flex-1 p-4 overflow-y-auto">
-    <h5 id="drawer-right-label" class="inline-flex items-center mb-4 text-base font-semibold text-primary-100 dark:text-gray-400"><svg class="w-4 h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+    <h5 id="drawer-right-label" class="inline-flex items-center text-wrap break-all mb-4 text-base font-semibold text-primary-100 dark:text-gray-400"><svg class="w-4 h-4 me-2.5 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
       <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
     </svg>Adding {{productOff?.name}} to cart</h5>
     <button type="button"
@@ -29,12 +29,12 @@
       <span class="sr-only">Close menu</span>
     </button>
 
-    <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">In order to add <b>{{productOff?.name}}</b> to your cart you have to select the price model and the set of characteristics you prefer.</p>
-    <p class="mb-6 text-sm text-gray-500 dark:text-gray-400">Please, firstly select the price plan:</p>
+    <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 text-wrap break-all">In order to add <b>{{productOff?.name}}</b> to your cart you have to select the price model and the set of characteristics you prefer.</p>
+    <p class="mb-6 text-sm text-gray-500 dark:text-gray-400 text-wrap break-all">Please, firstly select the price plan:</p>
     @for (pp of productOff?.productOfferingPrice; track pp.id){
       <div class="price-plan flex flex-col rounded-lg border border-dashed border-primary-100 bg-white dark:bg-gray-800 p-2 m-2 gap-1 cursor-pointer hover:bg-sky-50 transition-all duration-200"
            [ngClass]="{
-                  'border-primary-100 border': pp.id !== form.get('selectedPricePlan')?.value,
+                  'border-primary-100 text-wrap break-all border': pp.id !== form.get('selectedPricePlan')?.value,
                    'border-transparent outline outline-2 outline-teal-500 bg-teal-50': pp.id === form.get('selectedPricePlan')?.value
             }"
            (click)="onPricePlanSelected(pp)">
@@ -106,10 +106,10 @@
       </div>
     } @else if (price) {
       <div class="text-sm text-white">
-        @for (key of objectKeys(price); track key) {
+        @for (item of price; track item) {
           <div class="flex justify-between mb-2">
-            <span class="font-medium capitalize">{{ key }}:</span>
-            <span class="font-bold">{{ price[key] | currency:'EUR' }}</span>
+            <span class="font-medium capitalize">{{ item['priceType'] }}:</span>
+            <span class="font-bold">{{ item['text'] }}</span>
           </div>
         }
       </div>
