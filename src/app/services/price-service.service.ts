@@ -94,19 +94,28 @@ export class PriceServiceService {
 
   calculatePrice(prod: any) {
     console.log('Simulating HTTP call with payload:', prod);
-    let url = `http://localhost:8181/price/order/`;
-    return this.http.post<any>(url,prod);
+    //let url = `http://localhost:8181/price/order/`;
+    //return this.http.post<any>(url,prod);
 
     // Devuelve un JSON tras 1 segundo
     const mockResponse = [
+      { 'priceType': 'Recurring',
+        'price': {
+          'dutyFreeAmount': {
+            'unit': 'Euro',
+            'value': '500'
+          }
+        },
+        'recurringChargePeriod': 'MONTH'
+      },
       { 'priceType': 'One Time',
-        'price': 1500,
-        'unit': 'Euro',
-        'text': 'One Time Price 1500 Euro'},
-      { 'priceType': 'Usage',
-        'price': 1,
-        'unit': 'Euro',
-        'text': 'Usage Price 1 Euro per test'},
+        'price': {
+          'dutyFreeAmount': {
+            'unit': 'Euro',
+            'value': '30000'
+          }
+        },
+      },
     ];
     return of(mockResponse).pipe(delay(1000));
   }
