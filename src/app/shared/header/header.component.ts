@@ -10,7 +10,8 @@ import {
   faAnglesLeft,
   faUser,
   faUsers,
-  faCogs
+  faCogs,
+  faReceipt
 } from "@fortawesome/sharp-solid-svg-icons";
 import {LocalStorageService} from "../../services/local-storage.service";
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -399,4 +400,5 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   protected readonly faUser = faUser;
   protected  readonly faUsers = faUsers;
   protected readonly faCogs = faCogs;
+  protected readonly faReceipt = faReceipt;
 }

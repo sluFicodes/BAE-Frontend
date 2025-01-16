@@ -160,6 +160,9 @@
               <button (click)="goTo('/profile')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faAddressCard" class="mr-2"></fa-icon>{{ 'HEADER._profile' | translate }}</button>
             </li>
           }
+          <li>
+            <button (click)="goTo('/product-orders')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faReceipt" class="mr-2"></fa-icon>{{ 'HEADER._orders' | translate }}</button>
+          </li>
           @if(roles.includes('seller')){
             <li>
               <button (click)="goTo('/my-offerings')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faHandHoldingBox" class="mr-2"></fa-icon>{{ 'HEADER._offerings' | translate }}</button>
