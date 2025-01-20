@@ -47,6 +47,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   isCustom: boolean = false;
   images: AttachmentRefOrValue[]  = [];
   toastVisibility: boolean = false;
+  orderChars:any[]=[];
 
   characteristics: ProductSpecificationCharacteristic[] = []; // Características dinámicas
 
@@ -165,12 +166,14 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     console.log(this.characteristics)
     console.log('keys of selected chars...')
     console.log(this.getKeys(selectedCharacteristics))
-    let orderChars=[];
+    this.orderChars=[];
     for(let i=0; i<this.getKeys(selectedCharacteristics).length;i++){
       let idx = this.characteristics.findIndex(item => item.id === this.getKeys(selectedCharacteristics)[i]);
-      orderChars.push({
+      console.log(this.characteristics[idx])
+      this.orderChars.push({
         "name": this.characteristics[idx].name,
-        "value": this.getValues(selectedCharacteristics)[i]
+        "value": this.getValues(selectedCharacteristics)[i],
+        "valueType": this.characteristics[idx].valueType,
       })
     }
 
@@ -191,7 +194,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
         }
       }],
       "product": {
-        "productCharacteristic": orderChars
+        "productCharacteristic": this.orderChars
       }
     }
     let orderItems = [];
@@ -214,6 +217,10 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
         console.log('calculate price...')
         console.log(response.orderTotalPrice)
         this.price = response.orderTotalPrice; // Updates the price
+        this.price = this.price.map((item) => ({
+          ...item, 
+          id: this.selectedPricePlan.id, //Adds price plan id to the price info
+        }));
         this.isLoading = false; // Hides spinner
       },
       error: () => {
@@ -237,7 +244,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     const orderPayload = {
       productId: this.productOff?.id,
       pricePlan: formValues.selectedPricePlan,
-      characteristics: formValues.characteristics,
+      characteristics: this.orderChars,
       tsAccepted: formValues.tsAccepted,
       priceSummary: this.price
     };
@@ -248,7 +255,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
       "image": this.getProductImage(),
       "href": this.productOff?.href,
       "options": {
-        "characteristics": formValues.characteristics,
+        "characteristics": this.orderChars,
         "pricing": this.price
       },
       "termsAccepted": formValues.tsAccepted

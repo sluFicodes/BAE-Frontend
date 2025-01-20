@@ -101,7 +101,7 @@ export class PriceServiceService {
     return this.http.post<any>(url,prod);
 
     // Devuelve un JSON tras 1 segundo
-    const mockResponse = [
+    const mockResponse = { orderTotalPrice: [
       { 'priceType': 'Recurring',
         'price': {
           'dutyFreeAmount': {
@@ -119,7 +119,7 @@ export class PriceServiceService {
           }
         },
       },
-    ];
+    ]};
     return of(mockResponse).pipe(delay(1000));
   }
 }

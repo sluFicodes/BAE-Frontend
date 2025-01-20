@@ -148,44 +148,39 @@ export class CheckoutComponent implements OnInit {
     this.loading_purchase=true;
     let products = []
     for(let i = 0; i<this.items.length; i++){
-      let char = [];
-      let opChars = this.items[i].options.characteristics
-      if(opChars != undefined){
-        for(let j = 0; j< opChars.length; j++){
-          char.push({
-            "name": opChars[j].characteristic.name,
-            "value": opChars[j].value?.value,
-            "valueType": opChars[j].characteristic.valueType
-          })
-        }
-      }
-      let productPrice:any = []
+
+      console.log('ITEMS PRICING....')
+      console.log(this.items[i].options.pricing)
+
       if(this.items[i].options.pricing != undefined){
-        if(this.items[i].options?.pricing?.priceType != 'custom'){
-          productPrice = [
+        products.push({
+          "id": this.items[i].id,
+          "action": "add",
+          "productOffering": {
+            "id": this.items[i].id,
+            "href": this.items[i].id
+          },
+          //Setting pricing position to 0 as we're assuming we're always selecting the same price plan on the price simulation
+          "itemTotalPrice": [
             {
               "productOfferingPrice": {
-                "id": this.items[i].options.pricing?.id,
-                "href": this.items[i].options.pricing?.href,
+                "id": this.items[i].options.pricing[0].id,
+                "href": this.items[i].options.pricing[0].id,
               }
             }
-          ]
-        }
+          ],
+          "product": {
+            "productCharacteristic": this.items[i].options.characteristics
+          }
+        })
+        this.cdr.detectChanges();
       }
       
-      products.push({
-        "id": this.items[i].id,
-        "action": "add",
-        "productOffering": {
-          "id": this.items[i].id,
-          "href": this.items[i].id
-        },
-        "itemTotalPrice": productPrice,
-        "product": {
-          "productCharacteristic": char
-        }
-      })
+
     }
+    this.cdr.detectChanges();
+    console.log('productos creados....')
+    console.log(products)
 
     console.log(this.selectedBillingAddress.id)
     let productOrder = {
