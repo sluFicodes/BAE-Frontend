@@ -5,6 +5,7 @@ import {delay, Observable, of} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import { lastValueFrom, map } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
+import { environment } from 'src/environments/environment';
 
 type ProductOffering = components["schemas"]["ProductOffering"];
 
@@ -12,6 +13,7 @@ type ProductOffering = components["schemas"]["ProductOffering"];
   providedIn: 'root'
 })
 export class PriceServiceService {
+  public static BASE_URL: String = environment.BASE_URL;
 
   constructor(private http: HttpClient) {}
 
@@ -94,7 +96,8 @@ export class PriceServiceService {
 
   calculatePrice(prod: any) {
     console.log('Simulating HTTP call with payload:', prod);
-    let url = `http://localhost:8099/price/order/`;
+    let url = `${PriceServiceService.BASE_URL}/billing/order/`;
+
     return this.http.post<any>(url,prod);
 
     // Devuelve un JSON tras 1 segundo

@@ -212,8 +212,8 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     this.priceService.calculatePrice(prodOrder).subscribe({
       next: (response) => {
         console.log('calculate price...')
-        console.log(response)
-        this.price = response; // Updates the price
+        console.log(response.orderTotalPrice)
+        this.price = response.orderTotalPrice; // Updates the price
         this.isLoading = false; // Hides spinner
       },
       error: () => {
