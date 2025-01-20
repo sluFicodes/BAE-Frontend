@@ -149,27 +149,49 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   hasKey(obj: any, key: string): boolean {
     return key in obj;
   }
+  getKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+  getValues(obj: any): any[] {
+    return Object.values(obj);
+  }
   // Método para calcular el precio usando el servicio
   calculatePrice(): void {
     const selectedPricePlan = this.form.get('selectedPricePlan')?.value;
     const selectedCharacteristics = this.form.get('characteristics')?.value;
+    console.log('chars....')
+    console.log(selectedCharacteristics)
+    console.log('general chars...')
+    console.log(this.characteristics)
+    console.log('keys of selected chars...')
+    console.log(this.getKeys(selectedCharacteristics))
+    let orderChars=[];
+    for(let i=0; i<this.getKeys(selectedCharacteristics).length;i++){
+      let idx = this.characteristics.findIndex(item => item.id === this.getKeys(selectedCharacteristics)[i]);
+      orderChars.push({
+        "name": this.characteristics[idx].name,
+        "value": this.getValues(selectedCharacteristics)[i]
+      })
+    }
 
     //PROD is an OrderItem
     let prod = {
       "id": this.productOff?.id,
       "action": "add",
+      "quantity": "1",
       "productOffering": {
         "id": this.productOff?.id,
         "href": this.productOff?.id
       },
       "itemTotalPrice": [{
-        "productOfferingPrice": [{
+        "productOfferingPrice": {
           "id": selectedPricePlan.id,
-          "href": selectedPricePlan.href
-        }]
+          "href": selectedPricePlan.href,
+          "name": selectedPricePlan.name
+        }
       }],
       "product": {
-        "productCharacteristic": selectedCharacteristics
+        "productCharacteristic": orderChars
       }
     }
     let orderItems = [];
