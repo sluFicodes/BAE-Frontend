@@ -420,6 +420,16 @@ export class CreateProductSpecComponent implements OnInit {
                 }, 3000);
                 return;
               }
+              //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
+              if(file.size>3145728){
+                this.errorMessage='File size must be under 3MB.';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
               if(this.showCompliance){
                 const index = this.selectedISOS.findIndex(item => item.name === sel.name);
                 this.attachmentService.uploadFile(fileBody).subscribe({
