@@ -344,12 +344,14 @@ export class UpdateProductSpecComponent implements OnInit {
     if(this.prod.productSpecificationRelationship){
       for(let i=0; i< this.prod.productSpecificationRelationship.length; i++){
         this.prodSpecService.getResSpecById(this.prod.productSpecificationRelationship[i].id).then(data => {
+
           this.prodRelationships.push({
             id: this.prod.productSpecificationRelationship[i].id,
             href: this.prod.productSpecificationRelationship[i].id,
             //Que tipo de relacion le pongo? no viene en el prodspec
             relationshipType: this.selectedRelType,
-            productSpec: data    
+            name: this.prod.productSpecificationRelationship[i].name
+            //productSpec: data    
           });
         })
       }
@@ -1027,7 +1029,8 @@ export class UpdateProductSpecComponent implements OnInit {
       id: this.selectedProdSpec.id,
       href: this.selectedProdSpec.href,
       relationshipType: this.selectedRelType,
-      productSpec: this.selectedProdSpec      
+      name: this.selectedProdSpec.name
+      //productSpec: this.selectedProdSpec      
     });
     this.selectedRelType='migration';
     console.log(this.prodRelationships)
