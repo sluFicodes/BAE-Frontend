@@ -69,7 +69,10 @@
     }
     @if (form.get('selectedPricePlan')?.value && form.get('characteristics')?.valid) {
       <div class="mb-6 text-sm text-gray-500 dark:text-gray-400">
+        <h5 class="text-wrap break-all text-base font-semibold text-primary-100 dark:text-gray-400">Terms and conditions:</h5>
+        <div class="max-h-[300px] overflow-y-auto mb-2">
         <markdown class="text-gray-500 dark:text-gray-400 text-wrap break-all" [data]="tsAndCs.description"></markdown>
+        </div>
         <div class="flex items-center">
           <input type="checkbox" id="tsAccepted" class="mr-2" formControlName="tsAccepted">
           <label for="tsAccepted" class="text-sm">I accept the terms and conditions</label>
