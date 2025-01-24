@@ -39,6 +39,7 @@ export class CreateProductSpecComponent implements OnInit {
   SERV_SPEC_LIMIT: number = environment.SERV_SPEC_LIMIT;
   RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
   BUNDLE_ENABLED: boolean= environment.BUNDLE_ENABLED;
+  MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
@@ -421,7 +422,7 @@ export class CreateProductSpecComponent implements OnInit {
                 return;
               }
               //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
-              if(file.size>3145728){
+              if(file.size>this.MAX_FILE_SIZE){
                 this.errorMessage='File size must be under 3MB.';
                 console.error('There was an error while uploading file!');
                 this.showError=true;
