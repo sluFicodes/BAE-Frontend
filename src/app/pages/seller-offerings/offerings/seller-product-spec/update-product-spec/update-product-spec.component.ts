@@ -43,6 +43,7 @@ export class UpdateProductSpecComponent implements OnInit {
   RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
   DOME_TRUST_LINK: string = environment.DOME_TRUST_LINK;
   BUNDLE_ENABLED: boolean= environment.BUNDLE_ENABLED;
+  MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
@@ -344,12 +345,14 @@ export class UpdateProductSpecComponent implements OnInit {
     if(this.prod.productSpecificationRelationship){
       for(let i=0; i< this.prod.productSpecificationRelationship.length; i++){
         this.prodSpecService.getResSpecById(this.prod.productSpecificationRelationship[i].id).then(data => {
+
           this.prodRelationships.push({
             id: this.prod.productSpecificationRelationship[i].id,
             href: this.prod.productSpecificationRelationship[i].id,
             //Que tipo de relacion le pongo? no viene en el prodspec
             relationshipType: this.selectedRelType,
-            productSpec: data    
+            name: this.prod.productSpecificationRelationship[i].name
+            //productSpec: data    
           });
         })
       }
@@ -593,6 +596,16 @@ export class UpdateProductSpecComponent implements OnInit {
               }                            
               if(!this.isValidFilename(fileBody.content.name)){
                 this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
+              //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
+              if(file.size>this.MAX_FILE_SIZE){
+                this.errorMessage='File size must be under 3MB.';
                 console.error('There was an error while uploading file!');
                 this.showError=true;
                 setTimeout(() => {
@@ -1017,7 +1030,8 @@ export class UpdateProductSpecComponent implements OnInit {
       id: this.selectedProdSpec.id,
       href: this.selectedProdSpec.href,
       relationshipType: this.selectedRelType,
-      productSpec: this.selectedProdSpec      
+      name: this.selectedProdSpec.name
+      //productSpec: this.selectedProdSpec      
     });
     this.selectedRelType='migration';
     console.log(this.prodRelationships)

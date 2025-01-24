@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {parsePhoneNumber, getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
 import {AttachmentServiceService} from "src/app/services/attachment-service.service";
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { environment } from 'src/environments/environment';
 
 type OrganizationUpdate = components["schemas"]["Organization_Update"];
 
@@ -68,6 +69,7 @@ export class OrgInfoComponent {
   attFileName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9 _.-]*')]);
   attImageName = new FormControl('', [Validators.required, Validators.pattern('^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp)$')])
   filenameRegex = /^[A-Za-z0-9_.-]+$/;
+  MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
 
   @ViewChild('imgURL') imgURL!: ElementRef;
 
@@ -500,6 +502,16 @@ export class OrgInfoComponent {
               }
               if(!this.isValidFilename(fileBody.content.name)){
                 this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
+              //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
+              if(file.size>this.MAX_FILE_SIZE){
+                this.errorMessage='File size must be under 3MB.';
                 console.error('There was an error while uploading file!');
                 this.showError=true;
                 setTimeout(() => {
