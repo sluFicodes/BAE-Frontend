@@ -30,12 +30,14 @@ export class RefreshLoginServiceService {
       console.log('login subscription')
       console.log(data.expire - moment().unix())
       console.log(data.expire - moment().unix() <= 5)
-      console.log((data.expire - moment().unix())-5)
-      let aux =this.localStorage.getObject('login_items') as LoginInfo;
+      console.log((data.expire - moment().unix()) - 5)
+
+      let aux = this.localStorage.getObject('login_items') as LoginInfo;
+
       console.log('usuario antes')
       console.log(aux)
 
-      if(environment.SIOP_INFO.enabled == false){
+      //if(environment.SIOP_INFO.enabled == false){
         this.api.getLogin(aux['token']).then(refreshed => {
           this.stopInterval()
           this.localStorage.setObject('login_items',
@@ -50,10 +52,11 @@ export class RefreshLoginServiceService {
             "logged_as": aux['logged_as'] });
           console.log('usuario despues')
           console.log(this.localStorage.getObject('login_items') as LoginInfo)
+
           this.startInterval(((refreshed.expire - moment().unix())-4)*1000, refreshed)
           //this.startInterval(4000, refreshed)
         })
-    } else {
+    /*} else {
       this.stopInterval();
       this.localStorage.setObject('login_items',{});
       this.api.logout().catch((err) => {
@@ -68,7 +71,7 @@ export class RefreshLoginServiceService {
         console.log('Something happened router')
         console.log(err)
       })
-    }
+    }*/
     });
   }
 
