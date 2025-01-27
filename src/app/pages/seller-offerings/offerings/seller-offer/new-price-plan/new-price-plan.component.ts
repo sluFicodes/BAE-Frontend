@@ -69,7 +69,7 @@ export class NewPricePlanComponent implements OnInit {
   showPriceComponents:boolean=false;
   discountSelected:boolean=false;
 
-  selectedPriceUnit:any=currencies[0].code;
+  selectedPriceUnit:any=currencies[2].code;
 
   //PRICEPROFILE
   showProfile:boolean=false;
@@ -220,6 +220,8 @@ export class NewPricePlanComponent implements OnInit {
       pricecomponent['popRelationship'] = [discount];
     }
     this.createdPriceComponents.push(pricecomponent)
+    console.log('---PRICECOMP')
+    console.log(this.createdPriceComponents)
     this.showPriceComponents=!this.showPriceComponents;
     this.priceComponentForm.reset();
     if(this.selectedCharacteristic!=undefined){
@@ -441,7 +443,7 @@ export class NewPricePlanComponent implements OnInit {
   clearPriceFormInfo(){
     console.log('clear')
     this.oneTimeSelected=true;
-    this.selectedPriceUnit=currencies[0].code;
+    this.selectedPriceUnit=currencies[2].code;
     
     this.usageSelected=false;
     this.recurringSelected=false;

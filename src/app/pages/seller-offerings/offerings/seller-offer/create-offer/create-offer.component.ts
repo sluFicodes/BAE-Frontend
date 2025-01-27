@@ -150,7 +150,7 @@ export class CreateOfferComponent implements OnInit {
   customSelected:boolean=false;
 
   validPriceCheck:boolean=true;
-  selectedPriceUnit:any=currencies[0].code;
+  selectedPriceUnit:any=currencies[2].code;
   priceTypeAlter:any='ONE TIME';
   priceComponentSelected:boolean=false;
   discountSelected:boolean=false;

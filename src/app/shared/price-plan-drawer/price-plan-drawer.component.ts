@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ChangeDetectorRef} from '@angular/core';
 import {CharacteristicComponent} from "../characteristic/characteristic.component";
 import {MarkdownComponent} from "ngx-markdown";
 import {components} from "../../models/product-catalog";
@@ -58,7 +58,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     }
   }
 
-  constructor(private fb: FormBuilder, private priceService: PriceServiceService,private cartService: ShoppingCartServiceService,private eventMessage: EventMessageService,) {
+  constructor(private fb: FormBuilder, private priceService: PriceServiceService,private cartService: ShoppingCartServiceService,private eventMessage: EventMessageService,private cdr: ChangeDetectorRef,) {
     // Crear el formulario padre
     this.form = this.fb.group({
       selectedPricePlan: [null, Validators.required], // Plan de precios seleccionado
@@ -71,9 +71,13 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Escuchar eventos de teclado (por si necesitas otros)
     document.addEventListener('keydown', this.handleEscape.bind(this));
-
     // Configurar los términos y condiciones
     this.tsAndCs = this.productOff?.productOfferingTerm?.[0] || { description: '' };
+    if(this.tsAndCs.description==''){
+      this.form.controls['tsAccepted'].setValue(true);
+      this.cdr.detectChanges();
+    }
+    console.log(this.tsAndCs)
     let profile = this.productOff?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
     console.log('profile...')
     console.log(profile)
