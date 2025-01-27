@@ -31,7 +31,6 @@ export class RequestInterceptor implements HttpInterceptor {
                     },
                 });
                 if (request.url.startsWith(`${RequestInterceptor.BASE_URL}${RequestInterceptor.API_ORDERING}/productOrder`)) {
-                    console.log('hola interceptor')
                     modifiedRequest = request.clone({
                         setHeaders: {
                         'Authorization': 'Bearer '+aux.token,
@@ -48,7 +47,6 @@ export class RequestInterceptor implements HttpInterceptor {
                     },
                 });
                 if (request.url.startsWith(`${RequestInterceptor.BASE_URL}${RequestInterceptor.API_ORDERING}/productOrder`)) {
-                    console.log('hola interceptor')
                     modifiedRequest = request.clone({
                         setHeaders: {
                         'Authorization': 'Bearer '+aux.token,

@@ -67,7 +67,7 @@
         </div>
       }
     }
-    @if (form.get('selectedPricePlan')?.value && form.get('characteristics')?.valid) {
+    @if (form.get('selectedPricePlan')?.value && form.get('characteristics')?.valid && tsAndCs.description!='') {
       <div class="mb-6 text-sm text-gray-500 dark:text-gray-400">
         <h5 class="text-wrap break-all text-base font-semibold text-primary-100 dark:text-gray-400">Terms and conditions:</h5>
         <div class="max-h-[300px] overflow-y-auto mb-2">
