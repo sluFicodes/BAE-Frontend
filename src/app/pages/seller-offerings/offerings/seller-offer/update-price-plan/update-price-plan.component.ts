@@ -66,7 +66,7 @@ export class UpdatePricePlanComponent implements OnInit {
   showPriceComponents:boolean=false;
   discountSelected:boolean=false;
 
-  selectedPriceUnit:any=currencies[0].code;
+  selectedPriceUnit:any=currencies[2].code;
 
   //PRICEPROFILE
   showProfile:boolean=false;
@@ -482,7 +482,7 @@ export class UpdatePricePlanComponent implements OnInit {
   clearPriceFormInfo(){
     console.log('clear')
     this.oneTimeSelected=true;
-    this.selectedPriceUnit=currencies[0].code;
+    this.selectedPriceUnit=currencies[2].code;
     
     this.usageSelected=false;
     this.recurringSelected=false;

@@ -151,7 +151,7 @@ export class UpdateOfferComponent implements OnInit{
     condition: new FormControl(''),
     description: new FormControl(''),
   });
-  selectedPriceUnit:any=currencies[0].code;
+  selectedPriceUnit:any=currencies[2].code;
   priceTypeAlter:any='ONE TIME';
   priceComponentSelected:boolean=false;
   discountSelected:boolean=false;
