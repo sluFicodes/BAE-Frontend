@@ -56,6 +56,8 @@ export class CheckoutComponent implements OnInit {
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private router: Router,) {
+      // Bind the method to preserve context
+      this.orderProduct = this.orderProduct.bind(this);
       this.eventMessage.messages$.subscribe(ev => {
         if(ev.type === 'BillAccChanged') {
           this.getBilling();
@@ -143,6 +145,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   async orderProduct(){
+    
     console.log('buying')
     console.log(moment().utc())
     this.loading_purchase=true;
@@ -150,7 +153,7 @@ export class CheckoutComponent implements OnInit {
     for(let i = 0; i<this.items.length; i++){
 
       console.log('ITEMS PRICING....')
-      console.log(this.items[i].options.pricing)
+      console.log(this.items)
 
       if(this.items[i].options.pricing != undefined){
         products.push({
