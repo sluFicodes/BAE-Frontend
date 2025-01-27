@@ -39,6 +39,7 @@ export class CreateProductSpecComponent implements OnInit {
   SERV_SPEC_LIMIT: number = environment.SERV_SPEC_LIMIT;
   RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
   BUNDLE_ENABLED: boolean= environment.BUNDLE_ENABLED;
+  MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
@@ -413,6 +414,16 @@ export class CreateProductSpecComponent implements OnInit {
               }
               if(!this.isValidFilename(fileBody.content.name)){
                 this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
+              //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
+              if(file.size>this.MAX_FILE_SIZE){
+                this.errorMessage='File size must be under 3MB.';
                 console.error('There was an error while uploading file!');
                 this.showError=true;
                 setTimeout(() => {

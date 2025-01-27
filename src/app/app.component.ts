@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
 
         console.log('STARTING INTERVAL')
         console.log(info.expire)
-        console.log(((info.expire - moment().unix())-4))
+        console.log(((info.expire - moment().unix()) - 4))
 
         this.refreshApi.startInterval(((info.expire - moment().unix())-4)*1000, ev);
 

@@ -1251,12 +1251,6 @@
                                             <th scope="col" class="px-6 py-3">
                                                 {{ 'UPDATE_PROD_SPEC._product_name' | translate }}
                                             </th>
-                                            <th scope="col" class="hidden md:table-cell px-6 py-3">
-                                                {{ 'UPDATE_PROD_SPEC._type' | translate }}
-                                            </th>
-                                            <th scope="col" class="hidden lg:table-cell px-6 py-3">
-                                                {{ 'UPDATE_PROD_SPEC._last_update' | translate }}
-                                            </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Actions
                                             </th>
@@ -1269,21 +1263,7 @@
                                                     {{rel.relationshipType}}
                                                 </td>
                                                 <td class="px-6 py-4 text-wrap break-all">
-                                                    {{rel.productSpec.name}}
-                                                </td>
-                                                <td class="hidden md:table-cell px-6 py-4">
-                                                    @if(rel.productSpec.lifecycleStatus == 'Active'){
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Launched') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Retired') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Obsolete') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    }
-                                                </td>
-                                                <td class="hidden lg:table-cell px-6 py-4">
-                                                    {{rel.productSpec.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                                    {{rel.name}}
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <button (click)="deleteRel(rel)" class="font-bold text-white bg-red-500 rounded-3xl">
@@ -1656,12 +1636,6 @@
                                             <th scope="col" class="px-6 py-3">
                                                 {{ 'UPDATE_PROD_SPEC._product_name' | translate }}
                                             </th>
-                                            <th scope="col" class="hidden md:table-cell px-6 py-3">
-                                                {{ 'UPDATE_PROD_SPEC._type' | translate }}
-                                            </th>
-                                            <th scope="col" class="hidden lg:table-cell px-6 py-3">
-                                                {{ 'UPDATE_PROD_SPEC._last_update' | translate }}
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1671,21 +1645,7 @@
                                                     {{rel.relationshipType}}
                                                 </td>
                                                 <td class="px-6 py-4 text-wrap break-all">
-                                                    {{rel.productSpec.name}}
-                                                </td>
-                                                <td class="hidden md:table-cell px-6 py-4">
-                                                    @if(rel.productSpec.lifecycleStatus == 'Active'){
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Launched') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Retired') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Obsolete') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    }
-                                                </td>
-                                                <td class="hidden lg:table-cell px-6 py-4">
-                                                    {{rel.productSpec.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                                    {{rel.name}}
                                                 </td>
                                             </tr>
                                         }
