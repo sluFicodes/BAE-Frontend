@@ -181,3 +181,16 @@ markdown a {
 markdown a:hover {
   text-decoration: underline;
 }
+
+   :root {
+     fa-layers {
+       /*font-size: 1.5em;*/
+
+       fa-layers-counter {
+         font-size: 2em;
+         position: absolute;
+         top: -0.1em;
+         right: -0.1em;
+       }
+     }
+   }

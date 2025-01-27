@@ -14,6 +14,7 @@ import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import {LocalStorageService} from "../../services/local-storage.service";
 import { Router } from '@angular/router';
+import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-shopping-cart',
@@ -175,8 +176,9 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
     console.log(this.totalPrice)
   }
 
-  deleteProduct(product: cartProduct){
-    this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+  async deleteProduct(product: cartProduct){
+    await this.cartService.removeItemShoppingCart(product.id);
+    console.log('deleted');
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 
@@ -216,7 +218,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
     this.cdr.detectChanges();
   }
 
-  async orderProduct(){
+  /* async orderProduct(){
     console.log('buying')
     console.log(moment().utc())
     let products = []
@@ -293,9 +295,104 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
           console.error('There was an error while updating!', error);
       }
     });
+  } */
+
+  async orderProduct() {
+    console.log('buying');
+    console.log(moment().utc());
+
+    try {
+      // Construir la lista de productos
+      const products = this.items.map(item => this.buildProductPayload(item));
+
+      // Crear el objeto del pedido
+      const productOrder = this.buildProductOrder(products);
+
+      console.log('--- order ---');
+      console.log(productOrder);
+
+      // Enviar el pedido
+      const response = await firstValueFrom(this.orderService.postProductOrder(productOrder));
+      console.log(response);
+      console.log('PROD ORDER DONE');
+
+      // Vaciar el carrito
+      await this.emptyShoppingCart();
+
+      // Redirigir al inventario
+      this.goToInventory();
+    } catch (error) {
+      console.error('There was an error while processing the order:', error);
+    }
   }
 
-  goToInventory() {
+  private buildProductPayload(item: any) {
+    const characteristics = this.buildProductCharacteristics(item.options.characteristics);
+
+    return {
+      id: item.id,
+      action: 'add',
+      state: 'acknowledged',
+      itemTotalPrice: [
+        {
+          productOfferingPrice: {
+            id: item.options.pricing?.id,
+            href: item.options.pricing?.href,
+          },
+        },
+      ],
+      productOffering: {
+        id: item.id,
+        href: item.id,
+      },
+      product: {
+        productCharacteristic: characteristics,
+      },
+    };
+  }
+
+  private buildProductCharacteristics(opChars: any[]) {
+    if (!opChars) return [];
+    return opChars.map(char => ({
+      name: char.characteristic.name,
+      value: char.value?.value,
+      valueType: char.characteristic.valueType,
+    }));
+  }
+
+  private buildProductOrder(products: any[]) {
+    return {
+      state: 'acknowledged',
+      productOrderItem: products,
+      relatedParty: [
+        {
+          id: this.relatedParty,
+          href: this.relatedParty,
+          role: 'Customer',
+        },
+      ],
+      priority: '4',
+      billingAccount: {
+        id: this.selectedBilling.id,
+        href: this.selectedBilling.id,
+      },
+      orderDate: moment().utc(),
+      notificationContact: this.selectedBilling.email,
+    };
+  }
+
+  private async emptyShoppingCart() {
+    try {
+      const response = await this.cartService.emptyShoppingCart();
+      console.log(response);
+      console.log('EMPTY');
+    } catch (error) {
+      console.error('There was an error while emptying the cart:', error);
+    }
+  }
+
+
+goToInventory() {
     this.router.navigate(['/product-inventory']);
   }
 }

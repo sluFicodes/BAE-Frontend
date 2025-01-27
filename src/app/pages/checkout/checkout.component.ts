@@ -327,7 +327,7 @@ export class CheckoutComponent implements OnInit {
 
   private async emptyShoppingCart() {
     try {
-      const response = await firstValueFrom(this.cartService.emptyShoppingCart());
+      const response = await this.cartService.emptyShoppingCart();
       console.log(response);
       console.log('EMPTY');
     } catch (error) {
@@ -481,8 +481,9 @@ export class CheckoutComponent implements OnInit {
     )*/
   }
 
-  deleteProduct(product: cartProduct) {
-    this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+  async deleteProduct(product: cartProduct) {
+    await this.cartService.removeItemShoppingCart(product.id)
+    console.log('deleted');
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
     this.cartService.getShoppingCart().then(data => {
       console.log('---CARRITO API---')
