@@ -220,6 +220,8 @@ export class NewPricePlanComponent implements OnInit {
       pricecomponent['popRelationship'] = [discount];
     }
     this.createdPriceComponents.push(pricecomponent)
+    console.log('---PRICECOMP')
+    console.log(this.createdPriceComponents)
     this.showPriceComponents=!this.showPriceComponents;
     this.priceComponentForm.reset();
     if(this.selectedCharacteristic!=undefined){

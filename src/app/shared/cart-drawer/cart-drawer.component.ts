@@ -177,8 +177,9 @@ export class CartDrawerComponent implements OnInit{
     console.log(this.totalPrice)
   }
 
-  deleteProduct(product: cartProduct){
-    this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+  async deleteProduct(product: cartProduct){
+    await this.cartService.removeItemShoppingCart(product.id);
+    console.log('deleted');
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 

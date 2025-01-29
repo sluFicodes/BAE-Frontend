@@ -222,7 +222,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
         console.log(response.orderTotalPrice)
         this.price = response.orderTotalPrice; // Updates the price
         this.price = this.price.map((item) => ({
-          ...item, 
+          ...item,
           id: this.selectedPricePlan.id, //Adds price plan id to the price info
         }));
         this.isLoading = false; // Hides spinner
@@ -238,7 +238,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     return this.images.length > 0 ? this.images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
-  async createOrder() { 
+  /*async createOrder() {
     if (this.form.invalid) {
       console.error('Form is invalid');
       return;
@@ -280,14 +280,58 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     console.log('Order Payload:', orderPayload);
     this.onClose();
     // Llamar al servicio para crear el pedido
-    /*this.productOrderService.createOrder(orderPayload).subscribe({
-      next: (response) => {
-        console.log('Order created successfully:', response);
-        this.onClose(); // Cerrar el drawer tras crear el pedido
+
+  }
+  */
+
+  async createOrder() {
+    if (this.form.invalid) {
+      console.error('Form is invalid');
+      return;
+    }
+
+    const formValues = this.form.value;
+
+    // Construir el payload del pedido
+    const orderPayload = {
+      productId: this.productOff?.id,
+      pricePlan: formValues.selectedPricePlan,
+      characteristics: this.orderChars,
+      tsAccepted: formValues.tsAccepted,
+      priceSummary: this.price,
+    };
+
+    // Construir las opciones del producto
+    const prodOptions = this.buildProdOptions(formValues.tsAccepted);
+
+    try {
+      // Añadir producto al carrito
+      await this.cartService.addItemShoppingCart(prodOptions);
+      console.log('Update successful');
+
+      // Emitir eventos
+      this.eventMessage.emitAddedCartItem(prodOptions as cartProduct);
+
+      console.log('Order Payload:', orderPayload);
+    } catch (error) {
+      console.error('There was an error while updating the cart:', error);
+    }
+
+    // Cerrar el drawer
+    this.onClose();
+  }
+
+  private buildProdOptions(termsAccepted: boolean) {
+    return {
+      id: this.productOff?.id,
+      name: this.productOff?.name,
+      image: this.getProductImage(),
+      href: this.productOff?.href,
+      options: {
+        characteristics: this.orderChars,
+        pricing: this.price,
       },
-      error: (error) => {
-        console.error('Error creating order:', error);
-      }
-    });*/
+      termsAccepted,
+    };
   }
 }

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { lastValueFrom, map } from 'rxjs';
+import {BehaviorSubject, lastValueFrom, map} from 'rxjs';
 import { Category, LoginInfo } from '../models/interfaces';
 import { environment } from 'src/environments/environment';
 import {components} from "../models/product-catalog";
@@ -15,35 +15,51 @@ export class ShoppingCartServiceService {
   public static BASE_URL: String = environment.BASE_URL;
   public static API_CART: String = environment.SHOPPING_CART;
 
-  constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
+  private cartSubject = new BehaviorSubject<any[]>([]); // Contiene los productos del carrito
+  cart$ = this.cartSubject.asObservable(); // Observable para que otros componentes se suscriban
 
 
-  getShoppingCart(){
+  constructor(private http: HttpClient) { }
+
+
+  async getShoppingCart(){
     let url = `${ShoppingCartServiceService.BASE_URL}${ShoppingCartServiceService.API_CART}/item/`;
-
-    return lastValueFrom(this.http.get<any[]>(url));
+    const cart = await lastValueFrom(this.http.get<any[]>(url));
+    this.cartSubject.next(cart); // updates the Subject with the received cart
+    return cart;
   }
-  addItemShoppingCart(item:any){
+  async addItemShoppingCart(item:any){
     console.log('adding to cart')
     console.log(item)
     //POST - El item va en el body de la petición
     let url = `${ShoppingCartServiceService.BASE_URL}${ShoppingCartServiceService.API_CART}/item/`;
-   
-    return this.http.post<any>(url, item);
+
+    await lastValueFrom(this.http.post<any>(url, item));
+    await this.refreshCart(); // Updates cart after operation
+    // return this.http.post<any>(url, item);
   }
 
-  removeItemShoppingCart(id:any){
+  async removeItemShoppingCart(id:any){
     //DELETE
     let url = `${ShoppingCartServiceService.BASE_URL}${ShoppingCartServiceService.API_CART}/item/${id}`;
+    await lastValueFrom(this.http.delete<any>(url));
+    await this.refreshCart(); // Actualiza el carrito tras la operación
 
-    return this.http.delete<any>(url);
+    //return this.http.delete<any>(url);
   }
 
-  emptyShoppingCart(){
+  async emptyShoppingCart(){
     console.log('removing cart')
     //POST - El item va en el body de la petición
     let url = `${ShoppingCartServiceService.BASE_URL}${ShoppingCartServiceService.API_CART}/empty/`;
-  
-    return this.http.post<any>(url, {});  
+    await lastValueFrom(this.http.post<any>(url, {}));
+    await this.refreshCart(); // Actualiza el carrito tras la operación
+    //return this.http.post<any>(url, {});
+  }
+
+  // Refreshes the shopping cart from the API
+  private async refreshCart(): Promise<void> {
+    const cart = await this.getShoppingCart();
+    this.cartSubject.next(cart); // Emits the new cart state
   }
 }

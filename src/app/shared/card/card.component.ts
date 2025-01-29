@@ -274,7 +274,7 @@ export class CardComponent implements OnInit, AfterViewInit {
       });*/
   }
 
-  async addProductToCart(productOff:Product| undefined,options:boolean){
+  /* async addProductToCart(productOff:Product| undefined,options:boolean){
     //this.localStorage.addCartItem(productOff as Product);
     if(options==true){
       console.log('termschecked:')
@@ -392,12 +392,91 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
     }
     this.cdr.detectChanges();
+  } */
+
+
+  async addProductToCart(productOff: Product | undefined, options: boolean) {
+    if (!productOff || !productOff.productOfferingPrice) return;
+
+    const prodOptions = this.createProdOptions(productOff, options);
+    this.lastAddedProd = prodOptions;
+
+    try {
+      // Añadir producto al carrito
+      await this.cartService.addItemShoppingCart(prodOptions);
+      console.log('Update successful');
+
+      // Mostrar el toast
+      this.showToast();
+
+      // Emitir evento de producto añadido
+      this.eventMessage.emitAddedCartItem(productOff as cartProduct);
+    } catch (error) {
+      this.handleError(error, 'There was an error while adding item to the cart!');
+    }
+
+    // Restablecer selecciones si es necesario
+    if (this.cartSelection) {
+      this.resetSelections();
+    }
+
+    this.cdr.detectChanges();
   }
 
-  deleteProduct(product: Product | undefined){
+  private createProdOptions(productOff: Product, options: boolean) {
+    return {
+      id: productOff.id,
+      name: productOff.name,
+      image: this.getProductImage(),
+      href: productOff.href,
+      options: {
+        characteristics: this.selected_chars,
+        pricing: this.selected_price,
+      },
+      termsAccepted: options ? this.selected_terms : true,
+    };
+  }
+
+  private showToast() {
+    this.toastVisibility = true;
+    this.cdr.detectChanges();
+
+    const element = document.getElementById('progress-bar');
+    const parent = document.getElementById('toast-add-cart');
+    if (element && parent) {
+      element.style.width = '0%'; // Reinicia el ancho
+      element.offsetWidth; // Forzar el reflujo
+      element.style.width = '100%'; // Llena la barra de progreso
+      setTimeout(() => {
+        this.toastVisibility = false; // Ocultar el toast tras 3.5 segundos
+      }, 3500);
+    }
+  }
+
+  private handleError(error: any, defaultMessage: string) {
+    console.error(defaultMessage, error);
+    this.errorMessage = error?.error?.error ? `Error: ${error.error.error}` : defaultMessage;
+    this.showError = true;
+    setTimeout(() => (this.showError = false), 3000);
+  }
+
+  private resetSelections() {
+    this.cartSelection = false;
+    this.check_char = false;
+    this.check_terms = false;
+    this.check_prices = false;
+    this.selected_chars = [];
+    this.selected_price = {};
+    this.selected_terms = false;
+    this.cdr.detectChanges();
+  }
+
+
+async deleteProduct(product: Product | undefined){
     if(product !== undefined) {
       //this.localStorage.removeCartItem(product);
-      this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('removed'));
+      await this.cartService.removeItemShoppingCart(product.id);
+      console.log('removed');
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
