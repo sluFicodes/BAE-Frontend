@@ -21,7 +21,7 @@ export class ProductOrderService {
   postProductOrder(prod:any){
     //POST - El item va en el body de la petición
     let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder`;
-    return this.http.post<any>(url, prod);
+    return this.http.post<any>(url, prod, { observe: 'response' });
   }
 
   getProductOrders(partyId:any,page:any,filters:any[],date:any,role:any){
