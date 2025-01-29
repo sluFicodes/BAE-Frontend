@@ -292,11 +292,19 @@ export class CheckoutComponent implements OnInit {
 
     try {
       const response = await firstValueFrom(this.orderService.postProductOrder(productOrder));
-      console.log(response);
+      const redirectUrl = response.headers.get('X-redirect-url');
+
+      console.log(redirectUrl);
       console.log('PROD ORDER DONE');
 
       await this.emptyShoppingCart();
-      this.goToInventory();
+
+      if (redirectUrl) {
+        // Going to the payment gateway
+        window.location.href = redirectUrl;
+      } else {
+        this.goToInventory();
+      }
     } catch (error) {
       this.handleError(error, 'There was an error during purchase!');
     } finally {
