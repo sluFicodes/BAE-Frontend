@@ -1,11 +1,11 @@
 <div class="border-b border-gray-200 dark:border-gray-700 mb-2">
     <ul class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
         <li class="me-2">
-            <a (click)="onRoleChange('Customer')" 
+            <a (click)="onRoleChange('Customer')"
                 [ngClass]="role !== 'Customer' ? 'text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300' : 'text-blue-600 border-blue-600 active dark:text-blue-500 dark:border-blue-500'"
                class="inline-flex cursor-pointer items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg group" aria-current="page">
-                <svg [ngClass]="role !== 'Customer' ? 'text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300' : 'text-blue-600 dark:text-blue-500'" 
-                    class="w-4 h-4 me-2" aria-hidden="true" 
+                <svg [ngClass]="role !== 'Customer' ? 'text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300' : 'text-blue-600 dark:text-blue-500'"
+                    class="w-4 h-4 me-2" aria-hidden="true"
                     fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M192 96a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm-8 352l0-96 16 0 0 96-16 0zm-64 0l-88 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l120 0 80 0 376 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-344 0 0-191.1 28.6 47.5c9.1 15.1 28.8 20 43.9 10.9s20-28.8 10.9-43.9l-58.3-97c-17.4-28.9-48.6-46.6-82.3-46.6l-29.7 0c-33.7 0-64.9 17.7-82.3 46.6l-58.3 97c-9.1 15.1-4.2 34.8 10.9 43.9s34.8 4.2 43.9-10.9L120 256.9 120 448zM464 64l0 242.7-25.4-25.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l80 80c12.5 12.5 32.8 12.5 45.3 0l80-80c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L528 306.7 528 64c0-17.7-14.3-32-32-32s-32 14.3-32 32z"/></svg>
                 As Customer
@@ -13,17 +13,17 @@
         </li>
         @if(isSeller){
             <li class="me-2">
-                <a (click)="onRoleChange('Seller')" 
-                    [ngClass]="{'text-blue-600 border-blue-600 active dark:text-blue-500 dark:border-blue-500 group': role == 'Seller'}"    
+                <a (click)="onRoleChange('Seller')"
+                    [ngClass]="{'text-blue-600 border-blue-600 active dark:text-blue-500 dark:border-blue-500 group': role == 'Seller'}"
                     class="inline-flex cursor-pointer items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 group">
-                    <svg 
-                        [ngClass]="role !== 'Seller' ? 'text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300' : 'text-blue-600 dark:text-blue-500'" 
+                    <svg
+                        [ngClass]="role !== 'Seller' ? 'text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300' : 'text-blue-600 dark:text-blue-500'"
                         class="w-4 h-4 me-2" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M192 96a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm-8 352l0-96 16 0 0 96-16 0zm-64 0l-88 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l120 0 80 0 376 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-344 0 0-191.1 28.6 47.5c9.1 15.1 28.8 20 43.9 10.9s20-28.8 10.9-43.9l-58.3-97c-17.4-28.9-48.6-46.6-82.3-46.6l-29.7 0c-33.7 0-64.9 17.7-82.3 46.6l-58.3 97c-9.1 15.1-4.2 34.8 10.9 43.9s34.8 4.2 43.9-10.9L120 256.9 120 448zM598.6 121.4l-80-80c-12.5-12.5-32.8-12.5-45.3 0l-80 80c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L464 141.3 464 384c0 17.7 14.3 32 32 32s32-14.3 32-32l0-242.7 25.4 25.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3z"/></svg>
                    As Provider
                 </a>
             </li>
-        }   
+        }
     </ul>
 </div>
 
@@ -44,7 +44,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
-            
+
             <div id="dropdown" class="z-20 hidden w-fit md:w-1/5 p-3 bg-white rounded-lg border dark:bg-secondary-200">
                 <h6 class="mb-3 text-sm font-bold text-gray-900 dark:text-white">
                     {{ 'PRODUCT_ORDERS._status' | translate }}
@@ -53,52 +53,52 @@
                     <li class="flex items-center">
                         <input id="acknowledged" type="checkbox" value="" (change)="onStateFilterChange('acknowledged')"
                         class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                
+
                         <label for="acknowledged" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                             {{ 'PRODUCT_ORDERS._acknowledged' | translate }}
                         </label>
                     </li>
-                
+
                     <li class="flex items-center">
                         <input id="inProgress" type="checkbox" value="" (change)="onStateFilterChange('inProgress')"
                         class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                
+
                         <label for="inProgress" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                             {{ 'PRODUCT_ORDERS._in_progress' | translate }}
                         </label>
                     </li>
-                
+
                     <li class="flex items-center">
                         <input id="completed" type="checkbox" value=""  (change)="onStateFilterChange('completed')"
                         class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                
+
                         <label for="completed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                             {{ 'PRODUCT_ORDERS._completed' | translate }}
                         </label>
                     </li>
-                
+
                     <li class="flex items-center">
                         <input id="failed" type="checkbox" value="" (change)="onStateFilterChange('failed')"
                         class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                
+
                         <label for="failed" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                             {{ 'PRODUCT_ORDERS._failed' | translate }}
                         </label>
                     </li>
-            
+
                     <li class="flex items-center">
                         <input id="pending" type="checkbox" value=""  (change)="onStateFilterChange('pending')"
                         class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                
+
                         <label for="pending" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                             {{ 'PRODUCT_ORDERS._pending' | translate }}
                         </label>
                     </li>
-            
+
                     <li class="flex items-center">
                         <input id="cancelled" type="checkbox" value="" (change)="onStateFilterChange('cancelled')"
                         class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
-                
+
                         <label for="cancelled" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
                             {{ 'PRODUCT_ORDERS._cancelled' | translate }}
                         </label>
@@ -109,8 +109,8 @@
     </div>
 </div>
 <!-- END FILTERS -->
-        
-        
+
+
         @if (loading && !loading_more) {
             <div role="status" class="w-3/4 md:w-4/5 h-full flex justify-center align-middle">
               <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -134,16 +134,13 @@
                                             {{ 'PRODUCT_INVENTORY._state' | translate }}
                                         </th>
                                         <th scope="col" class="hidden md:table-cell px-6 py-3 text-center align-middle">
-                                            {{ 'PRODUCT_INVENTORY._priority' | translate }}
-                                        </th>
-                                        <th scope="col" class="hidden md:table-cell px-6 py-3 text-center align-middle">
                                             {{ 'PRODUCT_INVENTORY._bill' | translate }}
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-center align-middle">
                                             Date
                                         </th>
                                         <th scope="col" class="text-center align-middle">
-                                            Actions 
+                                            Actions
                                         </th>
                                     </tr>
                                 </thead>
@@ -153,7 +150,7 @@
                                             <td class="hidden md:table-cell px-6 py-4 text-center align-middle">
                                                 {{order.id}}
                                             </td>
-                                            <td class="px-6 py-4 text-center align-middle">                                                
+                                            <td class="px-6 py-4 text-center align-middle">
                                                 @if(order.state == 'inProgress'){
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{order.state}}</span>
                                                 } @else if(order.state ==  'completed') {
@@ -166,10 +163,9 @@
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{order.state}}</span>
                                                 }@else if(order.state == 'cancelled') {
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{order.state}}</span>
+                                                } @else {
+                                                  <span class="bg-amber-500 dark:bg-amber-900 text-amber-900 dark:text-amber-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-amber-950">Unchecked</span>
                                                 }
-                                            </td>
-                                            <td class="hidden md:table-cell px-6 py-4 text-center align-middle">
-                                                {{order.priority}}
                                             </td>
                                             <td class="hidden md:table-cell px-6 py-4 text-center align-middle">
                                                 {{order.billingAccount.name}}
@@ -197,7 +193,7 @@
                                 </div>
                             }
                         </div>
-        
+
                     @if (!loading_more) {
                         @if (page_check) {
                         <div class="flex pb-6 justify-center align-middle">
@@ -220,15 +216,15 @@
                     }
                 </div>
         }
-        
-        
+
+
         <!-- ORDER DETAILS modal -->
         @if (showOrderDetails){
             <div id="order-details-modal" [ngClass]="showOrderDetails ? 'backdrop-blur-sm': ''" tabindex="-1" aria-hidden="true" class="flex justify-center overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%)] max-h-full shadow-2xl">
                 <div class="w-full md:w-3/4 lg:w-1/2 relative bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 rounded-lg shadow bg-cover bg-right-bottom" (click)="$event.stopPropagation();">
                     <!-- Modal header -->
                     <div class="flex items-center justify-between p-2 rounded-t dark:border-gray-600 shadow-lg">
-                        <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">Order details:</h2>                
+                        <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">Order details:</h2>
                         <button (click)="showOrderDetails=false;" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="delete-bill-modal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
@@ -263,15 +259,9 @@
                                     <span class="bg-blue-100 dark:bg-secondary-100 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{orderToShow.state}}</span>
                                 }@else if(orderToShow.state == 'cancelled') {
                                     <span class="bg-blue-100 dark:bg-secondary-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{orderToShow.state}}</span>
+                                } @else {
+                                  <span class="bg-amber-500 dark:bg-amber-900 text-amber-900 dark:text-amber-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-amber-950">Unchecked</span>
                                 }
-                            </div>
-                            <div class="flex flex-row gap-2 pb-2 text-gray-600">
-                                <p class="w-fit text-base font-bold shrink-0 dark:text-white">
-                                    {{ 'PRODUCT_INVENTORY._priority' | translate }}
-                                </p>
-                                <h3 class="text-base dark:text-gray-200">
-                                    {{orderToShow.priority}}
-                                </h3>
                             </div>
                             <div class="flex flex-row gap-2 pb-2 text-gray-600">
                                 <p class="w-fit text-base font-bold shrink-0 dark:text-white">
@@ -309,6 +299,9 @@
                                         <th scope="col" class="px-6 py-3 text-center align-middle">
                                             Price
                                         </th>
+                                        <th scope="col" class="px-6 py-3 text-center align-middle">
+                                          Actions
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -333,7 +326,7 @@
                                             } @else {
                                                 <td class="px-6 py-4 text-center align-middle">
                                                     {{ 'SHOPPING_CART._free' | translate }}
-                                                </td>                                        
+                                                </td>
                                             }
                                         </tr>
                                     }
@@ -351,7 +344,7 @@
                                             <p class="flex flex-right text-gray-700 justify-end text-gray-500 dark:text-gray-200">Custom</p>
                                         } @else {
                                             <p class="flex flex-right text-gray-700 justify-end text-gray-500 dark:text-gray-200">Free</p>
-                                        }                                
+                                        }
                                      }
                                   </div>
                             </div>
@@ -359,6 +352,5 @@
                     </div>
                 </div>
             </div>
-        
+
         }
-        
