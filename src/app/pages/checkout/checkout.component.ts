@@ -69,6 +69,27 @@ export class CheckoutComponent implements OnInit {
       if (ev.type === 'ChangedSession') {
         this.initCheckoutData();
       }
+      if(ev.type === 'AddedCartItem') {
+        console.log('Elemento añadido')
+        this.cartService.getShoppingCart().then(data => {
+          console.log('---CARRITO API---')
+          console.log(data)
+          this.items=data;
+          this.cdr.detectChanges();
+          this.getTotalPrice();
+          console.log('------------------')
+        })
+      }
+      if(ev.type === 'RemovedCartItem') {
+        this.cartService.getShoppingCart().then(data => {
+          console.log('---CARRITO API---')
+          console.log(data)
+          this.items=data;
+          this.cdr.detectChanges();
+          this.getTotalPrice();
+          console.log('------------------')
+        })
+      }
     })
   }
 
