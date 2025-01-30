@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Category } from '../models/interfaces';
-import { ApiServiceService } from 'src/app/services/product-service.service';
-import { AccountServiceService } from 'src/app/services/account-service.service';
-import { ProductOrderService } from 'src/app/services/product-order-service.service';
-import { ProductInventoryServiceService } from 'src/app/services/product-inventory-service.service';
-import { environment } from 'src/environments/environment';
+import {Injectable} from '@angular/core';
+import {Category} from '../models/interfaces';
+import {ApiServiceService} from 'src/app/services/product-service.service';
+import {AccountServiceService} from 'src/app/services/account-service.service';
+import {ProductOrderService} from 'src/app/services/product-order-service.service';
+import {ProductInventoryServiceService} from 'src/app/services/product-inventory-service.service';
+import {environment} from 'src/environments/environment';
 import {components} from "../models/product-catalog";
 import {InvoicesService} from "./invoices-service";
+
 type ProductOffering = components["schemas"]["ProductOffering"];
 
 @Injectable({
@@ -104,6 +105,7 @@ export class PaginationService {
     }
   }
 
+  /*
   async getProducts(page:number,keywords:any,filters?:Category[]): Promise<ProductOffering[]> {
     let products:ProductOffering[]=[];
     try{
@@ -239,8 +241,123 @@ export class PaginationService {
     } finally {
       return products
     }
+  } */
+
+  async getProducts(page: number, keywords: any, filters?: Category[]): Promise<ProductOffering[]> {
+    try {
+      console.log('-------------------------- getProducts ----------------------------');
+      // Get data from API
+      const productOfferings: ProductOffering[] = filters && filters.length > 0
+        ? await this.api.getProductsByCategory(filters, page, keywords)
+        : await this.api.getProducts(page, keywords);
+
+      // Get Product Details in parallel
+      return await Promise.all(
+        productOfferings.map(async (offer): Promise<ProductOffering> => {
+          try {
+            // Getting specs and prices in parallel
+            const [spec, prodPrices] = await Promise.all([
+              offer.productSpecification?.id
+                ? this.api.getProductSpecification(offer.productSpecification.id)
+                : Promise.resolve(undefined),
+              offer.productOfferingPrice
+                ? Promise.all(offer.productOfferingPrice.map(p => this.api.getProductPrice(p.id)))
+                : Promise.resolve([])
+            ]);
+
+            // Building `ProductOffering` object
+            return {
+              id: offer.id,
+              href: offer.href,
+              name: offer.name,
+              description: offer.description,
+              isBundle: offer.isBundle,
+              isSellable: offer.isSellable,
+              lastUpdate: offer.lastUpdate,
+              lifecycleStatus: offer.lifecycleStatus,
+              statusReason: offer.statusReason,
+              version: offer.version,
+              agreement: offer.agreement ?? [],
+              attachment: spec?.attachment ?? [],
+              bundledProductOffering: offer.bundledProductOffering ?? [],
+              category: offer.category ?? [],
+              channel: offer.channel ?? [],
+              marketSegment: offer.marketSegment ?? [],
+              place: offer.place ?? [],
+              prodSpecCharValueUse: offer.prodSpecCharValueUse ?? [],
+              productOfferingPrice: prodPrices ?? [],
+              productOfferingRelationship: offer.productOfferingRelationship ?? [],
+              productOfferingTerm: offer.productOfferingTerm ?? [],
+              productSpecification: offer.productSpecification,
+              resourceCandidate: offer.resourceCandidate,
+              serviceCandidate: offer.serviceCandidate,
+              serviceLevelAgreement: offer.serviceLevelAgreement,
+              validFor: offer.validFor,
+              "@baseType": offer["@baseType"],
+              "@schemaLocation": offer["@schemaLocation"],
+              "@type": offer["@type"]
+            };
+          } catch (error) {
+            console.error(`Error processing product ${offer.id}:`, error);
+            return offer; // If error returns the original offer
+          }
+        })
+      );
+
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return [];
+    }
   }
 
+  async getProductsByCatalog(page: number, keywords: any, filters?: Category[], id?: any): Promise<ProductOffering[]> {
+    try {
+      console.log('-------------------------- getProductsByCatalog ----------------------------');
+      // Get data from API
+      const productOfferings: ProductOffering[] = filters && filters.length > 0
+        ? await this.api.getProductsByCategoryAndCatalog(filters, id, page)
+        : await this.api.getProductsByCatalog(id, page);
+
+      // Process product offerings in parallel
+      return await Promise.all(
+        productOfferings.map(async (offer): Promise<ProductOffering> => {
+          try {
+            // Getting specs and prices in parallel
+            const [spec, prodPrices] = await Promise.all([
+              offer.productSpecification?.id
+                ? this.api.getProductSpecification(offer.productSpecification.id)
+                : Promise.resolve(undefined),
+              offer.productOfferingPrice
+                ? Promise.all(offer.productOfferingPrice.map(p => this.api.getProductPrice(p.id)))
+                : Promise.resolve([])
+            ]);
+
+            return {
+              id: offer.id,
+              name: offer.name,
+              category: offer.category ?? [],
+              description: offer.description,
+              lastUpdate: offer.lastUpdate,
+              attachment: spec?.attachment ?? [],
+              productOfferingPrice: prodPrices ?? [],
+              productSpecification: offer.productSpecification,
+              productOfferingTerm: offer.productOfferingTerm ?? [],
+              version: offer.version
+            };
+          } catch (error) {
+            console.error(`Error processing product ${offer.id}:`, error);
+            return offer; // If error returns the original offer
+          }
+        })
+      );
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return []; // Returns [] if error
+    }
+  }
+
+
+  /*
   async getProductsByCatalog(page:number,keywords:any,filters?:Category[],id?:any): Promise<ProductOffering[]> {
     let products:ProductOffering[]=[];
     try{
@@ -376,7 +493,7 @@ export class PaginationService {
     } finally {
       return products
     }
-  }
+  }*/
 
   async getOrders(page:number,filters:Category[],partyId:any,selectedDate:any,orders:any[],role:any): Promise<any[]> {
     try{
@@ -428,6 +545,81 @@ export class PaginationService {
       console.log(orders)
       return orders
     }
+<<<<<<< HEAD
+=======
+  } */
+  async getOrders(page: number, filters: Category[], partyId: any, selectedDate: any, orders: any[], role: any): Promise<any[]> {
+    try {
+      // Get Orders
+      orders = await this.orderService.getProductOrders(partyId, page, filters, selectedDate, role);
+      console.log('getOrders', orders);
+      // Obtener todas las cuentas de facturación en paralelo
+      const billingAccounts = await Promise.all(orders.map(order => this.accountService.getBillingAccountById(order.billingAccount.id)));
+
+      // Procesar los pedidos en paralelo
+      const ordersWithDetails = await Promise.all(orders.map(async (order, i) => {
+        // Obtener detalles de los productos en paralelo
+        const items = await Promise.all(order.productOrderItem.map(async (productOrderItem:any) => {
+          try {
+            console.log('Soy un productOrderItem???????: ', productOrderItem);
+            const offer = await this.api.getProductById(productOrderItem.productOffering.id);
+            const spec = await this.api.getProductSpecification(offer.productSpecification.id);
+
+            if (!offer.productOfferingPrice || offer.productOfferingPrice.length === 0) {
+              return {
+                id: offer.id,
+                name: offer.name,
+                category: offer.category,
+                description: offer.description,
+                lastUpdate: offer.lastUpdate,
+                attachment: spec.attachment,
+                productSpecification: offer.productSpecification,
+                productOfferingTerm: offer.productOfferingTerm,
+                version: offer.version,
+                productOrderItem
+              };
+            }
+
+            let result: any = {}
+            result = {
+              id: offer.id,
+              name: offer.name,
+              category: offer.category,
+              description: offer.description,
+              lastUpdate: offer.lastUpdate,
+              attachment: spec.attachment,
+              productSpecification: offer.productSpecification,
+              productOfferingTerm: offer.productOfferingTerm,
+              version: offer.version,
+              productOrderItem
+            };
+
+            if(offer.productOfferingPrice?.[0]) {
+              const prodprice = await this.api.getProductPrice(offer.productOfferingPrice[0].id);
+              result['productOfferingPrice'] = prodprice
+              if(prodprice.priceType) result['priceType'] = prodprice.priceType;
+            }
+            return result;
+          } catch (error) {
+            console.error(`Error fetching product details for ${productOrderItem.id}:`, error);
+            return null; // Manejo de errores sin detener toda la ejecución
+          }
+        }));
+
+        return {
+          ...order,
+          billingAccount: billingAccounts[i],
+          productOrderItems: items.filter(Boolean) // Filtra productos nulos en caso de error
+        };
+      }));
+
+      console.log('Orders processed:', ordersWithDetails);
+      return ordersWithDetails;
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      return [];
+    }
+>>>>>>> 9c02f26 (ADDS ProductOrderItem support)
   }
 
   async getOffers(inventory:any[]): Promise<any[]> {
@@ -480,6 +672,11 @@ export class PaginationService {
     }
   }
 
+<<<<<<< HEAD
+=======
+
+  /*
+>>>>>>> 9c02f26 (ADDS ProductOrderItem support)
   async getInventory(page:number,keywords:any,filters:Category[],partyId:any): Promise<any[]>{
     let inv:any[]=[]
     try {
@@ -490,8 +687,26 @@ export class PaginationService {
     } finally {
       return inv
     }
+  }*/
+
+  async getInventory(page: number, keywords: any, filters: Category[], partyId: any): Promise<any[]> {
+    try {
+      console.log('Fetching inventory...');
+
+      // Obtener inventario desde el servicio
+      const data = await this.inventoryService.getInventory(page, partyId, filters, keywords);
+      console.log('Inventory received:', data);
+
+      // Obtener ofertas del inventario
+      return await this.getOffers(data);
+
+    } catch (error) {
+      console.error('Error fetching inventory:', error);
+      return []; // Retornar un array vacío en caso de error
+    }
   }
 
+<<<<<<< HEAD
   async getInvoices(page:number,filters:Category[],partyId:any,selectedDate:any,invoices:any[],role:any): Promise<any[]> {
     console.log("---getInvoices---")
     try{
@@ -503,4 +718,6 @@ export class PaginationService {
       return invoices
     }
   }
+=======
+>>>>>>> 9c02f26 (ADDS ProductOrderItem support)
 }

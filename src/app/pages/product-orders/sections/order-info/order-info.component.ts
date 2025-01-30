@@ -12,7 +12,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 type ProductOffering = components["schemas"]["ProductOffering"];
 import { phoneNumbers, countries } from 'src/app/models/country.const'
-import { initFlowbite } from 'flowbite';
+import {initFlowbite, Modal} from 'flowbite';
 import {EventMessageService} from "src/app/services/event-message.service";
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
@@ -28,7 +28,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   templateUrl: './order-info.component.html',
   styleUrl: './order-info.component.css'
 })
-export class OrderInfoComponent implements OnInit {
+export class OrderInfoComponent implements OnInit, AfterViewInit {
   loading: boolean = false;
   orders:any[]=[];
   nextOrders:any[]=[];
@@ -49,8 +49,11 @@ export class OrderInfoComponent implements OnInit {
   isSeller:boolean=false;
   role:any='Customer'
 
-  show_orders: boolean = true;
-  show_billing: boolean = false;
+  // Confirm modal stuff
+  @ViewChild('confirmModal') confirmModal!: ElementRef;
+  actionType: string = '';
+  selectedItem: any = null;
+  private modalInstance: any;
 
   protected readonly faIdCard = faIdCard;
   protected readonly faSort = faSort;
@@ -78,7 +81,74 @@ export class OrderInfoComponent implements OnInit {
       this.showOrderDetails=false;
       this.cdr.detectChanges();
     }
-    initFlowbite();
+    //initFlowbite();
+  }
+
+  openModal(action: string, item: any) {
+    this.actionType = action;
+    this.selectedItem = item;
+    if (this.modalInstance) {
+      this.modalInstance.show();
+    } else {
+      console.error("Modal instance is not initialized!");
+    }  }
+
+  closeModal() {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+  }
+
+  async confirmAction() {
+    if (!this.orderToShow) {
+      console.error("No order selected! Is this possible?");
+      return;
+    }
+    this.selectedItem.productOrderItem['state'] = this.actionType === 'Acknowledge' ? 'acknowledged' : 'rejected';
+    console.log(`${this.actionType} confirmed for item:`, this.selectedItem);
+    try {
+      // Creates object to PATCH
+      const patchData = {
+        productOrderItem: this.orderToShow.productOrderItem,
+      };
+
+      // Llamar al servicio para hacer el PATCH
+      const response = await this.orderService.updateOrder(this.orderToShow.id, patchData);
+      console.log("Order updated successfully:", response);
+
+      // Cerrar el modal después de la actualización
+      this.closeModal();
+
+    } catch (error) {
+      console.error("Error updating order:", error);
+    }
+  }
+
+  async updateLifecycle(state: string, item: any){
+    if (!this.orderToShow) {
+      console.error("No order selected! Is this possible?");
+      return;
+    }
+    console.log('Transitioning to...');
+    this.selectedItem = item;
+    console.log(state, item);
+    try {
+      this.selectedItem.productOrderItem['state'] = state;
+      // Creates object to PATCH
+      const patchData = {
+        productOrderItem: this.orderToShow.productOrderItem,
+      };
+
+      // Llamar al servicio para hacer el PATCH
+      const response = await this.orderService.updateOrder(this.orderToShow.id, patchData);
+      console.log("Order updated successfully:", response);
+
+      // Cerrar el modal después de la actualización
+      this.closeModal();
+
+    } catch (error) {
+      console.error("Error updating order:", error);
+    }
   }
 
   ngOnInit() {
@@ -121,6 +191,11 @@ export class OrderInfoComponent implements OnInit {
 
   ngAfterViewInit(){
     initFlowbite();
+    setTimeout(() => {
+      if (this.confirmModal) {
+        this.modalInstance = new Modal(this.confirmModal.nativeElement);
+      }
+    }, 100);
   }
 
   getProductImage(prod:ProductOffering) {

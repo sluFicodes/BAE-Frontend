@@ -44,4 +44,14 @@ export class ProductOrderService {
     }
     return lastValueFrom(this.http.get<any[]>(url));
   }
+
+  updateOrder(orderId:any, patchData:any){
+    console.log('updatingOrder...');
+    console.log(orderId);
+    console.log(patchData);
+
+    let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder/${orderId}`;
+    return lastValueFrom(this.http.patch(url, patchData))
+  }
+
 }

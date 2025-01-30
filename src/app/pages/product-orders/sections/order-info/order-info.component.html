@@ -148,20 +148,20 @@
                                     @for (order of orders; track order.id; let idx = $index) {
                                         <tr class="border-b bg-gray-100 hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
                                             <td class="hidden md:table-cell px-6 py-4 text-center align-middle">
-                                                {{order.id}}
+                                              <span title="{{order.id}}">...{{order.id.slice(-6)}}</span>
                                             </td>
                                             <td class="px-6 py-4 text-center align-middle">
                                                 @if(order.state == 'inProgress'){
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{order.state}}</span>
-                                                } @else if(order.state ==  'completed') {
+                                                } @else if(order.state ===  'completed') {
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{order.state}}</span>
-                                                } @else if(order.state == 'failed') {
+                                                } @else if(order.state === 'failed') {
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{order.state}}</span>
-                                                } @else if(order.state == 'pending') {
+                                                } @else if(order.state === 'pending') {
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{order.state}}</span>
-                                                }@else if(order.state == 'acknowledged'){
+                                                }@else if(order.state === 'acknowledged'){
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{order.state}}</span>
-                                                }@else if(order.state == 'cancelled') {
+                                                }@else if(order.state === 'cancelled' || order.state === 'rejected') {
                                                     <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{order.state}}</span>
                                                 } @else {
                                                   <span class="bg-amber-500 dark:bg-amber-900 text-amber-900 dark:text-amber-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-amber-950">Unchecked</span>
@@ -247,17 +247,17 @@
                                 <p class="w-fit text-base font-bold shrink-0 dark:text-white">
                                     {{ 'PRODUCT_INVENTORY._state' | translate }}
                                 </p>
-                                @if(orderToShow.state == 'inProgress'){
+                                @if(orderToShow.state === 'inProgress'){
                                     <span class="bg-blue-100 dark:bg-secondary-100 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400 w-fit">{{orderToShow.state}}</span>
-                                } @else if(orderToShow.state ==  'completed') {
+                                } @else if(orderToShow.state ===  'completed') {
                                     <span class="bg-blue-100 dark:bg-secondary-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500 w-fit">{{orderToShow.state}}</span>
-                                } @else if(orderToShow.state == 'failed') {
+                                } @else if(orderToShow.state === 'failed') {
                                     <span class="bg-blue-100 dark:bg-secondary-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{orderToShow.state}}</span>
-                                } @else if(orderToShow.state == 'pending') {
+                                } @else if(orderToShow.state === 'pending') {
                                     <span class="bg-blue-100 dark:bg-secondary-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{orderToShow.state}}</span>
-                                }@else if(orderToShow.state == 'acknowledged'){
+                                }@else if(orderToShow.state === 'acknowledged'){
                                     <span class="bg-blue-100 dark:bg-secondary-100 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{orderToShow.state}}</span>
-                                }@else if(orderToShow.state == 'cancelled') {
+                                }@else if(orderToShow.state === 'cancelled' || orderToShow.state === 'rejected') {
                                     <span class="bg-blue-100 dark:bg-secondary-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{orderToShow.state}}</span>
                                 } @else {
                                   <span class="bg-amber-500 dark:bg-amber-900 text-amber-900 dark:text-amber-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-amber-950">Unchecked</span>
@@ -297,7 +297,10 @@
                                             Name
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-center align-middle">
-                                            Price
+                                            Price Plan
+                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-center align-middle">
+                                          State
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-center align-middle">
                                           Actions
@@ -305,7 +308,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @for (item of orderToShow.productOrderItem; track item.id; let idx = $index) {
+                                    @for (item of orderToShow.productOrderItems; track item.id; let idx = $index) {
                                         <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
                                             <td class="px-6 py-4 text-center align-middle flex justify-center items-center">
                                                 <img class="w-16 object-contain z-10 dark:text-white" src="{{getProductImage(item)}}" alt="Product image">
@@ -316,7 +319,7 @@
                                             @if(item.productOfferingPrice){
                                                 @if(item.productOfferingPrice.priceType == 'custom'){
                                                     <td class="px-6 py-4 text-center align-middle">
-                                                        Custom
+                                                      {{item.productOfferingPrice.name ?? 'Custom'}}
                                                     </td>
                                                 } @else {
                                                     <td class="px-6 py-4 text-center align-middle">
@@ -328,29 +331,122 @@
                                                     {{ 'SHOPPING_CART._free' | translate }}
                                                 </td>
                                             }
+                                          <td class="px-6 py-4 text-center align-middle">
+                                            @if(item.productOrderItem.state === 'inProgress'){
+                                              <span class="bg-blue-100 dark:bg-secondary-100 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400 w-fit">{{item.productOrderItem.state}}</span>
+                                            } @else if(item.productOrderItem.state ===  'completed') {
+                                              <span class="bg-blue-100 dark:bg-secondary-100 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500 w-fit">{{item.productOrderItem.state}}</span>
+                                            } @else if(item.productOrderItem.state === 'failed') {
+                                              <span class="bg-blue-100 dark:bg-secondary-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{item.productOrderItem.state}}</span>
+                                            } @else if(item.productOrderItem.state === 'pending') {
+                                              <span class="bg-blue-100 dark:bg-secondary-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{item.productOrderItem.state}}</span>
+                                            }@else if(item.productOrderItem.state === 'acknowledged'){
+                                              <span class="bg-blue-100 dark:bg-secondary-100 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{item.productOrderItem.state}}</span>
+                                            }@else if(item.productOrderItem.state === 'cancelled' || item.productOrderItem.state === 'rejected') {
+                                              <span class="bg-blue-100 dark:bg-secondary-100 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{item.productOrderItem.state}}</span>
+                                            } @else {
+                                              <span class="bg-amber-500 dark:bg-amber-900 text-amber-900 dark:text-amber-100 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-amber-950">Unchecked</span>
+                                            }
+                                          </td>
+                                          <td class="px-6 py-4 text-center align-middle flex justify-center">
+                                            @if (!item.productOrderItem.state) {
+                                              <button type="button" title="Acknowledge the order item"
+                                                      class="text-white bg-primary-100 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
+                                                      (click)="openModal('Acknowledge', item)">
+                                                <!--!Font Awesome Pro 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2025 Fonticons, Inc.-->
+                                                <svg class="w-[18px] h-[18px] text-white stroke-white fill-white stroke-2" stroke="currentColor"
+                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                                                  <path d="M319.1 0c14.8-.4 27.9 9.3 31.8 23.6l74 271.2 17.7-35.4c10.8-21.7 33-35.4 57.2-35.4L608 224c17.7 0 32 14.3 32 32s-14.3 32-32 32l-108.2 0L444.6 398.3c-5.9 11.9-18.6 18.8-31.8 17.5s-24.2-10.6-27.7-23.4L323.7 167.3 255.3 486.7c-3.1 14.4-15.5 24.8-30.2 25.3s-27.8-9.1-31.8-23.2L135.9 288 32 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l103.9 0c28.6 0 53.7 18.9 61.5 46.4L219.6 348 288.7 25.3C291.8 10.9 304.4 .4 319.1 0z"/>
+                                                </svg>
+                                              </button>
+
+                                              <button type="button" title="Reject the order item"
+                                                      class="text-red-950 bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
+                                                      (click)="openModal('Reject', item)">
+                                                <svg class="w-[18px] h-[18px] text-white stroke-white fill-white stroke-2" stroke="currentColor"
+                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                                  <path d="M96 80c0-26.5 21.5-48 48-48l288 0c26.5 0 48 21.5 48 48l0 304L96 384 96 80zm145 47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47z"/>
+                                                </svg>
+                                              </button>
+                                            } @else {
+                                                @if(item.productOfferingPrice.priceType == 'custom'){
+                                                  @if (item.productOrderItem.state === 'acknowledged') {
+                                                    <button type="button" title="Start Order Treatment"
+                                                            class="text-green-950 bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
+                                                            (click)="updateLifecycle('inProgress', item)">
+                                                      <svg class="w-[18px] h-[18px] text-white stroke-white fill-white stroke-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                                                        <path class="fa-secondary" opacity=".4" d="M32 80l0 352c0 5.8 3.1 11.1 8.2 14s11.2 2.7 16.2-.3l288-176c4.8-2.9 7.7-8.1 7.7-13.7s-2.9-10.7-7.7-13.7l-288-176c-4.9-3-11.1-3.1-16.2-.3s-8.2 8.2-8.2 14z"/><path class="fa-primary" d="M56.3 66.3c-4.9-3-11.1-3.1-16.2-.3s-8.2 8.2-8.2 14l0 352c0 5.8 3.1 11.1 8.2 14s11.2 2.7 16.2-.3l288-176c4.8-2.9 7.7-8.1 7.7-13.7s-2.9-10.7-7.7-13.7l-288-176zM24.5 38.1C39.7 29.6 58.2 30 73 39L361 215c14.3 8.7 23 24.2 23 41s-8.7 32.2-23 41L73 473c-14.8 9.1-33.4 9.4-48.5 .9S0 449.4 0 432L0 80C0 62.6 9.4 46.6 24.5 38.1z"/></svg>
+                                                    </button>
+                                                  } @else if (item.productOrderItem.state === 'inProgress') {
+                                                    <button type="button" title="Order Completely Treated"
+                                                            class="text-green-950 bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
+                                                            (click)="updateLifecycle('completed', item)">
+                                                      <svg class="w-[18px] h-[18px] text-white stroke-white fill-white stroke-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                                        <path d="M200.3 81.5C210.9 61.5 231.9 48 256 48s45.1 13.5 55.7 33.5L321 99.1l19-5.8c21.6-6.6 46.1-1.4 63.1 15.7s22.3 41.5 15.7 63.1l-5.8 19 17.5 9.3c20 10.6 33.5 31.6 33.5 55.7s-13.5 45.1-33.5 55.7L412.9 321l5.8 19c6.6 21.6 1.4 46.1-15.7 63.1s-41.5 22.3-63.1 15.7l-19-5.8-9.3 17.5c-10.6 20-31.6 33.5-55.7 33.5s-45.1-13.5-55.7-33.5L191 412.9l-19 5.8c-21.6 6.6-46.1 1.4-63.1-15.7S86.6 361.6 93.2 340l5.8-19-17.5-9.3C61.5 301.1 48 280.1 48 256s13.5-45.1 33.5-55.7L99.1 191l-5.8-19c-6.6-21.6-1.4-46.1 15.7-63.1S150.4 86.6 172 93.2l19 5.8 9.3-17.5zM256 0c-35.9 0-67.8 17-88.1 43.4c-33-4.3-67.6 6.2-93 31.6s-35.9 60-31.6 93C17 188.2 0 220.1 0 256s17 67.8 43.4 88.1c-4.3 33 6.2 67.6 31.6 93s60 35.9 93 31.6C188.2 495 220.1 512 256 512s67.8-17 88.1-43.4c33 4.3 67.6-6.2 93-31.6s35.9-60 31.6-93C495 323.8 512 291.9 512 256s-17-67.8-43.4-88.1c4.3-33-6.2-67.6-31.6-93s-60-35.9-93-31.6C323.8 17 291.9 0 256 0zM369 209l17-17L352 158.1l-17 17-111 111-47-47-17-17L126.1 256l17 17 64 64 17 17 17-17L369 209z"/>
+                                                      </svg>
+                                                    </button>
+                                                    <button type="button" title="Order Completely Failed"
+                                                            class="text-red-950 bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
+                                                            (click)="updateLifecycle('failed', item)">
+                                                      <svg class="w-[18px] h-[18px] text-white stroke-white fill-white stroke-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                                        <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm24-384l0 24 0 112 0 24-48 0 0-24 0-112 0-24 48 0zM232 368l0-48 48 0 0 48-48 0z"/>
+                                                        </svg>
+                                                    </button>
+                                                  }
+                                                } @else {
+                                                  n/a
+                                                }
+                                            }
+                                          </td>
+
                                         </tr>
                                     }
                                 </tbody>
                             </table>
-                            <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
-                            <div class="flex block">
-                               <p class="flex float-left w-1/2 ml-2 text-sm text-gray-500 dark:text-gray-200">{{ 'CART_DRAWER._subtotal' | translate }}:</p>
-                               <hr class="h-px my-2 bg-gray-200 border-0">
-                                  <div class="flex grid grid-cols-1 grid-flow-row w-1/2">
-                                     @for (price of getTotalPrice(orderToShow.productOrderItem); track price) {
-                                        <p class="flex block justify-end mr-2 text-sm text-gray-500 dark:text-gray-200">{{price.price}} {{price.unit}} {{price.text}}</p>
-                                     } @empty {
-                                        @if(check_custom==true){
-                                            <p class="flex flex-right text-gray-700 justify-end text-gray-500 dark:text-gray-200">Custom</p>
-                                        } @else {
-                                            <p class="flex flex-right text-gray-700 justify-end text-gray-500 dark:text-gray-200">Free</p>
-                                        }
-                                     }
-                                  </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
         }
+
+<!-- Confirm Modal -->
+<div #confirmModal id="confirmModal" tabindex="-1" aria-hidden="true"
+     class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full bg-black bg-opacity-50">
+  <div class="relative w-full max-w-md max-h-full">
+    <!-- Contenedor del modal -->
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+      <!-- Encabezado -->
+      <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600 bg-primary-100">
+        <h3 class="text-xl font-semibold text-secondary-50 dark:text-white">
+          Confirm Action
+        </h3>
+        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900
+          rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600
+          dark:hover:text-white" (click)="closeModal()">
+          ✖
+        </button>
+      </div>
+      <!-- Cuerpo del modal -->
+      <div class="p-6 text-center">
+        <p class="text-gray-500 dark:text-gray-300">
+          Are you sure you want to <strong>{{ actionType }}</strong> this order item?
+        </p>
+      </div>
+      <!-- Botones de acción -->
+      <div class="flex items-center p-6 space-x-4 border-t border-gray-200 rounded-b dark:border-gray-600">
+        <button type="button" (click)="confirmAction()"
+                class="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium
+          rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          Yes, Confirm
+        </button>
+        <button type="button" (click)="closeModal()"
+                class="text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100
+          focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-700
+          dark:text-gray-300 dark:border-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
