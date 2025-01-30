@@ -21,10 +21,11 @@ export class ProductOrderService {
   postProductOrder(prod:any){
     //POST - El item va en el body de la petición
     let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder`;
-    return this.http.post<any>(url, prod);
+    return this.http.post<any>(url, prod, { observe: 'response' });
   }
 
   getProductOrders(partyId:any,page:any,filters:any[],date:any,role:any){
+    console.log('getProductOrders');
     let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=${role}`;
     //let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Seller`;
     let status=''
@@ -34,7 +35,7 @@ export class ProductOrderService {
           status=status+filters[i]
         } else {
           status=status+filters[i]+','
-        }    
+        }
       }
       url=url+'&state='+status;
     }

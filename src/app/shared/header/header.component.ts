@@ -357,8 +357,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
         newUrl.pathname = environment.SIOP_INFO.requestUri
 
         let finalUrl = newUrl.toString()
+        let nonce = uuid.v4()
 
-        verifierUrl = `${verifierUrl}&response_type=code&request_uri=${finalUrl}&scope=openid%20learcredential`
+        verifierUrl = `${verifierUrl}&response_type=code&request_uri=${finalUrl}&scope=openid%20learcredential&nonce=${nonce}`
         window.location.href = verifierUrl
       } else {
         // Old verifier format
