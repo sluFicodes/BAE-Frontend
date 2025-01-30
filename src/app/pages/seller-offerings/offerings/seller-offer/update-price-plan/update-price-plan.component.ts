@@ -179,7 +179,6 @@ export class UpdatePricePlanComponent implements OnInit {
             }
           }
           this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
-          this.editProfile=true;
           if(this.priceToUpdate.prodSpecCharValueUse!=undefined){
             this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
             this.editProfile=true;
@@ -460,9 +459,9 @@ export class UpdatePricePlanComponent implements OnInit {
               updatingPrice.unitOfMeasure=this.createdPriceComponents[0].unitOfMeasure
             }
           }
-          if(this.editProfile){
+          if(this.createdPriceProfile){
             //referenia al comp profile
-            updatingPrice.prodSpecCharValueUse=this.priceToUpdate.prodSpecCharValueUse;
+            updatingPrice.prodSpecCharValueUse=this.createdPriceProfile;
           }
           for(let i=0;i<this.createdPriceComponents.length;i++){
             this.createdPriceComponents[i].price.unit=this.selectedPriceUnit;
@@ -472,6 +471,7 @@ export class UpdatePricePlanComponent implements OnInit {
         } else {
           updatingPrice.priceType='custom';          
         }
+        console.log(updatingPrice)
         this.eventMessage.emitUpdatePricePlan(updatingPrice);
       }
       this.editPrice=!this.editPrice;
