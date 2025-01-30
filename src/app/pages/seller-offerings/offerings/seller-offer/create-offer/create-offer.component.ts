@@ -892,6 +892,9 @@ export class CreateOfferComponent implements OnInit {
               if(components[j].prodSpecCharValueUse){
                 priceCompToCreate.prodSpecCharValueUse=components[j].prodSpecCharValueUse
               }
+              if(components[j].unitOfMeasure){
+                priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+              }
               let priceAlterations = components[j].popRelationship;
               if(priceAlterations != undefined){
                 //Creating price alteration
@@ -962,6 +965,9 @@ export class CreateOfferComponent implements OnInit {
             if(this.createdPrices[i].prodSpecCharValueUse){
               priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse
             }
+            if(this.createdPrices[i].unitOfMeasure){
+              priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
+            }
             try{
               let pricePlanCreated = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
               console.log('precio')
@@ -1012,6 +1018,9 @@ export class CreateOfferComponent implements OnInit {
           }
           if(this.createdPrices[i].prodSpecCharValueUse){
             priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse;
+          }
+          if(this.createdPrices[i].unitOfMeasure){
+            priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
           }
           this.api.postOfferingPrice(priceToCreate).subscribe({
             next: data => {
