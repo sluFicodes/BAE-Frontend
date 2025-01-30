@@ -882,6 +882,10 @@ export class CreateOfferComponent implements OnInit {
                 priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
                 priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
               }
+              if(components[j].priceType=='recurring-prepaid'){
+                priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+              }
               if(components[j].priceType=='usage'){
                 priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
               }
@@ -996,6 +1000,10 @@ export class CreateOfferComponent implements OnInit {
             }
           }
           if(this.createdPrices[i].priceType=='recurring'){
+            priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriodType;
+            priceToCreate.recurringChargePeriodLength=this.createdPrices[i].recurringChargePeriodLength;
+          }
+          if(this.createdPrices[i].priceType=='recurring-prepaid'){
             priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriodType;
             priceToCreate.recurringChargePeriodLength=this.createdPrices[i].recurringChargePeriodLength;
           }
