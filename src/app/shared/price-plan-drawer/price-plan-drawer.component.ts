@@ -9,6 +9,7 @@ import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-servi
 import {EventMessageService} from "../../services/event-message.service";
 import { cartProduct } from 'src/app/models/interfaces';
 import { v4 as uuidv4 } from 'uuid';
+import { certifications } from 'src/app/models/certification-standards.const';
 type Product = components["schemas"]["ProductOffering"];
 type ProductSpecification = components["schemas"]["ProductSpecification"];
 type ProductOfferingTerm = components["schemas"]["ProductOfferingTerm"];
@@ -50,6 +51,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   orderChars:any[]=[];
 
   characteristics: ProductSpecificationCharacteristic[] = []; // Características dinámicas
+  filteredCharacteristics: ProductSpecificationCharacteristic[] = [];
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscape(event: KeyboardEvent): void {
@@ -113,9 +115,16 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
       this.hasProfile = false;
     }
 
+    this.filteredCharacteristics=[];
+    for(let i=0;i<this.characteristics.length;i++){
+      if (!certifications.some(certification => certification.name === this.characteristics[i].name)) {
+        this.filteredCharacteristics.push(this.characteristics[i]);
+      }
+    }
+
     // Reconfigurar el grupo de características en el formulario
     const characteristicsGroup = this.fb.group({});
-    this.characteristics.forEach((characteristic) => {
+    this.filteredCharacteristics.forEach((characteristic) => {
       if (characteristic.id != null) {
         const defaultValue = characteristic.productSpecCharacteristicValue?.find(
           (val) => val.isDefault
@@ -129,6 +138,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
         );
       }
     });
+
     this.form.setControl('characteristics', characteristicsGroup);
 
     this.selectedPricePlan = pricePlan;
@@ -167,17 +177,17 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     console.log('chars....')
     console.log(selectedCharacteristics)
     console.log('general chars...')
-    console.log(this.characteristics)
+    console.log(this.filteredCharacteristics)
     console.log('keys of selected chars...')
     console.log(this.getKeys(selectedCharacteristics))
     this.orderChars=[];
     for(let i=0; i<this.getKeys(selectedCharacteristics).length;i++){
-      let idx = this.characteristics.findIndex(item => item.id === this.getKeys(selectedCharacteristics)[i]);
-      console.log(this.characteristics[idx])
+      let idx = this.filteredCharacteristics.findIndex(item => item.id === this.getKeys(selectedCharacteristics)[i]);
+      console.log(this.filteredCharacteristics[idx])
       this.orderChars.push({
-        "name": this.characteristics[idx].name,
+        "name": this.filteredCharacteristics[idx].name,
         "value": this.getValues(selectedCharacteristics)[i],
-        "valueType": this.characteristics[idx].valueType,
+        "valueType": this.filteredCharacteristics[idx].valueType,
       })
     }
 

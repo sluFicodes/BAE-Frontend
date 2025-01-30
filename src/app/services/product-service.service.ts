@@ -233,9 +233,9 @@ export class ApiServiceService {
     return this.http.post<any>(url, price);
   }
 
-  updateOfferingPrice(price:any){
+  updateOfferingPrice(price:any,id:any){
     //POST - El item va en el body de la petición
-    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOfferingPrice/${price.id}`;
+    let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOfferingPrice/${id}`;
     return this.http.patch<any>(url, price);
   }
 
