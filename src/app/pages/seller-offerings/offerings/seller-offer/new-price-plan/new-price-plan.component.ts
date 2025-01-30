@@ -33,6 +33,7 @@ export class NewPricePlanComponent implements OnInit {
   partyId:any='';
   oneTimeSelected:boolean=true;
   recurringSelected:boolean=false;
+  recurringPrepaidSelected:boolean=false;
   usageSelected:boolean=false;
   filteredCharacteristics:any[]=[];
   selectedCharacteristic:any=undefined;
@@ -149,6 +150,7 @@ export class NewPricePlanComponent implements OnInit {
     this.isDiscount=false;
     this.oneTimeSelected=true;
     this.recurringSelected=false;
+    this.recurringPrepaidSelected=false;
     this.usageSelected=false;
 
     this.showPriceComponents=!this.showPriceComponents;
@@ -166,26 +168,44 @@ export class NewPricePlanComponent implements OnInit {
         unit: this.selectedPriceUnit,
         value: this.priceComponentForm.value.price ? parseInt(this.priceComponentForm.value.price) : 0
       },
-      priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : 'one time'
+      priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.recurringPrepaidSelected ? 'recurring-prepaid' : 'one time'
     }
     if(this.selectedCharacteristic!=undefined){
-      let charVal:any={value:this.selectedCharacteristicVal}
-      const charIdx = this.selectedCharacteristic.productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (this.selectedCharacteristicVal).toString());
-      if(charIdx!=-1){
-        if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[charIdx]){
-          charVal={value:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].value,unitOfMeasure:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].unitOfMeasure}
-        }else{
-          charVal={value:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].value}
+      console.log(this.selectedCharacteristic)      
+      //If its a range characteristic
+      if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
+        console.log('---- RANGO -----')
+        pricecomponent.unitOfMeasure={
+          amount:1,
+          units:this.selectedCharacteristic.productSpecCharacteristicValue[0].unitOfMeasure
         }
+      //if not
+      } else {
+        let charVal:any={value:this.selectedCharacteristicVal}  
+        const charIdx = this.selectedCharacteristic.productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (this.selectedCharacteristicVal).toString());
+        if(charIdx!=-1){
+          if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[charIdx]){
+            charVal={value:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].value,unitOfMeasure:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].unitOfMeasure}
+          }else{
+            charVal={value:this.selectedCharacteristic.productSpecCharacteristicValue[charIdx].value}
+          }
+        }
+        pricecomponent.prodSpecCharValueUse = [{
+          id: this.selectedCharacteristic.id,
+          name: this.selectedCharacteristic.name,
+          productSpecCharacteristicValue: [charVal]
+        }] 
       }
-      pricecomponent.prodSpecCharValueUse = [{
-        id: this.selectedCharacteristic.id,
-        name: this.selectedCharacteristic.name,
-        productSpecCharacteristicValue: [charVal]
-      }] 
     }
     if(this.recurringSelected){
       console.log('recurring')
+      if(this.priceComponentForm.value.recurring)
+      pricecomponent.recurringChargePeriodLength=Number(this.priceComponentForm.value.recurring);
+      if(this.priceComponentForm.value?.recurringPeriod)
+      pricecomponent.recurringChargePeriodType=this.priceComponentForm.value.recurringPeriod;
+    }
+    if(this.recurringPrepaidSelected){
+      console.log('recurringPrepaid')
       if(this.priceComponentForm.value.recurring)
       pricecomponent.recurringChargePeriodLength=Number(this.priceComponentForm.value.recurring);
       if(this.priceComponentForm.value?.recurringPeriod)
@@ -415,6 +435,10 @@ export class NewPricePlanComponent implements OnInit {
               priceToCreate.recurringChargePeriodType=this.createdPriceComponents[0].recurringChargePeriodType;
               priceToCreate.recurringChargePeriodLength=this.createdPriceComponents[0].recurringChargePeriodLength;
             }
+            if(this.createdPriceComponents[0].priceType=='recurring-prepaid'){
+              priceToCreate.recurringChargePeriodType=this.createdPriceComponents[0].recurringChargePeriodType;
+              priceToCreate.recurringChargePeriodLength=this.createdPriceComponents[0].recurringChargePeriodLength;
+            }
             if(this.createdPriceComponents[0].priceType=='usage'){
                 priceToCreate.unitOfMeasure=this.createdPriceComponents[0].unitOfMeasure
             }
@@ -447,7 +471,7 @@ export class NewPricePlanComponent implements OnInit {
     
     this.usageSelected=false;
     this.recurringSelected=false;
-
+    this.recurringPrepaidSelected=false;
     this.priceForm.reset();
     this.priceForm.controls['name'].setValue('');
     this.priceForm.controls['price'].setValue('');
@@ -468,18 +492,27 @@ export class NewPricePlanComponent implements OnInit {
     if(event.target.value=='ONE TIME'){
       this.oneTimeSelected=true;
       this.recurringSelected=false;
+      this.recurringPrepaidSelected=false;
       this.usageSelected=false;
     } else if (event.target.value=='RECURRING'){
       this.oneTimeSelected=false;
       this.recurringSelected=true;
+      this.recurringPrepaidSelected=false;
       this.usageSelected=false;
     } else if (event.target.value=='USAGE'){
       this.oneTimeSelected=false;
       this.recurringSelected=false;
+      this.recurringPrepaidSelected=false;
       this.usageSelected=true;
     } else if (event.target.value=='CUSTOM'){
       this.oneTimeSelected=false;
       this.recurringSelected=false;
+      this.recurringPrepaidSelected=false;
+      this.usageSelected=false;
+    } else if (event.target.value=='RECURRINGPREPAID'){
+      this.oneTimeSelected=false;
+      this.recurringSelected=false;
+      this.recurringPrepaidSelected=true;
       this.usageSelected=false;
     }
   }
