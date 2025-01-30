@@ -10,9 +10,11 @@ import * as moment from 'moment';
   providedIn: 'root'
 })
 export class InvoicesService {
+
   public static BASE_URL: String = environment.BASE_URL;
-  public static CONSUMER_BILLING_URL: String = environment.CONSUMER_BILLING_URL;
+  public static BASE_PATCH: String = environment.BILLING;
   public static API_ORDERING: String = environment.CUSTOMER_BILLING;
+
   public static ORDER_LIMIT: Number = environment.ORDER_LIMIT;
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
@@ -20,7 +22,8 @@ export class InvoicesService {
   getInvoices(partyId:any,page:any,filters:any[],date:any,role:any){
 
     // TODO. Qué le pasa a esta petición? devuelve algo raro....
-    let url = `${InvoicesService.BASE_URL}${InvoicesService.API_ORDERING}?limit=${InvoicesService.ORDER_LIMIT}&offset=${page}&fields`;
+    let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}?limit=${InvoicesService.ORDER_LIMIT}&offset=${page}&fields`;
+  
     // let status=''
     // if(filters.length>0){
     //   for(let i=0; i < filters.length; i++){
