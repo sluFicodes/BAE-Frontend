@@ -6,6 +6,7 @@ import { ProductOrderService } from 'src/app/services/product-order-service.serv
 import { ProductInventoryServiceService } from 'src/app/services/product-inventory-service.service';
 import { environment } from 'src/environments/environment';
 import {components} from "../models/product-catalog";
+import {InvoicesService} from "./invoices-service";
 type ProductOffering = components["schemas"]["ProductOffering"];
 
 @Injectable({
@@ -19,7 +20,8 @@ export class PaginationService {
     private api: ApiServiceService,
     private accountService: AccountServiceService,
     private orderService: ProductOrderService,
-    private inventoryService: ProductInventoryServiceService
+    private inventoryService: ProductInventoryServiceService,
+    private invoicesService: InvoicesService
   ) { }
 
   async getItemsPaginated(page:number, pageSize:any, next:boolean, items:any[], nextItems:any[], options:any,
@@ -376,7 +378,6 @@ export class PaginationService {
     }
   }
 
-  /*
   async getOrders(page:number,filters:Category[],partyId:any,selectedDate:any,orders:any[],role:any): Promise<any[]> {
     try{
       orders = await this.orderService.getProductOrders(partyId,page,filters,selectedDate,role)
@@ -427,78 +428,8 @@ export class PaginationService {
       console.log(orders)
       return orders
     }
-  } */
-  async getOrders(page: number, filters: Category[], partyId: any, selectedDate: any, orders: any[], role: any): Promise<any[]> {
-    try {
-      // Obtener pedidos
-      orders = await this.orderService.getProductOrders(partyId, page, filters, selectedDate, role);
-
-      // Obtener todas las cuentas de facturación en paralelo
-      const billingAccounts = await Promise.all(orders.map(order => this.accountService.getBillingAccountById(order.billingAccount.id)));
-
-      // Procesar los pedidos en paralelo
-      const ordersWithDetails = await Promise.all(orders.map(async (order, i) => {
-        // Obtener detalles de los productos en paralelo
-        const items = await Promise.all(order.productOrderItem.map(async (productOrderItem:any) => {
-          try {
-            const offer = await this.api.getProductById(productOrderItem.productOffering.id);
-            const spec = await this.api.getProductSpecification(offer.productSpecification.id);
-
-            if (!offer.productOfferingPrice || offer.productOfferingPrice.length === 0) {
-              return {
-                id: offer.id,
-                name: offer.name,
-                category: offer.category,
-                description: offer.description,
-                lastUpdate: offer.lastUpdate,
-                attachment: spec.attachment,
-                productSpecification: offer.productSpecification,
-                productOfferingTerm: offer.productOfferingTerm,
-                version: offer.version
-              };
-            }
-
-            let result: any = {}
-            result = {
-              id: offer.id,
-              name: offer.name,
-              category: offer.category,
-              description: offer.description,
-              lastUpdate: offer.lastUpdate,
-              attachment: spec.attachment,
-              productSpecification: offer.productSpecification,
-              productOfferingTerm: offer.productOfferingTerm,
-              version: offer.version,
-            };
-
-            if(offer.productOfferingPrice?.[0]) {
-              const prodprice = await this.api.getProductPrice(offer.productOfferingPrice[0].id);
-              result['productOfferingPrice'] = prodprice
-              if(prodprice.priceType) result['priceType'] = prodprice.priceType;
-            }
-            return result;
-          } catch (error) {
-            console.error(`Error fetching product details for ${productOrderItem.id}:`, error);
-            return null; // Manejo de errores sin detener toda la ejecución
-          }
-        }));
-
-        return {
-          ...order,
-          billingAccount: billingAccounts[i],
-          productOrderItem: items.filter(Boolean) // Filtra productos nulos en caso de error
-        };
-      }));
-
-      console.log('Orders processed:', ordersWithDetails);
-      return ordersWithDetails;
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-      return [];
-    }
   }
 
-  /*
   async getOffers(inventory:any[]): Promise<any[]> {
     try{
       for(let i=0; i<inventory.length; i++){
@@ -547,73 +478,7 @@ export class PaginationService {
     } finally {
       return inventory
     }
-  } */
-
-  async getOffers(inventory: any[]): Promise<any[]> {
-    try {
-      // Procesar todos los elementos de inventory en paralelo
-      const updatedInventory = await Promise.all(inventory.map(async (item) => {
-        try {
-          // Obtener producto y especificación en paralelo
-          const [prod, spec] = await Promise.all([
-            this.api.getProductById(item.productOffering.id),
-            this.api.getProductSpecification(item.productOffering.id)
-          ]);
-
-          // Construcción de attachments
-          const attachment = spec?.attachment ?? [];
-
-          // Construcción de producto
-          const productDetails = {
-            id: item.id,
-            name: prod.name,
-            category: prod.category,
-            description: prod.description,
-            lastUpdate: prod.lastUpdate,
-            attachment,
-            productSpecification: prod.productSpecification,
-            productOfferingTerm: prod.productOfferingTerm,
-            version: prod.version
-          };
-
-          // Construcción de precio
-          let priceDetails = null;
-
-          if (item.productPrice?.length > 0) {
-            const price = item.productPrice[0].price.taxIncludedAmount;
-            priceDetails = {
-              price: price.value,
-              unit: price.unit,
-              priceType: item.productPrice[0].priceType,
-              text: item.productPrice[0].unitOfMeasure ? `/${item.productPrice[0].unitOfMeasure}` : item.productPrice[0].recurringChargePeriodType
-            };
-          } else if (prod.productOfferingPrice?.length === 1) {
-            const priceData = await this.api.getProductPrice(prod.productOfferingPrice[0].id);
-            console.log(priceData);
-            priceDetails = {
-              price: '',
-              unit: '',
-              priceType: priceData.priceType,
-              text: ''
-            };
-          }
-
-          return { ...item, product: productDetails, price: priceDetails };
-
-        } catch (error) {
-          console.error(`Error processing item ${item.id}:`, error);
-          return item; // Retorna el item sin modificaciones en caso de error
-        }
-      }));
-
-      return updatedInventory;
-
-    } catch (error) {
-      console.error('Error fetching offers:', error);
-      return [];
-    }
   }
-
 
   async getInventory(page:number,keywords:any,filters:Category[],partyId:any): Promise<any[]>{
     let inv:any[]=[]
@@ -624,6 +489,18 @@ export class PaginationService {
       inv = await this.getOffers(data);
     } finally {
       return inv
+    }
+  }
+
+  async getInvoices(page:number,filters:Category[],partyId:any,selectedDate:any,invoices:any[],role:any): Promise<any[]> {
+    console.log("---getInvoices---")
+    try{
+      invoices = await this.invoicesService.getInvoices(partyId,page,filters,selectedDate,role)
+    } finally {
+      console.log("params:", partyId,page,filters,selectedDate,role)
+      console.log("---getInvoices result:---", invoices)
+      console.log(invoices)
+      return invoices
     }
   }
 }

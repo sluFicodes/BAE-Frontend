@@ -81,25 +81,25 @@ export class OrderInfoComponent implements OnInit {
     initFlowbite();
   }
 
-  async ngOnInit() {
-    this.loading = true;
+  ngOnInit() {
+    this.loading=true;
     let today = new Date();
-    today.setMonth(today.getMonth() - 1);
+    today.setMonth(today.getMonth()-1);
     this.selectedDate = today.toISOString();
     this.dateRange.setValue('month');
-    await this.initPartyInfo();
+    this.initPartyInfo();
   }
 
-  async initPartyInfo() {
+  initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix()) - 4) > 0)) {
-      if (aux.logged_as == aux.id) {
+    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
+      if(aux.logged_as==aux.id){
         this.partyId = aux.partyId;
         let userRoles = aux.roles.map((elem: any) => {
           return elem.name
         })
         if (userRoles.includes("seller")) {
-          this.isSeller = true;
+          this.isSeller=true;
         }
       } else {
         let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as);
@@ -108,13 +108,13 @@ export class OrderInfoComponent implements OnInit {
           return elem.name
         })
         if (orgRoles.includes("seller")) {
-          this.isSeller = true;
+          this.isSeller=true;
         }
       }
       //this.partyId = aux.partyId;
-      this.page = 0;
-      this.orders = [];
-      await this.getOrders(false);
+      this.page=0;
+      this.orders=[];
+      this.getOrders(false);
     }
     initFlowbite();
   }
@@ -133,7 +133,7 @@ export class OrderInfoComponent implements OnInit {
   }
 
   async getOrders(next:boolean){
-    if(!next){
+    if(next==false){
       this.loading=true;
     }
 
@@ -150,18 +150,17 @@ export class OrderInfoComponent implements OnInit {
         console.log('--pag')
         console.log(data)
         console.log(this.orders)
-        this.page_check=data.page_check;
-        this.orders=data.items;
-        this.nextOrders=data.nextItems;
-        this.page=data.page;
-        this.loading=false;
-        this.loading_more=false;
+      this.page_check=data.page_check;
+      this.orders=data.items;
+      this.nextOrders=data.nextItems;
+      this.page=data.page;
+      this.loading=false;
+      this.loading_more=false;
     })
-    console.log('Loaded Orders:');
-    console.log(this.orders);
   }
 
   async next(){
+    console.log("-order-info-NEXT--")
     await this.getOrders(true);
   }
 
@@ -252,7 +251,7 @@ export class OrderInfoComponent implements OnInit {
   }
 
   toggleShowDetails(order:any){
-    console.log(order)
+    // console.log(order)
     this.showOrderDetails=true;
     this.orderToShow=order;
   }
@@ -262,6 +261,4 @@ export class OrderInfoComponent implements OnInit {
     console.log('ROLE',this.role);
     await this.getOrders(false);
   }
-
-  protected readonly JSON = JSON;
 }

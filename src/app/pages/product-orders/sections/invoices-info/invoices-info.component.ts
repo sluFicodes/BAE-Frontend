@@ -4,7 +4,7 @@ import { LoginInfo, billingAccountCart } from 'src/app/models/interfaces';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { AccountServiceService } from 'src/app/services/account-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
-import { ProductOrderService } from 'src/app/services/product-order-service.service';
+import { InvoicesService } from 'src/app/services/invoices-service';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { FastAverageColor } from 'fast-average-color';
 import {components} from "src/app/models/product-catalog";
@@ -19,40 +19,37 @@ import { environment } from 'src/environments/environment';
 import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
 import { TranslateModule } from '@ngx-translate/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { OrderInfoComponent } from "./sections/order-info/order-info.component";
-import { InvoicesInfoComponent } from "./sections/invoices-info/invoices-info.component";
 
 @Component({
-  selector: 'app-product-orders',
+  selector: 'app-invoices-info',
   standalone: true,
-  imports: [TranslateModule, FontAwesomeModule, CommonModule, OrderInfoComponent, InvoicesInfoComponent],
+  imports: [TranslateModule, FontAwesomeModule, CommonModule],
   providers: [DatePipe],
-  templateUrl: './product-orders.component.html',
-  styleUrl: './product-orders.component.css'
+  templateUrl: './invoices-info.component.html',
+  styleUrl: './invoices-info.component.css'
 })
-export class ProductOrdersComponent implements OnInit {
+export class InvoicesInfoComponent implements OnInit {
   loading: boolean = false;
-  orders:any[]=[];
-  nextOrders:any[]=[];
+  invoices:any[]=[];
+  nextInvoices:any[]=[];
   profile:any;
   partyId:any='';
-  showOrderDetails:boolean=false;
-  orderToShow:any;
+  showInvoiceDetails:boolean=false;
+  invoiceToShow:any;
   dateRange = new FormControl();
   selectedDate:any;
-  countries: any[] = countries;
   preferred:boolean=false;
   loading_more: boolean = false;
   page_check:boolean = true;
   page: number=0;
-  ORDER_LIMIT: number = environment.ORDER_LIMIT;
+  INVOICE_LIMIT: number = environment.INVOICE_LIMIT;
   filters: any[]=[];
   check_custom:boolean=false;
   isSeller:boolean=false;
   role:any='Customer'
 
   show_orders: boolean = true;
-  show_invoices: boolean = false;
+  show_billing: boolean = false;
 
   protected readonly faIdCard = faIdCard;
   protected readonly faSort = faSort;
@@ -63,7 +60,7 @@ export class ProductOrdersComponent implements OnInit {
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
     private accountService: AccountServiceService,
-    private orderService: ProductOrderService,
+    private invoicesService: InvoicesService,
     private eventMessage: EventMessageService,
     private paginationService: PaginationService
   ) {
@@ -76,8 +73,8 @@ export class ProductOrdersComponent implements OnInit {
 
   @HostListener('document:click')
   onClick() {
-    if(this.showOrderDetails==true){
-      this.showOrderDetails=false;
+    if(this.showInvoiceDetails==true){
+      this.showInvoiceDetails=false;
       this.cdr.detectChanges();
     }
     initFlowbite();
@@ -115,8 +112,8 @@ export class ProductOrdersComponent implements OnInit {
       }
       //this.partyId = aux.partyId;
       this.page=0;
-      this.orders=[];
-      this.getOrders(false);
+      this.invoices=[];
+      this.getInvoices(false);
     }
     initFlowbite();
   }
@@ -134,7 +131,8 @@ export class ProductOrdersComponent implements OnInit {
     return images.length > 0 ? images?.at(0)?.url : 'https://placehold.co/600x400/svg';
   }
 
-  async getOrders(next:boolean){
+  async getInvoices(next:boolean){
+    console.log("-getOrders--")
     if(next==false){
       this.loading=true;
     }
@@ -143,18 +141,18 @@ export class ProductOrdersComponent implements OnInit {
       "filters": this.filters,
       "partyId": this.partyId,
       "selectedDate": this.selectedDate,
-      "orders": this.orders,
+      "invoices": this.invoices,
       "role": this.role
     }
 
-    this.paginationService.getItemsPaginated(this.page, this.ORDER_LIMIT, next, this.orders,this.nextOrders, options,
-      this.paginationService.getOrders.bind(this.paginationService)).then(data => {
-        console.log('--pag')
-        console.log(data)
-        console.log(this.orders)
+    this.paginationService.getItemsPaginated(this.page, this.INVOICE_LIMIT, next, this.invoices, this.nextInvoices, options,
+      this.paginationService.getInvoices.bind(this.paginationService)).then(data => {
+      console.log('--pag')
+      console.log(data)
+      console.log(this.invoices)
       this.page_check=data.page_check;
-      this.orders=data.items;
-      this.nextOrders=data.nextItems;
+      this.invoices=data.items;
+      this.nextInvoices=data.nextItems;
       this.page=data.page;
       this.loading=false;
       this.loading_more=false;
@@ -162,7 +160,8 @@ export class ProductOrdersComponent implements OnInit {
   }
 
   async next(){
-    await this.getOrders(true);
+    console.log("-invoice-info-NEXT--")
+    await this.getInvoices(true);
   }
 
   onStateFilterChange(filter:string){
@@ -176,7 +175,7 @@ export class ProductOrdersComponent implements OnInit {
       this.filters.push(filter)
       console.log(this.filters)
     }
-    this.getOrders(false);
+    this.getInvoices(false);
   }
 
   isFilterSelected(filter:any){
@@ -208,7 +207,7 @@ export class ProductOrdersComponent implements OnInit {
     } else {
       this.selectedDate = undefined
     }
-    this.getOrders(false);
+    this.getInvoices(false);
   }
 
   getTotalPrice(items:any[]){
@@ -251,29 +250,17 @@ export class ProductOrdersComponent implements OnInit {
     return totalPrice
   }
 
-  toggleShowDetails(order:any){
-    console.log(order)
-    this.showOrderDetails=true;
-    this.orderToShow=order;
+  toggleShowDetails(invoice:any){
+    console.log(invoice)
+    this.showInvoiceDetails=true;
+    this.invoiceToShow=invoice;
   }
 
-  async onRoleChange(event: any) {
-    this.role=event.target.value;
-    await this.getOrders(false);
-  }
-
-  goToOrders(){
-    console.log("--goToOrders--")
-    //this.selectOrder();
-    this.show_invoices=false;
-    this.show_orders=true;
-    this.cdr.detectChanges();
-  }
-  goToInvoices(){
-    console.log("--goToInvoices--")
-    //this.selectBilling();
-    this.show_invoices=true;
-    this.show_orders=false;
-    this.cdr.detectChanges();
+  async onRoleChange(role: any) {
+    this.role=role;
+    console.log('ROLE',this.role);
+    await this.getInvoices(false);
   }
 }
+
+{ observe: 'response' }
