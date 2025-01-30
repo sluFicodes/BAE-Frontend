@@ -3,6 +3,7 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf} from "@angular/common";
 import {components} from "../../models/product-catalog";
 import {MarkdownComponent} from "ngx-markdown";
+import { certifications } from 'src/app/models/certification-standards.const';
 type  ProductSpecificationCharacteristic = components["schemas"]["ProductSpecificationCharacteristic"]
 
 interface CharacteristicValue {
@@ -39,7 +40,6 @@ export class CharacteristicComponent implements OnInit {
   control = new FormControl();
 
   ngOnInit(): void {
-    console.log(this.characteristic);
     const defaultValue = this.characteristic.productSpecCharacteristicValue?.find(
       (val) => val.isDefault
     )?.value || this.characteristic.productSpecCharacteristicValue?.find(

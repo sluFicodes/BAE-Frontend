@@ -127,7 +127,7 @@ export interface ProductOfferingPrice_DTO {
               valueTo?: number;
               valueType?: string;
               validFor?: {endDateTime:string; startDateTime:string};
-              value: any
+              value?: any
             }[]
             productSpecification?: {
               id: string;
@@ -189,7 +189,7 @@ export interface ProductOfferingPrice_DTO {
           valueTo?: number;
           valueType?: string;
           validFor?: {endDateTime:string; startDateTime:string};
-          value: any
+          value?: any
         }[]
         productSpecification?: {
           id: string;
