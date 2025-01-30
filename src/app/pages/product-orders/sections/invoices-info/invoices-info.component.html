@@ -14,9 +14,6 @@
       <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
         <thead class="text-xs text-gray-700 uppercase bg-secondary-50 dark:bg-primary-50 dark:text-secondary-100">
         <tr>
-<!--          <th scope="col" class="hidden md:table-cell px-6 py-3 text-center align-middle">-->
-<!--            {{ 'INVOICES._invoice_id' | translate }}-->
-<!--          </th>-->
           <th scope="col" class="px-6 py-3 text-center align-middle">
             {{ 'INVOICES._date' | translate }}
           </th>
@@ -40,9 +37,6 @@
         <tbody>
           @for (invoice of invoices; track invoice.id; let idx = $index) {
             <tr class="border-b bg-gray-100 hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
-<!--              <td class="md:table-cell px-6 py-4 text-center align-middle">-->
-<!--                {{invoice.id}}-->
-<!--              </td>-->
               <td class="px-6 py-4 text-center align-middle">
                 {{invoice?.date | date:'EEEE, dd/MM/yy, HH:mm'}}
               </td>
@@ -59,7 +53,7 @@
                 @if(invoice?.isBilled){
                   <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'INVOICES._billed' | translate }}</span>
                 } @else {
-                  <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{ 'INVOICES._pending' | translate }}</span>
+                    <span class="bg-blue-100 dark:bg-secondary-100 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{ 'INVOICES._pending' | translate }}</span>
                 }
               </td>
               <td class="px-6 py-4 text-center align-middle">

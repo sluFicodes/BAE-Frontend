@@ -40,7 +40,104 @@ export class InvoicesService {
     let result =  lastValueFrom(this.http.get<any[]>(url));
     console.log(result)
     // return result;
-    //  TODO mas triste es robar:
-    return [{"id":"urn:ngsi-ld:applied-customer-billing-rate:fad969da-d913-4844-85ed-654bf5e3064a","href":"urn:ngsi-ld:applied-customer-billing-rate:fad969da-d913-4844-85ed-654bf5e3064a","date":"2025-01-29T13:52:46.222721837Z","description":"Una factura","isBilled":false,"name":"Factura A","type":"pepepe","appliedTax":[{"taxCategory":"VAT","taxRate":0.5,"taxAmount":{"unit":"€","value":12.4}}],"billingAccount":{"id":"urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702","href":"urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702","name":"qwert12345"},"taxExcludedAmount":{"unit":"€","value":1.2},"taxIncludedAmount":{"unit":"€","value":3.6}},{"id":"urn:ngsi-ld:applied-customer-billing-rate:205c6b86-21c7-4cee-a689-18da800741ca","href":"urn:ngsi-ld:applied-customer-billing-rate:205c6b86-21c7-4cee-a689-18da800741ca","date":"2025-01-29T22:02:19.178869389Z","description":"Una factura","isBilled":false,"name":"Factura A","type":"pepepe","appliedTax":[{"taxCategory":"VAT","taxRate":0.5,"taxAmount":{"unit":"€","value":12.4}}],"billingAccount":{"id":"urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702","href":"urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702","name":"qwert12345"},"taxExcludedAmount":{"unit":"€","value":1.2},"taxIncludedAmount":{"unit":"€","value":3.6}},{"id":"urn:ngsi-ld:applied-customer-billing-rate:2cc8257e-e10d-48e2-91e2-2df06cb5c2d0","href":"urn:ngsi-ld:applied-customer-billing-rate:2cc8257e-e10d-48e2-91e2-2df06cb5c2d0","date":"2025-01-29T22:02:22.645926084Z","description":"Una factura","isBilled":false,"name":"Factura A","type":"pepepe","appliedTax":[{"taxCategory":"VAT","taxRate":0.5,"taxAmount":{"unit":"€","value":12.4}}],"billingAccount":{"id":"urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702","href":"urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702","name":"qwert12345"},"taxExcludedAmount":{"unit":"€","value":1.2},"taxIncludedAmount":{"unit":"€","value":3.6}}]
+    //  TODO más triste es robar:
+    return [
+      {
+        "id": "urn:ngsi-ld:applied-customer-billing-rate:4c0eae59-b20e-4bc1-953e-450b1b62005e",
+        "href": "urn:ngsi-ld:applied-customer-billing-rate:4c0eae59-b20e-4bc1-953e-450b1b62005e",
+        "date": "2025-01-30T11:06:00.021081459Z",
+        "description": "Mantenimienfo Opplafy",
+        "isBilled": false,
+        "name": "20250123",
+        "type": "-",
+        "appliedTax": [
+          {
+            "taxCategory": "VAT",
+            "taxRate": 10.0,
+            "taxAmount": {
+              "unit": "€",
+              "value": 10.0
+            }
+          }
+        ],
+        "billingAccount": {
+          "id": "urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702",
+          "href": "urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702",
+          "name": "qwert12345"
+        },
+        "taxExcludedAmount": {
+          "unit": "€",
+          "value": 100.0
+        },
+        "taxIncludedAmount": {
+          "unit": "€",
+          "value": 110.0
+        }
+      },
+      {
+        "id": "urn:ngsi-ld:applied-customer-billing-rate:0414d763-f886-43f7-94a3-184665de308d",
+        "href": "urn:ngsi-ld:applied-customer-billing-rate:0414d763-f886-43f7-94a3-184665de308d",
+        "date": "2025-01-29T11:06:40.629374381Z",
+        "description": "Hosting Google",
+        "isBilled": false,
+        "name": "20250124",
+        "type": "-",
+        "appliedTax": [
+          {
+            "taxCategory": "VAT",
+            "taxRate": 10.0,
+            "taxAmount": {
+              "unit": "€",
+              "value": 100.0
+            }
+          }
+        ],
+        "billingAccount": {
+          "id": "urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702",
+          "href": "urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702",
+          "name": "qwert12345"
+        },
+        "taxExcludedAmount": {
+          "unit": "€",
+          "value": 1000.0
+        },
+        "taxIncludedAmount": {
+          "unit": "€",
+          "value": 1100.0
+        }
+      },
+      {
+        "id": "urn:ngsi-ld:applied-customer-billing-rate:2b731d0e-3777-4348-a834-003761ae412f",
+        "href": "urn:ngsi-ld:applied-customer-billing-rate:2b731d0e-3777-4348-a834-003761ae412f",
+        "date": "2025-01-25T11:11:01.470847126Z",
+        "description": "Mongo training",
+        "isBilled": true,
+        "name": "202501268",
+        "type": "-",
+        "appliedTax": [
+          {
+            "taxCategory": "VAT",
+            "taxRate": 10.0,
+            "taxAmount": {
+              "unit": "€",
+              "value": 100.0
+            }
+          }
+        ],
+        "billingAccount": {
+          "id": "urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702",
+          "href": "urn:ngsi-ld:billing-account:99c38326-b1dd-4a90-b25d-80f97051c702",
+          "name": "qwert12345"
+        },
+        "taxExcludedAmount": {
+          "unit": "€",
+          "value": 1000.0
+        },
+        "taxIncludedAmount": {
+          "unit": "€",
+          "value": 1100.0
+        }
+      }
+    ]
   }
 }
