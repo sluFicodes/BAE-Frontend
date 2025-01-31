@@ -70,7 +70,7 @@ const routes: Routes = [
   },
   { path: 'product-orders',
     component: ProductOrdersComponent,
-    canActivate: [AuthGuard], data: { roles: ['individual','orgAdmin'] }
+    canActivate: [AuthGuard], data: { roles: [] }
   },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
 ]
