@@ -495,7 +495,7 @@ export class PaginationService {
     }
   }*/
 
-  async getOrders(page:number,filters:Category[],partyId:any,selectedDate:any,orders:any[],role:any): Promise<any[]> {
+  /*async getOrders(page:number,filters:Category[],partyId:any,selectedDate:any,orders:any[],role:any): Promise<any[]> {
     try{
       orders = await this.orderService.getProductOrders(partyId,page,filters,selectedDate,role)
       for(let i=0;i<orders.length;i++){
@@ -545,9 +545,8 @@ export class PaginationService {
       console.log(orders)
       return orders
     }
-<<<<<<< HEAD
-=======
-  } */
+  }*/
+
   async getOrders(page: number, filters: Category[], partyId: any, selectedDate: any, orders: any[], role: any): Promise<any[]> {
     try {
       // Get Orders
@@ -619,7 +618,6 @@ export class PaginationService {
       console.error('Error fetching orders:', error);
       return [];
     }
->>>>>>> 9c02f26 (ADDS ProductOrderItem support)
   }
 
   async getOffers(inventory:any[]): Promise<any[]> {
@@ -672,14 +670,7 @@ export class PaginationService {
     }
   }
 
-<<<<<<< HEAD
-=======
-
   /*
-<<<<<<< HEAD
->>>>>>> 9c02f26 (ADDS ProductOrderItem support)
-=======
->>>>>>> 0ed46f310cffe53967cb4a0e987700cc25a1c115
   async getInventory(page:number,keywords:any,filters:Category[],partyId:any): Promise<any[]>{
     let inv:any[]=[]
     try {
@@ -709,8 +700,6 @@ export class PaginationService {
     }
   }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
   async getInvoices(page:number,filters:Category[],partyId:any,selectedDate:any,invoices:any[],role:any): Promise<any[]> {
     console.log("---getInvoices---")
     try{
@@ -722,8 +711,4 @@ export class PaginationService {
       return invoices
     }
   }
-=======
->>>>>>> 9c02f26 (ADDS ProductOrderItem support)
-=======
->>>>>>> 0ed46f310cffe53967cb4a0e987700cc25a1c115
 }
