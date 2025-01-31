@@ -620,56 +620,40 @@ export class PaginationService {
     }
   }
 
-  async getOffers(inventory:any[]): Promise<any[]> {
-    try{
-      for(let i=0; i<inventory.length; i++){
-        let prod = await this.api.getProductById(inventory[i].productOffering.id)
-          let attachment: any[]= []
-          let spec = await this.api.getProductSpecification(prod.productSpecification.id)
-            if(spec.attachment){
-              attachment = spec.attachment
-            }
-            inventory[i]['product'] = {
-              id: inventory[i].id,
-              name: prod.name,
-              category: prod.category,
-              description: prod.description,
-              lastUpdate: prod.lastUpdate,
-              attachment: attachment,
-              productSpecification: prod.productSpecification,
-              productOfferingTerm: prod.productOfferingTerm,
-              version: prod.version
+    async getOffers(inventory: any[]): Promise<any[]> {
+      try {
+        // Process inventory items concurrently
+        const processedInventory = await Promise.all(
+          inventory.map(async (item) => {
+            const offering = await this.api.getProductById(item.productOffering.id);
+            const productSpec = await this.api.getProductSpecification(offering.productSpecification.id);
+            
+            // Attachments
+            const attachments = productSpec?.attachment ?? [];
+    
+            // Construct product object
+            item['product'] = {
+              id: item.id,
+              name: offering.name,
+              category: offering.category,
+              description: offering.description,
+              lastUpdate: offering.lastUpdate,
+              attachment: attachments,
+              productSpecification: offering.productSpecification,
+              productOfferingTerm: offering.productOfferingTerm,
+              version: offering.version
             };
-
-            if(inventory[i].productPrice){
-              if(inventory[i].productPrice.length>0){
-                inventory[i]['price']={
-                  "price": inventory[i].productPrice[0].price.taxIncludedAmount.value,
-                  "unit": inventory[i].productPrice[0].price.taxIncludedAmount.unit,
-                  "priceType": inventory[i].productPrice[0].priceType,
-                  "text": inventory[i].productPrice[0].unitOfMeasure != undefined ? '/'+inventory[i].productPrice[0].unitOfMeasure : inventory[i].productPrice[0].recurringChargePeriodType
-                }
-              } else {
-                if(prod.productOfferingPrice){
-                  if(prod.productOfferingPrice.length==1){
-                    let price = await this.api.getProductPrice(prod.productOfferingPrice[0].id)
-                      console.log(price)
-                      inventory[i]['price']={
-                        "price": '',
-                        "unit": '',
-                        "priceType": price.priceType,
-                        "text": ''
-                      }
-                  }
-                }
-              }
-            }
+            return item;
+          })
+        );
+    
+        return processedInventory;
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+        throw error;
       }
-    } finally {
-      return inventory
     }
-  }
-
+  
   /*
   async getInventory(page:number,keywords:any,filters:Category[],partyId:any): Promise<any[]>{
     let inv:any[]=[]

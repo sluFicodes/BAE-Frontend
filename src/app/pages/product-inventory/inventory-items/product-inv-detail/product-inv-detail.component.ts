@@ -36,6 +36,7 @@ export class ProductInvDetailComponent implements OnInit {
   prod:any = {};
   prodSpec:ProductSpecification = {};
   checkCustom:boolean=false;
+  pricePlan: any;
 
   protected readonly faScaleBalanced = faScaleBalanced;
   protected readonly faArrowProgress = faArrowProgress;
@@ -62,75 +63,104 @@ export class ProductInvDetailComponent implements OnInit {
   ) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     initFlowbite();
-    let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      this.check_logged=true;
-      this.cdr.detectChanges();
-    } else {
-      this.check_logged=false,
-      this.cdr.detectChanges();
-    }
+    this.handleLoginState();
 
     this.id = this.route.snapshot.paramMap.get('id');
-    this.inventoryServ.getProduct(this.id).then(data => {
-      console.log(data)
-      this.prod=data;
-      for(let i=0; i<this.prod.prodPrices?.length;i++){
-        if(this.prod.productPrice[i].priceType == 'custom'){
-          this.checkCustom=true;
-        }
+    if (!this.id) return;
+
+    try {
+      this.prod = await this.inventoryServ.getProduct(this.id);
+      this.checkCustom = this.prod?.productPrice?.some((price: any) => price.priceType === 'custom') ?? false;
+
+      const offering = await this.api.getProductById(this.prod.productOffering.id);
+      this.prodSpec = await this.api.getProductSpecification(offering.productSpecification.id);
+
+      if (this.prod.productPrice.length > 0) {
+        this.pricePlan = await this.loadPricePlan(this.prod.productPrice[0].productOfferingPrice.id);
       }
 
-      this.api.getProductById(this.prod.productOffering.id).then(prod => {
-        this.api.getProductSpecification(prod.productSpecification.id).then(spec => {
-          this.prodSpec=spec;
-          
-          let attachment = spec.attachment
-          
-          this.productOff={
-            id: prod.id,
-            name: prod.name,
-            category: prod.category,
-            description: prod.description,
-            lastUpdate: prod.lastUpdate,
-            attachment: attachment,
-            productOfferingPrice: this.prod.productPrice,
-            productSpecification: prod.productSpecification,
-            productOfferingTerm: prod.productOfferingTerm,
-            serviceLevelAgreement: prod.serviceLevelAgreement,
-            version: prod.version
-          }
-          let profile = this.productOff?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
-          if(profile.length==0){
-            this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
-            this.attatchments = this.productOff?.attachment?.filter(item => item.attachmentType != 'Picture') ?? [];
-          } else {
-            this.images = profile;
-            this.attatchments = this.productOff?.attachment?.filter(item => item.name != 'Profile Picture') ?? [];
-          }
+      this.productOff = {
+        id: offering.id,
+        name: offering.name,
+        category: offering.category,
+        description: offering.description,
+        lastUpdate: offering.lastUpdate,
+        attachment: this.prodSpec?.attachment ?? [],
+        productOfferingPrice: this.prod.productPrice,
+        productSpecification: offering.productSpecification,
+        productOfferingTerm: offering.productOfferingTerm,
+        serviceLevelAgreement: offering.serviceLevelAgreement,
+        version: offering.version
+      };
 
-          if(spec.serviceSpecification != undefined){
-            for(let j=0; j < spec.serviceSpecification.length; j++){
-              this.api.getServiceSpec(spec.serviceSpecification[j].id).then(serv => {
-                this.serviceSpecs.push(serv);
-              })
-            }
-          }
-          if(spec.resourceSpecification != undefined){
-            for(let j=0; j < spec.resourceSpecification.length; j++){
-              this.api.getResourceSpec(spec.resourceSpecification[j].id).then(res => {
-                this.resourceSpecs.push(res);
-              })
-            }
-          }
-  
-        })
-      })
+      console.log(this.productOff)
+
+      this.organizeAttachments();
+      this.completeCharacteristics();
+
+      // Fetch service & resource specs concurrently
+      await this.fetchSpecifications();
+
+      this.cdr.detectChanges();
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+    }
+  }
+
+  private completeCharacteristics() {
+    this.prod.productCharacteristic = this.prod?.productCharacteristic?.map((spec: any) => {
+      this.prodSpec?.productSpecCharacteristic?.forEach((char: any) => {
+        if (spec.name === char.name && char.productSpecCharacteristicValue &&
+            char.productSpecCharacteristicValue.length > 0 && char.productSpecCharacteristicValue[0].unitOfMeasure) {
+          spec.unitOfMeasure = char.productSpecCharacteristicValue[0].unitOfMeasure;
+        }
+      });
+      return spec;
     })
+  }
+
+  private handleLoginState() {
+    const aux = this.localStorage.getObject('login_items') as LoginInfo;
+    const isValidSession = aux && Object.keys(aux).length > 0 && (aux.expire - moment().unix() - 4) > 0;
+
+    this.check_logged = isValidSession;
     this.cdr.detectChanges();
-    
+  }
+
+  private organizeAttachments() {
+    const profile = this.productOff?.attachment?.filter((item: any) => item.name === 'Profile Picture') ?? [];
+
+    if (profile.length === 0) {
+      this.images = this.productOff?.attachment?.filter((item: any) => item.attachmentType === 'Picture') ?? [];
+      this.attatchments = this.productOff?.attachment?.filter((item: any) => item.attachmentType !== 'Picture') ?? [];
+    } else {
+      this.images = profile;
+      this.attatchments = this.productOff?.attachment?.filter((item: any) => item.name !== 'Profile Picture') ?? [];
+    }
+  }
+
+  private async fetchSpecifications() {
+    const serviceSpecRequests = this.prodSpec?.serviceSpecification?.map((spec: any) =>
+      this.api.getServiceSpec(spec.id)
+    ) ?? [];
+    const resourceSpecRequests = this.prodSpec?.resourceSpecification?.map((spec: any) =>
+      this.api.getResourceSpec(spec.id)
+    ) ?? [];
+
+    const [serviceSpecs, resourceSpecs] = await Promise.all([
+      Promise.all(serviceSpecRequests),
+      Promise.all(resourceSpecRequests)
+    ]);
+
+    this.serviceSpecs = serviceSpecs;
+    this.resourceSpecs = resourceSpecs;
+  }
+
+  private async loadPricePlan(priceId: string) {
+    const pricePlan = await this.api.getOfferingPrice(priceId);
+    return pricePlan;
   }
 
   back(){

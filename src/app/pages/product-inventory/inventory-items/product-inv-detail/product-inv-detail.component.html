@@ -36,7 +36,10 @@
                 <!--</a>-->
             </div>
             <div class="pt-2 line-clamp-5 h-fit">
-                <markdown class="dark:text-gray-200 text-wrap break-all" [data]="prodSpec.description"></markdown>
+                <markdown class="dark:text-gray-200 text-wrap break-all" [data]="productOff?.description"></markdown>
+            </div>
+            <div class="pt-2 line-clamp-5 h-fit">
+                Start Date: {{ prod.startDate }}
             </div>
         </div>
         <div class="hidden lg:block overflow-hidden rounded-r-lg">
@@ -74,78 +77,32 @@
                     </div>
                 }
 
-            <h2 class="text-4xl font-extrabold text-primary-100 dark:text-primary-50 text-center pb-8 pt-12">Product pricing</h2>
+            <h2 class="text-4xl font-extrabold text-primary-100 dark:text-primary-50 text-center pb-8 pt-12">Price Plan</h2>
             @if(prod?.productPrice != undefined){
-                @if(checkCustom){
-                    <div class="grid grid-flow-row gap-4 lg:grid-cols-2 lg:auto-cols-auto justify-items-center p-2">
-                        @for (price of prod?.productPrice; track price.id) {
-                            @if (price.priceType == 'custom') {
-                                <div class="mx-auto bg-white border border-gray-200 dark:bg-secondary-200 dark:border-gray-800 rounded-lg shadow w-full p-4">
-                                    <div class="flex justify-start mb-2">
-                                        <h2 class="text-gray-900 dark:text-white text-3xl font-extrabold mb-2">{{price.name}}</h2>
-                                    </div>
-                                    <markdown class="dark:text-gray-200 w-full p-4 text-wrap break-all" [data]="price?.description"></markdown>
-                                </div>
-                            }
-                        }
-                        @if(prod?.productPrice?.length==0){
-                            <div class="inline-flex items-center justify-center w-full">
-                                <div class="max-w-sm bg-white border border-gray-200  rounded-lg shadow w-full">
-                                    <div class="bg-blue-500 rounded-t-lg w-full">
-                                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{ 'SHOPPING_CART._free' | translate }}</h5>
-                                    </div>
-                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700">{{ 'SHOPPING_CART._free_desc' | translate }}</p>
-                                </div>
-                            </div>
-                        }
-                    </div>   
-                } @else {
-                    <div class="grid grid-flow-row gap-4 lg:grid-cols-3 lg:auto-cols-auto justify-items-center p-2">
-                        @for (price of prod?.productPrice; track price) {
-                            @if (price.priceType == 'recurring') {
-                                <div class="max-w-sm bg-white dark:bg-secondary-200 dark:border-gray-800 border border-gray-200 rounded-lg shadow w-full">
-                                    <div class="bg-green-500 rounded-t-lg w-full text-wrap break-all">
-                                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 w-full">{{price.name}}</h5>
-                                    </div>
-                                    <p class="flex justify-center font-normal text-gray-700 dark:text-white"> <b class="text-xl mr-2">{{price.price?.taxIncludedAmount?.value}}</b> {{price.price?.taxIncludedAmount?.unit}}</p>
-                                    <p class="flex justify-center font-normal text-gray-700 dark:text-white">/{{price.recurringChargePeriodType}}</p>
-                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700 dark:text-white text-wrap break-all">{{price?.description}}</p>
-                                </div>
-                            } @else if (price.priceType == 'usage') {
-                                <div class="max-w-sm bg-white border border-gray-200 dark:bg-secondary-200 dark:border-gray-800 rounded-lg shadow w-full">
-                                    <div class="bg-yellow-300 rounded-t-lg w-full">
-                                        <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900 text-wrap break-all">{{price.name}}</h5>
-                                    </div>
-                                    <p class="flex justify-center font-normal text-gray-700 dark:text-white"> <b class="text-xl mr-2">{{price.price?.taxIncludedAmount?.value}}</b> {{price.price?.taxIncludedAmount?.unit}}</p>
-                                    <p class="flex justify-center font-normal text-gray-700 dark:text-white">/{{price.unitOfMeasure}}</p>
-                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700 dark:text-white text-wrap break-all">{{price?.description}}</p>
-                                </div>
-                            } @else {
-                                <div class="max-w-sm bg-white border border-gray-200 dark:bg-secondary-200 dark:border-gray-800 rounded-lg shadow w-full">
-                                    <div class="bg-blue-500 rounded-t-lg w-full">
-                                        <h5 class="flex justify-center mb-4 p-6 text-2xl font-bold tracking-tight text-gray-900 text-wrap break-all">{{price.name}}</h5>
-                                    </div>
-                                    <p class="flex justify-center font-normal text-gray-700 dark:text-white"> <b class="text-xl mr-2">{{price.price?.taxIncludedAmount?.value}}</b> {{price.price?.taxIncludedAmount?.unit}}</p>
-                                    <p class="flex justify-center mb-2 p-4 font-normal text-gray-700 dark:text-white text-wrap break-all">{{price?.description}}</p>
-                                </div>
-                            }
-                        }
-                        @if(prod?.productPrice?.length==0){
-                            <div class="max-w-sm bg-white border border-gray-200 dark:bg-secondary-200 dark:border-gray-800 rounded-lg shadow w-full">
+                <div class="grid grid-flow-row gap-4 lg:grid-cols-2 lg:auto-cols-auto justify-items-center p-2">
+                    @if(prod?.productPrice?.length==0){
+                        <div class="inline-flex items-center justify-center w-full">
+                            <div class="max-w-sm bg-white border border-gray-200  rounded-lg shadow w-full">
                                 <div class="bg-blue-500 rounded-t-lg w-full">
                                     <h5 class="flex justify-center mb-2 p-6 text-2xl font-bold tracking-tight text-gray-900">{{ 'SHOPPING_CART._free' | translate }}</h5>
                                 </div>
-                                <p class="flex justify-center mb-2 font-normal text-gray-700 dark:text-white">{{ 'SHOPPING_CART._free_desc' | translate }}</p>
-                            </div> 
-                        }
-                    </div>
-                }
+                                <p class="flex justify-center mb-2 p-4 font-normal text-gray-700">{{ 'SHOPPING_CART._free_desc' | translate }}</p>
+                            </div>
+                        </div>
+                    } @else {
+                        <div class="mx-auto bg-white border border-gray-200 dark:bg-secondary-200 dark:border-gray-800 rounded-lg shadow w-full p-4">
+                            <div class="flex justify-start mb-2">
+                                <h2 class="text-gray-900 dark:text-white text-3xl font-extrabold mb-2">{{pricePlan?.name}}</h2>
+                            </div>
+                            <markdown class="dark:text-gray-200 w-full p-4 text-wrap break-all" [data]="pricePlan?.description"></markdown>
+                        </div>
+                    }
+                </div>
             }
         </div>
-        
         @if(prod.productCharacteristic != undefined && prod.productCharacteristic.length>0) {
             <div #charsContent id="chars-container">
-                <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12 dark:text-primary-50">Product characteristics</h2>
+                <h2 class="text-4xl font-extrabold text-primary-100 text-center pb-8 pt-12 dark:text-primary-50">Configuration options</h2>
                 <div class="container mx-auto px-4">
                     <div class="flex flex-wrap -mx-4">
                         @for (char of prod.productCharacteristic; track char.id; let idx = $index) {
