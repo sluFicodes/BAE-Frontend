@@ -15,6 +15,8 @@ export const environment = {
     INVENTORY: '/inventory',
     PRODUCT_ORDER: '/ordering',
     BILLING: '/billing',
+    CHARGING: '/charging',
+
     CUSTOMER_BILLING:'/appliedCustomerBillingRate',
     CONSUMER_BILLING_URL: 'http://localhost:8640',
     INVOICE_LIMIT: 100,

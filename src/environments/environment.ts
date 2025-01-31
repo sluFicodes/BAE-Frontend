@@ -14,6 +14,7 @@ export const environment = {
     SHOPPING_CART: '/shoppingCart',
     INVENTORY: '/inventory',
     PRODUCT_ORDER: '/ordering',
+    CHARGING: '/charging',
     BILLING: '/billing',
 
     CUSTOMER_BILLING:'/appliedCustomerBillingRate',

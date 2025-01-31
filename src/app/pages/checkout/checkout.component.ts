@@ -6,7 +6,7 @@ import {EventMessageService} from "../../services/event-message.service";
 import {PriceServiceService} from "../../services/price-service.service";
 import {ShoppingCartServiceService} from "../../services/shopping-cart-service.service";
 import {ApiServiceService} from "../../services/product-service.service";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {billingAccountCart, cartProduct, LoginInfo} from "../../models/interfaces";
 import {faCartShopping} from "@fortawesome/sharp-solid-svg-icons";
 import {environment} from "../../../environments/environment";
@@ -17,6 +17,7 @@ import * as moment from "moment/moment";
 import {ProductOrderService} from "../../services/product-order-service.service";
 import {BillingAddressComponent} from "./billing-address/billing-address.component";
 import {BillingAccountFormComponent} from "../../shared/billing-account-form/billing-account-form.component";
+import { PaymentService } from 'src/app/services/payment.service';
 
 
 @Component({
@@ -54,9 +55,11 @@ export class CheckoutComponent implements OnInit {
     private eventMessage: EventMessageService,
     private priceService: PriceServiceService,
     private cartService: ShoppingCartServiceService,
+    private paymentService: PaymentService,
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
-    private router: Router,) {
+    private router: Router,
+    private route: ActivatedRoute) {
     // Bind the method to preserve context
     this.orderProduct = this.orderProduct.bind(this);
     this.eventMessage.messages$.subscribe(ev => {
@@ -297,12 +300,12 @@ export class CheckoutComponent implements OnInit {
       console.log(redirectUrl);
       console.log('PROD ORDER DONE');
 
-      await this.emptyShoppingCart();
-
       if (redirectUrl) {
         // Going to the payment gateway
         window.location.href = redirectUrl;
       } else {
+        // we clear the shopping cart only if no redirection is applied
+        await this.emptyShoppingCart();
         this.goToInventory();
       }
     } catch (error) {
@@ -385,8 +388,41 @@ export class CheckoutComponent implements OnInit {
       //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
     });
 
-    this.initCheckoutData();
+    // Method 1: Get query params once
+    console.log('--- Query Params ---');
+    console.log(this.route.snapshot.queryParams);
 
+    // Check if we are comming from a purchase
+    const qParams:any = this.route.snapshot.queryParams;
+    if (qParams.client && qParams.action && qParams.ref) {
+      // All the payment basic params are here
+
+      this.loading_purchase = true;
+      firstValueFrom(this.paymentService.completePayment(qParams)).then((response) => {
+        this.loading_purchase = false;
+
+        console.log('--- Payment Response ---')
+        console.log(response)
+
+        if (qParams.action == 'accept' && response.status == 200) {
+          // Success request
+          this.emptyShoppingCart().then(() => this.goToInventory());
+          // Redirect to the inventory page
+        } else {
+          // Call the cancel endpoint
+          // We had an error, so we reload the checkout page
+          this.initCheckoutData();
+        }  
+      }).catch((error) => {
+        this.loading_purchase = true;
+        console.log('--- Payment Error ---')
+        console.log(error)
+        this.initCheckoutData();
+      });
+
+    } else {
+      this.initCheckoutData();
+    }
   }
 
   initCheckoutData() {
