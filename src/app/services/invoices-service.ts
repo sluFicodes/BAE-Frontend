@@ -19,10 +19,10 @@ export class InvoicesService {
 
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
-  getInvoices(partyId:any,page:any,filters:any[],date:any,role:any){
+  getInvoices(partyId:any, page:any, filters:any[], date:any, role:any){
 
     // TODO. Qué le pasa a esta petición? devuelve algo raro....
-    let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}?limit=${InvoicesService.ORDER_LIMIT}&offset=${page}&fields`;
+    let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}?limit=${InvoicesService.ORDER_LIMIT}&offset=${page}`;
   
     // let status=''
     // if(filters.length>0){
@@ -42,7 +42,7 @@ export class InvoicesService {
     //  TODO no se que le pasa a esta petición
     let result =  lastValueFrom(this.http.get<any[]>(url));
     console.log(result)
-    // return result;
+    return result;
     //  TODO más triste es robar:
     return [
       {

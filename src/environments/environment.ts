@@ -14,6 +14,8 @@ export const environment = {
     SHOPPING_CART: '/shoppingCart',
     INVENTORY: '/inventory',
     PRODUCT_ORDER: '/ordering',
+    BILLING: '/billing',
+
     CUSTOMER_BILLING:'/appliedCustomerBillingRate',
     CONSUMER_BILLING_URL: 'http://localhost:8640',
     //API PAGINATION
