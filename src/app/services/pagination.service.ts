@@ -676,7 +676,10 @@ export class PaginationService {
 =======
 
   /*
+<<<<<<< HEAD
 >>>>>>> 9c02f26 (ADDS ProductOrderItem support)
+=======
+>>>>>>> 0ed46f310cffe53967cb4a0e987700cc25a1c115
   async getInventory(page:number,keywords:any,filters:Category[],partyId:any): Promise<any[]>{
     let inv:any[]=[]
     try {
@@ -707,6 +710,7 @@ export class PaginationService {
   }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   async getInvoices(page:number,filters:Category[],partyId:any,selectedDate:any,invoices:any[],role:any): Promise<any[]> {
     console.log("---getInvoices---")
     try{
@@ -720,4 +724,6 @@ export class PaginationService {
   }
 =======
 >>>>>>> 9c02f26 (ADDS ProductOrderItem support)
+=======
+>>>>>>> 0ed46f310cffe53967cb4a0e987700cc25a1c115
 }
