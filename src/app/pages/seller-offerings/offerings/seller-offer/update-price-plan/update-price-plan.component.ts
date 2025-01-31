@@ -224,6 +224,11 @@ export class UpdatePricePlanComponent implements OnInit {
           amount:1,
           units:this.selectedCharacteristic.productSpecCharacteristicValue[0].unitOfMeasure
         }
+        pricecomponent.prodSpecCharValueUse = [{
+          id: this.selectedCharacteristic.id,
+          name: this.selectedCharacteristic.name,
+          productSpecCharacteristicValue: []
+        }]
       //if not
       } else { 
         const charIdx = this.selectedCharacteristic.productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (this.selectedCharacteristicVal).toString());

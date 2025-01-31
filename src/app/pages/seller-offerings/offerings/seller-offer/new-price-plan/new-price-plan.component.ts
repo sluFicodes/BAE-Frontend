@@ -171,7 +171,7 @@ export class NewPricePlanComponent implements OnInit {
       priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.recurringPrepaidSelected ? 'recurring-prepaid' : 'one time'
     }
     if(this.selectedCharacteristic!=undefined){
-      console.log(this.selectedCharacteristic)      
+      console.log(this.selectedCharacteristic)          
       //If its a range characteristic
       if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
         console.log('---- RANGO -----')
@@ -179,9 +179,14 @@ export class NewPricePlanComponent implements OnInit {
           amount:1,
           units:this.selectedCharacteristic.productSpecCharacteristicValue[0].unitOfMeasure
         }
+        pricecomponent.prodSpecCharValueUse = [{
+          id: this.selectedCharacteristic.id,
+          name: this.selectedCharacteristic.name,
+          productSpecCharacteristicValue: []
+        }] 
       //if not
-      } else {
-        let charVal:any={value:this.selectedCharacteristicVal}  
+      } else {   
+        let charVal:any={value:this.selectedCharacteristicVal}        
         const charIdx = this.selectedCharacteristic.productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (this.selectedCharacteristicVal).toString());
         if(charIdx!=-1){
           if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[charIdx]){
