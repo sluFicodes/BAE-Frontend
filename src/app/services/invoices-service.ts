@@ -27,7 +27,7 @@ export class InvoicesService {
 
 
     // TODO. Qué le pasa a esta petición? devuelve algo raro....
-    let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}?limit=${InvoicesService.ORDER_LIMIT}&offset=${page}`;
+    let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}?limit=1000&offset=${page}`;
   
     url += `&relatedParty.id=${partyId}&relatedParty.role=${role}`
 

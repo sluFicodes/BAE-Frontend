@@ -89,6 +89,13 @@ export class ProductOrdersComponent implements OnInit {
     today.setMonth(today.getMonth()-1);
     this.selectedDate = today.toISOString();
     this.dateRange.setValue('month');
+
+    let order_button = document.getElementById('order-button')
+    let invoices_button = document.getElementById('bill-button')
+
+    this.selectMenu(order_button,'text-white bg-primary-100');
+    this.unselectMenu(invoices_button,'text-white bg-primary-100');
+
     this.initPartyInfo();
   }
 
@@ -262,11 +269,47 @@ export class ProductOrdersComponent implements OnInit {
     await this.getOrders(false);
   }
 
+  removeClass(elem: HTMLElement, cls:string) {
+    var str = " " + elem.className + " ";
+    elem.className = str.replace(" " + cls + " ", " ").replace(/^\s+|\s+$/g, "");
+  }
+
+  addClass(elem: HTMLElement, cls:string) {
+      elem.className += (" " + cls);
+  }
+
+  unselectMenu(elem:HTMLElement | null,cls:string){
+    if(elem != null){
+      if(elem.className.match(cls)){
+        this.removeClass(elem,cls)
+      } else {
+        console.log('already unselected')
+      }
+    }
+  }
+
+  selectMenu(elem:HTMLElement| null,cls:string){
+    if(elem != null){
+      if(elem.className.match(cls)){
+        console.log('already selected')
+      } else {
+        this.addClass(elem,cls)
+      }
+    }
+  }
+
   goToOrders(){
     console.log("--goToOrders--")
     //this.selectOrder();
     this.show_invoices=false;
     this.show_orders=true;
+
+    let order_button = document.getElementById('order-button')
+    let invoices_button = document.getElementById('bill-button')
+
+    this.selectMenu(order_button,'text-white bg-primary-100');
+    this.unselectMenu(invoices_button,'text-white bg-primary-100');
+
     this.cdr.detectChanges();
   }
   goToInvoices(){
@@ -274,6 +317,13 @@ export class ProductOrdersComponent implements OnInit {
     //this.selectBilling();
     this.show_invoices=true;
     this.show_orders=false;
+
+    let order_button = document.getElementById('order-button')
+    let invoices_button = document.getElementById('bill-button')
+
+    this.unselectMenu(order_button,'text-white bg-primary-100');
+    this.selectMenu(invoices_button,'text-white bg-primary-100');
+
     this.cdr.detectChanges();
   }
 }
