@@ -216,7 +216,10 @@ export class UpdateOfferComponent implements OnInit{
         const index = this.createdPrices.findIndex((item) => item.id === price.id);
         if(index!=-1){
           console.log('updating price values...')
-          this.createdPrices[index]=price;
+          //this.createdPrices[index]=price;
+          this.createdPrices = this.createdPrices.map((item, index) => 
+            index === index ? price : item
+          );
         }
         if(this.editPrice){
           this.editPrice=false;
@@ -312,6 +315,9 @@ export class UpdateOfferComponent implements OnInit{
           }
           if(data.priceType){
             priceInfo.priceType=data.priceType;
+          }
+          if(data.prodSpecCharValueUse){
+            priceInfo.prodSpecCharValueUse=data.prodSpecCharValueUse;
           }
           if(data.bundledPopRelationship){
             let relatedPrices:any[] = [];
@@ -1130,29 +1136,27 @@ export class UpdateOfferComponent implements OnInit{
             if(this.createdPrices[i].unitOfMeasure){
               priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
             }
-            this.api.postOfferingPrice(priceToCreate).subscribe({
-              next: data => {
-                console.log('precio')
-                console.log(data)
-                this.createdPrices[i].id=data.id;
-                if(i==this.createdPrices.length-1){
-                  this.saveOfferInfo();
-                }            
-              },
-              error: error => {
-                console.error('There was an error while creating offers price!', error);
-                if(error.error.error){
-                  console.log(error)
-                  this.errorMessage='Error: '+error.error.error;
-                } else {
-                  this.errorMessage='There was an error while creating offers price!';
-                }
-                this.showError=true;
-                setTimeout(() => {
-                  this.showError = false;
-                }, 3000);
+            try {
+              let createdPrices = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
+              console.log('precio')
+              console.log(createdPrices)
+              this.createdPrices[i].id=createdPrices.id;
+              if(i==this.createdPrices.length-1){
+                this.saveOfferInfo();
               }
-            });
+            } catch (error:any){
+              console.error('There was an error while creating offers price!', error);
+              if(error.error.error){
+                console.log(error)
+                this.errorMessage='Error: '+error.error.error;
+              } else {
+                this.errorMessage='There was an error while creating offers price!';
+              }
+              this.showError=true;
+              setTimeout(() => {
+                this.showError = false;
+              }, 3000);
+            }
           }        
           //EL PRECIO EXISTE -- UPDATE  
           } else {
@@ -1165,7 +1169,10 @@ export class UpdateOfferComponent implements OnInit{
                 let compRel:any[]=[];
                 if(components != undefined){
                   for(let j=0;j<components?.length;j++){
-                    const compIdx = this.oldPrices[index].bundledPopRelationship.findIndex((item: { id: any; }) => item.id === components![j].id);
+                    let compIdx = this.oldPrices[index].bundledPopRelationship.findIndex((item: { id: any; }) => item.id === components?.[j]?.id);
+                    if(!this.oldPrices[index].bundledPopRelationship[compIdx].id.startsWith('urn:ngsi')){
+                      compIdx=-1;
+                    }
                     if(compIdx!=-1){
                       //UPDATE COMPONENT
                       let priceCompToUpdate: ProductOfferingPrice = {
@@ -1269,6 +1276,10 @@ export class UpdateOfferComponent implements OnInit{
                       }
 
                       try{
+                        console.log('--PRICE TO UPDATE---------')
+                        console.log(priceCompToUpdate)
+                        console.log('id')
+                        console.log(priceCompToUpdate.id)
                         let priceCompToUpdateId=priceCompToUpdate.id;
                         delete priceCompToUpdate.id;
                         await lastValueFrom(this.api.updateOfferingPrice(priceCompToUpdate,priceCompToUpdateId))
@@ -1378,14 +1389,15 @@ export class UpdateOfferComponent implements OnInit{
                 //UPDATE price plan
                 console.log('prices----')
                 console.log(this.createdPrices[i])
-                let mappedCreatedPriced = this.createdPrices[i].bundledPopRelationship?.map(({ id, href, name }) => ({ id, href, name }));
+                let mappedCreatedPriced = this.createdPrices[i].bundledPopRelationship?.map(({ id, href, name }) => ({ id, href, name }));                
+
                 let priceToUpdate: ProductOfferingPrice = {
                   id: this.createdPrices[i].id,
                   name: this.createdPrices[i].name,
                   isBundle: true,
                   description: this.createdPrices[i].description,
                   lifecycleStatus: this.createdPrices[i].lifecycleStatus,
-                  bundledPopRelationship: mappedCreatedPriced?.concat(compRel)
+                  bundledPopRelationship: mappedCreatedPriced?.concat(compRel).filter(item => item.id && item.id.startsWith("urn:ngsi"))
                 }
                 try{
                   let priceToUpdateId=priceToUpdate.id;
