@@ -68,6 +68,7 @@ export class PaginationService {
         page=0;
         params[0]=page;
 
+        console.log('------ Calling handler')
         console.log(params)
         let data = await handler(...params)
         items=data;
@@ -684,8 +685,9 @@ export class PaginationService {
     }
   }
 
-  async getInvoices(page:number,filters:Category[],partyId:any,selectedDate:any,invoices:any[],role:any): Promise<any[]> {
+  async getInvoices(page:number, filters:Category[], partyId:any, selectedDate:any, role:any): Promise<any[]> {
     console.log("---getInvoices---")
+    let invoices = []
     try{
       invoices = await this.invoicesService.getInvoices(partyId,page,filters,selectedDate,role)
     } finally {

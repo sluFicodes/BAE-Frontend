@@ -150,12 +150,12 @@ export class InvoicesInfoComponent implements OnInit {
       console.log('--pag')
       console.log(data)
       console.log(this.invoices)
-      this.page_check=data.page_check;
-      this.invoices=data.items;
-      this.nextInvoices=data.nextItems;
-      this.page=data.page;
-      this.loading=false;
-      this.loading_more=false;
+      this.page_check = data.page_check;
+      this.invoices = data.items;
+      this.nextInvoices = data.nextItems;
+      this.page = data.page;
+      this.loading = false;
+      this.loading_more = false;
     })
   }
 
@@ -262,5 +262,3 @@ export class InvoicesInfoComponent implements OnInit {
     await this.getInvoices(false);
   }
 }
-
-{ observe: 'response' }

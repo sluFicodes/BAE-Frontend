@@ -184,10 +184,20 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     for(let i=0; i<this.getKeys(selectedCharacteristics).length;i++){
       let idx = this.filteredCharacteristics.findIndex(item => item.id === this.getKeys(selectedCharacteristics)[i]);
       console.log(this.filteredCharacteristics[idx])
+
+      let value = this.getValues(selectedCharacteristics)[i]
+      let valueType = this.filteredCharacteristics[idx].valueType
+
+      if (!valueType && isNaN(value)) {
+        valueType = 'string'
+      } else if (!valueType && !isNaN(value)) {
+        valueType = 'number'
+      }
+
       this.orderChars.push({
         "name": this.filteredCharacteristics[idx].name,
-        "value": this.getValues(selectedCharacteristics)[i],
-        "valueType": this.filteredCharacteristics[idx].valueType,
+        "value": value,
+        "valueType": valueType,
       })
     }
 
