@@ -21,9 +21,16 @@ export class InvoicesService {
 
   getInvoices(partyId:any, page:any, filters:any[], date:any, role:any){
 
+    console.log('Reading invoices')
+    console.log(partyId)
+    console.log(role)
+
+
     // TODO. Qué le pasa a esta petición? devuelve algo raro....
     let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}?limit=${InvoicesService.ORDER_LIMIT}&offset=${page}`;
   
+    url += `&relatedParty.id=${partyId}&relatedParty.role=${role}`
+
     // let status=''
     // if(filters.length>0){
     //   for(let i=0; i < filters.length; i++){
