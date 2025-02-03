@@ -227,7 +227,10 @@ export class CreateOfferComponent implements OnInit {
         const index = this.createdPrices.findIndex((item) => item.id === price.id);
         if(index!=-1){
           console.log('updating price values...')
-          this.createdPrices[index]=price;
+          //this.createdPrices[index]=price;
+          this.createdPrices = this.createdPrices.map((item, index) => 
+            index === index ? price : item
+          );
         }
         if(this.editPrice){
           this.editPrice=false;
@@ -1022,29 +1025,27 @@ export class CreateOfferComponent implements OnInit {
           if(this.createdPrices[i].unitOfMeasure){
             priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
           }
-          this.api.postOfferingPrice(priceToCreate).subscribe({
-            next: data => {
-              console.log('precio')
-              console.log(data)
-              this.createdPrices[i].id=data.id;
-              if(i==this.createdPrices.length-1){
-                this.saveOfferInfo();
-              }            
-            },
-            error: error => {
-              console.error('There was an error while creating offers price!', error);
-              if(error.error.error){
-                console.log(error)
-                this.errorMessage='Error: '+error.error.error;
-              } else {
-                this.errorMessage='There was an error while creating offers price!';
-              }
-              this.showError=true;
-              setTimeout(() => {
-                this.showError = false;
-              }, 3000);
+          try{
+            let createdPrices = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
+            console.log('precio')
+            console.log(createdPrices)
+            this.createdPrices[i].id=createdPrices.id;
+            if(i==this.createdPrices.length-1){
+              this.saveOfferInfo();
             }
-          });
+          } catch (error:any){
+            console.error('There was an error while creating offers price!', error);
+            if(error.error.error){
+              console.log(error)
+              this.errorMessage='Error: '+error.error.error;
+            } else {
+              this.errorMessage='There was an error while creating offers price!';
+            }
+            this.showError=true;
+            setTimeout(() => {
+              this.showError = false;
+            }, 3000);
+          }
         }
       }
     } else {
