@@ -201,6 +201,16 @@
               {{invoiceToShow?.appliedTax[0].taxAmount.value}}{{invoiceToShow?.appliedTax[0].taxAmount.unit}}
             </h3>
           </div>
+          @if (invoiceToShow?.isBilled){
+            <div class="flex flex-row gap-2 pb-2 text-gray-600">
+              <p class="w-fit text-base font-bold shrink-0 dark:text-white">
+                {{ 'INVOICES._product' | translate }}
+              </p>
+              <h3 class="text-base dark:text-gray-200">
+                <a class="font-medium mr-1 text-blue-600 dark:text-blue-500 hover:underline" (click)="goToProduct(invoiceToShow?.product.id)">{{invoiceToShow?.product.id}}</a>
+              </h3>
+            </div>
+          }
         </div>
       </div>
     </div>

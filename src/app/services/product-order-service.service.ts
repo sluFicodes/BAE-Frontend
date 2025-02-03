@@ -27,6 +27,7 @@ export class ProductOrderService {
   getProductOrders(partyId:any,page:any,filters:any[],date:any,role:any){
     console.log('getProductOrders');
     let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=${role}`;
+
     //let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder?limit=${ProductOrderService.ORDER_LIMIT}&offset=${page}&relatedParty.id=${partyId}&relatedParty.role=Seller`;
     let status=''
     if(filters.length>0){

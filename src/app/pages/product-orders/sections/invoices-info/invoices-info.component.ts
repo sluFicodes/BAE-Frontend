@@ -62,7 +62,8 @@ export class InvoicesInfoComponent implements OnInit {
     private accountService: AccountServiceService,
     private invoicesService: InvoicesService,
     private eventMessage: EventMessageService,
-    private paginationService: PaginationService
+    private paginationService: PaginationService,
+    private router: Router
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
@@ -260,5 +261,9 @@ export class InvoicesInfoComponent implements OnInit {
     this.role=role;
     console.log('ROLE',this.role);
     await this.getInvoices(false);
+  }
+
+  goToProduct(prodId: any) {
+    this.router.navigate(['/product-inventory/', prodId]);
   }
 }

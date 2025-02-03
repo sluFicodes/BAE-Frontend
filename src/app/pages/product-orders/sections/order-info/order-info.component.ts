@@ -113,8 +113,8 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
       };
 
       // Llamar al servicio para hacer el PATCH
-      const response = await this.orderService.updateOrder(this.orderToShow.id, patchData);
-      console.log("Order updated successfully:", response);
+      //const response = await this.orderService.updateOrder(this.orderToShow.id, patchData);
+      //console.log("Order updated successfully:", response);
 
       // Cerrar el modal después de la actualización
       this.closeModal();
@@ -332,7 +332,7 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
   }
 
   async onRoleChange(role: any) {
-    this.role=role;
+    this.role = role;
     console.log('ROLE',this.role);
     await this.getOrders(false);
   }

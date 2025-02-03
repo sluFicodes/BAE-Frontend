@@ -349,7 +349,7 @@
                                             }
                                           </td>
                                           <td class="px-6 py-4 text-center align-middle flex justify-center">
-                                            @if (!item.productOrderItem.state) {
+                                            @if (!item.productOrderItem.state && item.productOfferingPrice.priceType == 'custom' && role == 'Seller') {
                                               <button type="button" title="Acknowledge the order item"
                                                       class="text-white bg-primary-100 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"
                                                       (click)="openModal('Acknowledge', item)">
@@ -369,7 +369,7 @@
                                                 </svg>
                                               </button>
                                             } @else {
-                                                @if(item.productOfferingPrice.priceType == 'custom'){
+                                                @if(item.productOfferingPrice.priceType == 'custom' && role == 'Seller'){
                                                   @if (item.productOrderItem.state === 'acknowledged') {
                                                     <button type="button" title="Start Order Treatment"
                                                             class="text-green-950 bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2"

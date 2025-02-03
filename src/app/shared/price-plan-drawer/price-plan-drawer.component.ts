@@ -172,6 +172,10 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   }
   // Método para calcular el precio usando el servicio
   calculatePrice(): void {
+    if (this.isCustom) {
+      return
+    }
+
     const selectedPricePlan = this.form.get('selectedPricePlan')?.value;
     const selectedCharacteristics = this.form.get('characteristics')?.value;
     console.log('chars....')
@@ -324,6 +328,11 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     // Construir las opciones del producto
     const prodOptions = this.buildProdOptions(formValues.tsAccepted);
 
+    if (this.isCustom){
+      prodOptions.options.pricing = [{
+        id: orderPayload.pricePlan.id
+      }]
+    }
     try {
       // Añadir producto al carrito
       await this.cartService.addItemShoppingCart(prodOptions);
