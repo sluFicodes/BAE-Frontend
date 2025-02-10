@@ -30,12 +30,12 @@ export class OrgInfoComponent {
   email:string='';
   selectedDate:any;
   profileForm = new FormGroup({
-    name: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
     website: new FormControl(''),
     description: new FormControl(''),
   });
   mediumForm = new FormGroup({
-    email: new FormControl('', [Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    email: new FormControl(''),
     country: new FormControl(''),
     city: new FormControl(''),
     stateOrProvince: new FormControl(''),
@@ -457,20 +457,52 @@ export class OrgInfoComponent {
   }
 
   onTypeChange(event: any) {
+    this.mediumForm.reset();
     if(event.target.value=='email'){
       this.emailSelected=true;
       this.addressSelected=false;
       this.phoneSelected=false;
+      this.mediumForm.get('country')?.clearValidators();
+      this.mediumForm.get('city')?.clearValidators();
+      this.mediumForm.get('stateOrProvince')?.clearValidators();
+      this.mediumForm.get('postCode')?.clearValidators();
+      this.mediumForm.get('street')?.clearValidators();
+      this.mediumForm.get('telephoneNumber')?.clearValidators();
+      this.mediumForm.get('email')?.setValidators([Validators.required,Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
+      this.mediumForm.get('email')?.markAsUntouched();
+      this.cdr.detectChanges();
     }else if (event.target.value=='address'){
       this.emailSelected=false;
       this.addressSelected=true;
       this.phoneSelected=false;
+      this.mediumForm.get('telephoneNumber')?.clearValidators();
+      this.mediumForm.get('email')?.clearValidators();
+      this.mediumForm.get('country')?.setValidators([Validators.required]);
+      this.mediumForm.get('country')?.markAsUntouched();
+      this.mediumForm.get('city')?.setValidators([Validators.required]);
+      this.mediumForm.get('city')?.markAsUntouched();
+      this.mediumForm.get('stateOrProvince')?.setValidators([Validators.required]);
+      this.mediumForm.get('stateOrProvince')?.markAsUntouched();
+      this.mediumForm.get('postCode')?.setValidators([Validators.required]);
+      this.mediumForm.get('postCode')?.markAsUntouched();
+      this.mediumForm.get('street')?.setValidators([Validators.required]);
+      this.mediumForm.get('street')?.markAsUntouched();
+      this.cdr.detectChanges();
     }else{
       this.emailSelected=false;
       this.addressSelected=false;
       this.phoneSelected=true;
+      this.mediumForm.get('country')?.clearValidators();
+      this.mediumForm.get('city')?.clearValidators();
+      this.mediumForm.get('stateOrProvince')?.clearValidators();
+      this.mediumForm.get('postCode')?.clearValidators();
+      this.mediumForm.get('street')?.clearValidators();
+      this.mediumForm.get('email')?.clearValidators();
+      this.mediumForm.get('telephoneNumber')?.setValidators([Validators.required]);
+      this.mediumForm.get('telephoneNumber')?.markAsUntouched();
+      this.cdr.detectChanges();
     }
-    this.mediumForm.reset();
+    console.log(this.mediumForm)
   }
 
 

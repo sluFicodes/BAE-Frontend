@@ -341,9 +341,12 @@ export class UpdateProductSpecComponent implements OnInit {
     }
 
     //RELATIONSHIPS
+    console.log('----- RELACIONES')
+    console.log(this.prod.productSpecificationRelationship)
     if(this.prod.productSpecificationRelationship){
       for(let i=0; i< this.prod.productSpecificationRelationship.length; i++){
         this.prodSpecService.getResSpecById(this.prod.productSpecificationRelationship[i].id).then(data => {
+          console.log(data)
           this.prodRelationships.push({
             id: this.prod.productSpecificationRelationship[i].id,
             href: this.prod.productSpecificationRelationship[i].id,
