@@ -353,6 +353,7 @@ export class UpdateProductSpecComponent implements OnInit {
             href: this.prod.productSpecificationRelationship[i].id,
             //Que tipo de relacion le pongo? no viene en el prodspec
             relationshipType: this.prod.productSpecificationRelationship[i].relationshipType ?? this.selectedRelType,
+            name: this.prod.productSpecificationRelationship[i].name,
             productSpec: data
           });
         })

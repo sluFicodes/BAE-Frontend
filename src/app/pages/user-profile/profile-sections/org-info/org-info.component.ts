@@ -3,7 +3,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { AccountServiceService } from 'src/app/services/account-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { phoneNumbers, countries } from 'src/app/models/country.const'
 import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
@@ -36,14 +36,14 @@ export class OrgInfoComponent {
     description: new FormControl(''),
   });
   mediumForm = new FormGroup({
-    email: new FormControl('', { updateOn: 'change' }),
-    country: new FormControl('', { updateOn: 'change' }),
-    city: new FormControl('', { updateOn: 'change' }),
-    stateOrProvince: new FormControl('', { updateOn: 'change' }),
-    postCode: new FormControl('', { updateOn: 'change' }),
-    street: new FormControl('', { updateOn: 'change' }),
-    telephoneNumber: new FormControl('', { updateOn: 'change' }),
-    telephoneType: new FormControl('', { updateOn: 'change' })
+    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    country: new FormControl(''),
+    city: new FormControl('',),
+    stateOrProvince: new FormControl(''),
+    postCode: new FormControl(''),
+    street: new FormControl(''),
+    telephoneNumber: new FormControl(''),
+    telephoneType: new FormControl('')
   });
   contactmediums:any[]=[];
   emailSelected:boolean=true;
@@ -465,47 +465,101 @@ export class OrgInfoComponent {
       this.addressSelected=false;
       this.phoneSelected=false;
       this.mediumForm.get('country')?.clearValidators();
+      this.mediumForm.get('country')?.setValue('');
       this.mediumForm.get('city')?.clearValidators();
+      this.mediumForm.get('city')?.setValue('');
       this.mediumForm.get('stateOrProvince')?.clearValidators();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
       this.mediumForm.get('postCode')?.clearValidators();
+      this.mediumForm.get('postCode')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.setValue('');
       this.mediumForm.get('street')?.clearValidators();
+      this.mediumForm.get('street')?.setValue('');
       this.mediumForm.get('telephoneNumber')?.clearValidators();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
       this.mediumForm.get('email')?.setValidators([Validators.required,Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
       this.mediumForm.get('email')?.markAsUntouched();
+      this.mediumForm.get('email')?.setValue('');
       this.cdr.detectChanges();
     }else if (event.target.value=='address'){
       this.emailSelected=false;
       this.addressSelected=true;
       this.phoneSelected=false;
       this.mediumForm.get('telephoneNumber')?.clearValidators();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
       this.mediumForm.get('email')?.clearValidators();
+      this.mediumForm.get('email')?.setValue('');
       this.mediumForm.get('country')?.setValidators([Validators.required]);
       this.mediumForm.get('country')?.markAsUntouched();
+      this.mediumForm.get('country')?.setValue('');
       this.mediumForm.get('city')?.setValidators([Validators.required]);
       this.mediumForm.get('city')?.markAsUntouched();
+      this.mediumForm.get('city')?.setValue('');
       this.mediumForm.get('stateOrProvince')?.setValidators([Validators.required]);
       this.mediumForm.get('stateOrProvince')?.markAsUntouched();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
       this.mediumForm.get('postCode')?.setValidators([Validators.required]);
       this.mediumForm.get('postCode')?.markAsUntouched();
+      this.mediumForm.get('postCode')?.setValue('');
       this.mediumForm.get('street')?.setValidators([Validators.required]);
       this.mediumForm.get('street')?.markAsUntouched();
+      this.mediumForm.get('street')?.setValue('');
       this.cdr.detectChanges();
     }else{
       this.emailSelected=false;
       this.addressSelected=false;
       this.phoneSelected=true;
       this.mediumForm.get('country')?.clearValidators();
+      this.mediumForm.get('country')?.setValue('');
       this.mediumForm.get('city')?.clearValidators();
+      this.mediumForm.get('city')?.setValue('');
       this.mediumForm.get('stateOrProvince')?.clearValidators();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
       this.mediumForm.get('postCode')?.clearValidators();
+      this.mediumForm.get('postCode')?.setValue('');
       this.mediumForm.get('street')?.clearValidators();
+      this.mediumForm.get('street')?.setValue('');
       this.mediumForm.get('email')?.clearValidators();
+      this.mediumForm.get('email')?.setValue('');
       this.mediumForm.get('telephoneNumber')?.setValidators([Validators.required]);
       this.mediumForm.get('telephoneNumber')?.markAsUntouched();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
       this.cdr.detectChanges();
     }
     console.log(this.mediumForm)
+    console.log(this.printAllActiveValidators());
+
   }
+  showMedium(){
+    console.log('--- SHOW MEDIUM')
+    console.log(this.mediumForm)
+    console.log(this.printAllActiveValidators());
+    console.log('--value')
+    console.log(this.mediumForm.get('email')?.value)
+  }
+
+  printActiveValidators(controlName: string) {
+    const control = this.mediumForm.get(controlName);
+    if (!control || !control.validator) {
+      console.log(`No active validators for ${controlName}`);
+      return;
+    }
+  
+    const validatorFn = control.validator({} as AbstractControl);
+    if (!validatorFn) {
+      console.log(`No active validators for ${controlName}`);
+      return;
+    }
+  
+    console.log(`Active validators for ${controlName}:`, Object.keys(validatorFn));
+  }
+
+  printAllActiveValidators() {
+    Object.keys(this.mediumForm.controls).forEach(controlName => {
+      this.printActiveValidators(controlName);
+    });
+  }
+  
 
 
   public dropped(files: NgxFileDropEntry[],sel:any) {
