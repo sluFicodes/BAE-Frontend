@@ -251,7 +251,7 @@
                     <label class="font-bold text-lg dark:text-white">{{ 'PROFILE._email' | translate }}</label>
                     <input formControlName="email" type="text" id="prod-name"                    
                     class="mb-2 bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                    [ngClass]="(mediumForm.get('email')?.invalid == true && mediumForm.value.email!='') || (mediumForm.get('email')?.touched && mediumForm.value.email=='') ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"/>              
+                    [ngClass]="(mediumForm.get('email')?.invalid == true && mediumForm.value.email!='') || (mediumForm.get('email')?.touched == true && mediumForm.value.email=='') ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"/>              
                 </div>
             } @else if(addressSelected){
                 <div>

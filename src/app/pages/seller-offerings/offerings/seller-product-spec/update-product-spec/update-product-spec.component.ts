@@ -346,12 +346,11 @@ export class UpdateProductSpecComponent implements OnInit {
     if(this.prod.productSpecificationRelationship){
       for(let i=0; i< this.prod.productSpecificationRelationship.length; i++){
         this.prodSpecService.getResSpecById(this.prod.productSpecificationRelationship[i].id).then(data => {
-          console.log(data)
           this.prodRelationships.push({
             id: this.prod.productSpecificationRelationship[i].id,
             href: this.prod.productSpecificationRelationship[i].id,
             //Que tipo de relacion le pongo? no viene en el prodspec
-            relationshipType: this.selectedRelType,
+            relationshipType: this.prod.productSpecificationRelationship[i].relationshipType ?? this.selectedRelType,
             productSpec: data    
           });
         })
@@ -1253,6 +1252,15 @@ export class UpdateProductSpecComponent implements OnInit {
     }
 
     if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){
+      let rels = [];
+      for(let i=0; i<this.prodRelationships.length;i++){
+        rels.push({
+          id: this.prodRelationships[i].id,
+          href: this.prodRelationships[i].href,
+          name: this.prodRelationships[i].productSpec.name,
+          relationshipType: this.prodRelationships[i].relationshipType
+        })
+      }
       this.productSpecToUpdate = {
         name: this.generalForm.value.name,
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
@@ -1263,7 +1271,7 @@ export class UpdateProductSpecComponent implements OnInit {
         //isBundle: this.bundleChecked,
         //bundledProductSpecification: this.prodSpecsBundle,
         productSpecCharacteristic: this.finishChars,
-        productSpecificationRelationship: this.prodRelationships,
+        productSpecificationRelationship: rels,
         attachment: this.prodAttachments,
         resourceSpecification: this.selectedResourceSpecs,
         serviceSpecification: this.selectedServiceSpecs  

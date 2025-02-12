@@ -35,14 +35,14 @@ export class OrgInfoComponent {
     description: new FormControl(''),
   });
   mediumForm = new FormGroup({
-    email: new FormControl(''),
-    country: new FormControl(''),
-    city: new FormControl(''),
-    stateOrProvince: new FormControl(''),
-    postCode: new FormControl(''),
-    street: new FormControl(''),
-    telephoneNumber: new FormControl(''),
-    telephoneType: new FormControl('')
+    email: new FormControl('', { updateOn: 'change' }),
+    country: new FormControl('', { updateOn: 'change' }),
+    city: new FormControl('', { updateOn: 'change' }),
+    stateOrProvince: new FormControl('', { updateOn: 'change' }),
+    postCode: new FormControl('', { updateOn: 'change' }),
+    street: new FormControl('', { updateOn: 'change' }),
+    telephoneNumber: new FormControl('', { updateOn: 'change' }),
+    telephoneType: new FormControl('', { updateOn: 'change' })
   });
   contactmediums:any[]=[];
   emailSelected:boolean=true;
