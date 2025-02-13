@@ -16,7 +16,8 @@
         "_search_ph": "Search Cloud Services, Edge Services, Providers...",
         "_search": "Search",
         "_not_found": "No offers found",
-        "_browse_serv": "Browse services"
+        "_browse_serv": "Browse services",
+        "_view_serv": "View services"
     },
     "FEATURED": {
         "_title": "Featured offerings",
