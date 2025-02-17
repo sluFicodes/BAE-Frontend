@@ -170,12 +170,14 @@ export class UpdateServiceSpecComponent implements OnInit {
       if(this.creatingChars.length==0){
         this.creatingChars.push({
           isDefault:true,
-          value:this.stringValue as any
+          value:this.stringValue as any,
+          valueType: "string"
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
-          value:this.stringValue as any
+          value:this.stringValue as any,
+          valueType: "string"
         })
       }      
     } else if (this.numberCharSelected){
@@ -184,13 +186,15 @@ export class UpdateServiceSpecComponent implements OnInit {
         this.creatingChars.push({
           isDefault:true,
           value:this.numberValue as any,
-          unitOfMeasure:this.numberUnit
+          unitOfMeasure:this.numberUnit,
+          valueType: "number"
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
           value:this.numberValue as any,
-          unitOfMeasure:this.numberUnit
+          unitOfMeasure:this.numberUnit,
+          valueType: "number"
         })
       } 
     }else{
@@ -200,14 +204,16 @@ export class UpdateServiceSpecComponent implements OnInit {
           isDefault:true,
           valueFrom:this.fromValue as any,
           valueTo:this.toValue as any,
-          unitOfMeasure:this.rangeUnit
+          unitOfMeasure:this.rangeUnit,
+          valueType: "number"
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
           valueFrom:this.fromValue as any,
           valueTo:this.toValue as any,
-          unitOfMeasure:this.rangeUnit})
+          unitOfMeasure:this.rangeUnit,
+          valueType: "number"})
       } 
     }
   }

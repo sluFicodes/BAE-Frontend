@@ -209,6 +209,7 @@ export class UpdatePricePlanComponent implements OnInit {
     let pricecomponent:ProductOfferingPrice_DTO = {
       id: uuidv4(),
       name: this.priceComponentForm.value.name ? this.priceComponentForm.value.name : '',
+      lifecycleStatus: "Active",
       description: this.priceComponentForm.value.description ? this.priceComponentForm.value.description : '',
       price: {
         unit: this.selectedPriceUnit,
