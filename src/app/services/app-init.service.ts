@@ -25,7 +25,9 @@ export class AppInitService {
                 environment.DOME_ABOUT_LINK = config.domeAbout;
                 environment.DOME_REGISTER_LINK = config.domeRegister;
                 environment.DOME_PUBLISH_LINK = config.domePublish;
-                environment.PURCHASE_ENABLED = true;
+                environment.KB_ONBOARDING_GUIDELINES_URL = config.domeOnboardingGuidelines;
+                environment.KB_GUIDELNES_URL = config.domeGuidelines;
+                environment.REGISTRATION_FORM_URL = config.domeRegistrationForm;
                 resolve(config);
             }),
             error: (error) => {
