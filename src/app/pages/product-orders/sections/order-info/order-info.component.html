@@ -510,13 +510,24 @@
 
     <!-- Display notes when available -->
     <div *ngFor="let note of selectedOrder?.note" class="flex"
-         [ngClass]="{'justify-end': note.author === currentUser, 'justify-start': note.author !== currentUser}">
+         [ngClass]="{'justify-end': note.author === partyId, 'justify-start': note.author !== partyId}">
 
       <div class="max-w-xs p-3 rounded-lg shadow-md"
-           [ngClass]="{'bg-blue-200 text-blue-900': note.author === currentUser, 'bg-gray-200 text-gray-800': note.author !== currentUser}">
+           [ngClass]="{'bg-blue-200 text-blue-900': note.author === partyId, 'bg-gray-200 text-gray-800': note.author !== partyId}">
 
         <p class="text-sm">{{ note.text }}</p>
-        <span class="text-xs block mt-1 text-gray-500">{{ note.author }} - {{ formatDate(note.date) }}</span>
+        <span class="text-xs block mt-1 text-gray-500">
+          <!-- Si el usuario está en caché, mostrarlo. Si no, mostrar "Loading..." mientras se obtiene el nombre -->
+              {{ note.author === partyId
+              ? currentUser
+              : (userCache.get(note.author) || 'Loading...' )
+              }} - {{ formatDate(note.date) }}
+
+              <!-- Forzar la obtención del nombre de usuario si no está en caché -->
+          <ng-container *ngIf="!userCache.has(note.author)">
+            {{ getUsername(note.author) | async }}
+          </ng-container>
+        </span>
       </div>
     </div>
   </div>
@@ -530,7 +541,7 @@
                 (keyup.enter)="addNote()"></textarea>
       <button (click)="addNote()"
               class="mt-2 px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600">
-        Send
+        {{ isUpdating ? 'Saving...' : 'Send' }}
       </button>
     </div>
   </div>

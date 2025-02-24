@@ -20,6 +20,7 @@ import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
 import { TranslateModule } from '@ngx-translate/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {SharedModule} from "../../../../shared/shared.module";
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-order-info',
@@ -63,8 +64,11 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
   newNoteText = '';
   currentUser!: string;
   isLoading = false;
+  isUpdating = false;
 
   @ViewChild('noteContainer') noteContainer!: ElementRef;
+
+  userCache = new Map<string, string>(); // Caching userId -> username
 
 
   protected readonly faIdCard = faIdCard;
@@ -78,7 +82,7 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     private accountService: AccountServiceService,
     private orderService: ProductOrderService,
     private eventMessage: EventMessageService,
-    private paginationService: PaginationService
+    private paginationService: PaginationService,
   ) {
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ChangedSession') {
@@ -385,26 +389,72 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
 
   async onRoleChange(role: any) {
     this.role = role;
-    console.log('ROLE',this.role);
     await this.getOrders(false);
   }
 
   hasNotes(order: any): boolean{
-    return !!order.notes;
+    return !!order.note;
   }
 
-  addNote(): void {
+  async addNote(): Promise<void> {
     if (!this.newNoteText.trim()) return;
 
     const newNote = {
       text: this.newNoteText,
-      id: new Date().getTime().toString(),
-      author: this.currentUser,
+      id: `urn:ngsi-ld:note:${uuidv4()}`,
+      author: this.partyId,
       date: new Date().toISOString()
     };
 
+    // Add the note to the UI immediately
     this.selectedOrder.note.push(newNote);
-    this.newNoteText = ''; // Limpiar el campo de entrada
+    this.newNoteText = ''; // Clear input field
+    this.isUpdating = true;
+    this.scrollToBottom();
+
+    try {
+      // Send update request to the backend
+      const patchData = { note: this.selectedOrder.note };
+      console.log('patchData',patchData);
+      await this.orderService.updateOrder(this.selectedOrder.id, patchData);
+      console.log('Order notes updated successfully');
+    } catch (error) {
+      console.error('Error updating order notes:', error);
+      alert('Failed to update notes. Please try again.');
+      // Remove the note if update fails
+      this.selectedOrder.note.pop();
+    } finally {
+      this.isUpdating = false;
+    }
+  }
+
+  async getUsername(partyId: string): Promise<string> {
+    if (this.userCache.has(partyId)) {
+      return this.userCache.get(partyId)!;
+    }
+
+    try {
+      let username: string;
+
+      if (partyId.startsWith('urn:ngsi-ld:individual:')) {
+        // Get individual user info
+        const userInfo = await this.accountService.getUserInfo(partyId);
+        username = `${userInfo?.givenName || ''} ${userInfo?.familyName || ''}`.trim() || `Unknown (${partyId})`;
+      } else if (partyId.startsWith('urn:ngsi-ld:organization:')) {
+        // Get organization info
+        const orgInfo = await this.accountService.getOrgInfo(partyId);
+        username = orgInfo?.tradingName || `Unknown Organization (${partyId})`;
+      } else {
+        username = `Unknown (${partyId})`;
+      }
+
+      // Store in cache
+      this.userCache.set(partyId, username);
+      return username;
+    } catch (error) {
+      console.error('Error fetching name for', partyId, error);
+      return `Unknown (${partyId})`;
+    }
   }
 
   formatDate(dateString: string): string {
