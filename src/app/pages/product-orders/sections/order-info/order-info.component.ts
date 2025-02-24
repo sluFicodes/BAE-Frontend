@@ -140,26 +140,54 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async updateLifecycle(state: string, item: any){
+  async updateLifecycle(state: string, item: any) {
     if (!this.orderToShow) {
       console.error("No order selected! Is this possible?");
       return;
     }
-    console.log('Transitioning to...');
+
+    console.log('Transitioning to...', state, item);
     this.selectedItem = item;
-    console.log(state, item);
+
     try {
+      // Actualizar el estado en la UI antes de enviar el PATCH
       this.selectedItem.productOrderItem['state'] = state;
-      // Creates object to PATCH
-      const patchData = {
-        productOrderItem: this.orderToShow.productOrderItem,
+
+      // Crear objeto PATCH para actualizar el estado
+      const statePatchData = {
+        productOrderItem: this.orderToShow.productOrderItem
       };
 
-      // Llamar al servicio para hacer el PATCH
-      const response = await this.orderService.updateOrder(this.orderToShow.id, patchData);
-      console.log("Order updated successfully:", response);
+      // Llamar al servicio para actualizar solo el estado
+      const stateResponse = await this.orderService.updateOrder(this.orderToShow.id, statePatchData);
+      console.log("Order state updated successfully:", stateResponse);
 
-      // Cerrar el modal después de la actualización
+      // Ahora creamos la nota después de la actualización exitosa
+      const newNote = {
+        text: `Order state updated to ${state}`,
+        id: `urn:ngsi-ld:note:${uuidv4()}`,
+        author: this.partyId,
+        date: new Date().toISOString()
+      };
+
+      // Asegurar que el array de notas existe
+      if (!this.orderToShow.note) {
+        this.orderToShow.note = [];
+      }
+
+      // Agregar la nueva nota localmente
+      this.orderToShow.note.push(newNote);
+
+      // Crear objeto PATCH para actualizar solo la nota
+      const notePatchData = {
+        note: this.orderToShow.note
+      };
+
+      // Llamar al servicio para actualizar solo la nota
+      const noteResponse = await this.orderService.updateOrder(this.orderToShow.id, notePatchData);
+      console.log("Order note added successfully:", noteResponse);
+
+      // Cerrar el modal después de completar ambas actualizaciones
       this.closeModal();
 
     } catch (error) {
@@ -225,9 +253,15 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     if (this.drawerInstance) {
       this.isLoading = true;
       this.drawerInstance.show();
-      // Simulamos un tiempo de carga de 1s antes de mostrar las notas
+      // 1s before showing notes
       setTimeout(() => {
         this.isLoading = false;
+
+        // Sorts notes (older before)
+        if (this.orderToShow?.note?.length) {
+          this.orderToShow.note.sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        }
+
         this.scrollToBottom();
       }, 1000);
     }
@@ -391,6 +425,13 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     this.role = role;
     await this.getOrders(false);
   }
+
+  hasProcurementAutomaticTerm(item: any): boolean {
+    return item.productOfferingTerm?.some(
+      (term: any) => term.name === "procurement" && term.description === "automatic"
+    );
+  }
+
 
   hasNotes(order: any): boolean{
     return !!order.note;
