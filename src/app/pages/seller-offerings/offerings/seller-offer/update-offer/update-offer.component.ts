@@ -47,9 +47,10 @@ export class UpdateOfferComponent implements OnInit{
   showLicense:boolean=false;
   showSLA:boolean=false;
   showPrice:boolean=false;
+  showProcurement:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price', 'replication', 'summary'];
-  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','replication-circle','summary-circle'];
+  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price', 'procurement', 'replication', 'summary'];
+  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle', 'procurement-circle', 'replication-circle','summary-circle'];
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
@@ -162,6 +163,19 @@ export class UpdateOfferComponent implements OnInit{
   //PRICEPROFILE
   showProfile:boolean=false;
   editProfile:boolean=false;
+
+  //PROCUREMENT
+  procurementModes = [{
+    id: 'manual',
+    name: 'Manual'
+  }, {
+    id: 'payment-automatic',
+    name: 'Payment Automatic - Procurement Manual'
+  }, {
+    id: 'automatic',
+    name: 'Automatic'
+  }];
+  procurementMode: string = 'manual';
 
   //REPLICATION
   showReplication:boolean=false;
@@ -298,6 +312,13 @@ export class UpdateOfferComponent implements OnInit{
       this.licenseForm.controls['description'].setValue(this.offer.productOfferingTerm[0].description);
       this.createdLicense.treatment=this.offer.productOfferingTerm[0].name;
       this.createdLicense.description=this.offer.productOfferingTerm[0].description;
+
+      //PROCUREMENT
+      this.offer.productOfferingTerm.forEach((term: any) => {
+        if(term.name == 'procurement') {
+          this.procurementMode = term.description;
+        }
+      })
     }
 
     //PRICEPLANS
@@ -344,7 +365,6 @@ export class UpdateOfferComponent implements OnInit{
         })
       }
     }
-
   }
 
   goBack() {
@@ -417,6 +437,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
     this.showReplication=false;
     this.editPrice=false;
@@ -438,6 +459,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
     this.showReplication=false;
     this.editPrice=false;
@@ -460,6 +482,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
     this.showReplication=false;
     this.editPrice=false;
@@ -477,6 +500,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=true;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
     this.showReplication=false;
     this.editPrice=false;
@@ -494,6 +518,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=true;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
     this.showReplication=false;
     this.editPrice=false;
@@ -511,6 +536,25 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=true;
+    this.showProcurement=false;
+    this.showPreview=false;
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+  }
+
+  toggleProcurement() {
+    this.selectStep('procurement','procurement-circle');
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showSummary=false;
+    this.showProdSpec=false;
+    this.showCatalog=false;
+    this.showCategory=false;
+    this.showLicense=false;
+    this.showSLA=false;
+    this.showPrice=false;
+    this.showProcurement=true;
     this.showPreview=false;
     this.showReplication=false;
     this.editPrice=false;
@@ -528,6 +572,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
     this.showReplication=true;
     this.editPrice=false;
@@ -917,6 +962,10 @@ export class UpdateOfferComponent implements OnInit{
     } else {
       return false;
     } 
+  }
+
+  changeProcurement(event: any) {
+    this.procurementMode = event.target.value;
   }
 
   showFinish(){
@@ -1508,7 +1557,7 @@ export class UpdateOfferComponent implements OnInit{
           }
         ]
       } else {
-        this.offerToUpdate.productOfferingTerm= [
+        this.offerToUpdate.productOfferingTerm = [
           {
               name: '',
               description: '',
@@ -1516,6 +1565,11 @@ export class UpdateOfferComponent implements OnInit{
           }
         ]        
       }
+
+      this.offerToUpdate.productOfferingTerm.push({
+        name: 'procurement',
+        description: this.procurementMode,
+      })
     }
 
     this.api.updateProductOffering(this.offerToUpdate,this.offer.id).subscribe({

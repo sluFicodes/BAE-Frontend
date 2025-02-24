@@ -49,6 +49,7 @@ export class CreateOfferComponent implements OnInit {
   showLicense:boolean=false;
   showSLA:boolean=false;
   showPrice:boolean=false;
+  showProcurement:boolean=false;
 
   //Check if step was done
   generalDone:boolean=false;
@@ -59,11 +60,12 @@ export class CreateOfferComponent implements OnInit {
   licenseDone:boolean=false;
   slaDone:boolean=false;
   priceDone:boolean=false;
+  procurementDone:boolean=false;
   finishDone:boolean=false;
   replicationDone:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price','replication','summary'];
-  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','replication-circle','summary-circle'];
+  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price', 'procurement', 'replication','summary'];
+  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle', 'procurement-circle', 'replication-circle','summary-circle'];
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
@@ -179,6 +181,19 @@ export class CreateOfferComponent implements OnInit {
   showProfile:boolean=false;
   editProfile:boolean=false;
 
+  //PROCUREMENT
+  procurementModes = [{
+    id: 'manual',
+    name: 'Manual'
+  }, {
+    id: 'payment-automatic',
+    name: 'Payment Automatic - Procurement Manual'
+  }, {
+    id: 'automatic',
+    name: 'Automatic'
+  }];
+  procurementMode: string = 'manual';
+
   //REPLICATION
   showReplication:boolean=false;
   selectedCountries:any[]=[];
@@ -286,6 +301,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showReplication=false;
     this.showPreview=false;
     this.editPrice=false;
@@ -303,6 +319,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showReplication=false;
     this.showPreview=false;
     this.editPrice=false;
@@ -336,6 +353,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showReplication=false;
     this.showPreview=false;
     this.editPrice=false;
@@ -357,6 +375,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showReplication=false;
     this.showPreview=false;
     this.editPrice=false;
@@ -379,6 +398,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showReplication=false;
     this.showPreview=false;
     this.editPrice=false;
@@ -396,6 +416,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=true;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
     this.editPrice=false;
     this.showCreatePrice=false;
@@ -413,6 +434,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=true;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showReplication=false;
     this.showPreview=false;
     this.editPrice=false;
@@ -431,6 +453,28 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=true;
+    this.showProcurement=false;
+    this.showPreview=false;
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+    initFlowbite();
+  }
+
+  toggleProcurement() {
+    this.selectStep('procurement','procurement-circle');
+
+    this.priceDone=true;
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showSummary=false;
+    this.showProdSpec=false;
+    this.showCatalog=false;
+    this.showCategory=false;
+    this.showLicense=false;
+    this.showSLA=false;
+    this.showPrice=false;
+    this.showProcurement=true;
     this.showPreview=false;
     this.showReplication=false;
     this.editPrice=false;
@@ -439,7 +483,7 @@ export class CreateOfferComponent implements OnInit {
   }
 
   toggleReplication(){
-    this.priceDone=true;
+    this.procurementDone=true;
     this.selectStep('replication','replication-circle');
     this.showBundle=false;
     this.showGeneral=false;
@@ -450,6 +494,7 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
     this.showReplication=true;
     this.editPrice=false;
@@ -861,6 +906,10 @@ export class CreateOfferComponent implements OnInit {
     this.showCreatePrice=false;
   }
 
+  changeProcurement(event: any) {
+    this.procurementMode = event.target.value;
+  }
+
   async createOffer(){
     this.postedPrices=[];
     if(this.createdPrices.length>0){
@@ -1100,7 +1149,7 @@ export class CreateOfferComponent implements OnInit {
           }
         ]
       } else {
-        this.offerToCreate.productOfferingTerm= [
+        this.offerToCreate.productOfferingTerm = [
           {
               name: '',
               description: '',
@@ -1108,6 +1157,11 @@ export class CreateOfferComponent implements OnInit {
           }
         ]        
       }
+
+      this.offerToCreate.productOfferingTerm.push({
+        name: 'procurement',
+        description: this.procurementMode,
+      })
     }
 
     this.api.postProductOffering(this.offerToCreate,this.selectedCatalog.id).subscribe({
@@ -1148,7 +1202,7 @@ export class CreateOfferComponent implements OnInit {
   }
 
   //STEPS CSS EFFECTS:
-  selectStep(step:string,stepCircle:string){
+  selectStep(step:string, stepCircle:string){
     const index = this.stepsElements.findIndex(item => item === step);
     if (index !== -1) {
       this.stepsElements.splice(index, 1);

@@ -97,10 +97,21 @@
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
+            <button id="procurement" (click)="toggleProcurement()"
+            class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
+                <span id="procurement-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
+                    {{ BUNDLE_ENABLED ? 7 : 6 }}
+                </span>
+                <span>
+                    <h3 class="flex text-sm md:text-base sm:text-center md:text-start">Procurement mode</h3>
+                    <p class="hidden xl:flex text-xs sm:text-center md:text-start">Offer's Procurement mode configuration</p>
+                </span>
+            </button>
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
             <button id="replication" (click)="toggleReplication()"
             class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                 <span id="replication-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
-                    7
+                    {{ BUNDLE_ENABLED ? 8 : 7 }}
                 </span>
                 <span>
                     <h3 class="flex text-sm md:text-base sm:text-center md:text-start">Replication and Visibility</h3>
@@ -1086,7 +1097,7 @@
                     <update-price-plan [selectedProdSpec]=selectedProdSpec [priceToUpdate]=priceToUpdate></update-price-plan>
                 }
                 <div class="flex w-full justify-items-end justify-end m-4">
-                    <button type="button" (click)="toggleReplication();" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                    <button type="button" (click)="toggleProcurement();" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                         {{ 'CREATE_OFFER._next' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -1094,6 +1105,28 @@
                     </button>
                 </div>
 
+            }
+            @if(showProcurement) {
+                <h2 class="text-3xl font-bold text-primary-100 dark:text-white">Procurement modes</h2>
+                <p class="mb-3 text-gray-500 dark:text-gray-400">Define which parts of the procurement/activation process will be performed automatically and which ones will be performed manually by the provider</p>
+
+                <div class="flex flex-row">
+                    <select id="procurement" [(ngModel)]="procurementMode"
+                    class="mb-2 mr-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        @for(mode of procurementModes; track mode){                          
+                            <option value="{{mode.id}}">{{mode.name}}</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="flex w-full justify-items-end justify-end m-4">
+                    <button type="button" (click)="toggleReplication();" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        {{ 'CREATE_OFFER._next' | translate }}
+                        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                        </svg>
+                    </button>
+                </div>
             }
             @if(showReplication){
                 <h2 class="text-3xl font-bold text-primary-100 dark:text-white">Replication Policy</h2>
