@@ -12,18 +12,19 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 type ProductOffering = components["schemas"]["ProductOffering"];
 import { phoneNumbers, countries } from 'src/app/models/country.const'
-import {initFlowbite, Modal} from 'flowbite';
+import {Drawer, initFlowbite, Modal} from 'flowbite';
 import {EventMessageService} from "src/app/services/event-message.service";
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
 import { TranslateModule } from '@ngx-translate/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {SharedModule} from "../../../../shared/shared.module";
 
 @Component({
   selector: 'app-order-info',
   standalone: true,
-  imports: [TranslateModule, FontAwesomeModule, CommonModule],
+  imports: [TranslateModule, FontAwesomeModule, CommonModule, SharedModule],
   providers: [DatePipe],
   templateUrl: './order-info.component.html',
   styleUrl: './order-info.component.css'
@@ -54,6 +55,17 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
   actionType: string = '';
   selectedItem: any = null;
   private modalInstance: any;
+
+  // Note's drawer
+  isDrawerOpen = false;
+  drawerInstance: Drawer | null = null;
+  selectedOrder: any = null;
+  newNoteText = '';
+  currentUser!: string;
+  isLoading = false;
+
+  @ViewChild('noteContainer') noteContainer!: ElementRef;
+
 
   protected readonly faIdCard = faIdCard;
   protected readonly faSort = faSort;
@@ -165,6 +177,7 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       if(aux.logged_as==aux.id){
         this.partyId = aux.partyId;
+        this.currentUser = aux.user;
         let userRoles = aux.roles.map((elem: any) => {
           return elem.name
         })
@@ -189,13 +202,52 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     initFlowbite();
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit(): void{
     initFlowbite();
+    const drawerElement = document.getElementById('drawer-notes');
+    if (drawerElement) {
+      this.drawerInstance = new Drawer(drawerElement, { placement: 'right', backdrop: false });
+    }
     setTimeout(() => {
       if (this.confirmModal) {
         this.modalInstance = new Modal(this.confirmModal.nativeElement);
       }
     }, 100);
+  }
+
+  // Note's drawer functionality
+  toggleDrawer(order: any): void {
+    this.selectedOrder = order;
+    if (this.drawerInstance) {
+      this.isLoading = true;
+      this.drawerInstance.show();
+      // Simulamos un tiempo de carga de 1s antes de mostrar las notas
+      setTimeout(() => {
+        this.isLoading = false;
+        this.scrollToBottom();
+      }, 1000);
+    }
+    this.isDrawerOpen = true;
+  }
+
+  closeDrawer(): void {
+    if (this.drawerInstance) {
+      this.drawerInstance.hide();
+    }
+    this.isDrawerOpen = false;
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event: KeyboardEvent): void {
+    this.closeDrawer();
+  }
+
+  private scrollToBottom(): void {
+    if (this.noteContainer) {
+      setTimeout(() => {
+        this.noteContainer.nativeElement.scrollTop = this.noteContainer.nativeElement.scrollHeight;
+      }, 100);
+    }
   }
 
   getProductImage(prod:ProductOffering) {
@@ -336,4 +388,29 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     console.log('ROLE',this.role);
     await this.getOrders(false);
   }
+
+  hasNotes(order: any): boolean{
+    return !!order.notes;
+  }
+
+  addNote(): void {
+    if (!this.newNoteText.trim()) return;
+
+    const newNote = {
+      text: this.newNoteText,
+      id: new Date().getTime().toString(),
+      author: this.currentUser,
+      date: new Date().toISOString()
+    };
+
+    this.selectedOrder.note.push(newNote);
+    this.newNoteText = ''; // Limpiar el campo de entrada
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+  }
+
+  protected readonly JSON = JSON;
 }
