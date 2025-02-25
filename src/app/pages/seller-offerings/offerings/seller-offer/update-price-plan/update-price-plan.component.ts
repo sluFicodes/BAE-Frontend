@@ -53,14 +53,14 @@ export class UpdatePricePlanComponent implements OnInit {
     unit: new FormControl(''),
   });
   discountForm = new FormGroup({
-    amount: new FormControl('', [Validators.required,Validators.pattern("^[0-9]*$")]),
+    amount: new FormControl('', [Validators.required,Validators.pattern(/^[0-9]+$/)]),
     percentage: new FormControl(''),
     duration: new FormControl('',[Validators.required]),
     period: new FormControl('',[Validators.required]),
   });
   priceDescription:string='';
   priceComponentDescription:string='';
-  createdPriceComponents:any[]=[];  
+  createdPriceComponents:any[]=[];
   createdPriceAlterations:any[]=[];
   createdPriceProfile:any=[];
   hideStringCharOption:boolean=true;
@@ -100,21 +100,16 @@ export class UpdatePricePlanComponent implements OnInit {
     })
   }
 
-  @HostListener('document:click')
-  onClick() {
-    if(this.showEmoji==true){
-      this.showEmoji=false;
-      this.cdr.detectChanges();
-    }
-    if(this.showPriceComponents==true){
-      this.showPriceComponents=false;
-      this.cdr.detectChanges();
-    }
-    if(this.showProfile==true){
-      this.showProfile=false;
+  @HostListener('document:click', ['$event'])
+  onClick(event: Event) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.showEmoji = false;
+      this.showPriceComponents = false;
+      this.showProfile = false;
       this.cdr.detectChanges();
     }
   }
+
 
   ngOnInit() {
     this.initPartyInfo();
@@ -152,10 +147,10 @@ export class UpdatePricePlanComponent implements OnInit {
             },
             priceType:this.priceToUpdate?.priceType
           }
-  
+
           if(this.priceToUpdate.price != undefined && this.priceToUpdate.price.unit != undefined){
             this.selectedPriceUnit=this.priceToUpdate.price.unit
-          }     
+          }
           if(this.priceToUpdate.prodSpecCharValueUse!=undefined){
             console.log('HAY INFO DE PERFIL')
             this.createdPriceProfile=this.priceToUpdate.prodSpecCharValueUse;
@@ -220,7 +215,7 @@ export class UpdatePricePlanComponent implements OnInit {
     if(this.selectedCharacteristic!=undefined){
       let charVal:any={value:this.selectedCharacteristicVal}
       //If its a range characteristic
-      if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){       
+      if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
         pricecomponent.unitOfMeasure={
           amount:1,
           units:this.selectedCharacteristic.productSpecCharacteristicValue[0].unitOfMeasure
@@ -231,7 +226,7 @@ export class UpdatePricePlanComponent implements OnInit {
           productSpecCharacteristicValue: []
         }]
       //if not
-      } else { 
+      } else {
         const charIdx = this.selectedCharacteristic.productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (this.selectedCharacteristicVal).toString());
         if(charIdx!=-1){
           if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[charIdx]){
@@ -283,7 +278,7 @@ export class UpdatePricePlanComponent implements OnInit {
       this.createdPriceAlterations.push(discount);
       pricecomponent['popRelationship'] = [{
         id: discount.id,
-        name: discount.name   
+        name: discount.name
       }]
     }
     this.createdPriceComponents.push(pricecomponent)
@@ -305,10 +300,10 @@ export class UpdatePricePlanComponent implements OnInit {
       month: 'months',
       year: 'years',
     };
-  
+
     // Validate the unit and map to Moment.js DurationConstructor
     const validUnit = unitMapping[unit.toLowerCase()];
-    
+
     if (validUnit) {
       return moment().add(duration, validUnit).toISOString();
     } else {
@@ -318,9 +313,9 @@ export class UpdatePricePlanComponent implements OnInit {
 
   changePriceProfileCharValue(char:any,event:any){
     const index = this.createdPriceProfile.findIndex((item: { id: any; }) => item.id === char.id);
-    const innerIndex = this.createdPriceProfile[index].productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (event.target.value).toString());    
+    const innerIndex = this.createdPriceProfile[index].productSpecCharacteristicValue.findIndex((item: { value: any; }) => (item.value).toString() === (event.target.value).toString());
     console.log(innerIndex)
-    for(let i=0;i<this.createdPriceProfile[index].productSpecCharacteristicValue.length;i++){      
+    for(let i=0;i<this.createdPriceProfile[index].productSpecCharacteristicValue.length;i++){
       if(i==innerIndex){
         this.createdPriceProfile[index].productSpecCharacteristicValue[i].isDefault=true;
       } else {
@@ -334,7 +329,7 @@ export class UpdatePricePlanComponent implements OnInit {
     const index = this.createdPriceProfile.findIndex((item: { id: any; }) => item.id === char.id);
     //Set range value
     this.createdPriceProfile[index].productSpecCharacteristicValue[0].value=Number(event.target.value);
-    console.log(this.createdPriceProfile[index]) 
+    console.log(this.createdPriceProfile[index])
   }
 
   cancelPriceComponent(){
@@ -380,7 +375,7 @@ export class UpdatePricePlanComponent implements OnInit {
         }
       }
     }
-    this.cdr.detectChanges(); 
+    this.cdr.detectChanges();
   }
 
   editPriceComp(price:any){
@@ -404,7 +399,7 @@ export class UpdatePricePlanComponent implements OnInit {
           this.createdPriceProfile.push(this.selectedProdSpec.productSpecCharacteristic[i])
         }
       }
-    }    
+    }
     console.log('-----')
     console.log(this.createdPriceProfile)
     console.log('drawer')
@@ -424,7 +419,7 @@ export class UpdatePricePlanComponent implements OnInit {
       );
       this.cdr.detectChanges();
       console.log('selected char')
-      console.log(this.selectedCharacteristic)  
+      console.log(this.selectedCharacteristic)
       console.log('-----change select')
       console.log(this.selectedCharacteristic.productSpecCharacteristicValue)
       if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
@@ -494,11 +489,11 @@ export class UpdatePricePlanComponent implements OnInit {
           }
           for(let i=0;i<this.createdPriceComponents.length;i++){
             this.createdPriceComponents[i].price.unit=this.selectedPriceUnit;
-          }          
+          }
           this.createdPriceComponents=[];
           this.createdPriceAlterations=[];
         } else {
-          updatingPrice.priceType='custom';          
+          updatingPrice.priceType='custom';
         }
         console.log(updatingPrice)
         this.eventMessage.emitUpdatePricePlan(updatingPrice);
@@ -512,7 +507,7 @@ export class UpdatePricePlanComponent implements OnInit {
     console.log('clear')
     this.oneTimeSelected=true;
     this.selectedPriceUnit=currencies[2].code;
-    
+
     this.usageSelected=false;
     this.recurringSelected=false;
     this.recurringPrepaidSelected=false;
@@ -602,7 +597,7 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + ' **bold text** '
-      });    
+      });
     }
   }
 
@@ -616,7 +611,7 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + ' _italicized text_ '
-      });    
+      });
     }
   }
 
@@ -630,7 +625,7 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + '\n- First item\n- Second item'
-      });    
+      });
     }
   }
 
@@ -644,7 +639,7 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + '\n1. First item\n2. Second item'
-      });    
+      });
     }
   }
 
@@ -658,7 +653,7 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + '\n`code`'
-      });    
+      });
     }
   }
 
@@ -672,7 +667,7 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + '\n```\ncode\n```'
-      });    
+      });
     }
   }
 
@@ -681,13 +676,13 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceComponentForm.value.description;
       this.priceComponentForm.patchValue({
         description: currentText + '\n> blockquote'
-      }); 
+      });
     } else {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + '\n> blockquote'
-      });    
-    }   
+      });
+    }
   }
 
   addLink(){
@@ -700,9 +695,9 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + ' [title](https://www.example.com) '
-      });    
-    } 
-  } 
+      });
+    }
+  }
 
   addTable(){
     if(this.showPriceComponents){
@@ -714,7 +709,7 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
-      });    
+      });
     }
   }
 
@@ -729,7 +724,7 @@ export class UpdatePricePlanComponent implements OnInit {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
         description: currentText + event.emoji.native
-      });    
+      });
     }
   }
 

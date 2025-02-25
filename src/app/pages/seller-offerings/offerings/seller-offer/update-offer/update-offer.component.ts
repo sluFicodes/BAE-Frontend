@@ -54,7 +54,7 @@ export class UpdateOfferComponent implements OnInit{
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
-  description:string='';  
+  description:string='';
   partyId:any='';
 
   //OFFER GENERAL INFO:
@@ -70,12 +70,12 @@ export class UpdateOfferComponent implements OnInit{
   bundlePage=0;
   bundlePageCheck:boolean=false;
   loadingBundle:boolean=false;
-  loadingBundle_more:boolean=false;  
+  loadingBundle_more:boolean=false;
   //final selected products inside bundle
   offersBundle:BundledProductOffering[]=[];
   bundledOffers:any[]=[];
   nextBundledOffers:BundledProductOffering[]=[];
-  
+
   //PROD SPEC INFO:
   prodSpecPage=0;
   prodSpecPageCheck:boolean=false;
@@ -197,7 +197,7 @@ export class UpdateOfferComponent implements OnInit{
   @ViewChild('delaymetric') delaymetric!: ElementRef;
   @ViewChild('usageUnit') usageUnit!: ElementRef;
   @ViewChild('usageUnitUpdate') usageUnitUpdate!: ElementRef;
-  @ViewChild('usageUnitAlter') usageUnitAlter!: ElementRef;  
+  @ViewChild('usageUnitAlter') usageUnitAlter!: ElementRef;
 
   constructor(
     private router: Router,
@@ -231,7 +231,7 @@ export class UpdateOfferComponent implements OnInit{
         if(index!=-1){
           console.log('updating price values...')
           //this.createdPrices[index]=price;
-          this.createdPrices = this.createdPrices.map((item, index) => 
+          this.createdPrices = this.createdPrices.map((item, index) =>
             index === index ? price : item
           );
         }
@@ -240,7 +240,7 @@ export class UpdateOfferComponent implements OnInit{
         }
       }
     })
-    
+
   }
 
   @HostListener('document:click')
@@ -291,7 +291,7 @@ export class UpdateOfferComponent implements OnInit{
     //PRODUCT SPECIFICATION
     if(this.offer.productSpecification){
       //this.selectedProdSpec=this.offer.productSpecification;
-      await this.api.getProductSpecification(this.offer.productSpecification.id).then(async data => { 
+      await this.api.getProductSpecification(this.offer.productSpecification.id).then(async data => {
         this.selectedProdSpec=data;
       })
     }
@@ -325,14 +325,14 @@ export class UpdateOfferComponent implements OnInit{
     if(this.offer.productOfferingPrice){
       //this.createdPrices=this.offer.productOfferingPrice;
       for(let i=0;i<this.offer.productOfferingPrice.length;i++){
-        this.api.getOfferingPrice(this.offer.productOfferingPrice[i].id).then(async data => {   
-          console.log('price')
+        this.api.getOfferingPrice(this.offer.productOfferingPrice[i].id).then(async data => {
+          console.log('priceplan:')
           console.log(data)
           let priceInfo: ProductOfferingPrice_DTO = {
             id: data.id,
             name: data.name,
             description: data.description,
-            lifecycleStatus: data.lifecycleStatus,            
+            lifecycleStatus: data.lifecycleStatus,
           }
           if(data.priceType){
             priceInfo.priceType=data.priceType;
@@ -360,8 +360,8 @@ export class UpdateOfferComponent implements OnInit{
             console.log('usage')
             priceInfo.unitOfMeasure=data.unitOfMeasure;
           }
-          this.createdPrices.push(priceInfo)
-          this.oldPrices.push(priceInfo)
+          this.createdPrices.push(data)
+          this.oldPrices.push(data)
         })
       }
     }
@@ -525,7 +525,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showCreatePrice=false;
   }
 
-  togglePrice(){    
+  togglePrice(){
     this.selectStep('price','price-circle');
     this.showBundle=false;
     this.showGeneral=false;
@@ -590,7 +590,7 @@ export class UpdateOfferComponent implements OnInit{
       this.createdLicense={
         treatment: '',
         description: ''
-      };      
+      };
     }
     this.showPreview=false;
   }
@@ -610,7 +610,6 @@ export class UpdateOfferComponent implements OnInit{
     console.log('---PRICE TO UPDATE---')
     this.priceToUpdate=price;
 
-    console.log(this.priceToUpdate)
     console.log(this.priceToUpdate)
     this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
     this.priceForm.controls['description'].setValue(this.priceToUpdate.description);
@@ -744,7 +743,7 @@ export class UpdateOfferComponent implements OnInit{
 
   getCategories(){
     console.log('Getting categories...')
-    this.api.getLaunchedCategories().then(data => {      
+    this.api.getLaunchedCategories().then(data => {
       for(let i=0; i < data.length; i++){
         this.findChildren(data[i],data);
         this.unformattedCategories.push(data[i]);
@@ -752,7 +751,7 @@ export class UpdateOfferComponent implements OnInit{
       this.loadingCategory=false;
       this.cdr.detectChanges();
       initFlowbite();
-    }) 
+    })
   }
 
   findChildren(parent:any,data:any[]){
@@ -794,21 +793,21 @@ export class UpdateOfferComponent implements OnInit{
     for(let i=0; i < superCategories.length; i++){
       let children = superCategories[i].children;
       if (children != undefined){
-        let check = children.find((element: { id: any; }) => element.id == parent.id) 
+        let check = children.find((element: { id: any; }) => element.id == parent.id)
         if (check != undefined) {
           let idx = children.findIndex((element: { id: any; }) => element.id == parent.id)
           children[idx] = parent
-          superCategories[i].children = children         
+          superCategories[i].children = children
         }
         this.saveChildren(children,parent)
-      }          
+      }
     }
   }
 
-  addParent(parentId:any){    
+  addParent(parentId:any){
     const index = this.unformattedCategories.findIndex(item => item.id === parentId);
     if (index != -1) {
-      //Si el padre no está seleccionado se añade a la selección      
+      //Si el padre no está seleccionado se añade a la selección
       if(this.unformattedCategories[index].isRoot==false){
         this.addCategory(this.unformattedCategories[index])
       } else {
@@ -825,13 +824,13 @@ export class UpdateOfferComponent implements OnInit{
     } else {
       console.log('añadir')
       this.selectedCategories.push(cat);
-    } 
+    }
 
     if(cat.isRoot==false){
       //const parentIdx = this.categories.findIndex(item => item.id === cat.parentId);
       const parentIdxSelected = this.selectedCategories.findIndex(item => item.id === cat.parentId);
       if (index==-1 && parentIdxSelected == -1) {
-        this.addParent(cat.parentId);     
+        this.addParent(cat.parentId);
       }
     }
     console.log(this.selectedCategories)
@@ -845,7 +844,7 @@ export class UpdateOfferComponent implements OnInit{
       return true;
     } else {
       return false;
-    } 
+    }
   }
 
   selectCatalog(cat:any){
@@ -857,7 +856,7 @@ export class UpdateOfferComponent implements OnInit{
     if(next==false){
       this.loadingCatalog=true;
     }
-    
+
     let options = {
       "keywords": undefined,
       "filters": ['Active','Launched'],
@@ -866,7 +865,7 @@ export class UpdateOfferComponent implements OnInit{
 
     this.paginationService.getItemsPaginated(this.catalogPage, this.CATALOG_LIMIT, next, this.catalogs,this.nextCatalogs, options,
       this.api.getCatalogsByUser.bind(this.api)).then(data => {
-      this.catalogPageCheck=data.page_check;      
+      this.catalogPageCheck=data.page_check;
       this.catalogs=data.items;
       this.nextCatalogs=data.nextItems;
       this.catalogPage=data.page;
@@ -887,7 +886,7 @@ export class UpdateOfferComponent implements OnInit{
     if(next==false){
       this.loadingProdSpec=true;
     }
-    
+
     let options = {
       "filters": ['Active','Launched'],
       "partyId": this.partyId,
@@ -897,7 +896,7 @@ export class UpdateOfferComponent implements OnInit{
 
     this.paginationService.getItemsPaginated(this.prodSpecPage, this.PROD_SPEC_LIMIT, next, this.prodSpecs,this.nextProdSpecs, options,
       this.prodSpecService.getProdSpecByUser.bind(this.prodSpecService)).then(data => {
-      this.prodSpecPageCheck=data.page_check;      
+      this.prodSpecPageCheck=data.page_check;
       this.prodSpecs=data.items;
       this.nextProdSpecs=data.nextItems;
       this.prodSpecPage=data.page;
@@ -914,7 +913,7 @@ export class UpdateOfferComponent implements OnInit{
     if(next==false){
       this.loadingBundle=true;
     }
-    
+
     let options = {
       "filters": ['Active','Launched'],
       "partyId": this.partyId,
@@ -924,7 +923,7 @@ export class UpdateOfferComponent implements OnInit{
 
     this.paginationService.getItemsPaginated(this.bundlePage, this.PRODUCT_LIMIT, next, this.bundledOffers,this.nextBundledOffers, options,
       this.api.getProductOfferByOwner.bind(this.api)).then(data => {
-      this.bundlePageCheck=data.page_check;      
+      this.bundlePageCheck=data.page_check;
       this.bundledOffers=data.items;
       this.nextBundledOffers=data.nextItems;
       this.bundlePage=data.page;
@@ -950,7 +949,7 @@ export class UpdateOfferComponent implements OnInit{
         lifecycleStatus: prod.lifecycleStatus,
         name: prod.name
       });
-    }    
+    }
     this.cdr.detectChanges();
     console.log(this.offersBundle)
   }
@@ -961,7 +960,7 @@ export class UpdateOfferComponent implements OnInit{
       return true
     } else {
       return false;
-    } 
+    }
   }
 
   changeProcurement(event: any) {
@@ -983,7 +982,7 @@ export class UpdateOfferComponent implements OnInit{
 
     this.selectStep('summary','summary-circle');
     this.showBundle=false;
-    this.showGeneral=false;    
+    this.showGeneral=false;
     this.showProdSpec=false;
     this.showCatalog=false;
     this.showCategory=false;
@@ -1031,7 +1030,7 @@ export class UpdateOfferComponent implements OnInit{
               if(components != undefined){
                 for(let j=0;j<components.length;j++){
                   //Creating price component
-                  let priceCompToCreate: ProductOfferingPrice = {        
+                  let priceCompToCreate: ProductOfferingPrice = {
                     name: components[j].name,
                     description: components[j].description,
                     lifecycleStatus: components[j].lifecycleStatus,
@@ -1091,7 +1090,7 @@ export class UpdateOfferComponent implements OnInit{
                       this.showError=true;
                       setTimeout(() => {
                         this.showError = false;
-                      }, 3000);     
+                      }, 3000);
                     }
                   }
                   try{
@@ -1100,7 +1099,7 @@ export class UpdateOfferComponent implements OnInit{
                       id: priceCompCreated.id,
                       href: priceCompCreated.id,
                       name: priceCompCreated.name
-                    }) 
+                    })
                     console.log('componente')
                     console.log(priceCompCreated)
                   } catch (error:any) {
@@ -1114,7 +1113,7 @@ export class UpdateOfferComponent implements OnInit{
                     this.showError=true;
                     setTimeout(() => {
                       this.showError = false;
-                    }, 3000);     
+                    }, 3000);
                   }
                 }
               }
@@ -1153,14 +1152,14 @@ export class UpdateOfferComponent implements OnInit{
                 this.showError = false;
               }, 3000);
             }
-          //Not bundled price plan  
+          //Not bundled price plan
           } else {
             let priceToCreate: ProductOfferingPrice = {
               name: this.createdPrices[i].name,
               isBundle: false,
               description: this.createdPrices[i].description,
               lifecycleStatus: this.createdPrices[i].lifecycleStatus,
-              priceType: this.createdPrices[i].priceType,   
+              priceType: this.createdPrices[i].priceType,
             }
             if(this.createdPrices[i].priceType!='custom'){
               priceToCreate.price= {
@@ -1206,8 +1205,8 @@ export class UpdateOfferComponent implements OnInit{
                 this.showError = false;
               }, 3000);
             }
-          }        
-          //EL PRECIO EXISTE -- UPDATE  
+          }
+          //EL PRECIO EXISTE -- UPDATE
           } else {
             console.log('precio existente -update')
             //Ver si se ha modificado y modificarlo si es necesario
@@ -1225,7 +1224,7 @@ export class UpdateOfferComponent implements OnInit{
                     if(compIdx!=-1){
                       //UPDATE COMPONENT
                       let priceCompToUpdate: ProductOfferingPrice = {
-                        id: components[j].id,    
+                        id: components[j].id,
                         name: components[j].name,
                         description: components[j].description,
                         lifecycleStatus: components[j].lifecycleStatus,
@@ -1285,7 +1284,7 @@ export class UpdateOfferComponent implements OnInit{
                             this.showError=true;
                             setTimeout(() => {
                               this.showError = false;
-                            }, 3000);     
+                            }, 3000);
                           }
                         } else {
                           //CREATE
@@ -1319,7 +1318,7 @@ export class UpdateOfferComponent implements OnInit{
                             this.showError=true;
                             setTimeout(() => {
                               this.showError = false;
-                            }, 3000);     
+                            }, 3000);
                           }
                         }
                       }
@@ -1343,11 +1342,11 @@ export class UpdateOfferComponent implements OnInit{
                         this.showError=true;
                         setTimeout(() => {
                           this.showError = false;
-                        }, 3000);     
+                        }, 3000);
                       }
                     }else{
                       //CREATE COMPONENT
-                      let priceCompToCreate: ProductOfferingPrice = {        
+                      let priceCompToCreate: ProductOfferingPrice = {
                         name: components[j].name,
                         description: components[j].description,
                         lifecycleStatus: components[j].lifecycleStatus,
@@ -1407,7 +1406,7 @@ export class UpdateOfferComponent implements OnInit{
                           this.showError=true;
                           setTimeout(() => {
                             this.showError = false;
-                          }, 3000);     
+                          }, 3000);
                         }
                       }
                       try{
@@ -1416,7 +1415,7 @@ export class UpdateOfferComponent implements OnInit{
                           id: priceCompCreated.id,
                           href: priceCompCreated.id,
                           name: priceCompCreated.name
-                        }) 
+                        })
                         console.log('componente')
                         console.log(priceCompCreated)
                       } catch (error:any) {
@@ -1430,7 +1429,7 @@ export class UpdateOfferComponent implements OnInit{
                         this.showError=true;
                         setTimeout(() => {
                           this.showError = false;
-                        }, 3000);     
+                        }, 3000);
                       }
                     }
                   }
@@ -1438,7 +1437,7 @@ export class UpdateOfferComponent implements OnInit{
                 //UPDATE price plan
                 console.log('prices----')
                 console.log(this.createdPrices[i])
-                let mappedCreatedPriced = this.createdPrices[i].bundledPopRelationship?.map(({ id, href, name }) => ({ id, href, name }));                
+                let mappedCreatedPriced = this.createdPrices[i].bundledPopRelationship?.map(({ id, href, name }) => ({ id, href, name }));
 
                 let priceToUpdate: ProductOfferingPrice = {
                   id: this.createdPrices[i].id,
@@ -1457,7 +1456,7 @@ export class UpdateOfferComponent implements OnInit{
                   this.createdPrices[i].id=pricePlanUpdated.id;
                   if(checkCreate==false && i==lastIndex){
                     this.saveOfferInfo();
-                  } 
+                  }
                 } catch (error:any){
                   console.error('There was an error while creating offers price!', error);
                   if(error.error.error){
@@ -1490,7 +1489,7 @@ export class UpdateOfferComponent implements OnInit{
                   this.createdPrices[i].id=pricePlanUpdated.id;
                   if(checkCreate==false && i==lastIndex){
                     this.saveOfferInfo();
-                  } 
+                  }
                 } catch (error:any){
                   console.error('There was an error while creating offers price!', error);
                   if(error.error.error){
@@ -1508,7 +1507,7 @@ export class UpdateOfferComponent implements OnInit{
             }
           }
         }
-      }      
+      }
     } else {
       this.createdPrices=[];
       this.saveOfferInfo();
@@ -1563,7 +1562,7 @@ export class UpdateOfferComponent implements OnInit{
               description: '',
               validFor: {}
           }
-        ]        
+        ]
       }
 
       this.offerToUpdate.productOfferingTerm.push({
@@ -1600,10 +1599,10 @@ export class UpdateOfferComponent implements OnInit{
     if (index !== -1) {
       this.stepsElements.splice(index, 1);
       this.selectMenu(document.getElementById(step),'text-primary-100 dark:text-primary-50')
-      this.unselectMenu(document.getElementById(step),'text-gray-500') 
+      this.unselectMenu(document.getElementById(step),'text-gray-500')
       for(let i=0; i<this.stepsElements.length;i++){
         this.unselectMenu(document.getElementById(this.stepsElements[i]),'text-primary-100 dark:text-primary-50')
-        this.selectMenu(document.getElementById(this.stepsElements[i]),'text-gray-500') 
+        this.selectMenu(document.getElementById(this.stepsElements[i]),'text-gray-500')
       }
       this.stepsElements.push(step);
     }
@@ -1634,7 +1633,7 @@ export class UpdateOfferComponent implements OnInit{
       if(elem.className.match(cls)){
         this.removeClass(elem,cls)
       } else {
-        console.log('already unselected')
+        //console.log('already unselected')
       }
     }
   }
@@ -1642,7 +1641,7 @@ export class UpdateOfferComponent implements OnInit{
   selectMenu(elem:HTMLElement| null,cls:string){
     if(elem != null){
       if(elem.className.match(cls)){
-        console.log('already selected')
+        //console.log('already selected')
       } else {
         this.addClass(elem,cls)
       }
@@ -1665,7 +1664,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' **bold text** '
-      });    
+      });
     }
 
   }
@@ -1685,7 +1684,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' _italicized text_ '
-      });    
+      });
     }
   }
 
@@ -1704,7 +1703,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n- First item\n- Second item'
-      });    
+      });
     }
   }
 
@@ -1723,8 +1722,8 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n1. First item\n2. Second item'
-      });    
-    } 
+      });
+    }
   }
 
   addCode(){
@@ -1742,7 +1741,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n`code`'
-      });    
+      });
     }
   }
 
@@ -1761,7 +1760,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n```\ncode\n```'
-      });    
+      });
     }
   }
 
@@ -1770,7 +1769,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.generalForm.value.description;
       this.generalForm.patchValue({
         description: currentText + '\n> blockquote'
-      }); 
+      });
     } else if(this.showPrice) {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
@@ -1780,8 +1779,8 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n> blockquote'
-      });    
-    }   
+      });
+    }
   }
 
   addLink(){
@@ -1799,9 +1798,9 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' [title](https://www.example.com) '
-      });    
-    }  
-  } 
+      });
+    }
+  }
 
   addTable(){
     if(this.showGeneral){
@@ -1818,8 +1817,8 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
-      });    
-    } 
+      });
+    }
   }
 
   addEmoji(event:any){
@@ -1838,8 +1837,8 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + event.emoji.native
-      });    
-    } 
+      });
+    }
   }
 
   togglePreview(){
@@ -1861,7 +1860,7 @@ export class UpdateOfferComponent implements OnInit{
       } else {
         this.licenseDescription=''
       }
-    } 
+    }
   }
 
   handleSelectionChange(items: string[]) {
