@@ -1,0 +1,59 @@
+<div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-4 md:p-8 rounded-lg w-full">
+
+  <h2 class="text-3xl font-bold text-primary-100 dark:text-white pb-4">{{ 'UPDATE_OFFER._update' | translate }}</h2>
+  <!-- Stepper -->
+  <form [formGroup]="productOfferForm">
+    <ol class="flex items-start w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+      @for (step of steps; track i; let i = $index) {
+        <li (click)="goToStep(i)"
+            [class.text-primary-100]="currentStep === i"
+            class="flex-1 cursor-pointer">
+          <span class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 mx-auto border-2 border-primary-100 dark:border-primary-50 shrink-0 rounded-full"
+                [class.bg-primary-100]="currentStep === i"
+                [class.text-white]="currentStep === i">
+            {{ i + 1 }}
+          </span>
+          <span class="md:block mt-2 hidden">{{ step }}</span>
+        </li>
+      }
+    </ol>
+
+    <h3 class="block md:hidden mt-2 text-center text-2xl text-primary-100 dark:text-white pb-4">{{ this.steps[currentStep] }}</h3>
+
+
+    <!-- Step Forms -->
+    @if (currentStep === 0) {
+      <app-general-info-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['generalInfo']"></app-general-info-form>
+    } @else if (currentStep === 1) {
+      <app-prod-spec-form formControlName="prodSpec"
+                          [data]="offer"
+                          [partyId]="partyId"
+
+                          [formType]="formType">
+      </app-prod-spec-form>
+    } @else if (currentStep === 2) {
+      <app-general-info-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['generalInfo']"></app-general-info-form>
+    }
+
+    <!-- Navigation Buttons -->
+    <div class="flex justify-between mt-6">
+      <button (click)="goToStep(currentStep - 1)"
+              [disabled]="currentStep === 0"
+              class="px-4 py-2 bg-gray-300 rounded-lg">
+        Previous
+      </button>
+
+      <button (click)="goToStep(currentStep + 1)"
+              [disabled]="currentStep === steps.length - 1"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg">
+        Next
+      </button>
+
+      <button (click)="submitForm()"
+              [disabled]="!isFormValid"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg">
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
