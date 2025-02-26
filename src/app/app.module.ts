@@ -197,6 +197,7 @@ import {OfferComponent} from "./shared/forms/offer/offer.component";
     }
   ],
   exports: [
+    CategoriesRecursionComponent
   ],
   bootstrap: [AppComponent]
 })

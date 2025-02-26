@@ -32,7 +32,7 @@
                           [formType]="formType">
       </app-prod-spec-form>
     } @else if (currentStep === 2) {
-      <app-general-info-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['generalInfo']"></app-general-info-form>
+      <app-category-form formControlName="category" [data]="offer" [formType]="formType"></app-category-form>
     }
 
     <!-- Navigation Buttons -->

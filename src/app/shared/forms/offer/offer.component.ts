@@ -5,6 +5,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {ProdSpecComponent} from "./prod-spec/prod-spec.component";
 import {NgIf} from "@angular/common";
 import {ApiServiceService} from "../../../services/product-service.service";
+import {CategoryComponent} from "./category/category.component";
 
 @Component({
   selector: 'app-offer-form',
@@ -14,7 +15,8 @@ import {ApiServiceService} from "../../../services/product-service.service";
     TranslateModule,
     ProdSpecComponent,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CategoryComponent
   ],
   templateUrl: './offer.component.html',
   styleUrl: './offer.component.css'
@@ -45,7 +47,7 @@ export class OfferComponent implements OnInit{
     this.productOfferForm = this.fb.group({
       generalInfo: this.fb.group({}),
       prodSpec: new FormControl(null),
-      category: this.fb.group({}),
+      category: new FormControl([]),
       license: this.fb.group({}),
       pricePlans: this.fb.group({}),
       procurementMode: this.fb.group({}),

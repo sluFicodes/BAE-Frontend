@@ -1,15 +1,11 @@
 import {Component, forwardRef, Input, OnInit} from '@angular/core';
 import {
-  AbstractControl,
   ControlValueAccessor,
   FormControl,
-  FormGroup,
   NG_VALUE_ACCESSOR,
-  ReactiveFormsModule
 } from "@angular/forms";
 import {DatePipe, NgClass} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
-import {ApiServiceService} from "../../../../services/product-service.service";
 import {ProductSpecServiceService} from "../../../../services/product-spec-service.service";
 import {PaginationService} from "../../../../services/pagination.service";
 import {environment} from "../../../../../environments/environment";
