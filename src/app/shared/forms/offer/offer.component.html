@@ -33,6 +33,8 @@
       </app-prod-spec-form>
     } @else if (currentStep === 2) {
       <app-category-form formControlName="category" [data]="offer" [formType]="formType"></app-category-form>
+    } @else if (currentStep === 3) {
+      <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
     }
 
     <!-- Navigation Buttons -->

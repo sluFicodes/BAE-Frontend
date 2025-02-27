@@ -50,16 +50,18 @@
         @for (category of categories; track category.id; let i = $index) {
           <tr
             [ngClass]="{
-              'bg-gray-200 dark:bg-gray-700': level === 0,
-              'bg-gray-100 dark:bg-gray-600': level > 0
+              'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600': level === 0,
+              'bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500': level > 0,
+              'bg-blue-500 dark:bg-blue-900 transition-colors duration-300': isCategorySelected(category)
             }"
-            class="border-b dark:border-gray-500">
+            class="border-b dark:border-gray-500 transition-all duration-200 cursor-pointer"
+            (click)="manageCategory(category)">
 
           <!-- Botón Expandir -->
             <td class="px-6 py-4">
               <button
                 *ngIf="category.childrenLoaded || !category.childrenLoaded"
-                (click)="toggleCategory(category)"
+                (click)="toggleCategory(category); $event.stopPropagation()"
                 class="transition-transform duration-300 ease-in-out"
                 [style.padding-left.px]="level * 10"
               >
@@ -88,9 +90,9 @@
             <td class="px-6 py-4 text-center">
               <input
                 type="checkbox"
-                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer transition-all duration-200 scale-100 checked:scale-110 checked:ring-2"
                 [checked]="isCategorySelected(category)"
-                (click)="manageCategory(category)"
+                (click)="manageCategory(category); $event.stopPropagation()"
               />
             </td>
 

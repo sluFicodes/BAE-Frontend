@@ -6,6 +6,7 @@ import {ProdSpecComponent} from "./prod-spec/prod-spec.component";
 import {NgIf} from "@angular/common";
 import {ApiServiceService} from "../../../services/product-service.service";
 import {CategoryComponent} from "./category/category.component";
+import {LicenseComponent} from "./license/license.component";
 
 @Component({
   selector: 'app-offer-form',
@@ -16,7 +17,8 @@ import {CategoryComponent} from "./category/category.component";
     ProdSpecComponent,
     NgIf,
     ReactiveFormsModule,
-    CategoryComponent
+    CategoryComponent,
+    LicenseComponent
   ],
   templateUrl: './offer.component.html',
   styleUrl: './offer.component.css'
