@@ -967,24 +967,29 @@
         "_details": "Organization details",
         "_description": "Description"
     },
-        "PRODUCT_ORDERS": {
-            "_orders": "Product Orders",
-            "_invoices": "Invoices",
-            "_no_orders": "No orders found.",
-            "_search_criteria": "Search criteria",
-            "_order_id": "Order Id",
-            "_status": "Choose a status",
-            "_priority": "Priority",
-            "_desc": "Description",
-            "_price": "Price",
-            "_bill": "Billing address",
-            "_filter_state": "Filter by status",
-            "_acknowledged": "Acknowledged",
-            "_in_progress": "In Progress",
-            "_completed": "Completed",
-            "_failed": "Failed",
-            "_pending": "Pending",
-            "_cancelled": "Cancelled"
+    "PRODUCT_ORDERS": {
+        "_orders": "Product Orders",
+        "_invoices": "Invoices",
+        "_no_orders": "No orders found.",
+        "_search_criteria": "Search criteria",
+        "_order_id": "Order Id",
+        "_status": "Choose a status",
+        "_priority": "Priority",
+        "_desc": "Description",
+        "_price": "Price",
+        "_bill": "Billing address",
+        "_filter_state": "Filter by status",
+        "_acknowledged": "Acknowledged",
+        "_in_progress": "In Progress",
+        "_completed": "Completed",
+        "_failed": "Failed",
+        "_pending": "Pending",
+        "_cancelled": "Cancelled"
 
-        }
+    },
+  "FORMS": {
+    "PRICE_PLANS": {
+      "_price_plans": "Price Plans"
+    }
+  }
 }

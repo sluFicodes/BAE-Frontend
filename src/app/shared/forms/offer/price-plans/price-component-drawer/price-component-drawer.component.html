@@ -1,0 +1,91 @@
+<!-- Drawer -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex justify-end">
+  <div class="w-96 bg-white dark:bg-gray-800 shadow-lg h-full p-6 overflow-y-auto">
+
+    <!-- Título -->
+    <h2 class="text-xl font-semibold text-gray-700 dark:text-white">
+      {{ component ? 'Editar Price Component' : 'Nuevo Price Component' }}
+    </h2>
+
+    <form [formGroup]="priceComponentForm" (ngSubmit)="submitForm()" class="mt-4 space-y-4">
+
+      <!-- Nombre -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+        <input formControlName="name" type="text"
+               class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+      </div>
+
+      <!-- Descripción -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descripción</label>
+        <app-markdown-textarea formControlName="description"></app-markdown-textarea>
+      </div>
+
+      <!-- Tipo de Precio -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo de Precio</label>
+        <select formControlName="priceType" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+          <option value="one-time">Único</option>
+          <option value="recurring">Recurrente</option>
+          <option value="recurring-prepaid">Prepago</option>
+          <option value="usage">Uso</option>
+        </select>
+      </div>
+
+      <!-- Descuento -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descuento</label>
+        <div class="flex space-x-2">
+          <input formControlName="discountValue" type="number" placeholder="Cantidad"
+                 class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+          <select formControlName="discountUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <option value="percentage">%</option>
+            <option value="fixed">Cantidad Fija</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Duración del Descuento -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Duración del Descuento</label>
+        <div class="flex space-x-2">
+          <input formControlName="discountDuration" type="number" placeholder="Duración"
+                 class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+          <select formControlName="discountDurationUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <option value="days">Días</option>
+            <option value="weeks">Semanas</option>
+            <option value="months">Meses</option>
+            <option value="years">Años</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Opciones dinámicas según el tipo de precio -->
+      @if (priceComponentForm.get('priceType')?.value === 'recurring') {
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Frecuencia de Pago</label>
+          <select formControlName="recurringPeriod" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <option value="daily">Diario</option>
+            <option value="weekly">Semanal</option>
+            <option value="monthly">Mensual</option>
+            <option value="yearly">Anual</option>
+          </select>
+        </div>
+      } @else if (priceComponentForm.get('priceType')?.value === 'usage') {
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Unidad de Cobro</label>
+          <input formControlName="usageUnit" type="text" placeholder="Ej. GB, CPU, Horas"
+                 class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+        </div>
+      }
+
+      <!-- Botones -->
+      <div class="flex justify-end space-x-3">
+        <button type="button" (click)="closeWithoutSaving()" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Cancelar</button>
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Guardar</button>
+      </div>
+    </form>
+
+  </div>
+</div>

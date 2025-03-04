@@ -3,10 +3,11 @@ import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular
 import {GeneralInfoComponent} from "./general-info/general-info.component";
 import {TranslateModule} from "@ngx-translate/core";
 import {ProdSpecComponent} from "./prod-spec/prod-spec.component";
-import {NgIf} from "@angular/common";
+import {NgClass, NgIf} from "@angular/common";
 import {ApiServiceService} from "../../../services/product-service.service";
 import {CategoryComponent} from "./category/category.component";
 import {LicenseComponent} from "./license/license.component";
+import {PricePlansComponent} from "./price-plans/price-plans.component";
 
 @Component({
   selector: 'app-offer-form',
@@ -18,7 +19,9 @@ import {LicenseComponent} from "./license/license.component";
     NgIf,
     ReactiveFormsModule,
     CategoryComponent,
-    LicenseComponent
+    LicenseComponent,
+    PricePlansComponent,
+    NgClass
   ],
   templateUrl: './offer.component.html',
   styleUrl: './offer.component.css'
@@ -51,7 +54,7 @@ export class OfferComponent implements OnInit{
       prodSpec: new FormControl(null),
       category: new FormControl([]),
       license: this.fb.group({}),
-      pricePlans: this.fb.group({}),
+      pricePlans: this.fb.group([]),
       procurementMode: this.fb.group({}),
       replicationMode: this.fb.group({})
     });
