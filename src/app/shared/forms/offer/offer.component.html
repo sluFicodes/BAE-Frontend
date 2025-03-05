@@ -36,10 +36,12 @@
                             [formType]="formType">
         </app-prod-spec-form>
       } @else if (currentStep === 2) {
+        <app-catalogue formControlName="catalogue" [partyId]="partyId"></app-catalogue>
+      } @else if (currentStep === 3){
         <app-category-form formControlName="category" [data]="offer" [formType]="formType"></app-category-form>
-      } @else if (currentStep === 3) {
+      } @else if (currentStep === 4) {
         <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
-      } @if (currentStep === 4) {
+      } @if (currentStep === 5) {
          <app-price-plans-form [form]="productOfferForm"></app-price-plans-form>
       }
     </div>

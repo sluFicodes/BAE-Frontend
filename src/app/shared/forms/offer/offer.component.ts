@@ -8,7 +8,8 @@ import {ApiServiceService} from "../../../services/product-service.service";
 import {CategoryComponent} from "./category/category.component";
 import {LicenseComponent} from "./license/license.component";
 import {PricePlansComponent} from "./price-plans/price-plans.component";
-
+import {CatalogueComponent} from "./catalogue/catalogue.component"
+ 
 @Component({
   selector: 'app-offer-form',
   standalone: true,
@@ -21,6 +22,7 @@ import {PricePlansComponent} from "./price-plans/price-plans.component";
     CategoryComponent,
     LicenseComponent,
     PricePlansComponent,
+    CatalogueComponent,
     NgClass
   ],
   templateUrl: './offer.component.html',
@@ -37,6 +39,7 @@ export class OfferComponent implements OnInit{
   steps = [
     'General Info',
     'Product Specification',
+    'Catalogue',
     'Category',
     'License',
     'Price Plans',
@@ -52,6 +55,7 @@ export class OfferComponent implements OnInit{
     this.productOfferForm = this.fb.group({
       generalInfo: this.fb.group({}),
       prodSpec: new FormControl(null),
+      catalogue: new FormControl(null),
       category: new FormControl([]),
       license: this.fb.group({}),
       pricePlans: this.fb.group([]),
