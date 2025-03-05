@@ -1,28 +1,53 @@
-/**
- *              environment.SIOP_INFO = config.siop;
-                environment.CHAT_API = config.chat;
-                environment.MATOMO_SITE_ID = config.matomoId;
-                environment.MATOMO_TRACKER_URL = config.matomoUrl;
-                environment.KNOWLEDGE_BASE_URL = config.knowledgeBaseUrl;
-                environment.TICKETING_SYSTEM_URL = config.ticketingUrl;
-                environment.SEARCH_ENABLED = config.searchEnabled;
-                environment.DOME_TRUST_LINK = config.domeTrust;
-                environment.DOME_ABOUT_LINK = config.domeAbout;
-                environment.DOME_REGISTER_LINK = config.domeRegister;
-                environment.DOME_PUBLISH_LINK = config.domePublish;
-                environment.PURCHASE_ENABLED = config.purchaseEnabled;
- */
-describe('/dashboard', () => {
-  it('should exist login button with the corresponding SIOP configuration', () => {
-    cy.intercept( 'GET', 'http://proxy.docker:8004/stats', {}).as('stats')
-    cy.intercept( 'GET', 'http://proxy.docker:8004/catalog/productOffering?*', []).as('productOffering')
-    cy.intercept( 'GET', 'http://proxy.docker:8004/config', {searchEnabled: true, purchaseEnabled: true, domeRegister: true}).as('config')
-    cy.intercept( 'GET', 'http://proxy.docker:8004/catalog/category?*', []).as('category')
+import { category_launched, init_config, init_stat, local_items, product_offering } from "../support/constants"
+import * as moment from 'moment';
+const checkHeaderPreLogin = () => {
+    // Mocks
+    cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/stats', times:1}, init_stat).as('stats')
+    cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/catalog/productOffering?*', times: 1}, product_offering).as('productOffering')
+    cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/config', times: 1}, init_config).as('config')
+    cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/catalog/category?*', times: 1}, category_launched).as('category')
+    // Verify mocks are called 1 time
     cy.visit('/')
     cy.wait('@stats')
+    cy.get('@stats.all').should('have.length', 1)
     cy.wait('@config')
+    cy.get('@config.all').should('have.length', 1)
     cy.wait('@productOffering')
+    cy.get('@productOffering.all').should('have.length', 1)
     cy.wait('@category')
+    cy.get('@category.all').should('have.length', 1)
+    // Verify header interactive elemements are displayed and work as expected
     cy.login().should('exist')
-  })
-})
+    cy.getBySel('publishOffering').should('exist')
+    cy.getBySel('browse').should('exist')
+    cy.getBySel('about').should('exist')
+    cy.getBySel('registerAcc').should('exist')
+    cy.getBySel('knowledge').should('exist')
+    cy.getBySel('darkMode').should('exist')
+
+    cy.getBySel('darkMode').click()
+    cy.getBySel('moonSVG').should('have.class', 'hidden')
+    cy.getBySel('sunSVG').should('not.have.class', 'hidden')
+    cy.getBySel('darkMode').click()
+    cy.getBySel('sunSVG').should('have.class', 'hidden')
+    cy.getBySel('moonSVG').should('not.have.class', 'hidden')
+
+    cy.getBySel('knowledge').should('have.attr', 'href', init_config.knowledgeBaseUrl)
+};
+
+describe('/dashboard',{
+    viewportHeight: 800,
+    viewportWidth: 1080,
+  },
+  () => {
+
+    it('should login successfully and show the required components in pre-login and post-login', () => {
+        checkHeaderPreLogin()
+        local_items.expire = moment().unix() + 100
+        window.localStorage.setItem('local_items', JSON.stringify(local_items))
+        cy.visit('/dashboard')
+        cy.reload()
+        
+    })
+    })
+
