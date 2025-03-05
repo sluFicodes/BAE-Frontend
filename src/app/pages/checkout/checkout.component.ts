@@ -397,8 +397,16 @@ export class CheckoutComponent implements OnInit {
     if (qParams.client && qParams.action && qParams.ref) {
       // All the payment basic params are here
 
+      let params = {...qParams}
+      // They are adding the jwt incorrect within the ref, so check for it
+      if (params.ref.includes('?jwt')) {
+        let ref = params.ref.split('?jwt');
+        params.ref = ref[0];
+        params.jwt = ref[1];
+      }
+
       this.loading_purchase = true;
-      firstValueFrom(this.paymentService.completePayment(qParams)).then((response) => {
+      firstValueFrom(this.paymentService.completePayment(params)).then((response) => {
         this.loading_purchase = false;
 
         console.log('--- Payment Response ---')
