@@ -49,9 +49,9 @@ export class InvoicesService {
     //  TODO no se que le pasa a esta petición
     let result =  lastValueFrom(this.http.get<any[]>(url));
     console.log(result)
-    return result;
+    //return result;
     //  TODO más triste es robar:
-    return [
+    let inv:any[]= [
       {
         "id": "urn:ngsi-ld:applied-customer-billing-rate:4c0eae59-b20e-4bc1-953e-450b1b62005e",
         "href": "urn:ngsi-ld:applied-customer-billing-rate:4c0eae59-b20e-4bc1-953e-450b1b62005e",
@@ -65,7 +65,7 @@ export class InvoicesService {
             "taxCategory": "VAT",
             "taxRate": 10.0,
             "taxAmount": {
-              "unit": "€",
+              "unit": "EUR",
               "value": 10.0
             }
           }
@@ -76,11 +76,11 @@ export class InvoicesService {
           "name": "qwert12345"
         },
         "taxExcludedAmount": {
-          "unit": "€",
+          "unit": "EUR",
           "value": 100.0
         },
         "taxIncludedAmount": {
-          "unit": "€",
+          "unit": "EUR",
           "value": 110.0
         }
       },
@@ -97,7 +97,7 @@ export class InvoicesService {
             "taxCategory": "VAT",
             "taxRate": 10.0,
             "taxAmount": {
-              "unit": "€",
+              "unit": "EUR",
               "value": 100.0
             }
           }
@@ -108,11 +108,11 @@ export class InvoicesService {
           "name": "qwert12345"
         },
         "taxExcludedAmount": {
-          "unit": "€",
+          "unit": "EUR",
           "value": 1000.0
         },
         "taxIncludedAmount": {
-          "unit": "€",
+          "unit": "EUR",
           "value": 1100.0
         }
       },
@@ -129,7 +129,7 @@ export class InvoicesService {
             "taxCategory": "VAT",
             "taxRate": 10.0,
             "taxAmount": {
-              "unit": "€",
+              "unit": "EUR",
               "value": 100.0
             }
           }
@@ -140,14 +140,24 @@ export class InvoicesService {
           "name": "qwert12345"
         },
         "taxExcludedAmount": {
-          "unit": "€",
+          "unit": "EUR",
           "value": 1000.0
         },
         "taxIncludedAmount": {
-          "unit": "€",
+          "unit": "EUR",
           "value": 1100.0
         }
       }
     ]
+    return inv
   }
+
+  /*updateInvoice(invoiceId:any, patchData:any){
+    console.log('updatingInvoice...');
+    console.log(invoiceId);
+    console.log(patchData);
+    let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}?limit=1000&offset=${page}`;
+    let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder/${orderId}`;
+    return lastValueFrom(this.http.patch(url, patchData))
+  }*/
 }

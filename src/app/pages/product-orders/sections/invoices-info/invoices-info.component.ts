@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ElementRef, ViewChild, AfterViewInit, HostListener, NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { LoginInfo, billingAccountCart } from 'src/app/models/interfaces';
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -16,14 +17,14 @@ import { initFlowbite } from 'flowbite';
 import {EventMessageService} from "src/app/services/event-message.service";
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
-import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
+import {faIdCard, faSort, faSwatchbook, faEdit, faSave} from "@fortawesome/pro-solid-svg-icons";
 import { TranslateModule } from '@ngx-translate/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-invoices-info',
   standalone: true,
-  imports: [TranslateModule, FontAwesomeModule, CommonModule],
+  imports: [TranslateModule, FontAwesomeModule, CommonModule, FormsModule],
   providers: [DatePipe],
   templateUrl: './invoices-info.component.html',
   styleUrl: './invoices-info.component.css'
@@ -47,13 +48,19 @@ export class InvoicesInfoComponent implements OnInit {
   check_custom:boolean=false;
   isSeller:boolean=false;
   role:any='Customer'
+  name:any=''
 
   show_orders: boolean = true;
   show_billing: boolean = false;
 
+  editingIndex: number | null = null;
+  editableInvoiceName: string = '';
+
   protected readonly faIdCard = faIdCard;
   protected readonly faSort = faSort;
   protected readonly faSwatchbook = faSwatchbook;
+  protected readonly faEdit = faEdit;
+  protected readonly faSave = faSave;
 
   constructor(
     private localStorage: LocalStorageService,
@@ -143,7 +150,8 @@ export class InvoicesInfoComponent implements OnInit {
       "partyId": this.partyId,
       "selectedDate": this.selectedDate,
       "invoices": this.invoices,
-      "role": this.role
+      "role": this.role,
+      "name": this.name
     }
 
     this.paginationService.getItemsPaginated(this.page, this.INVOICE_LIMIT, next, this.invoices, this.nextInvoices, options,
@@ -153,6 +161,7 @@ export class InvoicesInfoComponent implements OnInit {
       console.log(this.invoices)
       this.page_check = data.page_check;
       this.invoices = data.items;
+      this.name = data.name;
       this.nextInvoices = data.nextItems;
       this.page = data.page;
       this.loading = false;
@@ -265,5 +274,16 @@ export class InvoicesInfoComponent implements OnInit {
 
   goToProduct(prodId: any) {
     this.router.navigate(['/product-inventory/', prodId]);
+  }
+
+  editInvoice(index: number, invoice: any) {
+    this.editingIndex = index;
+    this.editableInvoiceName = invoice.name;
+  }
+
+  saveInvoice(index: number, invoice: any) {
+    invoice.name = this.editableInvoiceName;
+    //PATCH?    
+    this.editingIndex = null;
   }
 }
