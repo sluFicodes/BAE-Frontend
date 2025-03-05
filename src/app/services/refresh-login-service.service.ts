@@ -24,8 +24,10 @@ export class RefreshLoginServiceService {
 
   startInterval(intervalDuration: number, data:any): void {
     this.intervalObservable = interval(intervalDuration);
+
     console.log('start interval')
     console.log(intervalDuration)
+
     this.intervalSubscription = this.intervalObservable.subscribe(() => {
       console.log('login subscription')
       console.log(data.expire - moment().unix())
@@ -37,41 +39,45 @@ export class RefreshLoginServiceService {
       console.log('usuario antes')
       console.log(aux)
 
-      //if(environment.SIOP_INFO.enabled == false){
-        this.api.getLogin(aux['token']).then(refreshed => {
-          this.stopInterval()
-          this.localStorage.setObject('login_items',
-            {"id": refreshed.id,
-            "user": refreshed.username,
-            "email": refreshed.email,
-            "token": refreshed.accessToken,
-            "expire": refreshed.expire,
-            "partyId": aux['partyId'],
-            "roles": refreshed.roles,
-            "organizations": aux['organizations'],
-            "logged_as": aux['logged_as'] });
-          console.log('usuario despues')
-          console.log(this.localStorage.getObject('login_items') as LoginInfo)
+      this.api.getLogin(aux['token']).then(refreshed => {
+        this.stopInterval()
 
+        this.localStorage.setObject('login_items', {
+          "id": refreshed.id,
+          "user": refreshed.username,
+          "email": refreshed.email,
+          "token": refreshed.accessToken,
+          "expire": refreshed.expire,
+          "partyId": aux['partyId'],
+          "roles": refreshed.roles,
+          "organizations": aux['organizations'],
+          "logged_as": aux['logged_as']
+        });
+
+        console.log('usuario despues')
+        console.log(this.localStorage.getObject('login_items') as LoginInfo)
+
+        // Start the interval only if the token has been really refreshed
+        // Otherwise close the session
+        if (refreshed.expire > moment().unix() + 4) {
           this.startInterval(((refreshed.expire - moment().unix())-4)*1000, refreshed)
-          //this.startInterval(4000, refreshed)
-        })
-    /*} else {
-      this.stopInterval();
-      this.localStorage.setObject('login_items',{});
-      this.api.logout().catch((err) => {
-        console.log('Something happened')
-        console.log(err)
-      })
+        } else {
+          this.stopInterval();
+          this.localStorage.setObject('login_items',{});
+          this.api.logout().catch((err) => {
+            console.log('Something happened')
+            console.log(err)
+          })
 
-      this.router.navigate(['/dashboard']).then(() => {
-        console.log('LOGOUT MADE')
-        window.location.reload()
-      }).catch((err) => {
-        console.log('Something happened router')
-        console.log(err)
+          this.router.navigate(['/dashboard']).then(() => {
+            console.log('LOGOUT MADE')
+            window.location.reload()
+          }).catch((err) => {
+            console.log('Something happened router')
+            console.log(err)
+          })
+        }
       })
-    }*/
     });
   }
 
