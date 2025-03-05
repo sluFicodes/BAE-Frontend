@@ -1,3 +1,5 @@
+import moment = require("moment")
+
 export const init_config = {
     'siop': {
         'enabled': false,
@@ -37,36 +39,17 @@ export const category_launched = [{
 
 export const product_offering = []
 
-export const login_token = {
-    "provider": "fiware",
-    "id": "admin",
-    "displayName": "admin",
-    "emails": [
-        {
-            "value": "admin@test.com"
-        }
-    ],
-    "email": "admin@test.com",
-    "roles": [
-        {
-            "id": "1af053c1-44dd-479f-a50f-e0c40a592b2f",
-            "name": "customer"
-        },
-        {
-            "id": "2bfb986d-3804-406c-b890-e945694a2ba4",
-            "name": "seller"
-        },
-        {
-            "id": "624ae013-e572-4d28-a389-a91fce005317",
-            "name": "admin"
-        }
-    ],
-    "organizations": [],
-    "appId": "d153323a-b503-40bb-ae42-9d2ca5bbd480",
-    "_raw": "{\"organizations\":[],\"displayName\":\"\",\"roles\":[{\"id\":\"1af053c1-44dd-479f-a50f-e0c40a592b2f\",\"name\":\"customer\"},{\"id\":\"2bfb986d-3804-406c-b890-e945694a2ba4\",\"name\":\"seller\"},{\"id\":\"624ae013-e572-4d28-a389-a91fce005317\",\"name\":\"admin\"}],\"app_id\":\"d153323a-b503-40bb-ae42-9d2ca5bbd480\",\"trusted_apps\":[],\"isGravatarEnabled\":\"\",\"id\":\"admin\",\"authorization_decision\":\"\",\"app_azf_domain\":\"\",\"eidas_profile\":{},\"attributes\":{},\"shared_attributes\":\"\",\"username\":\"admin\",\"email\":\"admin@test.com\",\"image\":\"\",\"gravatar\":\"\",\"extra\":\"\"}",
-    "_json": {
-        "organizations": [],
-        "displayName": "",
+export const login_token = () => {
+    return {
+        "provider": "fiware",
+        "id": "admin",
+        "displayName": "admin",
+        "emails": [
+            {
+                "value": "admin@test.com"
+            }
+        ],
+        "email": "admin@test.com",
         "roles": [
             {
                 "id": "1af053c1-44dd-479f-a50f-e0c40a592b2f",
@@ -81,28 +64,49 @@ export const login_token = {
                 "name": "admin"
             }
         ],
-        "app_id": "d153323a-b503-40bb-ae42-9d2ca5bbd480",
-        "trusted_apps": [],
-        "isGravatarEnabled": "",
-        "id": "admin",
-        "authorization_decision": "",
-        "app_azf_domain": "",
-        "eidas_profile": {},
-        "attributes": {},
-        "shared_attributes": "",
+        "organizations": [],
+        "appId": "d153323a-b503-40bb-ae42-9d2ca5bbd480",
+        "_raw": "",
+        "_json": {
+            "organizations": [],
+            "displayName": "",
+            "roles": [
+                {
+                    "id": "1af053c1-44dd-479f-a50f-e0c40a592b2f",
+                    "name": "customer"
+                },
+                {
+                    "id": "2bfb986d-3804-406c-b890-e945694a2ba4",
+                    "name": "seller"
+                },
+                {
+                    "id": "624ae013-e572-4d28-a389-a91fce005317",
+                    "name": "admin"
+                }
+            ],
+            "app_id": "d153323a-b503-40bb-ae42-9d2ca5bbd480",
+            "trusted_apps": [],
+            "isGravatarEnabled": "",
+            "id": "admin",
+            "authorization_decision": "",
+            "app_azf_domain": "",
+            "eidas_profile": {},
+            "attributes": {},
+            "shared_attributes": "",
+            "username": "admin",
+            "email": "admin@test.com",
+            "image": "",
+            "gravatar": "",
+            "extra": ""
+        },
         "username": "admin",
-        "email": "admin@test.com",
-        "image": "",
-        "gravatar": "",
-        "extra": ""
-    },
-    "username": "admin",
-    "expire": 1741009181,
-    "partyId": "urn:ngsi-ld:individual:b73dd8ce-b63f-4c5b-be07-ca7ea10ad78e",
-    "accessToken": "f10d5c048d9eaf400f3a5d0702e19ebe11172338",
-    "refreshToken": "a957fb1afc717c1f44fc6d4523482643019ce58b",
-    "idp": "local",
-    "orgState": 1
+        "expire": moment().unix() + 100,
+        "partyId": "urn:ngsi-ld:individual:b73dd8ce-b63f-4c5b-be07-ca7ea10ad78e",
+        "accessToken": "f10d5c048d9eaf400f3a5d0702e19ebe11172338",
+        "refreshToken": "a957fb1afc717c1f44fc6d4523482643019ce58b",
+        "idp": "local",
+        "orgState": 1
+    }
 }
 
 export const catalog_launched = [
