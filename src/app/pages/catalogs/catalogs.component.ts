@@ -68,11 +68,11 @@ export class CatalogsComponent implements OnInit{
     let options = {
       "keywords": this.filter
     }
-
     this.paginationService.getItemsPaginated(this.page,this.CATALOG_LIMIT,next,this.catalogs,this.nextCatalogs, options,
       this.api.getCatalogs.bind(this.api)).then(data => {
       this.page_check=data.page_check;      
-      this.catalogs=data.items;
+      this.catalogs=data.items.filter((catalog:Catalog) => (catalog.id !== environment.DFT_CATALOG_ID)
+      );
       this.nextCatalogs=data.nextItems;
       this.page=data.page;
       this.loading=false;
