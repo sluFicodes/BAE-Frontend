@@ -3,7 +3,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { AccountServiceService } from 'src/app/services/account-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { phoneNumbers, countries } from 'src/app/models/country.const'
 import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {parsePhoneNumber, getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
 import {AttachmentServiceService} from "src/app/services/attachment-service.service";
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { environment } from 'src/environments/environment';
 
 type OrganizationUpdate = components["schemas"]["Organization_Update"];
 
@@ -30,14 +31,14 @@ export class OrgInfoComponent {
   email:string='';
   selectedDate:any;
   profileForm = new FormGroup({
-    name: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
     website: new FormControl(''),
     description: new FormControl(''),
   });
   mediumForm = new FormGroup({
-    email: new FormControl('', [Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
     country: new FormControl(''),
-    city: new FormControl(''),
+    city: new FormControl('',),
     stateOrProvince: new FormControl(''),
     postCode: new FormControl(''),
     street: new FormControl(''),
@@ -68,6 +69,7 @@ export class OrgInfoComponent {
   attFileName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9 _.-]*')]);
   attImageName = new FormControl('', [Validators.required, Validators.pattern('^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp)$')])
   filenameRegex = /^[A-Za-z0-9_.-]+$/;
+  MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
 
   @ViewChild('imgURL') imgURL!: ElementRef;
 
@@ -457,21 +459,107 @@ export class OrgInfoComponent {
   }
 
   onTypeChange(event: any) {
+    this.mediumForm.reset();
     if(event.target.value=='email'){
       this.emailSelected=true;
       this.addressSelected=false;
       this.phoneSelected=false;
+      this.mediumForm.get('country')?.clearValidators();
+      this.mediumForm.get('country')?.setValue('');
+      this.mediumForm.get('city')?.clearValidators();
+      this.mediumForm.get('city')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.clearValidators();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
+      this.mediumForm.get('postCode')?.clearValidators();
+      this.mediumForm.get('postCode')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.setValue('');
+      this.mediumForm.get('street')?.clearValidators();
+      this.mediumForm.get('street')?.setValue('');
+      this.mediumForm.get('telephoneNumber')?.clearValidators();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
+      this.mediumForm.get('email')?.setValidators([Validators.required,Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
+      this.mediumForm.get('email')?.markAsUntouched();
+      this.mediumForm.get('email')?.setValue('');
+      this.cdr.detectChanges();
     }else if (event.target.value=='address'){
       this.emailSelected=false;
       this.addressSelected=true;
       this.phoneSelected=false;
+      this.mediumForm.get('telephoneNumber')?.clearValidators();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
+      this.mediumForm.get('email')?.clearValidators();
+      this.mediumForm.get('email')?.setValue('');
+      this.mediumForm.get('country')?.setValidators([Validators.required]);
+      this.mediumForm.get('country')?.markAsUntouched();
+      this.mediumForm.get('country')?.setValue('');
+      this.mediumForm.get('city')?.setValidators([Validators.required]);
+      this.mediumForm.get('city')?.markAsUntouched();
+      this.mediumForm.get('city')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.setValidators([Validators.required]);
+      this.mediumForm.get('stateOrProvince')?.markAsUntouched();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
+      this.mediumForm.get('postCode')?.setValidators([Validators.required]);
+      this.mediumForm.get('postCode')?.markAsUntouched();
+      this.mediumForm.get('postCode')?.setValue('');
+      this.mediumForm.get('street')?.setValidators([Validators.required]);
+      this.mediumForm.get('street')?.markAsUntouched();
+      this.mediumForm.get('street')?.setValue('');
+      this.cdr.detectChanges();
     }else{
       this.emailSelected=false;
       this.addressSelected=false;
       this.phoneSelected=true;
+      this.mediumForm.get('country')?.clearValidators();
+      this.mediumForm.get('country')?.setValue('');
+      this.mediumForm.get('city')?.clearValidators();
+      this.mediumForm.get('city')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.clearValidators();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
+      this.mediumForm.get('postCode')?.clearValidators();
+      this.mediumForm.get('postCode')?.setValue('');
+      this.mediumForm.get('street')?.clearValidators();
+      this.mediumForm.get('street')?.setValue('');
+      this.mediumForm.get('email')?.clearValidators();
+      this.mediumForm.get('email')?.setValue('');
+      this.mediumForm.get('telephoneNumber')?.setValidators([Validators.required]);
+      this.mediumForm.get('telephoneNumber')?.markAsUntouched();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
+      this.cdr.detectChanges();
     }
-    this.mediumForm.reset();
+    console.log(this.mediumForm)
+    console.log(this.printAllActiveValidators());
+
   }
+  showMedium(){
+    console.log('--- SHOW MEDIUM')
+    console.log(this.mediumForm)
+    console.log(this.printAllActiveValidators());
+    console.log('--value')
+    console.log(this.mediumForm.get('email')?.value)
+  }
+
+  printActiveValidators(controlName: string) {
+    const control = this.mediumForm.get(controlName);
+    if (!control || !control.validator) {
+      console.log(`No active validators for ${controlName}`);
+      return;
+    }
+  
+    const validatorFn = control.validator({} as AbstractControl);
+    if (!validatorFn) {
+      console.log(`No active validators for ${controlName}`);
+      return;
+    }
+  
+    console.log(`Active validators for ${controlName}:`, Object.keys(validatorFn));
+  }
+
+  printAllActiveValidators() {
+    Object.keys(this.mediumForm.controls).forEach(controlName => {
+      this.printActiveValidators(controlName);
+    });
+  }
+  
 
 
   public dropped(files: NgxFileDropEntry[],sel:any) {
@@ -500,6 +588,16 @@ export class OrgInfoComponent {
               }
               if(!this.isValidFilename(fileBody.content.name)){
                 this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
+              //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
+              if(file.size>this.MAX_FILE_SIZE){
+                this.errorMessage='File size must be under 3MB.';
                 console.error('There was an error while uploading file!');
                 this.showError=true;
                 setTimeout(() => {

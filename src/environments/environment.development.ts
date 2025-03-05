@@ -52,5 +52,6 @@ export const environment = {
     DOME_YOUTUBE: 'https://www.youtube.com/channel/UC8UiL59S0JiaYYr14w5eOzA',
     DOME_X: 'https://x.com/DomeMarketplace',
     BUNDLE_ENABLED: false,
-    DFT_CATALOG_ID: ''
+    DFT_CATALOG_ID: '',
+    MAX_FILE_SIZE:3145728
 };
