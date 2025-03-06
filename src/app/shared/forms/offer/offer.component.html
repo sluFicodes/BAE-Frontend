@@ -36,13 +36,41 @@
                             [formType]="formType">
         </app-prod-spec-form>
       } @else if (currentStep === 2) {
-        <app-catalogue formControlName="catalogue" [partyId]="partyId"></app-catalogue>
+        @if(this.formType=='update'){
+          <app-category-form formControlName="category" [data]="offer" [formType]="formType"></app-category-form>
+        }@else{
+          <app-catalogue formControlName="catalogue" [partyId]="partyId"></app-catalogue>
+        }        
       } @else if (currentStep === 3){
-        <app-category-form formControlName="category" [data]="offer" [formType]="formType"></app-category-form>
+        @if(this.formType=='update'){
+          <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
+        }@else{
+          <app-category-form formControlName="category" [data]="offer" [formType]="formType"></app-category-form>
+        }
       } @else if (currentStep === 4) {
-        <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
+        @if(this.formType=='update'){
+          <app-price-plans-form [form]="productOfferForm"></app-price-plans-form>
+        }@else{
+          <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
+        }
       } @if (currentStep === 5) {
-         <app-price-plans-form [form]="productOfferForm"></app-price-plans-form>
+        @if(this.formType=='update'){
+          <app-procurement-mode [formType]="formType" [form]="productOfferForm.controls['procurementMode']"></app-procurement-mode>
+        }@else{
+          <app-price-plans-form [form]="productOfferForm"></app-price-plans-form>
+        }         
+      } @if (currentStep === 6) {
+        @if(this.formType=='update'){
+          <app-replication-visibility></app-replication-visibility>
+        }@else{
+          <app-procurement-mode [formType]="formType" [form]="productOfferForm.controls['procurementMode']"></app-procurement-mode>
+        }
+      } @if(currentStep === 7) {
+        @if(this.formType=='update'){
+          summary
+        }@else{
+          <app-replication-visibility></app-replication-visibility>
+        }
       }
     </div>
 

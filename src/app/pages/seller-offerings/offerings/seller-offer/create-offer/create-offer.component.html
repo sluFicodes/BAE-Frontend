@@ -23,6 +23,9 @@
         </nav>
     </div>
   <!-- End Breadcrumb -->
+
+  <app-offer-form [partyId]="partyId" [formType]="'create'"></app-offer-form>
+
   <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
     <h2 class="text-3xl font-bold text-primary-100 dark:text-white ml-4">{{ 'CREATE_OFFER._new' | translate }}</h2>
     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">

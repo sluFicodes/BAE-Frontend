@@ -8,7 +8,9 @@ import {ApiServiceService} from "../../../services/product-service.service";
 import {CategoryComponent} from "./category/category.component";
 import {LicenseComponent} from "./license/license.component";
 import {PricePlansComponent} from "./price-plans/price-plans.component";
-import {CatalogueComponent} from "./catalogue/catalogue.component"
+import {CatalogueComponent} from "./catalogue/catalogue.component";
+import {ProcurementModeComponent} from "./procurement-mode/procurement-mode.component"
+import {ReplicationVisibilityComponent} from "./replication-visibility/replication-visibility.component"
  
 @Component({
   selector: 'app-offer-form',
@@ -23,6 +25,8 @@ import {CatalogueComponent} from "./catalogue/catalogue.component"
     LicenseComponent,
     PricePlansComponent,
     CatalogueComponent,
+    ProcurementModeComponent,
+    ReplicationVisibilityComponent,
     NgClass
   ],
   templateUrl: './offer.component.html',
@@ -80,6 +84,17 @@ export class OfferComponent implements OnInit{
   async ngOnInit() {
     if (this.formType === 'update' && this.offer) {
       await this.loadOfferData();
+      this.steps = [
+        'General Info',
+        'Product Specification',
+        //'Catalogue',
+        'Category',
+        'License',
+        'Price Plans',
+        'Procurement Mode',
+        'Replication & Visibility',
+        'Summary'
+      ];
     }
 
   }
@@ -93,4 +108,5 @@ export class OfferComponent implements OnInit{
       prodSpec: this.selectedProdSpec || null // Cargar si existe, o dejar en null
     });
   }
+  
 }
