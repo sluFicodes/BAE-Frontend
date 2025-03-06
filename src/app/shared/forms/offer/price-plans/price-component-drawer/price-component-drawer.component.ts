@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MarkdownTextareaComponent} from "../../../markdown-textarea/markdown-textarea.component";
+import {TranslateModule} from "@ngx-translate/core";
+import {NgClass} from "@angular/common";
 
 @Component({
   selector: 'app-price-component-drawer',
@@ -8,19 +10,31 @@ import {MarkdownTextareaComponent} from "../../../markdown-textarea/markdown-tex
   templateUrl: './price-component-drawer.component.html',
   imports: [
     ReactiveFormsModule,
-    MarkdownTextareaComponent
+    MarkdownTextareaComponent,
+    TranslateModule,
+    NgClass
   ],
   styleUrl: './price-component-drawer.component.css'
 })
 export class PriceComponentDrawerComponent implements OnInit {
   @Input() component: any | null = null;
   @Output() close = new EventEmitter<any | null>();
+  @Output() save = new EventEmitter<any>();
+
+  isOpen = false;
+  initialized = false;
 
   priceComponentForm!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
+    this.initialized = false;
+    setTimeout(() => {
+      this.isOpen = true;
+      this.initialized = true;
+    }, 50);
+
     this.priceComponentForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
@@ -40,11 +54,20 @@ export class PriceComponentDrawerComponent implements OnInit {
 
   submitForm() {
     if (this.priceComponentForm.valid) {
-      this.close.emit(this.priceComponentForm.value);
+      this.save.emit(this.priceComponentForm.value);
+      this.closeDrawer();
     }
   }
 
-  closeWithoutSaving() {
-    this.close.emit(null);
+  closeDrawer() {
+    this.isOpen = false;
+    // If editing, do nothing; if creating, clear form
+    setTimeout(() => this.close.emit(null), 500);
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  handleEscapeKey(event: KeyboardEvent) {
+    event.stopPropagation();  // Prevent closing parent drawer
+    this.closeDrawer();
   }
 }

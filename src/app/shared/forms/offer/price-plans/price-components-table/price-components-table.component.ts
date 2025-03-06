@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {NgIf} from "@angular/common";
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-price-components-table',
   standalone: true,
   templateUrl: './price-components-table.component.html',
   imports: [
-    NgIf
+    NgIf,
+    TranslateModule
   ],
   styleUrl: './price-components-table.component.css'
 })

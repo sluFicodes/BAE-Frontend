@@ -2,10 +2,13 @@ import {Component, EventEmitter, Input, Output, OnInit, HostListener, SimpleChan
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MarkdownTextareaComponent} from "../../../markdown-textarea/markdown-textarea.component";
 import {TranslateModule} from "@ngx-translate/core";
-import {NgClass, NgIf} from "@angular/common";
+import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {PriceComponentsTableComponent} from "../price-components-table/price-components-table.component";
 import {PriceComponentDrawerComponent} from "../price-component-drawer/price-component-drawer.component";
 import {currencies} from "currencies.json";
+import {
+  ConfigurationProfileDrawerComponent
+} from "../configuration-profile-drawer/configuration-profile-drawer.component";
 
 
 @Component({
@@ -19,54 +22,60 @@ import {currencies} from "currencies.json";
     MarkdownTextareaComponent,
     NgIf,
     PriceComponentDrawerComponent,
-    PriceComponentsTableComponent
+    PriceComponentsTableComponent,
+    ConfigurationProfileDrawerComponent,
+    NgForOf
   ],
   styleUrl: './price-plan-drawer.component.css'
 })
 export class PricePlanDrawerComponent implements OnInit {
-  @Input() form!: FormGroup;  // Receive the parent form
-  @Input() selectedPricePlan: any | null = null;
+  @Input() formGroup!: FormGroup;  // Receive the parent form
+  @Input() prodSpec: any | null = null;  // Access to prodSpec
+
+  @Input() action: string = 'create';
   @Output() save = new EventEmitter<any>();
   @Output() close = new EventEmitter<void>();
 
   isOpen = false;
   initialized = false;
-  pricePlanForm!: FormGroup;
   showPriceComponentDrawer = false;
+  showConfigurationDrawer = false;
   editingComponent: any = null;
   protected readonly currencies = currencies;
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-
-    this.initialized = false; // Ensure we apply the initial transform
+    this.initialized = false;
     setTimeout(() => {
       this.isOpen = true;
-      this.initialized = true; // Allow animation to work
+      this.initialized = true;
     }, 50);
 
-    // Esto está por ver...
-    // if (this.selectedPricePlan) {
-    //  this.pricePlanForm.patchValue(this.selectedPricePlan);
-    // }
+    if (!this.formGroup) {
+      console.error('❌ Error: `formGroup` is not a FormGroup!', this.formGroup);
+      return;
+    }
 
-    // set custom priceType if paymentOnline is false
-    this.form.get('paymentOnline')?.valueChanges.subscribe(value => {
+    // 🔹 Ensure dynamic updates work
+    this.formGroup.get('paymentOnline')?.valueChanges.subscribe(value => {
       if (!value) {
-        this.form.get('priceType')?.setValue('custom');
+        this.formGroup.get('priceType')?.setValue('custom');
+      } else {
+        this.formGroup.get('priceType')?.setValue('');
       }
+    });
+
+    // 🔹 Mark the form as touched when changes occur
+    this.formGroup.valueChanges.subscribe(() => {
+      this.formGroup.markAsTouched();
     });
   }
 
   savePricePlan() {
-    if (this.form.invalid) return; // Prevent saving if invalid
-    this.save.emit(this.form.value);  // Send form data back to parent
-    this.closeDrawer();// Close drawer
-  }
-
-  closeForm() {
-    this.save.emit();
+    if (this.formGroup.invalid) return;
+    this.save.emit(this.formGroup.value);
+    this.closeDrawer();
   }
 
   openPriceComponentDrawer(component: any = null) {
@@ -76,7 +85,7 @@ export class PricePlanDrawerComponent implements OnInit {
 
   closePriceComponentDrawer(updatedComponent: any | null) {
     if (updatedComponent) {
-      const components = this.pricePlanForm.get('priceComponents')?.value || [];
+      const components = this.formGroup.get('priceComponents')?.value || [];
       if (this.editingComponent) {
         // Editar componente existente
         const index = components.findIndex((c: { id: string }) => c.id === this.editingComponent.id);
@@ -87,7 +96,7 @@ export class PricePlanDrawerComponent implements OnInit {
         // Agregar nuevo componente
         components.push(updatedComponent);
       }
-      this.pricePlanForm.get('priceComponents')?.setValue(components);
+      this.formGroup.get('priceComponents')?.setValue(components);
     }
     this.showPriceComponentDrawer = false;
     this.editingComponent = null;
@@ -98,24 +107,90 @@ export class PricePlanDrawerComponent implements OnInit {
   }
 
   deletePriceComponent(componentId: string) {
-    const components = this.pricePlanForm.get('priceComponents')?.value || [];
-    this.pricePlanForm.get('priceComponents')?.setValue(
+    const components = this.formGroup.get('priceComponents')?.value || [];
+    this.formGroup.get('priceComponents')?.setValue(
       components.filter((c: { id: string }) => c.id !== componentId)
     );
   }
 
   get pricePlanTranslationKey(): string {
-    return this.selectedPricePlan ? 'FORMS.PRICE_PLANS._edit_price_plan' : 'FORMS.PRICE_PLANS._new_price_plan';
+    return this.action === 'create' ? 'FORMS.PRICE_PLANS._new_price_plan' : 'FORMS.PRICE_PLANS._edit_price_plan';
   }
 
   closeDrawer() {
     this.isOpen = false;
-    setTimeout(() => this.close.emit(), 1000); // Delay closing to match animation
+    // If editing, do nothing; if creating, clear form
+    setTimeout(() => this.close.emit(), 500);
   }
 
   @HostListener('document:keydown.escape', ['$event'])
   handleEscapeKey(event: KeyboardEvent) {
-    this.closeDrawer();
+    if (this.showConfigurationDrawer) {
+      this.showConfigurationDrawer = false;
+    } else if(!this.showPriceComponentDrawer)
+      this.closeDrawer();
   }
+
+  openConfigurationProfileDrawer() {
+    this.showConfigurationDrawer = true;
+  }
+
+  updateConfigurationProfile(updatedProfile: any) {
+    this.formGroup.get('prodSpecCharValueUse')?.setValue(updatedProfile);
+    this.showConfigurationDrawer = false;
+  }
+
+  get configurationProfileButtonText(): string {
+    return this.formGroup?.get('prodSpecCharValueUse')?.value?.length > 0
+      ? 'FORMS.PRICE_PLANS._edit_profile'
+      : 'FORMS.PRICE_PLANS._add_profile';
+  }
+
+  // Profile table with pagination
+  currentPage = 0;
+  pageSize = 5;
+
+  get paginatedProfileData() {
+    const data = this.formGroup?.get('prodSpecCharValueUse')?.value || [];
+    const startIndex = this.currentPage * this.pageSize;
+    return data.slice(startIndex, startIndex + this.pageSize);
+  }
+
+  get totalPages() {
+    const data = this.formGroup?.get('prodSpecCharValueUse')?.value || [];
+    return Math.ceil(data.length / this.pageSize);
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    }
+  }
+
+  getProcessedProfileData() {
+    return this.formGroup?.get('prodSpecCharValueUse')?.value?.map((char: any) => ({
+      ...char,
+      selectedValue: char.productSpecCharacteristicValue?.find((v: any) => v.isDefault) || null
+    })) || [];
+  }
+
+  getProfileData() {
+    let profileData = this.formGroup?.get('prodSpecCharValueUse')?.value;
+
+    if (!profileData || profileData.length === 0) {
+      // If no profile, chars come from prodSpec
+      profileData = this.prodSpec?.productSpecCharacteristic || [];
+    }
+
+    return profileData;
+  }
+
+
 
 }

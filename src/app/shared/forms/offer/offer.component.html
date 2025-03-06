@@ -49,7 +49,7 @@
         }
       } @else if (currentStep === 4) {
         @if(this.formType=='update'){
-          <app-price-plans-form [form]="productOfferForm"></app-price-plans-form>
+          <app-price-plans-form [form]="productOfferForm" [prodSpec]="productOfferForm.get('prodSpec')?.value"></app-price-plans-form>
         }@else{
           <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
         }
@@ -57,7 +57,7 @@
         @if(this.formType=='update'){
           <app-procurement-mode [formType]="formType" [form]="productOfferForm.controls['procurementMode']"></app-procurement-mode>
         }@else{
-          <app-price-plans-form [form]="productOfferForm"></app-price-plans-form>
+          <app-price-plans-form [form]="productOfferForm" [prodSpec]="productOfferForm.get('prodSpec')?.value"></app-price-plans-form>
         }         
       } @if (currentStep === 6) {
         @if(this.formType=='update'){

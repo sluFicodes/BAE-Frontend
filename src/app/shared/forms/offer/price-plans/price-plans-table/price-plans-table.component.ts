@@ -23,23 +23,25 @@ export class PricePlansTableComponent {
     return this._pricePlans;
   }
   @Output() edit = new EventEmitter<any>(); // Emitir evento al editar
-  @Output() delete = new EventEmitter<string>(); // Emitir evento al eliminar
+  @Output() delete = new EventEmitter<number>(); // Emitir evento al eliminar
 
   showDeleteModal = false;
   pricePlanToDelete: any | null = null;
+  planIndex: number;
 
   editPricePlan(plan: any) {
     this.edit.emit(plan); // Emitir el evento con el plan a editar
   }
 
-  confirmDelete(plan: any) {
+  confirmDelete(plan: any, index: number) {
     this.pricePlanToDelete = plan;
+    this.planIndex = index;
     this.showDeleteModal = true;
   }
 
   deletePricePlan() {
-    if (this.pricePlanToDelete) {
-      this.delete.emit(this.pricePlanToDelete.id);
+    if (this.pricePlanToDelete && this.planIndex >= 0) {
+      this.delete.emit(this.planIndex);
       this.showDeleteModal = false;
       this.pricePlanToDelete = null;
     }

@@ -5,7 +5,7 @@
   <app-price-plans-table
     [pricePlans]="pricePlans"
     (edit)="editPricePlan($event)"
-    (delete)="deletePricePlan($event)">
+    (delete)="removePricePlan($event)">
   </app-price-plans-table>
 
   <!-- Add Price Plan Button -->
@@ -24,8 +24,9 @@
 <!-- Price Plan Drawer -->
 @if (showDrawer) {
   <app-price-plan-drawer
-    [form]="pricePlanForm"
-    [selectedPricePlan]="selectedPricePlan"
+    [formGroup]="selectedPricePlan"
+    [prodSpec]="prodSpec"
+    [action]="action"
     (save)="savePricePlan($event)"
     (close)="showDrawer = false">
   </app-price-plan-drawer>
