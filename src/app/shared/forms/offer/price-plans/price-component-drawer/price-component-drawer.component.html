@@ -1,6 +1,10 @@
 <!-- Drawer -->
-<div class="fixed inset-0 bg-black bg-opacity-50 flex justify-end">
-  <div class="w-96 bg-white dark:bg-gray-800 shadow-lg h-full p-6 overflow-y-auto">
+<div class="fixed inset-0 bg-black bg-opacity-50 flex justify-end transition-opacity duration-500 z-50"
+     [ngClass]="{'opacity-100': isOpen, 'opacity-0 pointer-events-none': !isOpen}">
+
+  <div class="w-full md:w-5/6 bg-secondary-50 dark:bg-gray-800 h-full p-6 overflow-y-auto transform transition-transform duration-500"
+       [ngClass]="{'translate-x-0': isOpen, 'translate-x-full': !isOpen, '-translate-x-full': !initialized}">
+
 
     <!-- Título -->
     <h2 class="text-xl font-semibold text-gray-700 dark:text-white">
@@ -11,52 +15,52 @@
 
       <!-- Nombre -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nombre</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._name' | translate }}</label>
         <input formControlName="name" type="text"
                class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
       </div>
 
       <!-- Descripción -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descripción</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._description' | translate }}</label>
         <app-markdown-textarea formControlName="description"></app-markdown-textarea>
       </div>
 
       <!-- Tipo de Precio -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo de Precio</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._type_of_price' | translate }}</label>
         <select formControlName="priceType" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-          <option value="one-time">Único</option>
-          <option value="recurring">Recurrente</option>
-          <option value="recurring-prepaid">Prepago</option>
-          <option value="usage">Uso</option>
+          <option value="one-time">{{ 'FORMS.PRICE_PLAN_COMPONENT._one_time' | translate }}</option>
+          <option value="recurring">{{ 'FORMS.PRICE_PLAN_COMPONENT._recurring' | translate }}</option>
+          <option value="recurring-prepaid">{{ 'FORMS.PRICE_PLAN_COMPONENT._recurring_prepaid' | translate }}</option>
+          <option value="usage">{{ 'FORMS.PRICE_PLAN_COMPONENT._usage' | translate }}</option>
         </select>
       </div>
 
       <!-- Descuento -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Descuento</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._add_discount' | translate }}</label>
         <div class="flex space-x-2">
           <input formControlName="discountValue" type="number" placeholder="Cantidad"
                  class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
           <select formControlName="discountUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <option value="percentage">%</option>
-            <option value="fixed">Cantidad Fija</option>
+            <option value="percentage">{{ 'FORMS.PRICE_PLAN_COMPONENT._percentage' | translate }}</option>
+            <option value="fixed">{{ 'FORMS.PRICE_PLAN_COMPONENT._fixed' | translate }}</option>
           </select>
         </div>
       </div>
 
       <!-- Duración del Descuento -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Duración del Descuento</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._discount_duration' | translate }}</label>
         <div class="flex space-x-2">
           <input formControlName="discountDuration" type="number" placeholder="Duración"
                  class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
           <select formControlName="discountDurationUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <option value="days">Días</option>
-            <option value="weeks">Semanas</option>
-            <option value="months">Meses</option>
-            <option value="years">Años</option>
+            <option value="days">{{ 'FORMS.PRICE_PLAN_COMPONENT._days' | translate }}</option>
+            <option value="weeks">{{ 'FORMS.PRICE_PLAN_COMPONENT._weeks' | translate }}</option>
+            <option value="months">{{ 'FORMS.PRICE_PLAN_COMPONENT._months' | translate }}</option>
+            <option value="years">{{ 'FORMS.PRICE_PLAN_COMPONENT._years' | translate }}</option>
           </select>
         </div>
       </div>
@@ -64,17 +68,17 @@
       <!-- Opciones dinámicas según el tipo de precio -->
       @if (priceComponentForm.get('priceType')?.value === 'recurring') {
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Frecuencia de Pago</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT.recurring_period' | translate }}</label>
           <select formControlName="recurringPeriod" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <option value="daily">Diario</option>
-            <option value="weekly">Semanal</option>
-            <option value="monthly">Mensual</option>
-            <option value="yearly">Anual</option>
+            <option value="daily">{{ 'FORMS.PRICE_PLAN_COMPONENT._daily' | translate }}</option>
+            <option value="weekly">{{ 'FORMS.PRICE_PLAN_COMPONENT._weekly' | translate }}</option>
+            <option value="monthly">{{ 'FORMS.PRICE_PLAN_COMPONENT._monthly' | translate }}</option>
+            <option value="yearly">{{ 'FORMS.PRICE_PLAN_COMPONENT._yearly' | translate }}</option>
           </select>
         </div>
       } @else if (priceComponentForm.get('priceType')?.value === 'usage') {
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Unidad de Cobro</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._unit' | translate }}</label>
           <input formControlName="usageUnit" type="text" placeholder="Ej. GB, CPU, Horas"
                  class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
         </div>
@@ -82,8 +86,8 @@
 
       <!-- Botones -->
       <div class="flex justify-end space-x-3">
-        <button type="button" (click)="closeWithoutSaving()" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">Cancelar</button>
-        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Guardar</button>
+        <button type="button" (click)="closeDrawer()" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">{{ 'FORMS.PRICE_PLAN_COMPONENT._cancel' | translate }}</button>
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">{{ 'FORMS.PRICE_PLAN_COMPONENT._save' | translate }}</button>
       </div>
     </form>
 

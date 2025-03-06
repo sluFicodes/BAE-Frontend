@@ -40,7 +40,7 @@
       } @else if (currentStep === 3) {
         <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
       } @if (currentStep === 4) {
-         <app-price-plans-form [form]="productOfferForm"></app-price-plans-form>
+        <app-price-plans-form [form]="productOfferForm" [prodSpec]="productOfferForm.get('prodSpec')?.value"></app-price-plans-form>
       }
     </div>
 

@@ -46,6 +46,7 @@ export class OfferComponent implements OnInit{
   ];
   isFormValid = false;
   selectedProdSpec: any;
+  pricePlans:any = [];
 
   constructor(private api: ApiServiceService,
               private fb: FormBuilder) {
@@ -54,7 +55,7 @@ export class OfferComponent implements OnInit{
       prodSpec: new FormControl(null),
       category: new FormControl([]),
       license: this.fb.group({}),
-      pricePlans: this.fb.group([]),
+      pricePlans: new FormControl([]),
       procurementMode: this.fb.group({}),
       replicationMode: this.fb.group({})
     });
@@ -80,13 +81,28 @@ export class OfferComponent implements OnInit{
 
   }
   async loadOfferData() {
+    console.log('Loading offer into form...', this.offer);
+
+    // Product Specification
     if (this.offer.productSpecification) {
       await this.api.getProductSpecification(this.offer.productSpecification.id).then(async data => {
         this.selectedProdSpec = data;
       })
+      this.productOfferForm.patchValue({
+        prodSpec: this.selectedProdSpec || null // Cargar si existe, o dejar en null
+      });
     }
-    this.productOfferForm.patchValue({
-      prodSpec: this.selectedProdSpec || null // Cargar si existe, o dejar en null
-    });
+
+    // Price Plans
+    if (Array.isArray(this.offer.productOfferingPrice) && this.offer.productOfferingPrice.length > 0) {
+     for (let pop of this.offer.productOfferingPrice) {
+       const pricePlan = await this.api.getOfferingPrice(pop.id);
+       this.pricePlans.push(pricePlan);
+     }
+     console.log('Price Plans existentes: ', this.pricePlans);
+      this.productOfferForm.patchValue({
+        pricePlans: this.pricePlans || null // Cargar si existe, o dejar en null
+      });
+    }
   }
 }

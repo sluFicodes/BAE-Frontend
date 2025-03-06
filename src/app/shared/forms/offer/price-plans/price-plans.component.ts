@@ -1,8 +1,16 @@
 import { Component, Input, OnInit, forwardRef } from '@angular/core';
-import {ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators} from '@angular/forms';
+import {
+  ControlValueAccessor, FormArray,
+  FormBuilder,
+  FormGroup,
+  NG_VALUE_ACCESSOR,
+  Validators
+} from '@angular/forms';
 import {PricePlansTableComponent} from "./price-plans-table/price-plans-table.component";
 import {TranslateModule} from "@ngx-translate/core";
 import {PricePlanDrawerComponent} from "./price-plan-drawer/price-plan-drawer.component";
+import { v4 as uuidv4 } from 'uuid';
+import {pricePlanValidator} from "../../../../validators/validators";
 
 @Component({
   selector: 'app-price-plans-form',
@@ -24,97 +32,155 @@ import {PricePlanDrawerComponent} from "./price-plan-drawer/price-plan-drawer.co
 })
 export class PricePlansComponent implements OnInit, ControlValueAccessor {
   @Input() form!: FormGroup;  // Recibe el formulario del padre
+  @Input() prodSpec: any | null = null;  // Y con este se acceder a prodSpec
+
+  pricePlansForm = this.fb.array<FormGroup>([], { validators: [] });
+
   pricePlans: any[] = [];
   selectedPricePlan: any | null = null;
   showDrawer = false;
   pricePlanForm!: FormGroup;  // This will be passed to the drawer
+  action = 'create'; // What are we doing?
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    if (!this.form) {
-      console.error('Error: the form is not defined in PricePlansComponent');
-      return;
-    }
+    this.pricePlanForm = this.createPricePlanForm();
 
-    // Ensure the form has 'pricePlans' control
-    if (!this.form.get('pricePlans')) {
-      this.form.addControl('pricePlans', new FormControl([]));
-    }
+    // ✅ Get existing price plans from parent form
+    const existingPlans = this.form.get('pricePlans')?.value || [];
+    this.pricePlansForm = this.fb.array<FormGroup>(
+      existingPlans.map((plan: any) => this.createPricePlanForm(plan))
+    );
 
-    // Initialize with existing data
-    this.pricePlans = this.form.get('pricePlans')?.value || [];
-    console.log('✅ pricePlans initialized:', this.pricePlans);
+    // ✅ Sync the displayed list with the form array
+    this.pricePlans = this.pricePlansForm.value;
+  }
 
-    // Create the form for the drawer
-    this.pricePlanForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      paymentOnline: [false],
-      priceType: ['custom', Validators.required],
-      currency: ['EUR'], // Por defecto EUR
-      productProfile: [null], // Selector de características
-      priceComponents: [[]] // Lista de componentes de precio
+  private createPricePlanForm(plan: any = null): FormGroup {
+    return this.fb.group(
+      {
+        id: [plan?.id || this.generateId()],
+        href: [plan?.href || null],
+        name: [
+          plan?.name || '',
+          { validators: [Validators.required] }
+        ],
+        description: [
+          plan?.description || '',
+          { validators: [Validators.required] }
+        ],
+        isBundle: [plan?.isBundle || false],
+        lastUpdate: [plan?.lastUpdate || null],
+        lifecycleStatus: [plan?.lifecycleStatus || 'Active'],
+        paymentOnline: [plan?.paymentOnline ?? !!plan?.price],
+        priceType: [plan?.priceType || 'custom'],
+        prodSpecCharValueUse: [plan?.prodSpecCharValueUse || null],
+        currency: [plan?.price?.unit || 'EUR'],
+        unitOfMeasure: [plan?.unitOfMeasure || null],
+        productProfile: this.mapProductProfile(plan?.prodSpecCharValueUse || []),
+        priceComponents: [plan?.priceComponents || []],
+        validFor: [plan?.validFor || null],
+      },
+      { validators: [pricePlanValidator] } // Custom validator
+    );
+  }
+
+  private mapProductProfile(prodSpecCharValueUse: any[]): FormGroup {
+    return this.fb.group({
+      selectedValues: this.fb.array(
+        prodSpecCharValueUse.map(spec =>
+          this.fb.group({
+            id: [spec.id],
+            name: [spec.name],
+            selectedValue: [
+              spec.productSpecCharacteristicValue.find((v: { isDefault: boolean }) => v.isDefault)?.value || null,
+              Validators.required
+            ]
+          })
+        )
+      )
     });
-
   }
 
-  openPricePlanDrawer(plan: any = null) {
-    this.selectedPricePlan = plan;
+  addPricePlan(plan?: any) {
+    const pricePlanGroup = this.createPricePlanForm(plan);
 
-    if (plan) {
-      this.pricePlanForm.patchValue(plan);  // Load existing data
-    } else {
-      this.pricePlanForm.reset();  // New price plan
+    this.pricePlansForm.push(pricePlanGroup);
+    this.syncPricePlans(); // ✅ Update the displayed list
+  }
+
+  removePricePlan(index: number) {
+    if (index !== -1) {
+      this.pricePlansForm.removeAt(index);
+      this.syncPricePlans(); // ✅ Ensure list updates after removal
     }
-
-    this.showDrawer = true;
-  }
-
-  editPricePlan(plan: any) {
-    this.selectedPricePlan = plan;
-    this.showDrawer = true;
   }
 
   savePricePlan(plan: any) {
-    const control = this.form.get('pricePlans');
+    const index = this.pricePlansForm.controls.findIndex(p => p.value.id === this.selectedPricePlan?.value.id);
 
-    if (!control) {
-      console.error('❌ Error: `pricePlans` FormControl does not exist!');
-      return;
-    }
-
-    let currentPlans: any[] = Array.isArray(control.value) ? control.value : [];
-
-    console.log('🔹 Current Plans before update:', currentPlans);
-
-    if (this.selectedPricePlan) {
-      // Update existing plan
-      const index = currentPlans.findIndex((p: any) => p.id === this.selectedPricePlan.id);
-      if (index > -1) {
-        currentPlans[index] = plan;
-      }
+    if (index > -1) {
+      this.pricePlansForm.at(index).patchValue(plan); // ✅ Update existing plan
     } else {
-      // Add new plan
-      currentPlans = [...currentPlans, plan];
+      this.addPricePlan(plan); // ✅ Add new plan
     }
 
-    console.log('✅ Updated Plans:', currentPlans);
-
-
-    control.setValue(currentPlans);
-    this.pricePlans = currentPlans;
-    this.onChange(this.pricePlans); // Notify Angular Forms
-
+    this.syncPricePlans();
     this.showDrawer = false;
     this.selectedPricePlan = null;
   }
 
-  deletePricePlan(id: string) {
-    this.pricePlans = this.pricePlans.filter(plan => plan.id !== id);
-    this.form.get('pricePlans')?.setValue([...this.pricePlans]);
+  private generateId(): string {
+    return `temp-id:${uuidv4()}`; // Generates a random ID
+  }
 
-    this.onChange(this.pricePlans); // Notify Angular Forms
+  openPricePlanDrawer(plan: any = null) {
+    if (plan) {
+      console.log('📝 Editing existing price plan:', plan);
+
+      // Buscar el FormGroup en pricePlansForm en base al ID del plan
+      const index = this.pricePlansForm.controls.findIndex(p => p.value.id === plan.id);
+
+      if (index !== -1) {
+        this.selectedPricePlan = this.pricePlansForm.at(index) as FormGroup;
+      } else {
+        // Si no lo encuentra, creamos un nuevo FormGroup con los datos del plan
+        this.selectedPricePlan = this.createPricePlanForm(plan);
+      }
+
+      this.action = 'edit';
+    } else {
+      console.log('➕ Creating a new price plan');
+      this.action = 'create';
+      this.selectedPricePlan = this.createPricePlanForm();
+      this.pricePlansForm.push(this.selectedPricePlan);
+    }
+
+    this.showDrawer = true;
+  }
+
+
+  editPricePlan(plan: any) {
+    console.log('Editing Price Plan:', plan);
+
+    if (plan) {
+      this.action = 'edit';
+      this.selectedPricePlan = this.createPricePlanForm(plan);  // Ensure it's a FormGroup
+    } else {
+      this.action = 'create';
+      this.selectedPricePlan = this.createPricePlanForm();  // Create a new one
+    }
+
+    console.log('📝 Form after patching:', this.selectedPricePlan.value);
+
+    this.showDrawer = true;
+  }
+
+  private syncPricePlans() {
+    this.pricePlans = this.pricePlansForm.value;
+    this.form.get('pricePlans')?.setValue(this.pricePlans); // ✅ Update parent form
+    this.onChange(this.pricePlans);
   }
 
   // Métodos del ControlValueAccessor para conectar con `formControlName`
@@ -122,8 +188,8 @@ export class PricePlansComponent implements OnInit, ControlValueAccessor {
   onTouched: () => void = () => {};
 
   writeValue(value: any): void {
-    this.pricePlans = value || [];
-    this.form.get('pricePlans')?.setValue(this.pricePlans);
+    this.pricePlansForm.clear();
+    value?.forEach((plan: any) => this.addPricePlan(plan));
   }
 
   registerOnChange(fn: any): void {

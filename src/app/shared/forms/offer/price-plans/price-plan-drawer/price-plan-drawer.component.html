@@ -3,7 +3,7 @@
      [ngClass]="{'opacity-100': isOpen, 'opacity-0 pointer-events-none': !isOpen}">
 
   <!-- Drawer Content -->
-  <div class="w-3/4 bg-secondary-50 dark:bg-gray-800 h-full p-6 overflow-y-auto transform transition-transform duration-1000"
+  <div class="w-full md:w-5/6 bg-secondary-50 dark:bg-gray-800 h-full p-6 overflow-y-auto transform transition-transform duration-1000"
        [ngClass]="{'translate-x-0': isOpen, 'translate-x-full': !isOpen, '-translate-x-full': !initialized}">
 
     <!-- Header -->
@@ -23,13 +23,11 @@
     </div>
 
     <!-- Price Plan Form -->
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg">
-
-      <form [formGroup]="form" (ngSubmit)="savePricePlan()">
+    <div [formGroup]="formGroup" class="bg-white dark:bg-gray-800 p-8 rounded-lg">
 
         <!-- Nombre -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div class="mb-4">
+          <label class="font-bold text-lg dark:text-white">
             {{ 'FORMS.PRICE_PLANS._name' | translate }}
           </label>
           <input formControlName="name" type="text"
@@ -37,80 +35,174 @@
         </div>
 
         <!-- Descripción -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div class="mb-4">
+          <label class="font-bold text-lg dark:text-white">
             {{ 'FORMS.PRICE_PLANS._description' | translate }}
           </label>
           <app-markdown-textarea formControlName="description"></app-markdown-textarea>
         </div>
 
         <!-- Checkbox: Permitir pago online -->
-        <div class="flex items-center">
+        <div class="flex items-center mb-4">
           <input type="checkbox" id="paymentOnline" formControlName="paymentOnline"
                  class="w-4 h-4 text-blue-600 border-gray-300 rounded">
-          <label for="paymentOnline" class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+          <label for="paymentOnline" class="ml-2 font-medium text-base dark:text-white">
             {{ 'FORMS.PRICE_PLANS._online_payment_long' | translate }}
           </label>
         </div>
 
         <!-- Only when online payment is enabled -->
 
-        @if (form.get('paymentOnline')?.value) {
-          <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              {{ 'FORMS.PRICE_PLANS._currency' | translate }}
-            </label>
-            <select formControlName="currency" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-              @for(curr of currencies; track curr.code){
-                <option value="{{curr.code}}" [selected]="curr.code === this.form.get('currency')?.value">({{curr.code}}) {{curr.name}}</option>
-              }
-            </select>
-          </div>
+        @if (formGroup?.get('paymentOnline')?.value) {
 
           <!-- Selección del perfil del producto -->
-          <div>
-            <h3 class="text-lg font-semibold text-gray-700 dark:text-white">
+          <div class="mb-4">
+            <h3 class="font-bold text-lg dark:text-white">
               {{ 'FORMS.PRICE_PLANS._config_profile' | translate }}
             </h3>
-          </div>
-          <!--app-product-profile-selector formControlName="productProfile"></app-product-profile-selector-->
+          @if (!(formGroup?.get('prodSpecCharValueUse')?.value?.length > 0)){
+            <div class="p-4 my-2 text-sm text-center text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+              <span class="font-medium">{{ 'FORMS.PRICE_PLANS._profile_desc' | translate }}</span>
+            </div>
+            <div class="px-4">
+              <button type="button" (click)="openConfigurationProfileDrawer()"
+                      class="mt-2 px-4 py-1 bg-blue-500 text-white rounded flex items-center">
+                <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                  <path fill="currentColor"
+                        d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0
+                        32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7
+                        0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1
+                        1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3
+                        28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7
+                        0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7
+                        224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5
+                        48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/>
+                </svg>
+                {{ configurationProfileButtonText | translate }}
+              </button>
+            </div>
+          } @else {
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th class="px-4 py-2">{{ 'FORMS.PRICE_PLANS._char_name' | translate }}</th>
+                  <th class="px-4 py-2">{{ 'FORMS.PRICE_PLANS._char_value' | translate }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let char of getProcessedProfileData()" class="bg-white dark:bg-gray-800 border-b">
+                  <td class="px-4 py-1">{{ char.name }}</td>
+                  <td class="px-4 py-1">
+                    @if (char.selectedValue) {
+                      {{ char.selectedValue.value }}
+                      {{ char.selectedValue.unitOfMeasure || '' }}
+                    } @else {
+                      {{ 'FORMS.PRICE_PLANS._no_value_selected' | translate }}
+                    }
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
 
-            <!-- Tabla de Price Components -->
-          <div>
-            <h3 class="text-lg font-semibold text-gray-700 dark:text-white">
+            <!-- Pagination Controls -->
+            <div class="flex justify-between items-center mt-2">
+              <button type="button" (click)="openConfigurationProfileDrawer()"
+                      class="px-4 py-1 bg-blue-500 text-white rounded flex items-center">
+                <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                  <path fill="currentColor"
+                        d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0
+                        32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7
+                        0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1
+                        1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3
+                        28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7
+                        0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7
+                        224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5
+                        48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/>
+                </svg>
+                {{ configurationProfileButtonText | translate }}
+              </button>
+              <div class="flex justify-end items-center space-x-1">
+                <button (click)="prevPage()" [disabled]="currentPage === 0"
+                        class="flex items-center justify-center px-4 py-1 bg-gray-300 dark:bg-gray-600 rounded disabled:opacity-50">
+                  <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                    <path fill="currentColor"
+                          d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3
+                    256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
+                  </svg>
+                  {{ 'FORMS.PRICE_PLANS._prev' | translate }}
+                </button>
+                <span class="text-gray-700 dark:text-gray-300">
+                  {{ currentPage + 1 }} / {{ totalPages }}
+                </span>
+                <button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1"
+                        class="flex items-center justify-center px-4 py-1 bg-gray-300 dark:bg-gray-600 rounded disabled:opacity-50">
+                  {{ 'FORMS.PRICE_PLANS._next' | translate }}
+                  <svg class="min-w-4 w-4 h-4 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                    <path fill="currentColor"
+                          d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7
+                  256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          }
+            <!-- Configuration Profile Drawer -->
+            <app-configuration-profile-drawer *ngIf="showConfigurationDrawer"
+                                              [profileData]="getProfileData()"
+                                              (save)="updateConfigurationProfile($event)"
+                                              (close)="showConfigurationDrawer = false">
+            </app-configuration-profile-drawer>
+          </div>
+
+          <!-- Tabla de Price Components -->
+          <div class="mb-4">
+            <h3 class="font-bold text-lg dark:text-white">
               {{ 'FORMS.PRICE_PLANS._price_components' | translate }}
             </h3>
+            <div class="mb-4 p-2">
+              <label class="font-medium text-base dark:text-white">
+                {{ 'FORMS.PRICE_PLANS._currency' | translate }}
+              </label>
+              <select formControlName="currency" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                @for(curr of currencies; track curr.code){
+                  <option value="{{curr.code}}" [selected]="curr.code === this.formGroup?.get('currency')?.value">({{curr.code}}) {{curr.name}}</option>
+                }
+              </select>
+            </div>
             <div class="p-2">
-              <app-price-components-table [priceComponents]="form.get('priceComponents')?.value"
+              <app-price-components-table [priceComponents]="formGroup?.get('priceComponents')?.value"
                                           (edit)="editPriceComponent($event)"
                                           (delete)="deletePriceComponent($event)">
               </app-price-components-table>
 
-              <button type="button" (click)="openPriceComponentDrawer()"
-                      class="mt-2 px-4 py-2 bg-blue-500 text-white rounded flex items-center">
-                <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path fill="currentColor"
-                        d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24
-            24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64
-            0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>
-                </svg>
-                {{ 'FORMS.PRICE_PLANS._add_price_component' | translate }}
-              </button>
+              <div class="px-4">
+                <button type="button" (click)="openPriceComponentDrawer()"
+                        class="mt-2 px-4 py-2 bg-blue-500 text-white rounded flex items-center">
+                  <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path fill="currentColor"
+                          d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24
+              24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64
+              0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>
+                  </svg>
+                  {{ 'FORMS.PRICE_PLANS._add_price_component' | translate }}
+                </button>
+              </div>
             </div>
-
           </div>
-
         }
 
         <!-- Action Buttons -->
         <div class="flex justify-end space-x-3">
-          <button type="button" (click)="closeForm()" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">
+          <button type="button" (click)="closeDrawer()" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">
             {{ 'FORMS.PRICE_PLANS._cancel' | translate }}
           </button>
           <button type="submit"
-                  [disabled]="pricePlanForm.invalid"
+                  (click)="savePricePlan()"
+                  [disabled]="formGroup?.invalid"
                   class="px-4 py-2 rounded text-white flex items-center transition"
-                  [ngClass]="{'bg-primary-100 hover:bg-primary-50': form.valid, 'bg-gray-400 cursor-not-allowed': form.invalid}">
+                  [ngClass]="{'bg-primary-100 hover:bg-primary-50': formGroup?.valid, 'bg-gray-400 cursor-not-allowed': formGroup?.invalid}">
             <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <path fill="currentColor"
                     d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM128 272l16 0c-.6-5-.9-10.1-.9-15.2c0-5.7
@@ -124,12 +216,12 @@
           </button>
         </div>
 
-      </form>
     </div>
 
     <!-- Drawer para editar Price Components -->
     <app-price-component-drawer *ngIf="showPriceComponentDrawer"
                                 [component]="editingComponent"
+                                (save)="closePriceComponentDrawer($event)"
                                 (close)="closePriceComponentDrawer($event)">
     </app-price-component-drawer>
 
