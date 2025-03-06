@@ -25,10 +25,10 @@
       @for(char of characteristics.controls; track $index){
         <div class="min-h-19 pb-2">
           <h5 class="text-xl font-semibold tracking-tight text-primary-100">{{char.value.name}}:</h5>
-          @if(char.value.options?.[0]?.valueFrom){
+          @if(hasKey(char?.value.options[0], 'valueFrom')){
             <div class="relative mb-6">
               <label for="default-range" class="sr-only">Labels range</label>
-              <input id="default-range" type="range" (change)="changeProfileValue($index, $event)"
+              <input id="default-range" type="range" (change)="changeProfileValue($index,$event)"
                      [min]="char.value.options[0].valueFrom"
                      [max]="char.value.options[0].valueTo"
                      [value]="char.value.selectedValue"
