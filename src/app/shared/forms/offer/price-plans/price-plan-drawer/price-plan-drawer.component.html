@@ -60,11 +60,12 @@
             <h3 class="font-bold text-lg dark:text-white">
               {{ 'FORMS.PRICE_PLANS._config_profile' | translate }}
             </h3>
-          @if (!(formGroup?.get('prodSpecCharValueUse')?.value?.length > 0)){
+          @if(!checkPriceCompChars()){
+          @if (!(formGroup?.get('prodSpecCharValueUse')?.value?.length > 0)){            
             <div class="p-4 my-2 text-sm text-center text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
               <span class="font-medium">{{ 'FORMS.PRICE_PLANS._profile_desc' | translate }}</span>
             </div>
-            <div class="px-4">
+            <div class="px-4">              
               <button type="button" (click)="openConfigurationProfileDrawer()"
                       class="mt-2 px-4 py-1 bg-blue-500 text-white rounded flex items-center">
                 <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -147,15 +148,20 @@
                 </button>
               </div>
             </div>
-          }
+          }        
+        } @else {
+          <div class="p-4 my-2 text-sm text-center text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+            <span class="font-medium">{{ 'FORMS.PRICE_PLANS._price_comp_with_chars' | translate }}</span>
+          </div>
+        }  
             <!-- Configuration Profile Drawer -->
             <app-configuration-profile-drawer *ngIf="showConfigurationDrawer"
                                               [profileData]="getProfileData()"
                                               (save)="updateConfigurationProfile($event)"
                                               (close)="showConfigurationDrawer = false">
             </app-configuration-profile-drawer>
+          
           </div>
-
           <!-- Tabla de Price Components -->
           <div class="mb-4">
             <h3 class="font-bold text-lg dark:text-white">
@@ -221,6 +227,8 @@
     <!-- Drawer para editar Price Components -->
     <app-price-component-drawer *ngIf="showPriceComponentDrawer"
                                 [component]="editingComponent"
+                                [prodChars]="prodSpec?.productSpecCharacteristic"
+                                [profileData]="checkProfileData()"
                                 (save)="closePriceComponentDrawer($event)"
                                 (close)="closePriceComponentDrawer($event)">
     </app-price-component-drawer>

@@ -26,6 +26,46 @@
         <app-markdown-textarea formControlName="description"></app-markdown-textarea>
       </div>
 
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Base price</label>
+        <input formControlName="price" type="number" pattern="[0-9]*.[0-9]*" step="0.1"                        
+        class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+      </div>
+      @if(profileData){
+      <div class="flex">
+          <label class="font-bold text-lg dark:text-white">Does this price component apply to a product characteristic?</label>
+          <div class="flex inline-flex ml-2 align-middle">
+              <svg data-popover-target="popover-component-char" class="flex self-center w-6 h-6 text-primary-100" clip-rule="evenodd" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+              </svg>
+          </div>
+      </div>      
+      <div class="flex flex-row">
+          <select id="type" (change)="changePriceComponentChar($event)"
+          class="mb-2 mr-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+              <option value="">Select a characteristic</option>
+              @for(char of prodChars; track char){                          
+                  <option value="{{char.id}}">{{char.name}}</option>
+              }
+          </select>
+          @if(showValueSelect){
+              <select id="type" (change)="changePriceComponentCharValue($event)"
+              class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                  @if(hideStringCharOption){
+                      <option value="">Select a value</option>
+                  }  
+                  @for(val of selectedCharacteristic.productSpecCharacteristicValue; track val){
+                      @if(hasKey(val, 'unitOfMeasure')){
+                          <option value="{{val.value}}">{{val.value}} ({{val.unitOfMeasure}})</option>
+                      } @else {
+                          <option value="{{val.value}}">{{val.value}}</option>
+                      }
+                  }
+              </select>
+          }
+      </div>
+      }
+
       <!-- Tipo de Precio -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._type_of_price' | translate }}</label>
@@ -37,36 +77,8 @@
         </select>
       </div>
 
-      <!-- Descuento -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._add_discount' | translate }}</label>
-        <div class="flex space-x-2">
-          <input formControlName="discountValue" type="number" placeholder="Cantidad"
-                 class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-          <select formControlName="discountUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <option value="percentage">{{ 'FORMS.PRICE_PLAN_COMPONENT._percentage' | translate }}</option>
-            <option value="fixed">{{ 'FORMS.PRICE_PLAN_COMPONENT._fixed' | translate }}</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Duración del Descuento -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._discount_duration' | translate }}</label>
-        <div class="flex space-x-2">
-          <input formControlName="discountDuration" type="number" placeholder="Duración"
-                 class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-          <select formControlName="discountDurationUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <option value="days">{{ 'FORMS.PRICE_PLAN_COMPONENT._days' | translate }}</option>
-            <option value="weeks">{{ 'FORMS.PRICE_PLAN_COMPONENT._weeks' | translate }}</option>
-            <option value="months">{{ 'FORMS.PRICE_PLAN_COMPONENT._months' | translate }}</option>
-            <option value="years">{{ 'FORMS.PRICE_PLAN_COMPONENT._years' | translate }}</option>
-          </select>
-        </div>
-      </div>
-
       <!-- Opciones dinámicas según el tipo de precio -->
-      @if (priceComponentForm.get('priceType')?.value === 'recurring') {
+      @if (priceComponentForm.get('priceType')?.value === 'recurring' || priceComponentForm.get('priceType')?.value === 'recurring-prepaid') {
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT.recurring_period' | translate }}</label>
           <select formControlName="recurringPeriod" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
@@ -83,6 +95,34 @@
                  class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
         </div>
       }
+
+      <!-- Descuento -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._add_discount' | translate }}</label>
+        <div class="flex space-x-2">
+          <input formControlName="discountValue" type="number" placeholder="Cantidad"
+                  class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+          <select formControlName="discountUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <option value="percentage">{{ 'FORMS.PRICE_PLAN_COMPONENT._percentage' | translate }}</option>
+            <option value="fixed">{{ 'FORMS.PRICE_PLAN_COMPONENT._fixed' | translate }}</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Duración del Descuento -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._discount_duration' | translate }}</label>
+        <div class="flex space-x-2">
+          <input formControlName="discountDuration" type="number" placeholder="Duración"
+                  class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+          <select formControlName="discountDurationUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <option value="days">{{ 'FORMS.PRICE_PLAN_COMPONENT._days' | translate }}</option>
+            <option value="weeks">{{ 'FORMS.PRICE_PLAN_COMPONENT._weeks' | translate }}</option>
+            <option value="months">{{ 'FORMS.PRICE_PLAN_COMPONENT._months' | translate }}</option>
+            <option value="years">{{ 'FORMS.PRICE_PLAN_COMPONENT._years' | translate }}</option>
+          </select>
+        </div>
+      </div>
 
       <!-- Botones -->
       <div class="flex justify-end space-x-3">

@@ -1010,6 +1010,7 @@
       "_add_price_component": "Add a new Price Component",
       "_currency": "Set the currency that must be used in all the price components of this price plan",
       "_profile_desc": "If you want this price plan to apply exclusively to a specific product configuration, select that configuration here.",
+      "_price_comp_with_chars": "If you want this price plan to apply exclusively to a specific product configuration, remove the selected characteristics from the created price components.",
       "_add_profile": "Set a configuration profile",
       "_edit_profile": "Edit the current profile",
       "_char_name": "Characteristic",

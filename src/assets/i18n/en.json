@@ -989,7 +989,8 @@
     },
   "FORMS": {
     "PRICE_PLANS": {
-      "_price_plans": "Price Plans"
+      "_price_plans": "Price Plans",
+      "_price_comp_with_chars": "If you want this price plan to apply exclusively to a specific product configuration, remove the selected characteristics from the created price components."
     }
   }
 }

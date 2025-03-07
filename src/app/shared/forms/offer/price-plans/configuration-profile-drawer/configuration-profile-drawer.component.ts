@@ -57,21 +57,11 @@ export class ConfigurationProfileDrawerComponent implements OnInit {
   }
 
   changeProfileValue(index: number, event: any) {
-    console.log("Selected value:", event.target.value);
-    console.log("Before update:", this.characteristics.controls.map(ctrl => ctrl.value));
     this.characteristics.at(index).patchValue({ selectedValue: event.target.value });
-    console.log("After update:", this.characteristics.controls.map(ctrl => ctrl.value));
-  }
-
-  changeRangeProfileValue(char:any,event:any){
-    const index = this.characteristics.controls.map(control => control.value).findIndex(item => item.id === char.id);
-    this.characteristics.at(index).patchValue({ selectedValue:  event.target.value });
   }
 
   private mapFormToProfile(): any[] {
-    const profileArray = this.characteristics.value;
-    console.log("MAP PROFILE:", this.characteristics.controls.map(ctrl => ctrl.value));
-  
+    const profileArray = this.characteristics.value;  
     return profileArray.map((char: any) => ({
       id: char.id,
       name: char.name,
@@ -80,8 +70,7 @@ export class ConfigurationProfileDrawerComponent implements OnInit {
         // Ensure "value" exists on opt
         if (!("value" in opt)) {
           opt.value = char.selectedValue; // Or set a default value like null
-        }
-  
+        }  
         return {
           ...opt,
           isDefault: String(opt.value) === String(char.selectedValue),

@@ -97,6 +97,7 @@ export class PricePlanDrawerComponent implements OnInit {
         components.push(updatedComponent);
       }
       this.formGroup.get('priceComponents')?.setValue(components);
+      console.log(this.formGroup.get('priceComponents')?.value)
     }
     this.showPriceComponentDrawer = false;
     this.editingComponent = null;
@@ -111,6 +112,15 @@ export class PricePlanDrawerComponent implements OnInit {
     this.formGroup.get('priceComponents')?.setValue(
       components.filter((c: { id: string }) => c.id !== componentId)
     );
+  }
+
+  checkPriceCompChars(): boolean {
+    const priceComponents = this.formGroup.get('priceComponents')?.value ?? [];
+
+    const hasSelectedCharacteristic = priceComponents.some(
+      (item: any) => item.selectedCharacteristic != null
+    );
+    return hasSelectedCharacteristic;
   }
 
   get pricePlanTranslationKey(): string {
@@ -189,6 +199,16 @@ export class PricePlanDrawerComponent implements OnInit {
     }
 
     return profileData;
+  }
+
+  checkProfileData() {
+    let profileData = this.formGroup?.get('prodSpecCharValueUse')?.value;
+
+    if (!profileData || profileData.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 
