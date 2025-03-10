@@ -47,7 +47,7 @@ export class PriceComponentDrawerComponent implements OnInit {
       name: ['', Validators.required],
       price:['', Validators.required],
       description: [''],
-      priceType: ['one-time', Validators.required],
+      priceType: ['one time', Validators.required],
       discountValue: [null],
       discountUnit: ['percentage'],
       discountDuration: [null],

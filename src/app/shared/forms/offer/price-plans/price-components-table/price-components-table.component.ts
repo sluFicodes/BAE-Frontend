@@ -39,7 +39,7 @@ export class PriceComponentsTableComponent {
 
   getPriceTypeLabel(priceType: string): string {
     const labels: { [key: string]: string } = {
-      'one-time': 'Único',
+      'one time': 'Único',
       'recurring': 'Recurrente',
       'recurring-prepaid': 'Prepago',
       'usage': 'Uso'
