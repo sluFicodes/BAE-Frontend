@@ -165,14 +165,17 @@ export class OfferComponent implements OnInit{
         name: pricePlan.name,
         description: pricePlan.description,
         lifecycleStatus: pricePlan.lifecycleStatus,
-        paymentOnline: pricePlan?.paymentOnline ?? !!pricePlan?.bundledPopRelationship,
+        paymentOnline: pricePlan?.paymentOnline ?? !!pricePlan?.bundledPopRelationship        
       }
       if(pricePlan.priceType){
         priceInfo.priceType=pricePlan.priceType;
       }
       if(pricePlan.prodSpecCharValueUse){
         priceInfo.selectedCharacteristic=pricePlan.prodSpecCharValueUse;
-      }    
+      }
+      if(pricePlan?.price?.unit){
+        priceInfo.currency=pricePlan?.price?.unit
+      }  
       if(pricePlan.bundledPopRelationship){
       let relatedPrices:any[] = [];
       for(let i=0;i<pricePlan.bundledPopRelationship.length;i++){
@@ -190,11 +193,14 @@ export class OfferComponent implements OnInit{
             selectedCharacteristic: data?.prodSpecCharValueUse || null,
             currency: data?.price?.unit || 'EUR',
             unitOfMeasure: data?.unitOfMeasure?.units || null,
-            recurringPeriod: data?.recurringChargePeriodType || null,
+            recurringPeriod: data?.recurringChargePeriodType || 'monthly',
             productProfile: this.mapProductProfile(data?.prodSpecCharValueUse || []),
             price: data?.price?.value,
             validFor: data?.validFor || null,
           })
+          if(data?.price?.unit){
+            priceInfo.currency=data?.price?.unit
+          }
         })
       }
       priceInfo.priceComponents=relatedPrices;
