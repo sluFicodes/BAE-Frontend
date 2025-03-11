@@ -190,6 +190,7 @@ export class OfferComponent implements OnInit{
             selectedCharacteristic: data?.prodSpecCharValueUse || null,
             currency: data?.price?.unit || 'EUR',
             unitOfMeasure: data?.unitOfMeasure?.units || null,
+            recurringPeriod: data?.recurringChargePeriodType || null,
             productProfile: this.mapProductProfile(data?.prodSpecCharValueUse || []),
             price: data?.price?.value,
             validFor: data?.validFor || null,
@@ -201,6 +202,8 @@ export class OfferComponent implements OnInit{
       if(pricePlan.priceType=='usage'){
         priceInfo.usageUnit=pricePlan.unitOfMeasure
       }
+      console.log('info del price plan recogido----')
+      console.log(pricePlan)
       if(pricePlan.priceType=='recurring' || pricePlan.priceType=='recurring-prepaid'){
         priceInfo.recurringPeriod=pricePlan.recurringChargePeriodType
       }
@@ -240,7 +243,8 @@ export class OfferComponent implements OnInit{
         if(this.productOfferForm.value.pricePlans[i].priceComponents){
           bundleCompsCheck=this.productOfferForm.value.pricePlans[i].priceComponents
         }
-        if(bundleCompsCheck>0){
+        console.log(bundleCompsCheck)
+        if(bundleCompsCheck.length>0){
           let components=this.productOfferForm.value.pricePlans[i].priceComponents;
           let compRel:any[]=[];
           if(components != undefined){
