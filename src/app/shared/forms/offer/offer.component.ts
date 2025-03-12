@@ -11,6 +11,7 @@ import {PricePlansComponent} from "./price-plans/price-plans.component";
 import {CatalogueComponent} from "./catalogue/catalogue.component";
 import {ProcurementModeComponent} from "./procurement-mode/procurement-mode.component"
 import {ReplicationVisibilityComponent} from "./replication-visibility/replication-visibility.component"
+import {OfferSummaryComponent} from "./offer-summary/offer-summary.component"
 import { lastValueFrom } from 'rxjs';
 import {components} from "src/app/models/product-catalog";
 import {EventMessageService} from "src/app/services/event-message.service";
@@ -33,6 +34,7 @@ type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
     CatalogueComponent,
     ProcurementModeComponent,
     ReplicationVisibilityComponent,
+    OfferSummaryComponent,
     NgClass
   ],
   templateUrl: './offer.component.html',
@@ -460,7 +462,7 @@ export class OfferComponent implements OnInit{
     this.offerToCreate={
       name: this.productOfferForm.value.generalInfo.name,
       description: this.productOfferForm.value.generalInfo.description != null ? this.productOfferForm.value.generalInfo.description : '',
-      lifecycleStatus: this.formType == 'update' ? this.productOfferForm.value.generalInfo.description : "Active",
+      lifecycleStatus: this.formType == 'update' ? this.productOfferForm.value.generalInfo.status : "Active",
       isBundle: this.bundleChecked,
       bundledProductOffering: this.offersBundle,
       place: [],

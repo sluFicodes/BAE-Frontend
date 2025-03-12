@@ -67,7 +67,7 @@
         }
       } @if(currentStep === 7) {
         @if(this.formType=='update'){
-          summary
+          <app-offer-summary [productOfferForm]="productOfferForm"></app-offer-summary>
         }@else{
           <app-replication-visibility></app-replication-visibility>
         }

@@ -47,6 +47,9 @@ export class LicenseComponent implements OnInit {
         this.formGroup.addControl('treatment', new FormControl<string>(''));
         this.formGroup.addControl('description', new FormControl<string>(''));
       }
+    } else {
+      this.formGroup.addControl('treatment', new FormControl<string>(''));
+      this.formGroup.addControl('description', new FormControl<string>(''));
     }
   }
 }
