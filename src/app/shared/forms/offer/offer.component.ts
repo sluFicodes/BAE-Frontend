@@ -161,27 +161,52 @@ export class OfferComponent implements OnInit{
     // Price Plans
     if (Array.isArray(this.offer.productOfferingPrice) && this.offer.productOfferingPrice.length > 0) {
      for (let pop of this.offer.productOfferingPrice) {
+      let relatedPrices:any[] = [];
        const pricePlan = await this.api.getOfferingPrice(pop.id);
        let priceInfo: any = {
         id: pricePlan.id,
         name: pricePlan.name,
         description: pricePlan.description,
         lifecycleStatus: pricePlan.lifecycleStatus,
-        paymentOnline: pricePlan?.paymentOnline ?? !!pricePlan?.bundledPopRelationship        
+        paymentOnline: pricePlan?.paymentOnline ?? !!pricePlan?.bundledPopRelationship,
+        productProfile: this.mapProductProfile(pricePlan?.prodSpecCharValueUse || []),     
       }
       if(pricePlan.priceType){
         priceInfo.priceType=pricePlan.priceType;
       }
-      if(pricePlan.prodSpecCharValueUse){
+      /*if(pricePlan.prodSpecCharValueUse){
         priceInfo.selectedCharacteristic=pricePlan.prodSpecCharValueUse;
-      }
+      }*/
       if(pricePlan?.price?.unit){
         priceInfo.currency=pricePlan?.price?.unit
-      }  
-      if(pricePlan.bundledPopRelationship){
-      let relatedPrices:any[] = [];
+      }
+      if(pricePlan?.price?.value){
+        priceInfo.paymentOnline=true
+        priceInfo.price=pricePlan?.price?.value
+        relatedPrices.push({
+          id:pricePlan.id,
+          href:pricePlan.href,
+          name:pricePlan.name,
+          description:pricePlan?.description,
+          priceType:pricePlan?.priceType,
+          lastUpdate:pricePlan?.lastUpdate,
+          lifecycleStatus:pricePlan?.lifecycleStatus,
+          paymentOnline: true,
+          selectedCharacteristic: pricePlan?.prodSpecCharValueUse || null,
+          currency: pricePlan?.price?.unit || 'EUR',
+          recurringPeriod: pricePlan?.recurringChargePeriodType || 'monthly',
+          productProfile: this.mapProductProfile(pricePlan?.prodSpecCharValueUse || []),
+          price: pricePlan?.price?.value,
+          validFor: pricePlan?.validFor || null,
+          usageUnit: pricePlan.usageUnit
+        })
+        priceInfo.priceComponents=relatedPrices;
+      }
+      console.log(relatedPrices)
+      if(pricePlan.bundledPopRelationship){      
       for(let i=0;i<pricePlan.bundledPopRelationship.length;i++){
         await this.api.getOfferingPrice(pricePlan.bundledPopRelationship[i].id).then(data => {
+          console.log(data)
           relatedPrices.push({
             id:data.id,
             href:data.href,
@@ -194,9 +219,9 @@ export class OfferComponent implements OnInit{
             paymentOnline: data?.paymentOnline ?? !!data?.bundledPopRelationship,
             selectedCharacteristic: data?.prodSpecCharValueUse || null,
             currency: data?.price?.unit || 'EUR',
-            unitOfMeasure: data?.unitOfMeasure?.units || null,
+            //unitOfMeasure: data?.unitOfMeasure?.units || null,
+            usageUnit: data?.unitOfMeasure?.units || null,
             recurringPeriod: data?.recurringChargePeriodType || 'monthly',
-            productProfile: this.mapProductProfile(data?.prodSpecCharValueUse || []),
             price: data?.price?.value,
             validFor: data?.validFor || null,
           })
@@ -208,10 +233,10 @@ export class OfferComponent implements OnInit{
       priceInfo.priceComponents=relatedPrices;
       }
       if(pricePlan.priceType=='usage'){
-        priceInfo.usageUnit=pricePlan.unitOfMeasure
+        priceInfo.usageUnit=pricePlan.unitOfMeasure.units
       }
       console.log('info del price plan recogido----')
-      console.log(pricePlan)
+      console.log(priceInfo)
       if(pricePlan.priceType=='recurring' || pricePlan.priceType=='recurring-prepaid'){
         priceInfo.recurringPeriod=pricePlan.recurringChargePeriodType
       }
@@ -252,7 +277,7 @@ export class OfferComponent implements OnInit{
           bundleCompsCheck=this.productOfferForm.value.pricePlans[i].priceComponents
         }
         console.log(bundleCompsCheck)
-        if(bundleCompsCheck.length>0){
+        if(bundleCompsCheck.length>1){
           let components=this.productOfferForm.value.pricePlans[i].priceComponents;
           let compRel:any[]=[];
           if(components != undefined){
@@ -279,13 +304,18 @@ export class OfferComponent implements OnInit{
                 priceCompToCreate.recurringChargePeriodLength=1;
               }
               if(components[j].priceType=='usage'){
-                priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+                priceCompToCreate.unitOfMeasure={
+                  //set default to 1
+                  amount: 1,
+                  units: components[j].usageUnit
+                }
               }
-              if(components[j].prodSpecCharValueUse){
-                priceCompToCreate.prodSpecCharValueUse=components[j].prodSpecCharValueUse
+              if(components[j].selectedCharacteristic){
+                priceCompToCreate.prodSpecCharValueUse=components[j].selectedCharacteristic
               }
+
               if(components[j].unitOfMeasure){
-                priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+                priceCompToCreate.unitOfMeasure=components[j].usageUnit
               }
               let priceAlterations = components[j].popRelationship;
               if(priceAlterations != undefined){
@@ -357,8 +387,8 @@ export class OfferComponent implements OnInit{
             if(this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse){
               priceToCreate.prodSpecCharValueUse=this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse
             }
-            if(this.productOfferForm.value.pricePlans[i].unitOfMeasure){
-              priceToCreate.unitOfMeasure=this.productOfferForm.value.pricePlans[i].unitOfMeasure
+            if(this.productOfferForm.value.pricePlans[i].usageUnit){
+              priceToCreate.unitOfMeasure=this.productOfferForm.value.pricePlans[i].usageUnit
             }
             try{
               let pricePlanCreated = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
@@ -388,32 +418,43 @@ export class OfferComponent implements OnInit{
             name: this.productOfferForm.value.pricePlans[i].name,
             isBundle: false,
             description: this.productOfferForm.value.pricePlans[i].description,
-            lifecycleStatus: this.productOfferForm.value.pricePlans[i].lifecycleStatus,
-            priceType: this.productOfferForm.value.pricePlans[i].priceType,   
+            lifecycleStatus: this.productOfferForm.value.pricePlans[i].status
           }
-          if(this.productOfferForm.value.pricePlans[i].priceType!='custom'){
+          if(bundleCompsCheck.length>0){
             priceToCreate.price= {
-              unit: this.productOfferForm.value.pricePlans[i]?.currency,
-              value: this.productOfferForm.value.pricePlans[i]?.price
+              value: bundleCompsCheck[0]?.price,
+              unit: this.productOfferForm.value.pricePlans[i]?.currency
             }
+            priceToCreate.priceType= bundleCompsCheck[0]?.priceType
+            if(bundleCompsCheck[0]?.priceType=='recurring'){
+              priceToCreate.recurringChargePeriodType=bundleCompsCheck[0]?.recurringPeriod;
+              priceToCreate.recurringChargePeriodLength=1;
+            }
+            if(bundleCompsCheck[0]?.priceType=='recurring-prepaid'){
+              priceToCreate.recurringChargePeriodType=bundleCompsCheck[0]?.recurringPeriod;
+              priceToCreate.recurringChargePeriodLength=1;
+            }
+            if(bundleCompsCheck[0]?.priceType=='usage'){              
+              priceToCreate.unitOfMeasure={
+                //set default to 1
+                amount: 1,
+                units: bundleCompsCheck[0]?.usageUnit
+              }
+            }
+            if(bundleCompsCheck[0]?.selectedCharacteristic){
+              priceToCreate.prodSpecCharValueUse=bundleCompsCheck[0]?.selectedCharacteristic;
+            }
+            if(bundleCompsCheck[0]?.usageUnit){
+              priceToCreate.unitOfMeasure={
+                //set default to 1
+                amount: 1,
+                units: bundleCompsCheck[0]?.usageUnit
+              }
+            }
+          } else {
+            priceToCreate.priceType=this.productOfferForm.value.pricePlans[i].priceType
           }
-          if(this.productOfferForm.value.pricePlans[i].priceType=='recurring'){
-            priceToCreate.recurringChargePeriodType=this.productOfferForm.value.pricePlans[i].recurringPeriod;
-            priceToCreate.recurringChargePeriodLength=1;
-          }
-          if(this.productOfferForm.value.pricePlans[i].priceType=='recurring-prepaid'){
-            priceToCreate.recurringChargePeriodType=this.productOfferForm.value.pricePlans[i].recurringPeriod;
-            priceToCreate.recurringChargePeriodLength=1;
-          }
-          if(this.productOfferForm.value.pricePlans[i].priceType=='usage'){
-            priceToCreate.unitOfMeasure=this.productOfferForm.value.pricePlans[i].unitOfMeasure
-          }
-          if(this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse){
-            priceToCreate.prodSpecCharValueUse=this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse;
-          }
-          if(this.productOfferForm.value.pricePlans[i].unitOfMeasure){
-            priceToCreate.unitOfMeasure=this.productOfferForm.value.pricePlans[i].unitOfMeasure
-          }
+
           try{
             let createdPrices = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
             console.log('precio')

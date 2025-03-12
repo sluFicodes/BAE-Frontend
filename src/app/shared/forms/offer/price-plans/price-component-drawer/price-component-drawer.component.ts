@@ -32,7 +32,7 @@ export class PriceComponentDrawerComponent implements OnInit {
   hideStringCharOption:boolean=true;
   selectedCharacteristic:any=undefined;
   touchedCharCheck:boolean=false;
-  selectedCharacteristicVal:any
+  selectedCharacteristicVal:any;
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef,) {}
 
@@ -59,8 +59,12 @@ export class PriceComponentDrawerComponent implements OnInit {
 
     if (this.component) {
       this.priceComponentForm.patchValue(this.component);
+      /*console.log(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue)
+      if(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue){
+        console.log('---hola')
+        this.showValueSelect=true
+      }*/
     }
-
   }
 
   submitForm() {
