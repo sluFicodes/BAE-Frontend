@@ -15,6 +15,7 @@ import {OfferSummaryComponent} from "./offer-summary/offer-summary.component"
 import { lastValueFrom } from 'rxjs';
 import {components} from "src/app/models/product-catalog";
 import {EventMessageService} from "src/app/services/event-message.service";
+import * as moment from 'moment';
 
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
@@ -205,7 +206,7 @@ export class OfferComponent implements OnInit{
       console.log(relatedPrices)
       if(pricePlan.bundledPopRelationship){      
       for(let i=0;i<pricePlan.bundledPopRelationship.length;i++){
-        await this.api.getOfferingPrice(pricePlan.bundledPopRelationship[i].id).then(data => {
+        let data = await this.api.getOfferingPrice(pricePlan.bundledPopRelationship[i].id)
           console.log(data)
           relatedPrices.push({
             id:data.id,
@@ -228,7 +229,17 @@ export class OfferComponent implements OnInit{
           if(data?.price?.unit){
             priceInfo.currency=data?.price?.unit
           }
-        })
+          if(data?.popRelationship){
+            let alter = await this.api.getOfferingPrice(data?.popRelationship[0].id)
+            if(alter.percentage){
+              priceInfo.discountValue=alter?.percentage
+              priceInfo.discountUnit='percentage'
+            }else{
+              priceInfo.discountValue=alter?.price?.value
+              priceInfo.discountUnit=alter?.price?.unit
+            }
+            //priceInfo.discountDuration=alter?.validFor
+          }
       }
       priceInfo.priceComponents=relatedPrices;
       }
@@ -317,18 +328,24 @@ export class OfferComponent implements OnInit{
               if(components[j].unitOfMeasure){
                 priceCompToCreate.unitOfMeasure=components[j].usageUnit
               }
-              let priceAlterations = components[j].popRelationship;
-              if(priceAlterations != undefined){
+              
+              if(components[j].discountValue != null){
                 //Creating price alteration
                 let priceAlterToCreate: ProductOfferingPrice ={
-                  name: priceAlterations[0]?.name,
-                  priceType: priceAlterations[0]?.priceType,
-                  validFor: priceAlterations[0]?.validFor,
+                  name: 'discount',
+                  priceType: 'discount',
+                  validFor: {
+                    startDateTime: moment().toISOString(),
+                    endDateTime: moment().add(Number(components[j].discountDuration),components[j].discountDurationUnit).toISOString()
+                  },
                 }
-                if(priceAlterations[0].percentage){
-                  priceAlterToCreate.percentage = priceAlterations[0]?.percentage;
+                if(components[j].discountUnit=='percentage'){
+                  priceAlterToCreate.percentage = components[j].discountValue;
                 } else {
-                  priceAlterToCreate.price = priceAlterations[0]?.price;
+                  priceAlterToCreate.price = {
+                    value: components[j].discountValue,
+                    unit: this.productOfferForm.value.pricePlans[i].currency
+                  }
                 }
                 try{
                   let priceAlterCreated = await lastValueFrom(this.api.postOfferingPrice(priceAlterToCreate))
@@ -592,6 +609,25 @@ export class OfferComponent implements OnInit{
 
   goBack() {
     this.eventMessage.emitSellerOffer(true);
+  }
+
+  addToISOString(duration: number, unit: string): string {
+    // Mapping between custom units and Moment.js valid units
+    const unitMapping: { [key: string]: moment.unitOfTime.DurationConstructor } = {
+      day: 'days',
+      week: 'weeks',
+      month: 'months',
+      year: 'years',
+    };
+  
+    // Validate the unit and map to Moment.js DurationConstructor
+    const validUnit = unitMapping[unit.toLowerCase()];
+    
+    if (validUnit) {
+      return moment().add(duration, validUnit).toISOString();
+    } else {
+      throw new Error(`Invalid unit: ${unit}. Must be one of day, week, month, or year.`);
+    }
   }
   
 }
