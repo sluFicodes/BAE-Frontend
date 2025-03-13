@@ -207,8 +207,7 @@ export class OfferComponent implements OnInit{
       if(pricePlan.bundledPopRelationship){      
       for(let i=0;i<pricePlan.bundledPopRelationship.length;i++){
         let data = await this.api.getOfferingPrice(pricePlan.bundledPopRelationship[i].id)
-          console.log(data)
-          relatedPrices.push({
+          let priceComp:any = {
             id:data.id,
             href:data.href,
             name:data?.name,
@@ -220,25 +219,32 @@ export class OfferComponent implements OnInit{
             paymentOnline: data?.paymentOnline ?? !!data?.bundledPopRelationship,
             selectedCharacteristic: data?.prodSpecCharValueUse || null,
             currency: data?.price?.unit || 'EUR',
-            //unitOfMeasure: data?.unitOfMeasure?.units || null,
             usageUnit: data?.unitOfMeasure?.units || null,
             recurringPeriod: data?.recurringChargePeriodType || 'monthly',
             price: data?.price?.value,
             validFor: data?.validFor || null,
-          })
-          if(data?.price?.unit){
-            priceInfo.currency=data?.price?.unit
           }
+          
+          if(data?.price?.unit){
+            priceComp.currency=data?.price?.unit
+          }
+
           if(data?.popRelationship){
             let alter = await this.api.getOfferingPrice(data?.popRelationship[0].id)
+            console.log('----- alter')
+            console.log(alter)
             if(alter.percentage){
-              priceInfo.discountValue=alter?.percentage
-              priceInfo.discountUnit='percentage'
+              priceComp.discountValue=alter?.percentage
+              priceComp.discountUnit='percentage'
             }else{
-              priceInfo.discountValue=alter?.price?.value
-              priceInfo.discountUnit=alter?.price?.unit
-            }
-            //priceInfo.discountDuration=alter?.validFor
+              priceComp.discountValue=alter?.price?.value
+              priceComp.discountUnit=alter?.price?.unit
+            }            
+            priceComp.discountDuration = alter?.unitOfMeasure?.amount            
+            priceComp.discountDurationUnit = alter?.unitOfMeasure?.units
+            relatedPrices.push(priceComp)
+            //priceComp.discountDurationUnit=alter?.
+            //priceComp.discountDuration=this.calculateDiscountDuration(alter?.validFor,alter?.)
           }
       }
       priceInfo.priceComponents=relatedPrices;
@@ -346,6 +352,10 @@ export class OfferComponent implements OnInit{
                     value: components[j].discountValue,
                     unit: this.productOfferForm.value.pricePlans[i].currency
                   }
+                }
+                priceAlterToCreate.unitOfMeasure = {
+                  amount: components[j].discountDuration,
+                  units: components[j].discountDurationUnit
                 }
                 try{
                   let priceAlterCreated = await lastValueFrom(this.api.postOfferingPrice(priceAlterToCreate))
@@ -628,6 +638,16 @@ export class OfferComponent implements OnInit{
     } else {
       throw new Error(`Invalid unit: ${unit}. Must be one of day, week, month, or year.`);
     }
+  }
+
+  calculateDiscountDuration(validFor: { startDateTime: string, endDateTime: string }, unit: 'days' | 'hours' | 'months') {
+    const start = moment(validFor.startDateTime);
+    const end = moment(validFor.endDateTime);
+    
+    // Calculate the difference based on the given unit
+    const discountDuration = end.diff(start, unit);
+  
+    return discountDuration;
   }
   
 }

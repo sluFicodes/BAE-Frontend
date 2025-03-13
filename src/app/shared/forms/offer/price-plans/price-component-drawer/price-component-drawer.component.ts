@@ -4,6 +4,7 @@ import {MarkdownTextareaComponent} from "../../../markdown-textarea/markdown-tex
 import {TranslateModule} from "@ngx-translate/core";
 import {NgClass} from "@angular/common";
 import { initFlowbite } from 'flowbite';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-price-component-drawer',
@@ -59,6 +60,9 @@ export class PriceComponentDrawerComponent implements OnInit {
 
     if (this.component) {
       this.priceComponentForm.patchValue(this.component);
+      this.cdr.detectChanges();
+      console.log('---- EDIITA')
+      console.log(this.priceComponentForm.value)
       /*console.log(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue)
       if(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue){
         console.log('---hola')
@@ -140,4 +144,6 @@ export class PriceComponentDrawerComponent implements OnInit {
   hasKey(obj: any, key: string): boolean {
     return key in obj;
   }
+
+
 }
