@@ -31,7 +31,7 @@
             {{ 'FORMS.PRICE_PLANS._name' | translate }}
           </label>
           <input formControlName="name" type="text"
-                 class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                 class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
         </div>
 
         <!-- Descripción -->
@@ -61,28 +61,7 @@
               {{ 'FORMS.PRICE_PLANS._config_profile' | translate }}
             </h3>
           @if(!checkPriceCompChars()){
-          @if (!(formGroup?.get('prodSpecCharValueUse')?.value?.length > 0)){            
-            <div class="p-4 my-2 text-sm text-center text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
-              <span class="font-medium">{{ 'FORMS.PRICE_PLANS._profile_desc' | translate }}</span>
-            </div>
-            <div class="px-4">              
-              <button type="button" (click)="openConfigurationProfileDrawer()"
-                      class="mt-2 px-4 py-1 bg-blue-500 text-white rounded flex items-center">
-                <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                  <path fill="currentColor"
-                        d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0
-                        32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7
-                        0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1
-                        1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3
-                        28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7
-                        0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7
-                        224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5
-                        48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/>
-                </svg>
-                {{ configurationProfileButtonText | translate }}
-              </button>
-            </div>
-          } @else {
+          @if ((formGroup?.get('prodSpecCharValueUse')?.value?.length > 0) || (formGroup?.get('productProfile')?.value?.length > 0)){      
             <div class="overflow-x-auto">
               <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
@@ -147,10 +126,31 @@
                   </svg>
                 </button>
               </div>
+            </div>            
+          } @else {
+            <div class="p-4 my-2 text-sm text-center text-blue-800 rounded-lg bg-blue-50 dark:bg-secondary-100 dark:text-blue-400" role="alert">
+              <span class="font-medium">{{ 'FORMS.PRICE_PLANS._profile_desc' | translate }}</span>
+            </div>
+            <div class="px-4">              
+              <button type="button" (click)="openConfigurationProfileDrawer()"
+                      class="mt-2 px-4 py-1 bg-blue-500 text-white rounded flex items-center">
+                <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                  <path fill="currentColor"
+                        d="M0 416c0 17.7 14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0
+                        32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384c-17.7
+                        0-32 14.3-32 32zm128 0a32 32 0 1 1 64 0 32 32 0 1 1 -64 0zM320 256a32 32 0 1 1 64 0 32 32 0 1
+                        1 -64 0zm32-80c-32.8 0-61 19.7-73.3 48L32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3
+                        28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7
+                        0c-12.3-28.3-40.5-48-73.3-48zM192 128a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm73.3-64C253 35.7
+                        224.8 16 192 16s-61 19.7-73.3 48L32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5
+                        48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64z"/>
+                </svg>
+                {{ configurationProfileButtonText | translate }}
+              </button>
             </div>
           }        
         } @else {
-          <div class="p-4 my-2 text-sm text-center text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400" role="alert">
+          <div class="p-4 my-2 text-sm text-center text-blue-800 rounded-lg bg-blue-50 dark:bg-secondary-100 dark:text-blue-400" role="alert">
             <span class="font-medium">{{ 'FORMS.PRICE_PLANS._price_comp_with_chars' | translate }}</span>
           </div>
         }  
@@ -171,7 +171,7 @@
               <label class="font-medium text-base dark:text-white">
                 {{ 'FORMS.PRICE_PLANS._currency' | translate }}
               </label>
-              <select formControlName="currency" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+              <select formControlName="currency" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
                 @for(curr of currencies; track curr.code){
                   <option value="{{curr.code}}" [selected]="curr.code === this.formGroup?.get('currency')?.value">({{curr.code}}) {{curr.name}}</option>
                 }

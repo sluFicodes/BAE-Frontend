@@ -217,7 +217,7 @@
     </div>
 }
 -->
-@if(productOfferForm.get('license')?.value){
+@if(!isLicenseEmpty) {
     <h2 class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._license' | translate }}</h2>
     <div>
         <label for="treatment" class="font-bold text-base dark:text-white">{{ 'CREATE_OFFER._treatment' | translate }}</label>

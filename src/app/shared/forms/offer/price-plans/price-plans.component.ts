@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, Input, OnInit, forwardRef, ChangeDetectorRef } from '@angular/core';
 import {
   ControlValueAccessor, FormArray,
   FormBuilder,
@@ -42,7 +42,7 @@ export class PricePlansComponent implements OnInit, ControlValueAccessor {
   pricePlanForm!: FormGroup;  // This will be passed to the drawer
   action = 'create'; // What are we doing?
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.pricePlanForm = this.createPricePlanForm();
@@ -78,7 +78,7 @@ export class PricePlansComponent implements OnInit, ControlValueAccessor {
         prodSpecCharValueUse: [plan?.prodSpecCharValueUse || null],
         currency: [plan?.price?.unit || 'EUR'],
         unitOfMeasure: [plan?.unitOfMeasure || null],
-        productProfile: this.mapProductProfile(plan?.prodSpecCharValueUse || []),
+        productProfile: plan?.productProfile ? plan.productProfile : this.mapProductProfile(plan?.prodSpecCharValueUse || []),
         priceComponents: [plan?.priceComponents || []],
         validFor: [plan?.validFor || null],
       },
@@ -171,9 +171,10 @@ export class PricePlansComponent implements OnInit, ControlValueAccessor {
       this.action = 'create';
       this.selectedPricePlan = this.createPricePlanForm();  // Create a new one
     }
+    this.cdr
 
     console.log('📝 Form after patching:', this.selectedPricePlan.value);
-
+    this.cdr.detectChanges();
     this.showDrawer = true;
   }
 

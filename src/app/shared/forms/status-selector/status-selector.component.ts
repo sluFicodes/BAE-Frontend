@@ -45,7 +45,7 @@ export class StatusSelectorComponent implements ControlValueAccessor {
 
   getStatusClasses(status: string): string {
     const statusColors: Record<string, string> = {
-      "Active": 'text-green-700',
+      "Active": 'text-[#269c43]',
       "Launched": 'text-[#269c43]',
       "Retired": 'text-[#b40404]',
       "Obsolete": 'text-gray-800'
@@ -54,7 +54,7 @@ export class StatusSelectorComponent implements ControlValueAccessor {
     const baseClasses = "cursor-pointer flex items-center justify-center p-4 rounded-lg space-x-4 transition-all";
 
     return this.selectedStatus === status
-      ? `${baseClasses} bg-[#d2e0f0] font-semibold ${statusColors[status] || 'text-gray-500'}`
+      ? `${baseClasses} bg-[#d2e0f0] dark:bg-primary-100 font-semibold ${statusColors[status] || 'text-gray-500'}`
       : `${baseClasses} text-gray-500 dark:text-gray-200 hover:bg-[#d2e0f0] dark:hover:bg-gray-700`;
   }
 

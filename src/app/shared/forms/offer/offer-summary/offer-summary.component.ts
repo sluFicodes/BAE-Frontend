@@ -45,4 +45,13 @@ export class OfferSummaryComponent implements OnInit {
     console.log(this.productOfferForm.get('category')?.value)
   }
 
+  get isLicenseEmpty(): boolean {
+    const licenseValue = this.productOfferForm.get('license')?.value;
+  
+    // Check if the value is null, undefined, or an empty object
+    return !licenseValue || (typeof licenseValue === 'object' && Object.keys(licenseValue).length === 0);
+  }
+  
+  
+
 }

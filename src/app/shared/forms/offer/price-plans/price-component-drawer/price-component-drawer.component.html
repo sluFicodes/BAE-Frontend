@@ -17,7 +17,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._name' | translate }}</label>
         <input formControlName="name" type="text"
-               class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+               class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
       </div>
 
       <!-- Descripción -->
@@ -29,7 +29,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Base price</label>
         <input formControlName="price" type="number" pattern="[0-9]*.[0-9]*" step="0.1"                        
-        class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+        class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-gray-100 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
       </div>
       @if(profileData){
       <div class="flex">
@@ -42,7 +42,7 @@
       </div>      
       <div class="flex flex-row">
           <select id="type" (change)="changePriceComponentChar($event)"
-          class="mb-2 mr-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+          class="mb-2 mr-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             @if(!selectedCharacteristic){
               <option value="">Select a characteristic</option>
             }          
@@ -52,7 +52,7 @@
           </select>
           @if(showValueSelect){
               <select id="type" (change)="changePriceComponentCharValue($event)"
-              class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+              class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                   @if(hideStringCharOption){
                       <option value="">Select a value</option>
                   }  
@@ -71,7 +71,7 @@
       <!-- Tipo de Precio -->
       <div>
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._type_of_price' | translate }}</label>
-        <select formControlName="priceType" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+        <select formControlName="priceType" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
           <option value="one time">{{ 'FORMS.PRICE_PLAN_COMPONENT._one_time' | translate }}</option>
           <option value="recurring">{{ 'FORMS.PRICE_PLAN_COMPONENT._recurring' | translate }}</option>
           <option value="recurring-prepaid">{{ 'FORMS.PRICE_PLAN_COMPONENT._recurring_prepaid' | translate }}</option>
@@ -83,7 +83,7 @@
       @if (priceComponentForm.get('priceType')?.value === 'recurring' || priceComponentForm.get('priceType')?.value === 'recurring-prepaid') {
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT.recurring_period' | translate }}</label>
-          <select formControlName="recurringPeriod" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+          <select formControlName="recurringPeriod" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
             <option value="daily">{{ 'FORMS.PRICE_PLAN_COMPONENT._daily' | translate }}</option>
             <option value="weekly">{{ 'FORMS.PRICE_PLAN_COMPONENT._weekly' | translate }}</option>
             <option value="monthly">{{ 'FORMS.PRICE_PLAN_COMPONENT._monthly' | translate }}</option>
@@ -94,14 +94,14 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._unit' | translate }}</label>
           <input formControlName="usageUnit" type="text" placeholder="Ej. GB, CPU, Horas"
-                 class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                 class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
         </div>
       }
 
       <!-- Descuento -->
       <div class="flex items-center mb-4">
         <input type="checkbox" id="showDiscount" [checked]="showDiscount" (click)="showDiscount=!showDiscount"
-               class="w-4 h-4 text-blue-600 border-gray-300 rounded cursor-pointer">
+               class="w-4 h-4 text-blue-600 border-gray-300 rounded cursor-pointer dark:text-gray-100">
         <label class="ml-2 font-medium text-base dark:text-white">
           Does this price component include a discount?
         </label>
@@ -111,8 +111,8 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._add_discount' | translate }}</label>
           <div class="flex space-x-2">
             <input formControlName="discountValue" type="number" placeholder="Cantidad"
-                    class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <select formControlName="discountUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                    class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+            <select formControlName="discountUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
               <option value="percentage">{{ 'FORMS.PRICE_PLAN_COMPONENT._percentage' | translate }}</option>
               <option value="fixed">{{ 'FORMS.PRICE_PLAN_COMPONENT._fixed' | translate }}</option>
             </select>
@@ -124,8 +124,8 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._discount_duration' | translate }}</label>
           <div class="flex space-x-2">
             <input formControlName="discountDuration" type="number" placeholder="Duración"
-                    class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <select formControlName="discountDurationUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+                    class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
+            <select formControlName="discountDurationUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
               <option value="days">{{ 'FORMS.PRICE_PLAN_COMPONENT._days' | translate }}</option>
               <option value="weeks">{{ 'FORMS.PRICE_PLAN_COMPONENT._weeks' | translate }}</option>
               <option value="months">{{ 'FORMS.PRICE_PLAN_COMPONENT._months' | translate }}</option>
@@ -138,7 +138,7 @@
 
       <!-- Botones -->
       <div class="flex justify-end space-x-3">
-        <button type="button" (click)="closeDrawer()" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded">{{ 'FORMS.PRICE_PLAN_COMPONENT._cancel' | translate }}</button>
+        <button type="button" (click)="closeDrawer()" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 dark-text:white rounded">{{ 'FORMS.PRICE_PLAN_COMPONENT._cancel' | translate }}</button>
         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">{{ 'FORMS.PRICE_PLAN_COMPONENT._save' | translate }}</button>
       </div>
     </form>

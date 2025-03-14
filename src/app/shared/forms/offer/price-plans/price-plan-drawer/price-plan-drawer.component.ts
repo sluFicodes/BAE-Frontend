@@ -47,6 +47,9 @@ export class PricePlanDrawerComponent implements OnInit {
 
   ngOnInit() {
     this.initialized = false;
+    console.log('--- PROD PROF ----')
+    console.log(this.formGroup?.get('productProfile')?.value)
+    console.log(' --- --- ')
     setTimeout(() => {
       this.isOpen = true;
       this.initialized = true;
