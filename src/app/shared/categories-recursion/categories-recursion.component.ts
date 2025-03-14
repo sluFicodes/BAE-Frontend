@@ -1,6 +1,8 @@
 import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import {Category} from "../../models/interfaces";
 import {EventMessageService} from "src/app/services/event-message.service";
+import {DatePipe, NgClass} from "@angular/common";
+import {TranslateModule} from "@ngx-translate/core";
 
 @Component({
   selector: 'categories-recursion',
@@ -17,7 +19,7 @@ export class CategoriesRecursionComponent {
     private cdr: ChangeDetectorRef,
     private eventMessage: EventMessageService,
   ) {
-    
+
   }
 
   isCategorySelected(cat:any){
@@ -27,7 +29,7 @@ export class CategoriesRecursionComponent {
         return true;
       } else {
         return false;
-      } 
+      }
     } else {
       return false;
     }

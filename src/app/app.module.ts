@@ -85,6 +85,7 @@ import { UpdatePricePlanComponent } from './pages/seller-offerings/offerings/sel
 import { MultipleSelectComponent } from './shared/multiple-select/multiple-select.component';
 import {CharacteristicComponent} from "./shared/characteristic/characteristic.component";
 import {PricePlanDrawerComponent} from "./shared/price-plan-drawer/price-plan-drawer.component";
+import {OfferComponent} from "./shared/forms/offer/offer.component";
 
 @NgModule({
   declarations: [
@@ -148,8 +149,7 @@ import {PricePlanDrawerComponent} from "./shared/price-plan-drawer/price-plan-dr
     OrganizationDetailsComponent,
     FaqComponent,
     NewPricePlanComponent,
-    UpdatePricePlanComponent,
-    MultipleSelectComponent
+    UpdatePricePlanComponent
   ],
     imports: [
         BrowserModule,
@@ -178,7 +178,8 @@ import {PricePlanDrawerComponent} from "./shared/price-plan-drawer/price-plan-dr
         }),
         MatomoRouterModule,
         CharacteristicComponent,
-        PricePlanDrawerComponent
+        PricePlanDrawerComponent,
+        OfferComponent
     ],
   providers: [
     AppInitService,
@@ -195,6 +196,7 @@ import {PricePlanDrawerComponent} from "./shared/price-plan-drawer/price-plan-dr
     }
   ],
   exports: [
+    CategoriesRecursionComponent
   ],
   bootstrap: [AppComponent]
 })

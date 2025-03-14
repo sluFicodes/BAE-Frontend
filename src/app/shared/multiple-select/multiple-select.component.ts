@@ -1,8 +1,15 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {NgClass, NgIf, NgFor} from "@angular/common";
 import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'multiple-select',
+  standalone: true,
+  imports: [
+    NgIf,
+    NgClass,
+    NgFor
+  ],
   templateUrl: './multiple-select.component.html',
   styleUrl: './multiple-select.component.css'
 })

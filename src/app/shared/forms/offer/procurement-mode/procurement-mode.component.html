@@ -1,0 +1,10 @@
+<p class="mb-3 text-gray-500 dark:text-gray-400">Define which parts of the procurement/activation process will be performed automatically and which ones will be performed manually by the provider</p>
+
+<div class="flex flex-row">
+    <select id="procurement" (change)="changeProcurement($event)"
+    class="mb-2 mr-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        @for(mode of procurementModes; track mode){
+            <option value="{{mode.id}}">{{mode.name}}</option>
+        }
+    </select>
+</div>

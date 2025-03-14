@@ -23,7 +23,10 @@
         </nav>
     </div>
   <!-- End Breadcrumb -->
-  <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
+
+  <app-offer-form [partyId]="partyId" [formType]="'create'"></app-offer-form>
+
+  <!--<div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
     <h2 class="text-3xl font-bold text-primary-100 dark:text-white ml-4">{{ 'CREATE_OFFER._new' | translate }}</h2>
     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
     <div class="md:grid md:grid-cols-25/75 xl:grid-cols-20/80">
@@ -97,7 +100,7 @@
                 </span>
             </button>
             <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-            <!--<button id="sla" (click)="toggleSLA()" [disabled]="!slaDone" class="grid grid-cols-20/80 mb-2">
+            <button id="sla" (click)="toggleSLA()" [disabled]="!slaDone" class="grid grid-cols-20/80 mb-2">
                 <span id="sla-circle" class="flex items-center justify-center w-8 h-8 border border-2 border-gray-400 rounded-full shrink-0">
                     7
                 </span>
@@ -106,7 +109,7 @@
                     <p class="flex text-xs justify-start">{{ 'CREATE_OFFER._sla_info' | translate }}</p>
                 </span>
             </button>
-            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">-->
+            <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
             <button id="price" (click)="togglePrice()" [disabled]="!priceDone"
             class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                 <span id="price-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
@@ -150,7 +153,7 @@
                     <p class="hidden xl:flex text-xs sm:text-center md:text-start">{{ 'CREATE_OFFER._summary' | translate }}</p>
                 </span>
             </button>
-            
+
         </div>
         <div>
 
@@ -161,7 +164,7 @@
                         <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._name' | translate }}</label>
                         <input formControlName="name" type="text" id="prod-name" maxLength="100"
                         [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
-                        class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />                    
+                        class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                     </div>
                     <div>
                         <label for="prod-version" class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._version' | translate }}</label>
@@ -178,63 +181,63 @@
                                         class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h4.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0-7H6m2 7h6.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0 0H6"/>
-                                        </svg>                                          
+                                        </svg>
                                         <span class="sr-only">Bold</span>
                                     </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addItalic()" type="button"
                                         class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.874 19 6.143-14M6 19h6.33m-.66-14H18"/>
-                                        </svg>                                                                                 
+                                        </svg>
                                         <span class="sr-only">Italic</span>
                                     </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addList()" type="button"
                                         class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
-                                        </svg>                                          
+                                        </svg>
                                         <span class="sr-only">Add list</span>
                                     </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addOrderedList()" type="button"
                                         class="hidden lg:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
-                                        </svg>                                          
+                                        </svg>
                                         <span class="sr-only">Add ordered list</span>
                                     </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addBlockquote()" type="button"
                                         class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
-                                        </svg>                                         
+                                        </svg>
                                         <span class="sr-only">Add blockquote</span>
                                     </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addTable()" type="button"
                                         class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
-                                        </svg>                                         
+                                        </svg>
                                         <span class="sr-only">Add table</span>
-                                    </button>                                 
+                                    </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCode()" type="button"
                                         class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
-                                        </svg>                                        
+                                        </svg>
                                         <span class="sr-only">Add code</span>
                                     </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCodeBlock()" type="button"
                                         class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-                                          </svg>                                                                                  
+                                          </svg>
                                         <span class="sr-only">Add code block</span>
                                     </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addLink()" type="button"
                                         class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                         <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
-                                        </svg>                                                                                
+                                        </svg>
                                         <span class="sr-only">Add link</span>
                                     </button>
                                     <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button"
@@ -251,7 +254,7 @@
                                     <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
                                     <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                                   </svg>
-                                  
+
                                 <span class="sr-only">{{ 'CREATE_CATALOG._preview' | translate }}</span>
                             </button>
                             <div id="tooltip-fullscreen" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
@@ -263,14 +266,14 @@
                             <label for="editor" class="sr-only">Publish post</label>
                             @if(showPreview){
                                     <markdown class="bg-gray-50 text-wrap break-all dark:bg-secondary-300 dark:text-white text-gray-900" [data]="description"></markdown>
-                                
+
                             }@else{
                                 <textarea id="editor" formControlName="description" rows="8" class="block w-full min-h-fit px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
                             }
                             @if(showEmoji){
                                 <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
-                            }                    
-                            
+                            }
+
                         </div>
                     </div>
 
@@ -322,9 +325,9 @@
                                         {{ 'OFFERINGS._no_offerings' | translate }}
                                     </div>
                                 </div>
-                            </div>                    
+                            </div>
                         }@else{
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4 dark:bg-secondary-300">                        
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4 dark:bg-secondary-300">
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -370,7 +373,7 @@
                                             }
                                         </td>
                                         <td class="hidden lg:table-cell px-6 py-4">
-                                            {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                            {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}}
                                         </td>
                                         <td class="px-6 py-4">
                                             <input id="select-checkbox" [checked]="isProdInBundle(prod)" type="checkbox" value="" (click)="addProdToBundle(prod)" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -386,7 +389,7 @@
                                             {{ 'CREATE_OFFER._no_offer' | translate }}
                                           </div>
                                         </div>
-                                    </div>                          
+                                    </div>
                                 }
                             </tbody>
                         </table>
@@ -437,7 +440,7 @@
                               {{ 'CREATE_OFFER._no_prod_spec' | translate }}
                           </div>
                         </div>
-                    </div>                    
+                    </div>
                 } @else{
                     @if(loadingProdSpec){
                         <div role="status" class="w-full h-fit flex justify-center align-middle">
@@ -458,9 +461,9 @@
                                         {{ 'OFFERINGS._no_prod' | translate }}
                                     </div>
                                 </div>
-                            </div>                    
+                            </div>
                         }@else{
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4 mb-4">                        
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4 mb-4">
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                     <tr>
@@ -480,7 +483,7 @@
                                 </thead>
                                 <tbody>
                                     @for (prod of prodSpecs; track prod) {
-                                        <tr class="border-b hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-secondary-200" (click)="selectProdSpec(prod)" 
+                                        <tr class="border-b hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-secondary-200" (click)="selectProdSpec(prod)"
                                             [ngClass]="prod.id == selectedProdSpec.id ? 'bg-gray-300 dark:bg-secondary-200' : 'bg-white dark:bg-secondary-300'">
                                             <td class="px-6 py-4 text-wrap break-all">
                                                 {{prod.name}}
@@ -504,7 +507,7 @@
                                                 }
                                             </td>
                                             <td class="hidden md:table-cell px-6 py-4">
-                                                {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                                {{prod.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}}
                                             </td>
                                         </tr>
                                     }
@@ -566,9 +569,9 @@
                                     {{ 'OFFERINGS._no_cat' | translate }}
                                 </div>
                             </div>
-                        </div>                    
+                        </div>
                     }@else{
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">                        
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -585,7 +588,7 @@
                             </thead>
                             <tbody>
                                 @for (cat of catalogs; track cat) {
-                                    <tr class="border-b hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-secondary-200" (click)="selectCatalog(cat)" 
+                                    <tr class="border-b hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-secondary-200" (click)="selectCatalog(cat)"
                                         [ngClass]="cat.id == selectedCatalog.id ? 'bg-gray-300 dark:bg-secondary-200' : 'bg-white dark:bg-secondary-300'">
                                         <td class="px-6 py-4 text-wrap break-all">
                                             {{cat.name}}
@@ -639,7 +642,7 @@
                         </svg>
                     </button>
                 </div>
-                </div>                
+                </div>
             }
             @if(showCategory){
                 <h2 class="text-3xl font-bold text-primary-100 ml-4 dark:text-white">{{ 'CREATE_OFFER._category' | translate }}</h2>
@@ -652,7 +655,7 @@
                                 </svg>
                                 <span class="sr-only">Loading...</span>
                             </div>
-                        } @else {   
+                        } @else {
                             @if(categories.length==0){
                                 <div class="flex justify-center w-full m-4">
                                     <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50 dark:bg-secondary-200 dark:text-primary-50" role="alert">
@@ -663,9 +666,9 @@
                                             {{ 'OFFERINGS._no_categories' | translate }}
                                         </div>
                                     </div>
-                                </div>                    
+                                </div>
                             }@else{
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">               
+                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mt-4">
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                     <tr class="flex w-full justify-between">
@@ -687,7 +690,7 @@
                                                 <b>{{cat.name}}</b>
                                             </td>
                                             <td class="hidden md:flex px-6 py-4 w-fit">
-                                                {{cat.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                                {{cat.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}}
                                             </td>
                                             <td class="flex px-6 py-4 w-fit justify-end">
                                                 <input id="select-checkbox" [checked]="isCategorySelected(cat)" type="checkbox" value="" (click)="addCategory(cat)" class="flex w-4 h-4 justify-end text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -715,7 +718,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                                 </svg>
                             </button>
-                        </div>                  
+                        </div>
                 </div>
             }
             @if(showLicense){
@@ -738,63 +741,63 @@
                                                     class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h4.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0-7H6m2 7h6.5a3.5 3.5 0 1 1 0 7H8m0-7v7m0 0H6"/>
-                                                    </svg>                                          
+                                                    </svg>
                                                     <span class="sr-only">Bold</span>
                                                 </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addItalic()" type="button"
                                                     class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8.874 19 6.143-14M6 19h6.33m-.66-14H18"/>
-                                                    </svg>                                                                                 
+                                                    </svg>
                                                     <span class="sr-only">Italic</span>
                                                 </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addList()" type="button"
                                                     class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
-                                                    </svg>                                          
+                                                    </svg>
                                                     <span class="sr-only">Add list</span>
                                                 </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addOrderedList()" type="button"
                                                     class="hidden lg:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6h8m-8 6h8m-8 6h8M4 16a2 2 0 1 1 3.321 1.5L4 20h5M4 5l2-1v6m-2 0h4"/>
-                                                    </svg>                                          
+                                                    </svg>
                                                     <span class="sr-only">Add ordered list</span>
                                                 </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addBlockquote()" type="button"
                                                     class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                                         <path fill-rule="evenodd" d="M5 6a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm0 12a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1Zm1.65-9.76A1 1 0 0 0 5 9v6a1 1 0 0 0 1.65.76l3.5-3a1 1 0 0 0 0-1.52l-3.5-3ZM12 10a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h5a1 1 0 1 1 0 2h-5a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
-                                                    </svg>                                         
+                                                    </svg>
                                                     <span class="sr-only">Add blockquote</span>
                                                 </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addTable()" type="button"
                                                     class="p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-width="2" d="M3 11h18m-9 0v8m-8 0h16a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z"/>
-                                                    </svg>                                         
+                                                    </svg>
                                                     <span class="sr-only">Add table</span>
-                                                </button>                                 
+                                                </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCode()" type="button"
                                                     class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14"/>
-                                                    </svg>                                        
+                                                    </svg>
                                                     <span class="sr-only">Add code</span>
                                                 </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addCodeBlock()" type="button"
                                                     class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m5 4-2 2 2 2m4-4 2 2-2 2m5-12v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-                                                      </svg>                                                                                  
+                                                      </svg>
                                                     <span class="sr-only">Add code block</span>
                                                 </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="addLink()" type="button"
                                                     class="hidden md:block p-2 rounded hover:text-gray-900 hover:bg-gray-100">
                                                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.213 9.787a3.391 3.391 0 0 0-4.795 0l-3.425 3.426a3.39 3.39 0 0 0 4.795 4.794l.321-.304m-.321-4.49a3.39 3.39 0 0 0 4.795 0l3.424-3.426a3.39 3.39 0 0 0-4.794-4.795l-1.028.961"/>
-                                                    </svg>                                                                                
+                                                    </svg>
                                                     <span class="sr-only">Add link</span>
                                                 </button>
                                                 <button [disabled]="showPreview" [ngClass]="showPreview ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" (click)="showEmoji=!showEmoji;$event.stopPropagation();" type="button"
@@ -811,7 +814,7 @@
                                                 <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z"/>
                                                 <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
                                               </svg>
-                                              
+
                                             <span class="sr-only">{{ 'CREATE_CATALOG._preview' | translate }}</span>
                                         </button>
                                         <div id="tooltip-fullscreen" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip">
@@ -823,21 +826,21 @@
                                         <label for="editor" class="sr-only">Publish post</label>
                                         @if(showPreview){
                                                 <markdown class="bg-gray-50 text-wrap break-all dark:bg-secondary-300 dark:text-white text-gray-900" [data]="licenseDescription"></markdown>
-                                            
+
                                         }@else{
                                             <textarea id="editor" formControlName="description" rows="8" class="block w-full min-h-fit px-0 text-sm text-gray-800 dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
                                         }
                                         @if(showEmoji){
                                             <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
-                                        }                    
-                                        
+                                        }
+
                                     </div>
                                 </div>
-                            
+
                             </form>
                             <div class="flex w-full justify-items-center justify-center ml-4 mt-4">
                                 <button type="button" (click)="clearLicense()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                                    {{ 'CREATE_OFFER._cancel' | translate }}                        
+                                    {{ 'CREATE_OFFER._cancel' | translate }}
                                 </button>
                             </div>
                         </div>
@@ -846,8 +849,8 @@
                             <button type="button" (click)="freeLicenseSelected=!freeLicenseSelected" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                                 {{ 'CREATE_OFFER._create_license' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>  
-                                </svg>                         
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+                                </svg>
                             </button>
                         </div>
                     }
@@ -876,7 +879,7 @@
                           </div>
                         </div>
                     } @else {
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                                     <tr>
@@ -916,8 +919,8 @@
                                                 <button (click)="removeSLA(sla)" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                                     <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
-                                                    </svg>                                                                                                
-                                                </button>  
+                                                    </svg>
+                                                </button>
                                             </td>
                                         </tr>
                                     }
@@ -931,15 +934,15 @@
                                 {{ 'CREATE_OFFER._new_metric' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-                                </svg>                         
+                                </svg>
                             </button>
                         </div>
                     }
                     @if(showCreateSLA){
                         <select id="type" (change)="onSLAChange($event)" class="ml-4 mt-4 shadow bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                             @for(avSLA of availableSLAs; track avSLA){
-                                <option value="{{avSLA}}">{{avSLA}}</option>  
-                            }                              
+                                <option value="{{avSLA}}">{{avSLA}}</option>
+                            }
                         </select>
                         @if(updatesSelected){
                             <div class="flex m-4">
@@ -949,10 +952,10 @@
                                     <select id="type" (change)="onSLAMetricChange($event)" class="bg-white border-r border-gray-300 0text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
                                         <option value="day">Day</option>
                                         <option value="week">Week</option>
-                                        <option value="month">Month</option>                             
+                                        <option value="month">Month</option>
                                     </select>
                                 </div>
-                            </div>                            
+                            </div>
                         }
                         @if(responseSelected){
                             <div class="flex m-4">
@@ -962,7 +965,7 @@
                                     <select id="type" (change)="onSLAMetricChange($event)" class="bg-white border-r border-gray-300 0text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
                                         <option value="ms">Ms</option>
                                         <option value="s">S</option>
-                                        <option value="min">Min</option>                             
+                                        <option value="min">Min</option>
                                     </select>
                                 </div>
                             </div>
@@ -975,18 +978,18 @@
                                     <select id="type" (change)="onSLAMetricChange($event)" class="bg-white border-r border-gray-300 0text-gray-90 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-1/4 p-2.5">
                                         <option value="ms">Ms</option>
                                         <option value="s">S</option>
-                                        <option value="min">Min</option>                             
+                                        <option value="min">Min</option>
                                     </select>
                                 </div>
-                            </div>                            
+                            </div>
                         }
                         <div class="flex w-full justify-items-center justify-center ml-4">
                             <button type="button" (click)="addSLA()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                                 {{ 'CREATE_OFFER._add_metric' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
-                                </svg>                         
-                            </button> 
+                                </svg>
+                            </button>
                         </div>
                     }
                 <div class="flex w-full justify-items-end justify-end m-4">
@@ -1011,9 +1014,9 @@
                               {{ 'CREATE_OFFER._no_prices' | translate }}
                           </div>
                         </div>
-                    </div>                    
+                    </div>
                 }@else{
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">                        
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white m-4">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -1041,13 +1044,13 @@
                                             <button (click)="removePrice(price)" type="button" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                                 <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/>
-                                                </svg>                                                                                                
+                                                </svg>
                                             </button>
                                             <button type="button" (click)="showEditPrice(price)"  class="ml-2 text-white bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center me-2">
                                                 <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                                     <path fill-rule="evenodd" d="M14 4.182A4.136 4.136 0 0 1 16.9 3c1.087 0 2.13.425 2.899 1.182A4.01 4.01 0 0 1 21 7.037c0 1.068-.43 2.092-1.194 2.849L18.5 11.214l-5.8-5.71 1.287-1.31.012-.012Zm-2.717 2.763L6.186 12.13l2.175 2.141 5.063-5.218-2.141-2.108Zm-6.25 6.886-1.98 5.849a.992.992 0 0 0 .245 1.026 1.03 1.03 0 0 0 1.043.242L10.282 19l-5.25-5.168Zm6.954 4.01 5.096-5.186-2.218-2.183-5.063 5.218 2.185 2.15Z" clip-rule="evenodd"/>
                                                 </svg>
-                                            </button> 
+                                            </button>
                                         </td>
                                     </tr>
                                 }
@@ -1055,20 +1058,20 @@
                         </table>
                     </div>
                 }
-                <!--<div class="col-span-2 flex align-items-middle h-fit m-4">
+                <div class="col-span-2 flex align-items-middle h-fit m-4">
                     <label for="prod-brand" class="font-bold text-lg">{{ 'CREATE_OFFER._is_free_price' | translate }}</label>
                     <label class="inline-flex items-center me-5 cursor-pointer ml-4">
                         <input type="checkbox" (change)="toggleOpenPrice=!toggleOpenPrice" value="" class="sr-only peer">
                         <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
                     </label>
-                </div>-->
+                </div>
                 @if(!showCreatePrice){
                     <div class="flex w-full justify-items-center justify-center ml-4">
                         <button type="button" (click)="showNewPrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                             {{ 'CREATE_OFFER._new_price' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-                            </svg>                         
+                            </svg>
                         </button>
                     </div>
                 }
@@ -1094,7 +1097,7 @@
                 <div class="flex flex-row">
                     <select id="procurement" (change)="changeProcurement($event)"
                     class="mb-2 mr-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        @for(mode of procurementModes; track mode){                          
+                        @for(mode of procurementModes; track mode){
                             <option value="{{mode.id}}">{{mode.name}}</option>
                         }
                     </select>
@@ -1138,7 +1141,7 @@
                         <option value="Luxembourg">Luxembourg</option>
                         <option value="Poland">Poland</option>
                         <option value="Romania">Romania</option>
-                        <option value="Spain">Spain</option>                      
+                        <option value="Spain">Spain</option>
                     </select>
                     <select id="type" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option selected>Marketplaces</option>
@@ -1147,7 +1150,7 @@
                         <option value="CSI Piemonte">CSI Piemonte</option>
                         <option value="digitanimal">digitanimal</option>
                         <option value="Digitel TS">Digitel TS</option>
-                        <option value="DOME">DOME</option>                                       
+                        <option value="DOME">DOME</option>
                     </select>
                 </div>
                 <h3 class="font-bold text-black dark:text-white mt-4">Exceptions</h3>
@@ -1164,7 +1167,7 @@
                         <option value="Luxembourg">Luxembourg</option>
                         <option value="Poland">Poland</option>
                         <option value="Romania">Romania</option>
-                        <option value="Spain">Spain</option>                      
+                        <option value="Spain">Spain</option>
                     </select>
                     <select id="type" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option selected>Marketplaces</option>
@@ -1173,7 +1176,7 @@
                         <option value="CSI Piemonte">CSI Piemonte</option>
                         <option value="digitanimal">digitanimal</option>
                         <option value="Digitel TS">Digitel TS</option>
-                        <option value="DOME">DOME</option>                                       
+                        <option value="DOME">DOME</option>
                     </select>
                 </div>
                 <div class="border border-gray-500 p-4 rounded-md w-full dark:text-gray-400">
@@ -1193,9 +1196,9 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex items-center me-4">
                             <input id="inline-checked-radio" type="radio" value="" name="visibility-buttons" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="inline-checked-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Authenticated customers from companies incorporated in specific countries:</label>    
+                            <label for="inline-checked-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Authenticated customers from companies incorporated in specific countries:</label>
                         </div>
-                        <select id="type"  
+                        <select id="type"
                         class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <option selected>Member States</option>
                         <option value="Austria">Austria</option>
@@ -1206,7 +1209,7 @@
                         <option value="Luxembourg">Luxembourg</option>
                         <option value="Poland">Poland</option>
                         <option value="Romania">Romania</option>
-                        <option value="Spain">Spain</option>                      
+                        <option value="Spain">Spain</option>
                         </select>
                     </div>
                 </div>
@@ -1237,7 +1240,7 @@
                             </label>
                         </div>
                     </div>
-                    
+
                     <div class="mb-4">
                         <label class="font-bold text-lg mr-4 dark:text-white">{{ 'CREATE_OFFER._status' | translate }}</label>
                         @if(offerToCreate?.lifecycleStatus == 'Active'){
@@ -1253,14 +1256,14 @@
 
                     @if(offerToCreate?.description !=''){
                         <label class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._description' | translate }}</label>
-                        <div class="px-4 py-2 bg-white rounded-lg p-4 mb-4 dark:bg-secondary-300 dark:text-white border dark:border-secondary-200">                                
+                        <div class="px-4 py-2 bg-white rounded-lg p-4 mb-4 dark:bg-secondary-300 dark:text-white border dark:border-secondary-200">
                             <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="offerToCreate?.description"></markdown>
                         </div>
                     }
 
                     @if(offersBundle.length>0){
                         <label class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._bundle' | translate }}</label>
-                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
+                        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                     <tr>
@@ -1293,11 +1296,11 @@
                                     }
                                 </tbody>
                             </table>
-                        </div>  
+                        </div>
                     }
-                
+
                     <label class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._catalog' | translate }}</label>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                             <tr>
@@ -1312,7 +1315,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>                       
+                        <tbody>
                             <tr class="border-b hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
                                 <td class="px-6 py-4 text-wrap break-all">
                                     {{selectedCatalog.name}}
@@ -1337,7 +1340,7 @@
                 </div>
                 @if(selectedCategories.length>0){
                     <h2 class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._category' | translate }}</h2>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">   
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -1356,17 +1359,17 @@
                                             {{cat.name}}
                                         </td>
                                         <td class="hidden md:table-cell px-6 py-4">
-                                            {{cat.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                            {{cat.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}}
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                    </div>                
+                    </div>
                 }
                 @if(createdPrices.length>0){
                     <h2 class="font-bold text-lg dark:text-white">{{ 'CREATE_OFFER._price_plans' | translate }}</h2>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -1395,7 +1398,7 @@
                 }
                 @if(createdSLAs.length>0){
                     <h2 class="font-bold text-lg">{{ 'CREATE_OFFER._sla' | translate }}</h2>
-                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">                        
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full bg-white mb-4">
                         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-200">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-secondary-200 dark:text-white">
                                 <tr>
@@ -1443,7 +1446,7 @@
                         </label>
                         @if(createdLicense.description!==''){
                             <label class="font-bold text-base dark:text-white">{{ 'CREATE_OFFER._description' | translate }}</label>
-                            <div class="px-4 py-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white rounded-lg p-4"> 
+                            <div class="px-4 py-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white rounded-lg p-4">
                                 <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="createdLicense.description"></markdown>
                             </div>
                         }
@@ -1461,7 +1464,7 @@
             }
         </div>
     </div>
-</div>
+</div> -->
 
 
 @if(showError){
