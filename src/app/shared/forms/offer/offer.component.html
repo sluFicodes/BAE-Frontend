@@ -8,7 +8,8 @@
   <form [formGroup]="productOfferForm">
     <ol class="flex items-start w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400">
       @for (step of steps; track i; let i = $index) {
-        <li (click)="goToStep(i)"
+        <li 
+            (click)="(formType !== 'create' || i < currentStep) && goToStep(i)"
             [class.text-primary-100]="currentStep === i"
             class="flex-1 cursor-pointer">
           <span class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 mx-auto border-2 border-primary-100 dark:border-primary-50 shrink-0 rounded-full"
