@@ -34,6 +34,7 @@ export class PriceComponentDrawerComponent implements OnInit {
   selectedCharacteristic:any=undefined;
   touchedCharCheck:boolean=false;
   selectedCharacteristicVal:any;
+  showDiscount:boolean=false;
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef,) {}
 
@@ -68,6 +69,9 @@ export class PriceComponentDrawerComponent implements OnInit {
         console.log('---hola')
         this.showValueSelect=true
       }*/
+     if(this.priceComponentForm.get('discountValue')?.value != null){
+      this.showDiscount=true;
+     }
     }
   }
 

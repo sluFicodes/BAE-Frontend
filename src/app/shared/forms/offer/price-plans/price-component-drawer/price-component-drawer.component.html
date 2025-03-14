@@ -99,32 +99,42 @@
       }
 
       <!-- Descuento -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._add_discount' | translate }}</label>
-        <div class="flex space-x-2">
-          <input formControlName="discountValue" type="number" placeholder="Cantidad"
-                  class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-          <select formControlName="discountUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <option value="percentage">{{ 'FORMS.PRICE_PLAN_COMPONENT._percentage' | translate }}</option>
-            <option value="fixed">{{ 'FORMS.PRICE_PLAN_COMPONENT._fixed' | translate }}</option>
-          </select>
-        </div>
+      <div class="flex items-center mb-4">
+        <input type="checkbox" id="showDiscount" [checked]="showDiscount" (click)="showDiscount=!showDiscount"
+               class="w-4 h-4 text-blue-600 border-gray-300 rounded cursor-pointer">
+        <label class="ml-2 font-medium text-base dark:text-white">
+          Does this price component include a discount?
+        </label>
       </div>
+      @if(showDiscount){
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._add_discount' | translate }}</label>
+          <div class="flex space-x-2">
+            <input formControlName="discountValue" type="number" placeholder="Cantidad"
+                    class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <select formControlName="discountUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+              <option value="percentage">{{ 'FORMS.PRICE_PLAN_COMPONENT._percentage' | translate }}</option>
+              <option value="fixed">{{ 'FORMS.PRICE_PLAN_COMPONENT._fixed' | translate }}</option>
+            </select>
+          </div>
+        </div>
+  
+        <!-- Duración del Descuento -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._discount_duration' | translate }}</label>
+          <div class="flex space-x-2">
+            <input formControlName="discountDuration" type="number" placeholder="Duración"
+                    class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <select formControlName="discountDurationUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
+              <option value="days">{{ 'FORMS.PRICE_PLAN_COMPONENT._days' | translate }}</option>
+              <option value="weeks">{{ 'FORMS.PRICE_PLAN_COMPONENT._weeks' | translate }}</option>
+              <option value="months">{{ 'FORMS.PRICE_PLAN_COMPONENT._months' | translate }}</option>
+              <option value="years">{{ 'FORMS.PRICE_PLAN_COMPONENT._years' | translate }}</option>
+            </select>
+          </div>
+        </div>
+      }
 
-      <!-- Duración del Descuento -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT._discount_duration' | translate }}</label>
-        <div class="flex space-x-2">
-          <input formControlName="discountDuration" type="number" placeholder="Duración"
-                  class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-          <select formControlName="discountDurationUnit" class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <option value="days">{{ 'FORMS.PRICE_PLAN_COMPONENT._days' | translate }}</option>
-            <option value="weeks">{{ 'FORMS.PRICE_PLAN_COMPONENT._weeks' | translate }}</option>
-            <option value="months">{{ 'FORMS.PRICE_PLAN_COMPONENT._months' | translate }}</option>
-            <option value="years">{{ 'FORMS.PRICE_PLAN_COMPONENT._years' | translate }}</option>
-          </select>
-        </div>
-      </div>
 
       <!-- Botones -->
       <div class="flex justify-end space-x-3">
