@@ -187,10 +187,15 @@ export class PricePlanDrawerComponent implements OnInit {
   }
 
   getProcessedProfileData() {
-    return this.formGroup?.get('prodSpecCharValueUse')?.value?.map((char: any) => ({
-      ...char,
-      selectedValue: char.productSpecCharacteristicValue?.find((v: any) => v.isDefault) || null
-    })) || [];
+    if(this.formGroup?.get('prodSpecCharValueUse')?.value){
+      return this.formGroup?.get('prodSpecCharValueUse')?.value?.map((char: any) => ({
+        ...char,
+        selectedValue: char.productSpecCharacteristicValue?.find((v: any) => v.isDefault) || null
+      })) || [];
+    } else {
+      return this.formGroup?.get('productProfile')?.value?.selectedValues;
+    }
+
   }
 
   getProfileData() {

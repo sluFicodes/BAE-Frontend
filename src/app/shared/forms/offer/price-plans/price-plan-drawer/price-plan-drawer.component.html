@@ -61,7 +61,7 @@
               {{ 'FORMS.PRICE_PLANS._config_profile' | translate }}
             </h3>
           @if(!checkPriceCompChars()){
-          @if ((formGroup?.get('prodSpecCharValueUse')?.value?.length > 0) || (formGroup?.get('productProfile')?.value?.length > 0)){      
+          @if ((formGroup?.get('prodSpecCharValueUse')?.value?.length > 0) || (formGroup?.get('productProfile')?.value?.selectedValues.length > 0)){      
             <div class="overflow-x-auto">
               <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
@@ -75,8 +75,12 @@
                   <td class="px-4 py-1">{{ char.name }}</td>
                   <td class="px-4 py-1">
                     @if (char.selectedValue) {
-                      {{ char.selectedValue.value }}
-                      {{ char.selectedValue.unitOfMeasure || '' }}
+                      @if(char.selectedValue.value){
+                        {{ char.selectedValue.value }}
+                        {{ char.selectedValue.unitOfMeasure || '' }}
+                      } @else {
+                        {{ char.selectedValue }}
+                      }
                     } @else {
                       {{ 'FORMS.PRICE_PLANS._no_value_selected' | translate }}
                     }
