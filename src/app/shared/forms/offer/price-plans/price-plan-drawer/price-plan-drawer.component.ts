@@ -193,17 +193,40 @@ export class PricePlanDrawerComponent implements OnInit {
         selectedValue: char.productSpecCharacteristicValue?.find((v: any) => v.isDefault) || null
       })) || [];
     } else {
-      return this.formGroup?.get('productProfile')?.value?.selectedValues;
+      return this.formGroup?.get('productProfile')?.value?.selectedValues
     }
 
   }
+
+  updateIsDefault(profileData: any[], selectedValues: any[]) {
+    return profileData.map((char) => {
+      // Find the selected value for the current characteristic
+      const selectedChar = selectedValues.find((sel) => sel.id === char.id);
+  
+      if (selectedChar) {
+        return {
+          ...char,
+          productSpecCharacteristicValue: char.productSpecCharacteristicValue.map((opt: any) => ({
+            ...opt,
+            isDefault: opt.value === selectedChar.selectedValue, // Set isDefault to true if it matches
+          })),
+        };
+      }
+      return char;
+    });
+  }
+  
 
   getProfileData() {
     let profileData = this.formGroup?.get('prodSpecCharValueUse')?.value;
 
     if (!profileData || profileData.length === 0) {
       // If no profile, chars come from prodSpec
-      profileData = this.prodSpec?.productSpecCharacteristic || [];
+      if(this.formGroup?.get('productProfile')?.value?.selectedValues.length >0){
+        profileData = this.updateIsDefault(this.prodSpec?.productSpecCharacteristic,this.formGroup?.get('productProfile')?.value?.selectedValues)
+      } else {
+        profileData = this.prodSpec?.productSpecCharacteristic || [];
+      }      
     }
 
     return profileData;

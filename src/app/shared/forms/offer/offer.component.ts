@@ -203,8 +203,9 @@ export class OfferComponent implements OnInit{
         })
         priceInfo.priceComponents=relatedPrices;
       }
+      console.log('price components---')
       console.log(relatedPrices)
-      if(pricePlan.bundledPopRelationship){      
+      if(pricePlan.bundledPopRelationship){  
       for(let i=0;i<pricePlan.bundledPopRelationship.length;i++){
         let data = await this.api.getOfferingPrice(pricePlan.bundledPopRelationship[i].id)
           let priceComp:any = {
@@ -241,24 +242,25 @@ export class OfferComponent implements OnInit{
               priceComp.discountUnit=alter?.price?.unit
             }            
             priceComp.discountDuration = alter?.unitOfMeasure?.amount            
-            priceComp.discountDurationUnit = alter?.unitOfMeasure?.units
-            relatedPrices.push(priceComp)
+            priceComp.discountDurationUnit = alter?.unitOfMeasure?.units            
             //priceComp.discountDurationUnit=alter?.
             //priceComp.discountDuration=this.calculateDiscountDuration(alter?.validFor,alter?.)
           }
+          relatedPrices.push(priceComp)
       }
       priceInfo.priceComponents=relatedPrices;
+      console.log(priceInfo)
       }
       if(pricePlan.priceType=='usage'){
         priceInfo.usageUnit=pricePlan.unitOfMeasure.units
       }
-      console.log('info del price plan recogido----')
-      console.log(priceInfo)
+
       if(pricePlan.priceType=='recurring' || pricePlan.priceType=='recurring-prepaid'){
         priceInfo.recurringPeriod=pricePlan.recurringChargePeriodType
       }
 
       this.pricePlans.push(priceInfo);
+      console.log(this.pricePlans)
      }
      console.log('Price Plans existentes: ', this.pricePlans);
 
