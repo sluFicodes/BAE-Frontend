@@ -1,1 +1,33 @@
-<p>price-plans works!</p>
+<div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+  <h2 class="text-xl font-semibold text-secondary-100 dark:text-white">{{ 'FORMS.PRICE_PLANS._price_plans' | translate }}</h2>
+
+  <!-- Price Plans Table -->
+  <app-price-plans-table
+    [pricePlans]="pricePlans"
+    (edit)="editPricePlan($event)"
+    (delete)="removePricePlan($event)">
+  </app-price-plans-table>
+
+  <!-- Add Price Plan Button -->
+  <button type="button" (click)="openPricePlanDrawer()"
+          class="mt-2 px-4 py-2 flex items-center justify-center text-base font-medium bg-secondary-50 dark:bg-secondary-100 text-primary-100 dark:text-primary-50 rounded">
+    <svg class="min-w-4 w-4 h-4 md:mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <path fill="currentColor"
+            d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24
+            24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64
+            0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>
+    </svg>
+    <span class="hidden md:block">{{ 'FORMS.PRICE_PLANS._add' | translate }}</span>
+  </button>
+</div>
+
+<!-- Price Plan Drawer -->
+@if (showDrawer) {
+  <app-price-plan-drawer
+    [formGroup]="selectedPricePlan"
+    [prodSpec]="prodSpec"
+    [action]="action"
+    (save)="savePricePlan($event)"
+    (close)="showDrawer = false">
+  </app-price-plan-drawer>
+}

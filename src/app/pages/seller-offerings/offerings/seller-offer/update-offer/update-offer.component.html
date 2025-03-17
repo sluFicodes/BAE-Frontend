@@ -28,7 +28,7 @@
 
 
 
-  <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
+  <!--<div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-8 rounded-lg">
     <h2 class="text-3xl font-bold text-primary-100 dark:text-white ml-4">{{ 'UPDATE_OFFER._update' | translate }}</h2>
     <hr class="h-px m-4 bg-gray-300 dark:bg-gray-200 border-0">
     <div class="md:grid md:grid-cols-25/75 xl:grid-cols-20/80">
@@ -706,7 +706,7 @@
                                             <input id="select-checkbox" [checked]="isCategorySelected(cat)" type="checkbox" value="" (click)="addCategory(cat)" class="flex w-4 h-4 justify-end text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                         </td>
                                     </tr>
-                                    <!--@if(cat.children.length>0){
+                                    @if(cat.children.length>0){
                                         @for(child of cat.children; track child){
                                             <tr class="hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
                                                 <td colspan=3>
@@ -714,7 +714,7 @@
                                                 </td>
                                             </tr>
                                         }
-                                    }-->
+                                    }
                                 } @empty {
                                     <div class="flex justify-center w-full m-4">
                                         <div class="flex w-full items-center p-4 text-sm text-primary-100 rounded-lg bg-blue-50 dark:bg-secondary-200 dark:text-primary-50" role="alert">
@@ -1078,13 +1078,13 @@
                         </table>
                     </div>
                 }
-                <!--<div class="col-span-2 flex align-items-middle h-fit m-4">
+                <div class="col-span-2 flex align-items-middle h-fit m-4">
                     <label for="prod-brand" class="font-bold text-lg">{{ 'UPDATE_OFFER._is_free_price' | translate }}</label>
                     <label class="inline-flex items-center me-5 cursor-pointer ml-4">
                         <input type="checkbox" (change)="toggleOpenPrice=!toggleOpenPrice" value="" class="sr-only peer">
                         <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary-100 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-100"></div>
                     </label>
-                </div>-->
+                </div>
                 @if(!showCreatePrice){
                     <div class="flex w-full justify-items-center justify-center ml-4">
                         <button type="button" (click)="showNewPrice()" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
@@ -1151,16 +1151,56 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mt-4">
-                    <multiple-select [options]="availableCountries"></multiple-select>
-                    <multiple-select [options]="availableMarketplaces"></multiple-select>
+                    <select id="type"
+                     class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option selected>Member States</option>
+                        <option value="Austria">Austria</option>
+                        <option value="Belgium">Belgium</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Hungary">Hungary</option>
+                        <option value="Italy">Italy</option>
+                        <option value="Luxembourg">Luxembourg</option>
+                        <option value="Poland">Poland</option>
+                        <option value="Romania">Romania</option>
+                        <option value="Spain">Spain</option>
+                    </select>
+                    <select id="type" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option selected>Marketplaces</option>
+                        <option value="BEIA Software Services">BEIA Software Services</option>
+                        <option value="CloudFerro">CloudFerro</option>
+                        <option value="CSI Piemonte">CSI Piemonte</option>
+                        <option value="digitanimal">digitanimal</option>
+                        <option value="Digitel TS">Digitel TS</option>
+                        <option value="DOME">DOME</option>
+                    </select>
                 </div>
                 <h3 class="font-bold text-black dark:text-white mt-4">Exceptions</h3>
                 <p class="mb-3 text-gray-500 dark:text-gray-400">Within the above selection, never publish in the following marketplaces:</p>
                 <div class="grid grid-cols-2 gap-4 mt-4">
-                    <multiple-select [options]="availableCountries"></multiple-select>
-                    <multiple-select [options]="availableMarketplaces"></multiple-select>
+                    <select id="type"
+                     class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option selected>Member States</option>
+                        <option value="Austria">Austria</option>
+                        <option value="Belgium">Belgium</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Hungary">Hungary</option>
+                        <option value="Italy">Italy</option>
+                        <option value="Luxembourg">Luxembourg</option>
+                        <option value="Poland">Poland</option>
+                        <option value="Romania">Romania</option>
+                        <option value="Spain">Spain</option>
+                    </select>
+                    <select id="type" class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option selected>Marketplaces</option>
+                        <option value="BEIA Software Services">BEIA Software Services</option>
+                        <option value="CloudFerro">CloudFerro</option>
+                        <option value="CSI Piemonte">CSI Piemonte</option>
+                        <option value="digitanimal">digitanimal</option>
+                        <option value="Digitel TS">Digitel TS</option>
+                        <option value="DOME">DOME</option>
+                    </select>
                 </div>
-                <div class="border border-gray-500 p-4 rounded-md w-full dark:text-gray-400 mt-4">
+                <div class="border border-gray-500 p-4 rounded-md w-full dark:text-gray-400">
                     Publish only in this marketplace: DOME
                 </div>
                 <h2 class="text-3xl font-bold text-primary-100 dark:text-white mt-8">Visibility to customers</h2>
@@ -1179,7 +1219,19 @@
                             <input id="inline-checked-radio" type="radio" value="" name="visibility-buttons" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             <label for="inline-checked-radio" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Authenticated customers from companies incorporated in specific countries:</label>
                         </div>
-                        <multiple-select [options]="availableCountries"></multiple-select>
+                        <select id="type"
+                        class="mb-2 shadow bg-white dark:bg-secondary-300 border border-gray-300 text-gray-900 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <option selected>Member States</option>
+                        <option value="Austria">Austria</option>
+                        <option value="Belgium">Belgium</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Hungary">Hungary</option>
+                        <option value="Italy">Italy</option>
+                        <option value="Luxembourg">Luxembourg</option>
+                        <option value="Poland">Poland</option>
+                        <option value="Romania">Romania</option>
+                        <option value="Spain">Spain</option>
+                        </select>
                     </div>
                 </div>
                 <div class="flex w-full justify-items-end justify-end m-4">
@@ -1396,7 +1448,7 @@
     </div>
 </div>
 
-</div>
+</div> -->
 @if(showError){
     <error-message class="flex justify-center items-center fixed w-fit top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" [message]="errorMessage"></error-message>
 }

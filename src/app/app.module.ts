@@ -149,8 +149,7 @@ import {OfferComponent} from "./shared/forms/offer/offer.component";
     OrganizationDetailsComponent,
     FaqComponent,
     NewPricePlanComponent,
-    UpdatePricePlanComponent,
-    MultipleSelectComponent
+    UpdatePricePlanComponent
   ],
     imports: [
         BrowserModule,
