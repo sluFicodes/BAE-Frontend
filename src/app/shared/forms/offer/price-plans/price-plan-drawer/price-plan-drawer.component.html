@@ -53,7 +53,7 @@
 
         <!-- Only when online payment is enabled -->
 
-        @if (formGroup?.get('paymentOnline')?.value) {
+        @if (formGroup.get('paymentOnline')?.value) {
 
           <!-- Selección del perfil del producto -->
           <div class="mb-4">
@@ -61,7 +61,7 @@
               {{ 'FORMS.PRICE_PLANS._config_profile' | translate }}
             </h3>
           @if(!checkPriceCompChars()){
-          @if ((formGroup?.get('prodSpecCharValueUse')?.value?.length > 0) || (formGroup?.get('productProfile')?.value?.selectedValues.length > 0)){      
+          @if ((formGroup.get('prodSpecCharValueUse')?.value?.length > 0) || (formGroup.get('productProfile')?.value?.selectedValues.length > 0)){      
             <div class="overflow-x-auto">
               <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
@@ -177,12 +177,12 @@
               </label>
               <select formControlName="currency" class="mt-1 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
                 @for(curr of currencies; track curr.code){
-                  <option value="{{curr.code}}" [selected]="curr.code === this.formGroup?.get('currency')?.value">({{curr.code}}) {{curr.name}}</option>
+                  <option value="{{curr.code}}" [selected]="curr.code === this.formGroup.get('currency')?.value">({{curr.code}}) {{curr.name}}</option>
                 }
               </select>
             </div>
             <div class="p-2">
-              <app-price-components-table [priceComponents]="formGroup?.get('priceComponents')?.value"
+              <app-price-components-table [priceComponents]="formGroup.get('priceComponents')?.value"
                                           (edit)="editPriceComponent($event)"
                                           (delete)="deletePriceComponent($event)">
               </app-price-components-table>
@@ -210,9 +210,9 @@
           </button>
           <button type="submit"
                   (click)="savePricePlan()"
-                  [disabled]="formGroup?.invalid"
+                  [disabled]="formGroup.invalid"
                   class="px-4 py-2 rounded text-white flex items-center transition"
-                  [ngClass]="{'bg-primary-100 hover:bg-primary-50': formGroup?.valid, 'bg-gray-400 cursor-not-allowed': formGroup?.invalid}">
+                  [ngClass]="{'bg-primary-100 hover:bg-primary-50': formGroup.valid, 'bg-gray-400 cursor-not-allowed': formGroup.invalid}">
             <svg class="min-w-4 w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
               <path fill="currentColor"
                     d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM128 272l16 0c-.6-5-.9-10.1-.9-15.2c0-5.7

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output, ChangeDetectorRef} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormsModule, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MarkdownTextareaComponent} from "../../../markdown-textarea/markdown-textarea.component";
 import {TranslateModule} from "@ngx-translate/core";
 import {NgClass} from "@angular/common";
@@ -11,6 +11,7 @@ import * as moment from 'moment';
   standalone: true,
   templateUrl: './price-component-drawer.component.html',
   imports: [
+    FormsModule,
     ReactiveFormsModule,
     MarkdownTextareaComponent,
     TranslateModule,
@@ -64,13 +65,20 @@ export class PriceComponentDrawerComponent implements OnInit {
       this.cdr.detectChanges();
       console.log('---- EDIITA')
       console.log(this.priceComponentForm.value)
-      /*console.log(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue)
-      if(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue){
+      console.log(this.priceComponentForm.get('selectedCharacteristic')?.value[0])
+      /*if(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue){
         console.log('---hola')
         this.showValueSelect=true
       }*/
      if(this.priceComponentForm.get('discountValue')?.value != null){
       this.showDiscount=true;
+     }
+     const selectedChar = this.priceComponentForm.get('selectedCharacteristic')?.value?.[0];
+
+     if (selectedChar) {
+       this.selectedCharacteristic = selectedChar;
+       console.log('selected char')
+       console.log(this.selectedCharacteristic)
      }
     }
   }
