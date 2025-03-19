@@ -71,6 +71,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   loginSubscription: Subscription = new Subscription();
   roles:string[]=[];
   knowledge: string = environment.KNOWLEDGE_BASE_URL
+  knowledge_onboarding: string = environment.KB_ONBOARDING_GUIDELINES_URL
+  knowledge_guidelines: string = environment.KB_GUIDELNES_URL
+  registration: string = environment.REGISTRATION_FORM_URL
   ticketing: string = environment.TICKETING_SYSTEM_URL
   domeAbout: string = environment.DOME_ABOUT_LINK
   domeRegister: string = environment.DOME_REGISTER_LINK

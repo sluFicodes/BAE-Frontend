@@ -43,6 +43,9 @@ export const environment = {
     MATOMO_SITE_ID: "",
     TICKETING_SYSTEM_URL: "",
     KNOWLEDGE_BASE_URL: "",
+    KB_ONBOARDING_GUIDELINES_URL: "",
+    KB_GUIDELNES_URL:"",
+    REGISTRATION_FORM_URL: "",
     SEARCH_ENABLED: true,
     PURCHASE_ENABLED: false,
     DOME_TRUST_LINK: "https://dome-certification.dome-marketplace.org",
@@ -54,5 +57,5 @@ export const environment = {
     DOME_X: 'https://x.com/DomeMarketplace',
     BUNDLE_ENABLED: false,
     DFT_CATALOG_ID: '',
-    MAX_FILE_SIZE:3145728
+    MAX_FILE_SIZE:3145728,
 };

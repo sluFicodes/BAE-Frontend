@@ -1,6 +1,6 @@
 {
     "_yes": "Yes",
-    "_no": "No",    
+    "_no": "No",
     "DASHBOARD": {
         "_title": "DOME Marketplace is out! See what's new",
         "_header": "Digital Trust to move forward",
@@ -16,7 +16,8 @@
         "_search_ph": "Search Cloud Services, Edge Services, Providers...",
         "_search": "Search",
         "_not_found": "No offers found",
-        "_browse_serv": "Browse services"
+        "_browse_serv": "Browse services",
+        "_view_serv": "View services"
     },
     "FEATURED": {
         "_title": "Featured offerings",
@@ -171,7 +172,7 @@
         "_home": "Home",
         "_catalogs": "Catalogues",
         "_search": "Search",
-        "_browse": "Browse",        
+        "_browse": "Browse",
         "_cloud": "Cloud Services",
         "_smart_ports": "Smart ports",
         "_smart_cities": "Smart cities",
@@ -190,11 +191,14 @@
         "_admin": "Administration",
         "_publish": "Publish your offerings",
         "_register": "Register",
-        "_guidelines": "Guidelines",
-        "_onboarding": "Onboarding",    
+        "_guidelines": "Guidelines to register",
+        "_guideline_publish": "Guideline to publish",
+        "_onboarding": "Onboarding",
+        "_registration": "Registration form",
         "_about": "About",
         "_verify": "Publish your offering",
-        "_info": "Info"
+        "_info": "Info",
+        "_orders": "Product Orders"
     },
     "PRODUCT_DETAILS": {
         "_back": "Back",
@@ -346,6 +350,21 @@
         "_invalid_phone": "Phonenumber is invalid!",
         "_invalid_email": "Email is invalid!",
         "_no_billing": "There's no billing information."
+    },
+    "INVOICES": {
+      "_invoice_id": "Invoice ID",
+      "_date": "Date",
+      "_not_found": "No invoices found.",
+      "_description": "Description",
+      "_tax_included_amount": "Amount (tax included)",
+      "_tax_excluded_amount": "Amount (without tax)",
+      "_tax": "Tax",
+      "_billed": "Billed",
+      "_pending": "Pending",
+      "_status": "Status",
+      "_name": "Invoice num.",
+      "_type": "Type",
+      "_product": "Product ID"
     },
     "CREATE_CATALOG": {
         "_back": "Back",
@@ -699,7 +718,7 @@
         "_add_relationship": "Add new relationship",
         "_save_relationship": "Save relationship",
         "_profile_pic": "Profile picture",
-        "_finish": "Finish",        
+        "_finish": "Finish",
         "_summary": "Product's summary",
         "_create_prod": "Create product",
         "_choose_license": "Choose a license",
@@ -796,7 +815,7 @@
         "_add_relationship": "Add new relationship",
         "_save_relationship": "Save relationship",
         "_profile_pic": "Profile picture",
-        "_finish": "Update product",        
+        "_finish": "Update product",
         "_summary": "Product's summary",
         "_create_prod": "Create product",
         "_choose_license": "Choose a license",
@@ -912,7 +931,7 @@
         "_steps": "Steps",
         "_general": "General",
         "_general_info": "Category's general information",
-        "_finish": "Create category",        
+        "_finish": "Create category",
         "_summary": "Category's summary",
         "_name": "Name",
         "_description": "Description",
@@ -933,7 +952,7 @@
         "_steps": "Steps",
         "_general": "General",
         "_general_info": "Category's general information",
-        "_finish": "Update category",        
+        "_finish": "Update category",
         "_summary": "Category's summary",
         "_name": "Name",
         "_description": "Description",
@@ -947,5 +966,25 @@
     "ORGANIZATION": {
         "_details": "Organization details",
         "_description": "Description"
-    }
+    },
+        "PRODUCT_ORDERS": {
+            "_orders": "Product Orders",
+            "_invoices": "Invoices",
+            "_no_orders": "No orders found.",
+            "_search_criteria": "Search criteria",
+            "_order_id": "Order Id",
+            "_status": "Choose a status",
+            "_priority": "Priority",
+            "_desc": "Description",
+            "_price": "Price",
+            "_bill": "Billing address",
+            "_filter_state": "Filter by status",
+            "_acknowledged": "Acknowledged",
+            "_in_progress": "In Progress",
+            "_completed": "Completed",
+            "_failed": "Failed",
+            "_pending": "Pending",
+            "_cancelled": "Cancelled"
+
+        }
 }
