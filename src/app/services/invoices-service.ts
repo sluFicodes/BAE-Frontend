@@ -49,7 +49,7 @@ export class InvoicesService {
     //  TODO no se que le pasa a esta petición
     let result =  lastValueFrom(this.http.get<any[]>(url));
     console.log(result)
-    //return result;
+    return result;
     //  TODO más triste es robar:
     let inv:any[]= [
       {
@@ -152,12 +152,11 @@ export class InvoicesService {
     return inv
   }
 
-  /*updateInvoice(invoiceId:any, patchData:any){
+  updateInvoice(patchData:any,invoiceId:any){
     console.log('updatingInvoice...');
     console.log(invoiceId);
     console.log(patchData);
-    let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}?limit=1000&offset=${page}`;
-    let url = `${ProductOrderService.BASE_URL}${ProductOrderService.API_ORDERING}/productOrder/${orderId}`;
-    return lastValueFrom(this.http.patch(url, patchData))
-  }*/
+    let url = `${InvoicesService.BASE_URL}${InvoicesService.BASE_PATCH}${InvoicesService.API_ORDERING}/${invoiceId}`;
+    return this.http.patch(url, patchData)
+  }
 }

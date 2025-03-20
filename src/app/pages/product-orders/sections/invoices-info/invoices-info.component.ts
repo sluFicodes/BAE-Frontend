@@ -282,8 +282,19 @@ export class InvoicesInfoComponent implements OnInit {
   }
 
   saveInvoice(index: number, invoice: any) {
+    let oldName = invoice.name;
     invoice.name = this.editableInvoiceName;
-    //PATCH?    
+    this.invoicesService.updateInvoice(invoice, invoice.id).subscribe({
+      next: data => {
+        console.log('actualizado invoice')
+      },
+      error: error => {
+        invoice.name = oldName;
+        console.error('There was an error while updating!', error);
+      }
+    });   
     this.editingIndex = null;
   }
+
+
 }
