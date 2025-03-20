@@ -16,6 +16,9 @@ export class ContactUsFormComponent implements OnInit {
     role: new FormControl('', [Validators.required, Validators.maxLength(100)]),
     message: new FormControl('', [Validators.required]),
   });
+
+  dataControllerDome:any='https://dome-project.eu/about/#partners';
+  DPA:any='https://dome-marketplace-sbx.org/assets/documents/privacy.pdf';
   
   ngOnInit() {
   }
