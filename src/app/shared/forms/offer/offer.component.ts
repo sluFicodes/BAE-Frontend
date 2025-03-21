@@ -74,6 +74,7 @@ export class OfferComponent implements OnInit{
   constructor(private api: ApiServiceService,
               private eventMessage: EventMessageService,
               private fb: FormBuilder) {
+
     this.productOfferForm = this.fb.group({
       generalInfo: this.fb.group({}),
       prodSpec: new FormControl(null),
@@ -287,357 +288,241 @@ export class OfferComponent implements OnInit{
     });
   }
 
-  async createOffer(){
-
-    if(this.productOfferForm.value.pricePlans.length>0){
-      for(let i=0; i < this.productOfferForm.value.pricePlans.length; i++){
-        let bundleCompsCheck=[];
-        if(this.productOfferForm.value.pricePlans[i].priceComponents){
-          bundleCompsCheck=this.productOfferForm.value.pricePlans[i].priceComponents
-        }
-        console.log(bundleCompsCheck)
-        if(bundleCompsCheck.length>1){
-          let components=this.productOfferForm.value.pricePlans[i].priceComponents;
-          let compRel:any[]=[];
-          if(components != undefined){
-            for(let j=0;j<components.length;j++){
-              //Creating price component
-              let priceCompToCreate: ProductOfferingPrice = {        
-                name: components[j].name,
-                description: components[j].description,
-                lifecycleStatus: components[j].lifecycleStatus,
-                priceType: components[j].priceType,
-                price: {
-                  unit: this.productOfferForm.value.pricePlans[i].currency,
-                  value: components[j]?.price
-                }
-              }
-              if(components[j].priceType=='recurring'){
-                priceCompToCreate.recurringChargePeriodType=components[j].recurringPeriod;
-                //Set to 1 by default so monthly will be every 1 month, daily every day, and so on.
-                priceCompToCreate.recurringChargePeriodLength=1;
-              }
-              if(components[j].priceType=='recurring-prepaid'){
-                priceCompToCreate.recurringChargePeriodType=components[j].recurringPeriod;
-                //Set to 1 by default so monthly will be every 1 month, daily every day, and so on.
-                priceCompToCreate.recurringChargePeriodLength=1;
-              }
-              if(components[j].priceType=='usage'){
-                priceCompToCreate.unitOfMeasure={
-                  //set default to 1
-                  amount: 1,
-                  units: components[j].usageUnit
-                }
-              }
-              if(components[j].selectedCharacteristic){
-                priceCompToCreate.prodSpecCharValueUse=components[j].selectedCharacteristic
-              }
-
-              if(components[j].unitOfMeasure){
-                priceCompToCreate.unitOfMeasure=components[j].usageUnit
-              }
-              
-              if(components[j].discountValue != null){
-                //Creating price alteration
-                let priceAlterToCreate: ProductOfferingPrice ={
-                  name: 'discount',
-                  priceType: 'discount',
-                  validFor: {
-                    startDateTime: moment().toISOString(),
-                    endDateTime: moment().add(Number(components[j].discountDuration),components[j].discountDurationUnit).toISOString()
-                  },
-                }
-                if(components[j].discountUnit=='percentage'){
-                  priceAlterToCreate.percentage = components[j].discountValue;
-                } else {
-                  priceAlterToCreate.price = {
-                    value: components[j].discountValue,
-                    unit: this.productOfferForm.value.pricePlans[i].currency
-                  }
-                }
-                priceAlterToCreate.unitOfMeasure = {
-                  amount: components[j].discountDuration,
-                  units: components[j].discountDurationUnit
-                }
-                try{
-                  let priceAlterCreated = await lastValueFrom(this.api.postOfferingPrice(priceAlterToCreate))
-                  console.log('price Alteration')
-                  console.log(priceAlterCreated)
-                  priceCompToCreate.popRelationship=[{
-                    id: priceAlterCreated.id,
-                    href: priceAlterCreated.id,
-                    name: priceAlterCreated.name
-                  }]
-                } catch (error:any) {
-                  console.error('There was an error while creating offers price!', error);
-                  if(error.error.error){
-                    console.log(error)
-                    this.errorMessage='Error: '+error.error.error;
-                  } else {
-                    this.errorMessage='There was an error while creating offers price!';
-                  }
-                  this.showError=true;
-                  setTimeout(() => {
-                    this.showError = false;
-                  }, 3000);     
-                }
-              }
-              try{
-                let priceCompCreated = await lastValueFrom(this.api.postOfferingPrice(priceCompToCreate))
-                compRel.push({
-                  id: priceCompCreated.id,
-                  href: priceCompCreated.id,
-                  name: priceCompCreated.name
-                }) 
-                console.log('componente')
-                console.log(priceCompCreated)
-              } catch (error:any) {
-                console.error('There was an error while creating offers price!', error);
-                if(error.error.error){
-                  console.log(error)
-                  this.errorMessage='Error: '+error.error.error;
-                } else {
-                  this.errorMessage='There was an error while creating offers price!';
-                }
-                this.showError=true;
-                setTimeout(() => {
-                  this.showError = false;
-                }, 3000);     
-              }
-            }
-            //Creating price plan
-            let priceToCreate: ProductOfferingPrice = {
-              name: this.productOfferForm.value.pricePlans[i].name,
-              isBundle: true,
-              description: this.productOfferForm.value.pricePlans[i].description,
-              lifecycleStatus: this.productOfferForm.value.pricePlans[i].lifecycleStatus,
-              bundledPopRelationship: compRel
-            }
-            if(this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse){
-              let filteredValues = this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse.map((item: { productSpecCharacteristicValue: any[]; }) => {
-                // Filter the productSpecCharacteristicValue to keep only the default values
-                const defaultValues = item.productSpecCharacteristicValue.filter(value => value.isDefault);
-                
-                // Return the item with only the filtered default values
-                return {
-                  ...item, 
-                  productSpecCharacteristicValue: defaultValues
-                };
-              });
-              priceToCreate.prodSpecCharValueUse=filteredValues
-            }
-            if(this.productOfferForm.value.pricePlans[i].usageUnit){
-              priceToCreate.unitOfMeasure=this.productOfferForm.value.pricePlans[i].usageUnit
-            }
-            try{
-              let pricePlanCreated = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
-              console.log('precio')
-              console.log(pricePlanCreated)
-              this.productOfferForm.value.pricePlans[i].id=pricePlanCreated.id;
-              if(i==this.productOfferForm.value.pricePlans.length-1){
-                this.saveOfferInfo();
-              }
-            } catch (error:any){
-              console.error('There was an error while creating offers price!', error);
-              if(error.error.error){
-                console.log(error)
-                this.errorMessage='Error: '+error.error.error;
-              } else {
-                this.errorMessage='There was an error while creating offers price!';
-              }
-              this.showError=true;
-              setTimeout(() => {
-                this.showError = false;
-              }, 3000);
-            }
-        }
-        }else{  
-          //Not bundled price plan        
-          let priceToCreate: ProductOfferingPrice = {
-            name: this.productOfferForm.value.pricePlans[i].name,
-            isBundle: false,
-            description: this.productOfferForm.value.pricePlans[i].description,
-            lifecycleStatus: this.productOfferForm.value.pricePlans[i].status
-          }
-          if(this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse){
-            let filteredValues = this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse.map((item: { productSpecCharacteristicValue: any[]; }) => {
-              // Filter the productSpecCharacteristicValue to keep only the default values
-              const defaultValues = item.productSpecCharacteristicValue.filter(value => value.isDefault);
-              
-              // Return the item with only the filtered default values
-              return {
-                ...item, 
-                productSpecCharacteristicValue: defaultValues
-              };
-            });
-            priceToCreate.prodSpecCharValueUse=filteredValues
-          }
-          if(bundleCompsCheck.length>0){
-            priceToCreate.price= {
-              value: bundleCompsCheck[0]?.price,
-              unit: this.productOfferForm.value.pricePlans[i]?.currency
-            }
-            priceToCreate.priceType= bundleCompsCheck[0]?.priceType
-            if(bundleCompsCheck[0]?.priceType=='recurring'){
-              priceToCreate.recurringChargePeriodType=bundleCompsCheck[0]?.recurringPeriod;
-              priceToCreate.recurringChargePeriodLength=1;
-            }
-            if(bundleCompsCheck[0]?.priceType=='recurring-prepaid'){
-              priceToCreate.recurringChargePeriodType=bundleCompsCheck[0]?.recurringPeriod;
-              priceToCreate.recurringChargePeriodLength=1;
-            }
-            if(bundleCompsCheck[0]?.priceType=='usage'){              
-              priceToCreate.unitOfMeasure={
-                //set default to 1
-                amount: 1,
-                units: bundleCompsCheck[0]?.usageUnit
-              }
-            }
-            if(bundleCompsCheck[0]?.selectedCharacteristic){
-              priceToCreate.prodSpecCharValueUse=bundleCompsCheck[0]?.selectedCharacteristic;
-            }
-            if(bundleCompsCheck[0]?.usageUnit){
-              priceToCreate.unitOfMeasure={
-                //set default to 1
-                amount: 1,
-                units: bundleCompsCheck[0]?.usageUnit
-              }
-            }
-          } else {
-            priceToCreate.priceType=this.productOfferForm.value.pricePlans[i].priceType
-          }
-
-          try{
-            let createdPrices = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
-            console.log('precio')
-            console.log(createdPrices)
-            this.productOfferForm.value.pricePlans[i].id=createdPrices.id;
-            if(i==this.productOfferForm.value.pricePlans.length-1){
-              this.saveOfferInfo();
-            }
-          } catch (error:any){
-            console.error('There was an error while creating offers price!', error);
-            if(error.error.error){
-              console.log(error)
-              this.errorMessage='Error: '+error.error.error;
-            } else {
-              this.errorMessage='There was an error while creating offers price!';
-            }
-            this.showError=true;
-            setTimeout(() => {
-              this.showError = false;
-            }, 3000);
-          }
-        }
-      }
-    } else {
-      //this.createdPrices=[];
-      this.saveOfferInfo();
-    }
-    console.log(this.offerToCreate)
+  private handleApiError(error: any): void {
+    console.error('Error while creating offer price!', error);
+    this.errorMessage = error?.error?.error ? 'Error: ' + error.error.error : 'Error creating offer price!';
+    this.showError = true;
+    setTimeout(() => (this.showError = false), 3000);
   }
 
-  saveOfferInfo(){
-    let offercats = [];
-    let offerprices = [];
-    for(let i = 0; i < this.productOfferForm.value.category.length; i++){
-      offercats.push({
-        id: this.productOfferForm.value.category[i].id,
-        href: this.productOfferForm.value.category[i].id
-      })
+  private async createPriceAlteration(component: any, currency: string): Promise<any> {
+    const priceAlter: ProductOfferingPrice = {
+      name: 'discount',
+      priceType: 'discount',
+      validFor: {
+        startDateTime: moment().toISOString(),
+        endDateTime: moment().add(Number(component.discountDuration), component.discountDurationUnit).toISOString()
+      },
+      unitOfMeasure: {
+        amount: component.discountDuration,
+        units: component.discountDurationUnit
+      }
+    };
+  
+    if (component.discountUnit === 'percentage') {
+      priceAlter.percentage = component.discountValue;
+    } else {
+      priceAlter.price = { value: component.discountValue, unit: currency };
     }
-    for(let i = 0; i < this.productOfferForm.value.pricePlans.length; i++){
-      offerprices.push({
-        id: this.productOfferForm.value.pricePlans[i].id,
-        href: this.productOfferForm.value.pricePlans[i].id
-      })
+  
+    return await lastValueFrom(this.api.postOfferingPrice(priceAlter));
+  }
+
+  private async createPriceComponent(component: any, currency: string): Promise<any> {
+    const priceComp: ProductOfferingPrice = {
+      name: component.name,
+      description: component.description,
+      lifecycleStatus: component.lifecycleStatus,
+      priceType: component.priceType,
+      price: { unit: currency, value: component?.price },
+      recurringChargePeriodType: undefined,
+      recurringChargePeriodLength: undefined,
+      unitOfMeasure: undefined,
+      prodSpecCharValueUse: undefined
+    };
+
+    if (['recurring', 'recurring-prepaid'].includes(component.priceType)) {
+      priceComp.recurringChargePeriodType = component.recurringPeriod;
+      priceComp.recurringChargePeriodLength = 1;
     }
-    this.offerToCreate={
-      name: this.productOfferForm.value.generalInfo.name,
-      description: this.productOfferForm.value.generalInfo.description != null ? this.productOfferForm.value.generalInfo.description : '',
-      lifecycleStatus: this.formType == 'update' ? this.productOfferForm.value.generalInfo.status : "Active",
+
+    if (component.priceType === 'usage') {
+      priceComp.unitOfMeasure = { amount: 1, units: component.usageUnit };
+    }
+
+    if (component.selectedCharacteristic) {
+      priceComp.prodSpecCharValueUse = component.selectedCharacteristic;
+    }
+
+    if (component.unitOfMeasure) {
+      priceComp.unitOfMeasure = component.usageUnit;
+    }
+
+    if (component.discountValue != null) {
+      const discount = await this.createPriceAlteration(component, currency);
+      priceComp.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
+    }
+
+    const created = await lastValueFrom(this.api.postOfferingPrice(priceComp));
+    return { id: created.id, href: created.id, name: created.name };
+  }
+
+  private createBundledPricePlan(plan: any, compRel: any[]): ProductOfferingPrice {
+    const price: ProductOfferingPrice = {
+      name: plan.name,
+      isBundle: true,
+      description: plan.description,
+      lifecycleStatus: plan.lifecycleStatus,
+      bundledPopRelationship: compRel
+    };
+
+    if (plan.prodSpecCharValueUse) {
+      price.prodSpecCharValueUse = plan.prodSpecCharValueUse.map((item: any) => ({
+        ...item,
+        productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
+      }));
+    }
+
+    if (plan.usageUnit) {
+      price.unitOfMeasure = plan.usageUnit;
+    }
+
+    return price;
+  }
+
+  private async createSinglePricePlan(plan: any, comp: any): Promise<ProductOfferingPrice> {
+    const price: ProductOfferingPrice = {
+      name: plan.name,
+      isBundle: false,
+      description: plan.description,
+      lifecycleStatus: plan.status,
+      priceType: comp?.priceType,
+      price: comp?.price ? { value: comp.price, unit: plan.currency } : undefined,
+      recurringChargePeriodType: undefined,
+      recurringChargePeriodLength: undefined,
+      unitOfMeasure: undefined,
+      prodSpecCharValueUse: undefined
+    };
+
+    if (['recurring', 'recurring-prepaid'].includes(comp?.priceType)) {
+      price.recurringChargePeriodType = comp.recurringPeriod;
+      price.recurringChargePeriodLength = 1;
+    }
+
+    if (comp?.priceType === 'usage') {
+      price.unitOfMeasure = { amount: 1, units: comp.usageUnit };
+    }
+
+    if (comp?.selectedCharacteristic) {
+      price.prodSpecCharValueUse = comp.selectedCharacteristic;
+    }
+
+    if (plan.prodSpecCharValueUse) {
+      price.prodSpecCharValueUse = plan.prodSpecCharValueUse.map((item: any) => ({
+        ...item,
+        productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
+      }));
+    }
+
+    return price;
+  }
+
+  async createOffer() {
+    const plans = this.productOfferForm.value.pricePlans;
+
+    if (plans.length === 0) {
+      this.saveOfferInfo();
+      return;
+    }
+
+    for (let i = 0; i < plans.length; i++) {
+      const plan = plans[i];
+      const components = plan.priceComponents || [];
+
+      try {
+        let createdPriceId: string;
+
+        if (components.length > 1) {
+          const compRel = await Promise.all(
+            components.map((comp: any) => this.createPriceComponent(comp, plan.currency))
+          );
+          const bundledPricePlan = this.createBundledPricePlan(plan, compRel);
+          const created = await lastValueFrom(this.api.postOfferingPrice(bundledPricePlan));
+          createdPriceId = created.id;
+        } else {
+          const singlePlan = await this.createSinglePricePlan(plan, components[0]);
+          const created = await lastValueFrom(this.api.postOfferingPrice(singlePlan));
+          createdPriceId = created.id;
+        }
+
+        this.productOfferForm.value.pricePlans[i].id = createdPriceId;
+
+        if (i === plans.length - 1) {
+          this.saveOfferInfo();
+        }
+      } catch (error: any) {
+        this.handleApiError(error);
+      }
+    }
+  }
+
+  saveOfferInfo(): void {
+    const formValue = this.productOfferForm.value;
+
+    const categories = formValue.category.map((cat: any) => ({
+      id: cat.id,
+      href: cat.id
+    }));
+
+    const prices = formValue.pricePlans.map((plan: any) => ({
+      id: plan.id,
+      href: plan.id
+    }));
+
+    const generalInfo = formValue.generalInfo;
+    const lifecycleStatus = this.formType === 'update' ? generalInfo.status : 'Active';
+
+    const offer: any = {
+      name: generalInfo.name,
+      description: generalInfo.description || '',
+      lifecycleStatus,
       isBundle: this.bundleChecked,
       bundledProductOffering: this.offersBundle,
       place: [],
-      version: this.productOfferForm.value.generalInfo.version,
-      category: offercats,
-      productOfferingPrice: offerprices,
+      version: generalInfo.version,
+      category: categories,
+      productOfferingPrice: prices,
       validFor: {
-        startDateTime: (new Date()).toISOString()
+        startDateTime: new Date().toISOString()
       },
+      productOfferingTerm: [
+        {
+          name: formValue.license.treatment || '',
+          description: formValue.license.description || ''
+        },
+        {
+          name: 'procurement',
+          description: formValue.procurementMode.id
+        }
+      ]
+    };
+
+    if (!this.bundleChecked && this.formType === 'create') {
+      offer.productSpecification = {
+        id: formValue.prodSpec.id,
+        href: formValue.prodSpec.href
+      };
     }
-    if(!this.bundleChecked && this.formType=='create'){
-      this.offerToCreate.productSpecification = {
-        id: this.productOfferForm.value.prodSpec.id,
-        href: this.productOfferForm.value.prodSpec.href
+
+    this.offerToCreate = offer;
+
+    const request$ = this.formType === 'create'
+      ? this.api.postProductOffering(offer, formValue.catalogue.id)
+      : this.api.updateProductOffering(offer, this.offer.id);
+
+    request$.subscribe({
+      next: (data) => {
+        console.log('product offer created:');
+        console.log(data);
+        this.goBack();
+      },
+      error: (error) => {
+        console.error('Error during offer save/update:', error);
+        this.errorMessage = error?.error?.error ? 'Error: ' + error.error.error : 'An error occurred while saving the offer!';
+        this.showError = true;
+        setTimeout(() => (this.showError = false), 3000);
       }
-    }
-    if(this.productOfferForm.value.license.treatment!=''){
-      this.offerToCreate.productOfferingTerm= [
-        {
-            name: this.productOfferForm.value.license.treatment,
-            description: this.productOfferForm.value.license.description
-        }
-      ]
-    } else {
-      this.offerToCreate.productOfferingTerm= [
-        {
-            name: '',
-            description: ''
-        }
-      ]
-    }
-
-    this.offerToCreate.productOfferingTerm.push({
-      name: 'procurement',
-      description: this.productOfferForm.value.procurementMode.id,
-    })
-
-    if(this.formType=='create'){
-      this.api.postProductOffering(this.offerToCreate,this.productOfferForm.value.catalogue.id).subscribe({
-        next: data => {
-          console.log('product offer created:')
-          console.log(data)
-          this.goBack();
-        },
-        error: error => {
-          console.error('There was an error while creating the offer!', error);
-          if(error.error.error){
-            console.log(error)
-            this.errorMessage='Error: '+error.error.error;
-          } else {
-            this.errorMessage='There was an error while creating the offer!';
-          }
-          this.showError=true;
-          setTimeout(() => {
-            this.showError = false;
-          }, 3000);
-        }
-      });
-    } else {
-      this.api.updateProductOffering(this.offerToCreate,this.offer.id).subscribe({
-        next: data => {
-          console.log('product offer created:')
-          console.log(data)
-          this.goBack();
-        },
-        error: error => {
-          console.error('There was an error while updating!', error);
-          if(error.error.error){
-            console.log(error)
-            this.errorMessage='Error: '+error.error.error;
-          } else {
-            this.errorMessage='There was an error while updating the offer!';
-          }
-          this.showError=true;
-          setTimeout(() => {
-            this.showError = false;
-          }, 3000);
-        }
-      });
-    }
-
-
+    });
   }
 
   goBack() {
@@ -672,5 +557,4 @@ export class OfferComponent implements OnInit{
   
     return discountDuration;
   }
-  
 }

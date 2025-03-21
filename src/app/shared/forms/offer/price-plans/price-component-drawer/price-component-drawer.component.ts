@@ -70,16 +70,16 @@ export class PriceComponentDrawerComponent implements OnInit {
         console.log('---hola')
         this.showValueSelect=true
       }*/
-     if(this.priceComponentForm.get('discountValue')?.value != null){
-      this.showDiscount=true;
-     }
-     const selectedChar = this.priceComponentForm.get('selectedCharacteristic')?.value?.[0];
+      if(this.priceComponentForm.get('discountValue')?.value != null){
+        this.showDiscount=true;
+      }
+      const selectedChar = this.priceComponentForm.get('selectedCharacteristic')?.value?.[0];
 
-     if (selectedChar) {
-       this.selectedCharacteristic = selectedChar;
-       console.log('selected char')
-       console.log(this.selectedCharacteristic)
-     }
+      if (selectedChar) {
+        this.selectedCharacteristic = selectedChar;
+        console.log('selected char')
+        console.log(this.selectedCharacteristic)
+      }
     }
   }
 
@@ -91,51 +91,58 @@ export class PriceComponentDrawerComponent implements OnInit {
   }
 
   changePriceComponentChar(event: any){
-    if(event.target.value==''){
-      this.showValueSelect=false;
-    } else {      
-
-      let charValue = this.prodChars.find(
-        (char: { id: any; }) => char.id === event.target.value
-      );
-      
-      this.selectedCharacteristic = charValue;
-      this.cdr.detectChanges();
-
-      if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
-        this.showValueSelect=false;
-      } else if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
-        this.selectedCharacteristicVal=this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
-        this.showValueSelect=true;
-      } else {
-        this.selectedCharacteristicVal=this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
-        this.showValueSelect=true;
-        this.hideStringCharOption=false;
-      }
-
-      this.priceComponentForm.patchValue({
-        selectedCharacteristic: this.mapChars(this.selectedCharacteristicVal)
-      });
+    if(event.target.value == ''){
+      this.showValueSelect = false;
+      return
     }
+
+    let charValue = this.prodChars.find(
+      (char: { id: any; }) => char.id === event.target.value
+    );
+
+    this.selectedCharacteristic = charValue;
+    this.cdr.detectChanges();
+
+    if('valueFrom' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
+      // This is a range characteristic, so no value to select
+      this.showValueSelect = false;
+    } else if('unitOfMeasure' in this.selectedCharacteristic.productSpecCharacteristicValue[0]){
+      // This is a number characteristic
+      this.selectedCharacteristicVal = this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
+      this.showValueSelect = true;
+    } else {
+      // This is a string characteristic
+      this.selectedCharacteristicVal = this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
+      this.showValueSelect = true;
+      this.hideStringCharOption = false;
+    }
+
+    this.priceComponentForm.patchValue({
+      selectedCharacteristic: this.mapChars(this.selectedCharacteristicVal)
+    });
   }
 
-  private mapChars(charValue:any): any {
+  private mapChars(charValue: any): any {
     console.log(this.selectedCharacteristic)
-    return {
+    const char: any = {
       id: this.selectedCharacteristic.id,
       name: this.selectedCharacteristic.name,
       description: this.selectedCharacteristic.description || '',
-      productSpecCharacteristicValue: this.selectedCharacteristic.productSpecCharacteristicValue.map((opt: any) => { 
-        return {
-          ...opt,
-          isDefault: String(opt.value) === String(charValue),
-        };
-      })
     }
+
+    // Add the productSpecCharacteristicValue only if needed
+    // Range chars not include a value
+    if (this.showValueSelect) {
+      char.productSpecCharacteristicValue = [this.selectedCharacteristic.productSpecCharacteristicValue.find((opt: any) => {
+        return String(opt.value) === String(charValue);
+      })];
+    }
+
+    return char
   }
 
   changePriceComponentCharValue(event: any){
-    this.selectedCharacteristicVal=event.target.value;
+    this.selectedCharacteristicVal = event.target.value;
     this.priceComponentForm.patchValue({
       selectedCharacteristic: this.mapChars(event.target.value)
     });
@@ -156,6 +163,4 @@ export class PriceComponentDrawerComponent implements OnInit {
   hasKey(obj: any, key: string): boolean {
     return key in obj;
   }
-
-
 }
