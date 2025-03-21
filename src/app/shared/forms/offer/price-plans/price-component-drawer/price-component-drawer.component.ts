@@ -54,7 +54,7 @@ export class PriceComponentDrawerComponent implements OnInit {
       discountUnit: ['percentage'],
       discountDuration: [null],
       discountDurationUnit: ['days'],
-      recurringPeriod: ['monthly'],
+      recurringPeriod: ['month'],
       usageUnit: [''],
       selectedCharacteristic:[undefined]
     });

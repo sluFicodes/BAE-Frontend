@@ -39,11 +39,11 @@ export class PriceComponentsTableComponent {
 
   getPriceTypeLabel(priceType: string): string {
     const labels: { [key: string]: string } = {
-      'one time': 'Único',
-      'recurring': 'Recurrente',
-      'recurring-prepaid': 'Prepago',
-      'usage': 'Uso'
+      'one time': 'One time',
+      'recurring': 'Recurring',
+      'recurring-prepaid': 'Recurring Prepaid',
+      'usage': 'Usage'
     };
-    return labels[priceType] || 'Desconocido';
+    return labels[priceType] || 'Unknown';
   }
 }

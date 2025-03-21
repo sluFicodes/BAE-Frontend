@@ -21,6 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {SharedModule} from "../../../../shared/shared.module";
 import { v4 as uuidv4 } from 'uuid';
+import { from, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-order-info',
@@ -44,6 +45,10 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
   preferred:boolean=false;
   loading_more: boolean = false;
   page_check:boolean = true;
+  showError: boolean = false;
+  errorMessage: string = '';
+  customerName$!: Observable<string>;
+
   page: number=0;
   ORDER_LIMIT: number = environment.ORDER_LIMIT;
   filters: any[]=[];
@@ -79,6 +84,7 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     private localStorage: LocalStorageService,
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
+    private router: Router,
     private accountService: AccountServiceService,
     private orderService: ProductOrderService,
     private eventMessage: EventMessageService,
@@ -115,29 +121,14 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
+  handleError(msg: string) {
+    this.errorMessage = msg;
+    this.showError = true;
+    setTimeout(() => (this.showError = false), 3000);
+  }
+
   async confirmAction() {
-    if (!this.orderToShow) {
-      console.error("No order selected! Is this possible?");
-      return;
-    }
-    this.selectedItem.productOrderItem['state'] = this.actionType === 'Acknowledge' ? 'acknowledged' : 'rejected';
-    console.log(`${this.actionType} confirmed for item:`, this.selectedItem);
-    try {
-      // Creates object to PATCH
-      const patchData = {
-        productOrderItem: this.orderToShow.productOrderItem,
-      };
-
-      // Llamar al servicio para hacer el PATCH
-      //const response = await this.orderService.updateOrder(this.orderToShow.id, patchData);
-      //console.log("Order updated successfully:", response);
-
-      // Cerrar el modal después de la actualización
-      this.closeModal();
-
-    } catch (error) {
-      console.error("Error updating order:", error);
-    }
+    return this.updateLifecycle(this.actionType, this.selectedItem);
   }
 
   async updateLifecycle(state: string, item: any) {
@@ -159,9 +150,10 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
       };
 
       // Llamar al servicio para actualizar solo el estado
-      const stateResponse = await this.orderService.updateOrder(this.orderToShow.id, statePatchData);
+      const stateResponse: any = await this.orderService.updateOrder(this.orderToShow.id, statePatchData);
       console.log("Order state updated successfully:", stateResponse);
 
+      this.orderToShow.state = stateResponse.state;
       // Ahora creamos la nota después de la actualización exitosa
       const newNote = {
         text: `Order state updated to ${state}`,
@@ -191,12 +183,13 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
       this.closeModal();
 
     } catch (error) {
+      this.handleError("Error updating order state");
       console.error("Error updating order:", error);
     }
   }
 
   ngOnInit() {
-    this.loading=true;
+    this.loading = true;
     let today = new Date();
     today.setMonth(today.getMonth()-1);
     this.selectedDate = today.toISOString();
@@ -227,8 +220,8 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
         }
       }
       //this.partyId = aux.partyId;
-      this.page=0;
-      this.orders=[];
+      this.page = 0;
+      this.orders = [];
       this.getOrders(false);
     }
     initFlowbite();
@@ -419,6 +412,7 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     // console.log(order)
     this.showOrderDetails=true;
     this.orderToShow=order;
+    this.customerName$ = from(this.getCustomerName());
   }
 
   async onRoleChange(role: any) {
@@ -467,6 +461,28 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
     } finally {
       this.isUpdating = false;
     }
+  }
+
+  goToCustomerDeatils() {
+    const customer = this.orderToShow.relatedParty.find(
+      (party: any) => party.role?.toLowerCase() === 'customer'
+    );
+
+    window.open(this.router.serializeUrl(
+      this.router.createUrlTree(['/org-details', customer?.id])
+    ), '_blank');
+  }
+
+  private async getCustomerName(): Promise<string> {
+    if (this.orderToShow?.relatedParty) {
+      const customer = this.orderToShow.relatedParty.find(
+        (party: any) => party.role?.toLowerCase() === 'customer'
+      );
+      if (customer?.id) {
+        return this.getUsername(customer.id);
+      }
+    }
+    return '';
   }
 
   async getUsername(partyId: string): Promise<string> {

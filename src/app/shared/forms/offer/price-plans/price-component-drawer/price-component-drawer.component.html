@@ -84,10 +84,10 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ 'FORMS.PRICE_PLAN_COMPONENT.recurring_period' | translate }}</label>
           <select formControlName="recurringPeriod" class="w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100">
-            <option value="daily">{{ 'FORMS.PRICE_PLAN_COMPONENT._daily' | translate }}</option>
-            <option value="weekly">{{ 'FORMS.PRICE_PLAN_COMPONENT._weekly' | translate }}</option>
-            <option value="monthly">{{ 'FORMS.PRICE_PLAN_COMPONENT._monthly' | translate }}</option>
-            <option value="yearly">{{ 'FORMS.PRICE_PLAN_COMPONENT._yearly' | translate }}</option>
+            <option value="day">{{ 'FORMS.PRICE_PLAN_COMPONENT._daily' | translate }}</option>
+            <option value="week">{{ 'FORMS.PRICE_PLAN_COMPONENT._weekly' | translate }}</option>
+            <option value="month">{{ 'FORMS.PRICE_PLAN_COMPONENT._monthly' | translate }}</option>
+            <option value="year">{{ 'FORMS.PRICE_PLAN_COMPONENT._yearly' | translate }}</option>
           </select>
         </div>
       } @else if (priceComponentForm.get('priceType')?.value === 'usage') {
