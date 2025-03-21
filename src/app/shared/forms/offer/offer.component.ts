@@ -195,7 +195,7 @@ export class OfferComponent implements OnInit{
           paymentOnline: true,
           selectedCharacteristic: pricePlan?.prodSpecCharValueUse || null,
           currency: pricePlan?.price?.unit || 'EUR',
-          recurringPeriod: pricePlan?.recurringChargePeriodType || 'monthly',
+          recurringPeriod: pricePlan?.recurringChargePeriodType || 'month',
           productProfile: this.mapProductProfile(pricePlan?.prodSpecCharValueUse || []),
           price: pricePlan?.price?.value,
           validFor: pricePlan?.validFor || null,
@@ -221,7 +221,7 @@ export class OfferComponent implements OnInit{
             selectedCharacteristic: data?.prodSpecCharValueUse || null,
             currency: data?.price?.unit || 'EUR',
             usageUnit: data?.unitOfMeasure?.units || null,
-            recurringPeriod: data?.recurringChargePeriodType || 'monthly',
+            recurringPeriod: data?.recurringChargePeriodType || 'month',
             price: data?.price?.value,
             validFor: data?.validFor || null,
           }
@@ -414,7 +414,17 @@ export class OfferComponent implements OnInit{
               bundledPopRelationship: compRel
             }
             if(this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse){
-              priceToCreate.prodSpecCharValueUse=this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse
+              let filteredValues = this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse.map((item: { productSpecCharacteristicValue: any[]; }) => {
+                // Filter the productSpecCharacteristicValue to keep only the default values
+                const defaultValues = item.productSpecCharacteristicValue.filter(value => value.isDefault);
+                
+                // Return the item with only the filtered default values
+                return {
+                  ...item, 
+                  productSpecCharacteristicValue: defaultValues
+                };
+              });
+              priceToCreate.prodSpecCharValueUse=filteredValues
             }
             if(this.productOfferForm.value.pricePlans[i].usageUnit){
               priceToCreate.unitOfMeasure=this.productOfferForm.value.pricePlans[i].usageUnit
@@ -448,6 +458,19 @@ export class OfferComponent implements OnInit{
             isBundle: false,
             description: this.productOfferForm.value.pricePlans[i].description,
             lifecycleStatus: this.productOfferForm.value.pricePlans[i].status
+          }
+          if(this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse){
+            let filteredValues = this.productOfferForm.value.pricePlans[i].prodSpecCharValueUse.map((item: { productSpecCharacteristicValue: any[]; }) => {
+              // Filter the productSpecCharacteristicValue to keep only the default values
+              const defaultValues = item.productSpecCharacteristicValue.filter(value => value.isDefault);
+              
+              // Return the item with only the filtered default values
+              return {
+                ...item, 
+                productSpecCharacteristicValue: defaultValues
+              };
+            });
+            priceToCreate.prodSpecCharValueUse=filteredValues
           }
           if(bundleCompsCheck.length>0){
             priceToCreate.price= {
@@ -553,18 +576,16 @@ export class OfferComponent implements OnInit{
       this.offerToCreate.productOfferingTerm= [
         {
             name: this.productOfferForm.value.license.treatment,
-            description: this.productOfferForm.value.license.description,
-            validFor: {}
+            description: this.productOfferForm.value.license.description
         }
       ]
     } else {
-      this.offerToCreate.productOfferingTerm = [
+      this.offerToCreate.productOfferingTerm= [
         {
             name: '',
-            description: '',
-            validFor: {}
+            description: ''
         }
-      ]        
+      ]
     }
 
     this.offerToCreate.productOfferingTerm.push({

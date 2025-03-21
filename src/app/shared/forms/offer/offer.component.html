@@ -1,8 +1,14 @@
 <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 mt-4 p-4 md:p-8 rounded-lg w-full">
+  @if(formType === 'update'){
+    <h2 class="text-3xl font-bold text-primary-100 dark:text-white pb-4">
+      {{ 'UPDATE_OFFER._update' | translate }}
+    </h2>
+  } @else {
+    <h2 class="text-3xl font-bold text-primary-100 dark:text-white pb-4">
+      {{ 'CREATE_OFFER._create' | translate }}
+    </h2>
+  }
 
-  <h2 class="text-3xl font-bold text-primary-100 dark:text-white pb-4">
-    {{ 'UPDATE_OFFER._update' | translate }}
-  </h2>
 
   <!-- Stepper -->
   <form [formGroup]="productOfferForm">

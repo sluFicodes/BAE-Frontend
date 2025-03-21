@@ -67,10 +67,9 @@ export class ConfigurationProfileDrawerComponent implements OnInit {
       name: char.name,
       description: char.description || '',
       productSpecCharacteristicValue: char.options.map((opt: any) => {
-        // Ensure "value" exists on opt
         if (!("value" in opt)) {
-          opt.value = char.selectedValue; // Or set a default value like null
-        }  
+          opt.value = "unitOfMeasure" in opt ? Number(char.selectedValue) : char.selectedValue;
+        } 
         return {
           ...opt,
           isDefault: String(opt.value) === String(char.selectedValue),
