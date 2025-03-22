@@ -386,7 +386,7 @@ export class OfferComponent implements OnInit{
       isBundle: false,
       description: plan.description,
       lifecycleStatus: plan.status,
-      priceType: comp?.priceType,
+      priceType: comp?.priceType ?? plan.priceType,
       price: comp?.price ? { value: comp.price, unit: plan.currency } : undefined,
       recurringChargePeriodType: undefined,
       recurringChargePeriodLength: undefined,

@@ -73,11 +73,17 @@ export class PricePlanDrawerComponent implements OnInit {
     this.formGroup.valueChanges.subscribe(() => {
       this.formGroup.markAsTouched();
     });
+
+    // Deshabilitar el control paymentOnline al inicio
+    const paymentOnlineControl = this.formGroup.get('paymentOnline');
+    if (paymentOnlineControl) {
+      paymentOnlineControl.disable();
+    }
   }
 
   savePricePlan() {
     if (this.formGroup.invalid) return;
-    this.save.emit(this.formGroup.value);
+    this.save.emit(this.formGroup.getRawValue());
     this.closeDrawer();
   }
 
