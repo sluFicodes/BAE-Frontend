@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Subject} from "rxjs";
-import {Category, cartProduct} from "../models/interfaces";
+import {Category, cartProduct, FormChangeState, PricePlanChangeState, SubformType} from "../models/interfaces";
 import { LoginInfo } from 'src/app/models/interfaces';
 
 export interface EventMessage {
@@ -9,9 +9,10 @@ export interface EventMessage {
   'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
   'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession' | 'CloseCartCard'|
   'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails' | 'OpenProductInvDetails' |
-  'SavePricePlan' | 'UpdatePricePlan' | 'ToggleEditPrice' | 'ToggleNewPrice';
+  'SavePricePlan' | 'UpdatePricePlan' | 'ToggleEditPrice' | 'ToggleNewPrice' |
+  'SubformChange';
   text?: string,
-  value?: object | boolean
+  value?: object | boolean | FormChangeState | PricePlanChangeState
 }
 
 
@@ -185,5 +186,12 @@ export class EventMessageService {
 
   emitToggleNewPricePlan(pricePlan:any){
     this.eventMessageSubject.next({type: 'ToggleNewPrice', value: pricePlan})
+  }
+
+  emitSubformChange(changeState: FormChangeState | PricePlanChangeState) {
+    this.eventMessageSubject.next({ 
+      type: 'SubformChange', 
+      value: changeState 
+    });
   }
 }

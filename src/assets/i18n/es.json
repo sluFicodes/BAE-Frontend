@@ -988,6 +988,12 @@
 
     },
   "FORMS": {
+    "PROCUREMENT_MODE": {
+      "_title": "Select Procurement Mode",
+      "_manual": "Manual",
+      "_automatic": "Automatic",
+      "_payment_automatic": "Payment Automatic - Procurement Manual"
+    },
     "PRICE_PLANS": {
       "_price_plans": "Price Plans",
       "_add": "Add new Price Plans",

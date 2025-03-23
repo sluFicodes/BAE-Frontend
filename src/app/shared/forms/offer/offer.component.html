@@ -34,43 +34,79 @@
     <div class="md:p-8">
       <!-- Step Forms -->
       @if (currentStep === 0) {
-        <app-general-info-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['generalInfo']"></app-general-info-form>
+        <app-general-info-form 
+          [data]="offer" 
+          [formType]="formType" 
+          [form]="productOfferForm.controls['generalInfo']"
+          (formChange)="handleSubformChange($event)">
+        </app-general-info-form>
       } @else if (currentStep === 1) {
         <app-prod-spec-form formControlName="prodSpec"
                             [data]="offer"
                             [partyId]="partyId"
-
-                            [formType]="formType">
+                            [formType]="formType"
+                            (formChange)="handleSubformChange($event)">
         </app-prod-spec-form>
       } @else if (currentStep === 2) {
         @if(this.formType=='update'){
-          <app-category-form formControlName="category" [data]="offer" [formType]="formType"></app-category-form>
+          <app-category-form formControlName="category" 
+                           [data]="offer" 
+                           [formType]="formType"
+                           (formChange)="handleSubformChange($event)">
+          </app-category-form>
         }@else{
           <app-catalogue formControlName="catalogue" [partyId]="partyId"></app-catalogue>
         }        
       } @else if (currentStep === 3){
         @if(this.formType=='update'){
-          <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
+          <app-license-form [data]="offer" 
+                          [formType]="formType" 
+                          [form]="productOfferForm.controls['license']"
+                          (formChange)="handleSubformChange($event)">
+          </app-license-form>
         }@else{
-          <app-category-form formControlName="category" [data]="offer" [formType]="formType"></app-category-form>
+          <app-category-form formControlName="category" 
+                           [data]="offer" 
+                           [formType]="formType"
+                           (formChange)="handleSubformChange($event)">
+          </app-category-form>
         }
       } @else if (currentStep === 4) {
         @if(this.formType=='update'){
-          <app-price-plans-form [form]="productOfferForm" [prodSpec]="productOfferForm.get('prodSpec')?.value"></app-price-plans-form>
+          <app-price-plans-form 
+            [form]="productOfferForm" 
+            [prodSpec]="productOfferForm.get('prodSpec')?.value"
+            (formChange)="handleSubformChange($event)">
+          </app-price-plans-form>
         }@else{
-          <app-license-form [data]="offer" [formType]="formType" [form]="productOfferForm.controls['license']"></app-license-form>
+          <app-license-form [data]="offer" 
+                          [formType]="formType" 
+                          [form]="productOfferForm.controls['license']"
+                          (formChange)="handleSubformChange($event)">
+          </app-license-form>
         }
       } @else if (currentStep === 5) {
         @if(this.formType=='update'){
-          <app-procurement-mode [formType]="formType" [form]="productOfferForm.controls['procurementMode']"></app-procurement-mode>
+          <app-procurement-mode [data]="offer" 
+            [form]="productOfferForm.controls['procurementMode']"
+            [formType]="formType"
+            (formChange)="handleSubformChange($event)">
+          </app-procurement-mode>
         }@else{
-          <app-price-plans-form [form]="productOfferForm" [prodSpec]="productOfferForm.get('prodSpec')?.value"></app-price-plans-form>
+          <app-price-plans-form [form]="productOfferForm" 
+                              [prodSpec]="productOfferForm.get('prodSpec')?.value"
+                              (formChange)="handleSubformChange($event)">
+          </app-price-plans-form>
         }         
       } @else if (currentStep === 6) {
         @if(this.formType=='update'){
           <app-replication-visibility></app-replication-visibility>
         }@else{
-          <app-procurement-mode [formType]="formType" [form]="productOfferForm.controls['procurementMode']"></app-procurement-mode>
+          <app-procurement-mode [data]="offer" 
+            [formType]="formType" 
+            [form]="productOfferForm.controls['procurementMode']"
+            (formChange)="handleSubformChange($event)">
+          </app-procurement-mode>
         }
       } @else if(currentStep === 7) {
         @if(this.formType=='update'){
@@ -101,10 +137,10 @@
       </button>
 
       <button (click)="goToStep(currentStep + 1)"
-              [disabled]="currentStep === steps.length - 1"
+              [disabled]="currentStep === steps.length - 1 || (formType === 'create' && !validateCurrentStep())"
               [ngClass]="{
-                'hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-white': currentStep !== steps.length - 1,
-                'cursor-not-allowed': currentStep === steps.length - 1
+                'hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-700 dark:hover:text-white': currentStep !== steps.length - 1 && (formType !== 'create' || validateCurrentStep()),
+                'cursor-not-allowed opacity-50': currentStep === steps.length - 1 || (formType === 'create' && !validateCurrentStep())
               }"
               class="px-4 py-2 flex items-center justify-center text-base font-medium rounded-lg text-gray-500 bg-white border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400">
         Next step
@@ -116,8 +152,12 @@
       </button>
       @if(formType === 'create' && currentStep === 8 || formType === 'update'){
         <button (click)="submitForm()"
-        [disabled]="!isFormValid"
-        class="px-4 py-2 bg-primary-100 hover:bg-primary-50 text-base font-medium text-white rounded-lg">
+        [disabled]="formType === 'update' ? !hasChanges : !isFormValid"
+        [ngClass]="{
+          'hover:bg-primary-50': formType === 'create' || formType === 'update' && hasChanges,
+          'opacity-50': formType === 'update' && !hasChanges
+        }"
+        class="px-4 py-2 text-base font-medium text-white rounded-lg bg-primary-100">
           {{ formType === 'create' ? 'Create Offer' : 'Update Offer' }}
         </button>
       }

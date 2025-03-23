@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, forwardRef, Input, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, forwardRef, Input, OnInit, OnDestroy, Output, EventEmitter} from '@angular/core';
 import {DatePipe, NgClass, NgIf, NgTemplateOutlet} from "@angular/common";
 import {TranslateModule} from "@ngx-translate/core";
 import {environment} from "../../../../../environments/environment";
@@ -7,6 +7,17 @@ import {PaginationService} from "../../../../services/pagination.service";
 import {ApiServiceService} from "../../../../services/product-service.service";
 import {AppModule} from "../../../../app.module";
 import {initFlowbite} from "flowbite";
+import {FormChangeState} from "../../../../models/interfaces";
+
+interface Category {
+  id: string;
+  name: string;
+  parentId?: string;
+  isRoot: boolean;
+  expanded?: boolean;
+  childrenLoaded?: boolean;
+  children?: Category[];
+}
 
 @Component({
   selector: 'app-category-form',
@@ -27,31 +38,44 @@ import {initFlowbite} from "flowbite";
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })
-export class CategoryComponent implements ControlValueAccessor, OnInit, AfterViewInit {
+export class CategoryComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy {
   @Input() formType!: string;
   @Input() data: any;
   @Input() partyId: any;
+  @Output() formChange = new EventEmitter<FormChangeState>();
 
   //CATEGORIES
   loadingCategory:boolean=false;
-  selectedCategories: any[] = [];
-  unformattedCategories:any[]=[];
-  categories:any[]=[];
+  selectedCategories: Category[] = [];
+  unformattedCategories:Category[]=[];
+  categories:Category[]=[];
+  private originalValue: Category[] = [];
+  private hasBeenModified: boolean = false;
+  private isEditMode: boolean = false;
 
   constructor(private api: ApiServiceService,
               private cdr: ChangeDetectorRef) {
+    console.log('🔄 Initializing CategoryComponent');
   }
 
   onChange: (value: any) => void = () => {};
   onTouched: () => void = () => {};
 
   async ngOnInit() {
+    console.log('📝 Initializing form in', this.formType, 'mode');
+    this.isEditMode = this.formType === 'update';
     // Si hay valores iniciales en el formulario, los cargamos
     await this.getCategories();
   }
 
-  writeValue(categories: any[]): void {
+  writeValue(categories: Category[]): void {
+    console.log('📝 Writing value to form:', categories);
     this.selectedCategories = categories || [];
+    // Store original value only in edit mode
+    if (this.isEditMode && categories) {
+      this.originalValue = JSON.parse(JSON.stringify(categories));
+      console.log('📝 Original value stored:', this.originalValue);
+    }
   }
 
   registerOnChange(fn: any): void {
@@ -62,7 +86,7 @@ export class CategoryComponent implements ControlValueAccessor, OnInit, AfterVie
     this.onTouched = fn;
   }
 
-  isCategorySelected(category: any): boolean {
+  isCategorySelected(category: Category): boolean {
     return this.selectedCategories.some(cat => cat.id === category.id);
   }
 
@@ -103,11 +127,10 @@ export class CategoryComponent implements ControlValueAccessor, OnInit, AfterVie
     }
   }
 
-  async loadChildren(category: any) {
+  async loadChildren(category: Category) {
     if (!category) return;
 
     if (category.childrenLoaded) {
-      // 🟢 Si los hijos ya están cargados, solo alternamos `expanded`
       category.expanded = !category.expanded;
       return;
     }
@@ -116,7 +139,6 @@ export class CategoryComponent implements ControlValueAccessor, OnInit, AfterVie
       console.log(`Cargando hijos de ${category.name}...`);
       const children = await this.api.getCategoriesByParentId(category.id);
 
-      // 🟢 Asignar hijos y marcar como cargados
       category.children = children.map(child => ({
         ...child,
         expanded: false,
@@ -127,36 +149,34 @@ export class CategoryComponent implements ControlValueAccessor, OnInit, AfterVie
       category.childrenLoaded = true;
       category.expanded = true;
 
-      setTimeout(() => this.cdr.detectChanges(), 0); // 🟢 Asegurar actualización de la vista
+      setTimeout(() => this.cdr.detectChanges(), 0);
 
     } catch (error) {
       console.error(`Error al cargar hijos de ${category.name}:`, error);
     }
   }
 
-  manageCategory(category: any): void {
+  manageCategory(category: Category): void {
     if (!category) return;
 
     const index = this.selectedCategories.findIndex(cat => cat.id === category.id);
 
     if (index > -1) {
-      // 🟢 Si la categoría ya está seleccionada, deseleccionarla
       this.selectedCategories.splice(index, 1);
-
-      // 🔄 Desmarcar todos los hijos recursivamente
       this.removeChildren(category);
-
     } else {
-      // 🟢 Si no está seleccionada, agregarla
       this.selectedCategories.push(category);
       this.addParent(category.parentId);
     }
 
-    this.onChange([...this.selectedCategories]); // Notificar al formulario padre
+    if (this.isEditMode) {
+      this.hasBeenModified = true;
+    }
+    this.onChange([...this.selectedCategories]);
     this.onTouched();
   }
 
-  removeChildren(category: any): void {
+  removeChildren(category: Category): void {
     if (!category.children || category.children.length === 0) return;
 
     for (let child of category.children) {
@@ -164,19 +184,13 @@ export class CategoryComponent implements ControlValueAccessor, OnInit, AfterVie
       if (index > -1) {
         this.selectedCategories.splice(index, 1);
       }
-      // 🔄 Llamada recursiva para eliminar hijos en todos los niveles
       this.removeChildren(child);
     }
   }
 
-
-  /**
-   * Método que marca automáticamente los padres cuando se selecciona un hijo.
-   */
-  addParent(parentId: string): void {
+  addParent(parentId: string | undefined): void {
     if (!parentId) return;
 
-    // 🟢 Buscar el padre en la jerarquía
     const parent = this.findCategoryById(parentId, this.categories);
 
     if (parent) {
@@ -184,18 +198,15 @@ export class CategoryComponent implements ControlValueAccessor, OnInit, AfterVie
 
       if (!alreadySelected) {
         this.selectedCategories.push(parent);
-        this.addParent(parent.parentId); // 🔄 Llamada recursiva para seleccionar toda la cadena ascendente
+        this.addParent(parent.parentId);
       }
     }
   }
 
-  /**
-   * Método recursivo que busca una categoría en toda la estructura.
-   */
-  findCategoryById(categoryId: string, categories: any[]): any {
+  findCategoryById(categoryId: string, categories: Category[]): Category | null {
     for (let category of categories) {
       if (category.id === categoryId) return category;
-      if (category.children.length > 0) {
+      if (category.children && category.children.length > 0) {
         const found = this.findCategoryById(categoryId, category.children);
         if (found) return found;
       }
@@ -203,22 +214,57 @@ export class CategoryComponent implements ControlValueAccessor, OnInit, AfterVie
     return null;
   }
 
-  protected readonly JSON = JSON;
-
-  async toggleCategory(category: any) {
+  async toggleCategory(category: Category) {
     if (!category) return;
 
     if (!category.childrenLoaded) {
-      // 🔄 Si los hijos no están cargados, cargarlos antes de expandir
       await this.loadChildren(category);
     } else {
-      // 🔄 Si ya están cargados, solo alternar la expansión
       category.expanded = !category.expanded;
     }
   }
 
-
   ngAfterViewInit() {
     setTimeout(() => this.cdr.detectChanges(), 0);
   }
+
+  ngOnDestroy() {
+    console.log('🗑️ Destroying CategoryComponent');
+    
+    // Solo emitir cambios si estamos en modo edición y hay cambios reales
+    if (this.isEditMode && this.hasBeenModified) {
+      const currentValue = [...this.selectedCategories];
+      const dirtyFields = this.getDirtyFields(currentValue);
+      
+      if (dirtyFields.length > 0) {
+        const changeState: FormChangeState = {
+          subformType: 'category',
+          isDirty: true,
+          dirtyFields,
+          originalValue: this.originalValue,
+          currentValue
+        };
+
+        console.log('🚀 Emitting final change state:', changeState);
+        this.formChange.emit(changeState);
+      } else {
+        console.log('📝 No real changes detected, skipping emission');
+      }
+    } else if (!this.isEditMode) {
+      console.log('📝 Not in edit mode, skipping change detection');
+    }
+  }
+
+  private getDirtyFields(currentValue: Category[]): string[] {
+    const dirtyFields: string[] = [];
+    
+    // Comparar arrays de categorías
+    if (JSON.stringify(currentValue) !== JSON.stringify(this.originalValue)) {
+      dirtyFields.push('selectedCategories');
+    }
+    
+    return dirtyFields;
+  }
+
+  protected readonly JSON = JSON;
 }

@@ -234,3 +234,50 @@ export interface ProductOfferingPrice_DTO {
       startDateTime?: string;
     }
 }
+
+export type SubformType = 
+  | 'generalInfo'
+  | 'productSpec'
+  | 'category'
+  | 'license'
+  | 'pricePlans'
+  | 'procurementMode'
+  | 'replicationMode';
+
+export interface FormChangeState {
+  subformType: string;
+  isDirty: boolean;
+  dirtyFields: string[];
+  originalValue: any;
+  currentValue: any;
+}
+
+export interface PricePlanChangeState extends FormChangeState {
+  priceComponentsChanged: boolean;
+  profileChanged: boolean;
+  modifiedPricePlans: {
+    id: string;
+    isNew: boolean;
+    modifiedFields: string[];
+    priceComponents: {
+      added: Array<{
+        id: string;
+        name: string;
+        price: number;
+        currency: string;
+        recurringPeriod?: string;
+        usageUnit?: string;
+      }>;
+      modified: Array<{
+        id: string;
+        name: string;
+        price: number;
+        currency: string;
+        recurringPeriod?: string;
+        usageUnit?: string;
+        modifiedFields: string[];
+      }>;
+      deleted: string[]; // IDs de los componentes eliminados
+    };
+  }[];
+}

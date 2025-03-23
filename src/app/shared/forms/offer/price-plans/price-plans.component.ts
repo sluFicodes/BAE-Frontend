@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, forwardRef, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, forwardRef, ChangeDetectorRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import {
   ControlValueAccessor, FormArray,
   FormBuilder,
@@ -13,6 +13,59 @@ import {PricePlanDrawerComponent} from "./price-plan-drawer/price-plan-drawer.co
 import { v4 as uuidv4 } from 'uuid';
 import {pricePlanValidator} from "../../../../validators/validators";
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgClass } from "@angular/common";
+import { EventMessageService } from "src/app/services/event-message.service";
+import { FormChangeState, PricePlanChangeState } from "src/app/models/interfaces";
+import { Subscription, debounceTime, distinctUntilChanged, filter } from "rxjs";
+
+interface PriceComponent {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  recurringPeriod?: string;
+  usageUnit?: string;
+}
+
+interface PricePlan {
+  id: string;
+  name: string;
+  description: string;
+  isBundle: boolean;
+  lastUpdate: string | null;
+  lifecycleStatus: string;
+  paymentOnline: boolean;
+  priceType: string;
+  currency: string;
+  unitOfMeasure: string | null;
+  validFor: any | null;
+  priceComponents: PriceComponent[];
+}
+
+interface PriceComponentChange {
+  id: string;
+  name: string;
+  price: number;
+  currency: string;
+  recurringPeriod?: string;
+  usageUnit?: string;
+  modifiedFields: string[];
+  oldValue?: PriceComponent;
+  newValue?: PriceComponent;
+}
+
+interface PricePlanChange {
+  id: string;
+  isNew: boolean;
+  modifiedFields: string[];
+  oldValue?: PricePlan;
+  newValue?: PricePlan;
+  priceComponents: {
+    added: PriceComponentChange[];
+    modified: PriceComponentChange[];
+    deleted: string[];
+  };
+}
 
 @Component({
   selector: 'app-price-plans-form',
@@ -23,7 +76,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     PricePlansTableComponent,
     TranslateModule,
     PricePlanDrawerComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgClass
   ],
   providers: [
     {
@@ -33,9 +87,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     }
   ]
 })
-export class PricePlansComponent implements OnInit, ControlValueAccessor {
+export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() form!: FormGroup;  // Recibe el formulario del padre
   @Input() prodSpec: any | null = null;  // Y con este se acceder a prodSpec
+  @Output() formChange = new EventEmitter<FormChangeState>();
 
   pricePlansForm = this.fb.array<FormGroup>([], { validators: [] });
   paymentOnline = false;  // Estado global del checkbox
@@ -46,20 +101,30 @@ export class PricePlansComponent implements OnInit, ControlValueAccessor {
   showDrawer = false;
   pricePlanForm!: FormGroup;  // This will be passed to the drawer
   action = 'create'; // What are we doing?
+  originalValue: any;
+  formSubscription: Subscription | null = null;
 
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {}
+  private originalPricePlans: PricePlan[] = [];
+  private originalPriceComponents: { [key: string]: any[] } = {};
+  private lastKnownState: PricePlan[] = [];
+
+  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef, private eventMessage: EventMessageService) {}
 
   ngOnInit() {
+    console.log('🔄 Initializing PricePlansComponent');
     this.pricePlanForm = this.createPricePlanForm();
 
     // ✅ Get existing price plans from parent form
     const existingPlans = this.form.get('pricePlans')?.value || [];
+    console.log('📋 Existing plans:', existingPlans);
+    
     this.pricePlansForm = this.fb.array<FormGroup>(
-      existingPlans.map((plan: any) => this.createPricePlanForm(plan))
+      existingPlans.map((plan: PricePlan) => this.createPricePlanForm(plan))
     );
 
     // ✅ Sync the displayed list with the form array
     this.pricePlans = this.pricePlansForm.value;
+    console.log('💰 Initial price plans:', this.pricePlans);
     
     // Set initial payment online state based on existing plans
     if (this.pricePlans.length > 0) {
@@ -67,6 +132,265 @@ export class PricePlansComponent implements OnInit, ControlValueAccessor {
       this.paymentOnlineControl.setValue(this.paymentOnline);
       this.paymentOnlineControl.disable();
     }
+
+    // Guardar el estado original
+    this.originalPricePlans = this.pricePlans.map((plan: PricePlan) => ({
+      id: plan['id'],
+      name: plan['name'],
+      description: plan['description'],
+      isBundle: plan['isBundle'],
+      lastUpdate: plan['lastUpdate'],
+      lifecycleStatus: plan['lifecycleStatus'],
+      paymentOnline: plan['paymentOnline'],
+      priceType: plan['priceType'],
+      currency: plan['currency'],
+      unitOfMeasure: plan['unitOfMeasure'],
+      validFor: plan['validFor'],
+      priceComponents: plan['priceComponents']?.map((comp: PriceComponent) => ({
+        id: comp['id'],
+        name: comp['name'],
+        price: comp['price'],
+        currency: comp['currency'],
+        recurringPeriod: comp['recurringPeriod'],
+        usageUnit: comp['usageUnit']
+      })) || []
+    }));
+
+    // Guardar el estado inicial como último estado conocido
+    this.lastKnownState = this.pricePlans.map((plan: PricePlan) => ({
+      id: plan['id'],
+      name: plan['name'],
+      description: plan['description'],
+      isBundle: plan['isBundle'],
+      lastUpdate: plan['lastUpdate'],
+      lifecycleStatus: plan['lifecycleStatus'],
+      paymentOnline: plan['paymentOnline'],
+      priceType: plan['priceType'],
+      currency: plan['currency'],
+      unitOfMeasure: plan['unitOfMeasure'],
+      validFor: plan['validFor'],
+      priceComponents: plan['priceComponents']?.map((comp: PriceComponent) => ({
+        id: comp['id'],
+        name: comp['name'],
+        price: comp['price'],
+        currency: comp['currency'],
+        recurringPeriod: comp['recurringPeriod'],
+        usageUnit: comp['usageUnit']
+      })) || []
+    }));
+
+    console.log('📝 Original state:', this.originalPricePlans);
+    console.log('🔍 Last known state:', this.lastKnownState);
+
+    // Subscribe to form array changes
+    this.formSubscription = this.pricePlansForm.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        filter(() => this.pricePlansForm.dirty)
+      )
+      .subscribe((newValue) => {
+        console.log('📊 Form array value changed:', newValue);
+        this.checkChanges();
+      });
+
+    // Subscribe to individual price plan changes
+    this.pricePlansForm.controls.forEach((control, index) => {
+      control.valueChanges
+        .pipe(
+          debounceTime(500),
+          distinctUntilChanged()
+        )
+        .subscribe((newValue) => {
+          console.log(`📈 Price plan ${index} changed:`, newValue);
+          this.checkChanges();
+        });
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.formSubscription) {
+      this.formSubscription.unsubscribe();
+    }
+  }
+
+  private checkChanges() {
+    console.log('🔍 Checking for changes...');
+    const currentValue = this.pricePlansForm.getRawValue() as PricePlan[];
+    console.log('📊 Current form value:', currentValue);
+
+    const changes = this.getDetailedChanges(currentValue);
+    console.log('📝 Detailed changes:', changes);
+
+    const changeState: PricePlanChangeState = {
+      subformType: 'pricePlans',
+      isDirty: this.pricePlansForm.dirty,
+      dirtyFields: Object.keys(this.pricePlansForm.controls)
+        .filter(key => this.pricePlansForm.get(key)?.dirty),
+      originalValue: this.originalValue,
+      currentValue,
+      priceComponentsChanged: changes.some(change => 
+        change.priceComponents.added.length > 0 || 
+        change.priceComponents.modified.length > 0 || 
+        change.priceComponents.deleted.length > 0
+      ),
+      profileChanged: this.checkProfileChanges(),
+      modifiedPricePlans: changes
+    };
+
+    console.log('🚀 Emitting price plans change state:', changeState);
+    this.formChange.emit(changeState);
+
+    // Actualizar el último estado conocido
+    this.lastKnownState = currentValue.map(plan => {
+      const mappedPlan: PricePlan = {
+        id: plan['id'],
+        name: plan['name'],
+        description: plan['description'],
+        isBundle: plan['isBundle'],
+        lastUpdate: plan['lastUpdate'],
+        lifecycleStatus: plan['lifecycleStatus'],
+        paymentOnline: plan['paymentOnline'],
+        priceType: plan['priceType'],
+        currency: plan['currency'],
+        unitOfMeasure: plan['unitOfMeasure'],
+        validFor: plan['validFor'],
+        priceComponents: plan['priceComponents']?.map((comp: PriceComponent) => ({
+          id: comp['id'],
+          name: comp['name'],
+          price: comp['price'],
+          currency: comp['currency'],
+          recurringPeriod: comp['recurringPeriod'],
+          usageUnit: comp['usageUnit']
+        })) || []
+      };
+      return mappedPlan;
+    });
+  }
+
+  private getDetailedChanges(currentValue: PricePlan[]): PricePlanChange[] {
+    const changes: PricePlanChange[] = [];
+
+    currentValue.forEach((plan: PricePlan) => {
+      const originalPlan = this.originalPricePlans['find'](p => p['id'] === plan['id']);
+      const lastKnownPlan = this.lastKnownState['find']((p: PricePlan) => p['id'] === plan['id']);
+      
+      // Detectar cambios en el plan
+      const modifiedFields = this.getModifiedFields(originalPlan, plan);
+      const planChanges = this.getModifiedFields(lastKnownPlan, plan);
+      
+      // Detectar cambios en los componentes
+      const originalComponents = originalPlan?.priceComponents || [];
+      const lastKnownComponents = lastKnownPlan?.priceComponents || [];
+      const currentComponents = plan.priceComponents || [];
+
+      const priceComponents = this.getDetailedComponentChanges(
+        originalComponents,
+        lastKnownComponents,
+        currentComponents
+      );
+
+      if (modifiedFields.length > 0 || 
+          planChanges.length > 0 ||
+          priceComponents.added.length > 0 || 
+          priceComponents.modified.length > 0 || 
+          priceComponents.deleted.length > 0) {
+        changes.push({
+          id: plan['id'],
+          isNew: !originalPlan,
+          modifiedFields,
+          oldValue: lastKnownPlan,
+          newValue: plan,
+          priceComponents
+        });
+      }
+    });
+
+    return changes;
+  }
+
+  private getDetailedComponentChanges(
+    originalComponents: PriceComponent[],
+    lastKnownComponents: PriceComponent[],
+    currentComponents: PriceComponent[]
+  ): {
+    added: PriceComponentChange[];
+    modified: PriceComponentChange[];
+    deleted: string[];
+  } {
+    const added = currentComponents
+      .filter(comp => !originalComponents['find'](o => o['id'] === comp['id']))
+      .map(comp => ({
+        id: comp['id'],
+        name: comp['name'],
+        price: comp['price'],
+        currency: comp['currency'],
+        recurringPeriod: comp['recurringPeriod'],
+        usageUnit: comp['usageUnit'],
+        modifiedFields: Object.keys(comp),
+        newValue: comp
+      }));
+
+    const deleted = originalComponents
+      .filter(comp => !currentComponents['find'](c => c['id'] === comp['id']))
+      .map(comp => comp['id']);
+
+    const modified = currentComponents
+      .filter(comp => {
+        const originalComp = originalComponents['find'](o => o['id'] === comp['id']);
+        const lastKnownComp = lastKnownComponents['find'](l => l['id'] === comp['id']);
+        return originalComp && (
+          this.getModifiedFields(originalComp, comp).length > 0 ||
+          this.getModifiedFields(lastKnownComp, comp).length > 0
+        );
+      })
+      .map(comp => {
+        const originalComp = originalComponents['find'](o => o['id'] === comp['id']);
+        const lastKnownComp = lastKnownComponents['find'](l => l['id'] === comp['id']);
+        return {
+          id: comp['id'],
+          name: comp['name'],
+          price: comp['price'],
+          currency: comp['currency'],
+          recurringPeriod: comp['recurringPeriod'],
+          usageUnit: comp['usageUnit'],
+          modifiedFields: this.getModifiedFields(lastKnownComp, comp),
+          oldValue: lastKnownComp,
+          newValue: comp
+        };
+      });
+
+    return { added, modified, deleted };
+  }
+
+  private getModifiedFields(original: PricePlan | PriceComponent | undefined, current: PricePlan | PriceComponent): string[] {
+    if (!original) return Object.keys(current);
+    
+    return Object.keys(current).filter(key => {
+      // Ignorar campos que no queremos comparar
+      if (key === 'priceComponents' || key === 'productProfile' || key === 'controls' || key === '_parent') {
+        return false;
+      }
+
+      const originalValue = (original as any)[key];
+      const currentValue = (current as any)[key];
+
+      // Si alguno de los valores es un FormGroup o FormArray, comparar sus valores
+      if (originalValue instanceof FormGroup || currentValue instanceof FormGroup ||
+          originalValue instanceof FormArray || currentValue instanceof FormArray) {
+        return JSON.stringify(originalValue?.value) !== JSON.stringify(currentValue?.value);
+      }
+
+      // Para otros tipos de valores, comparar directamente
+      return JSON.stringify(originalValue) !== JSON.stringify(currentValue);
+    });
+  }
+
+  private checkProfileChanges(): boolean {
+    const pricePlans = this.pricePlansForm.get('pricePlans')?.value || [];
+    return pricePlans.some((plan: any) => 
+      plan.productProfile?.dirty || plan.productProfile?.touched
+    );
   }
 
   onPaymentOnlineChange(event: any) {

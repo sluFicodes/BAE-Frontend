@@ -1,4 +1,4 @@
-import {Component, forwardRef, Input, OnInit} from '@angular/core';
+import {Component, forwardRef, Input, OnInit, OnDestroy, Output, EventEmitter} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -9,6 +9,17 @@ import {TranslateModule} from "@ngx-translate/core";
 import {ProductSpecServiceService} from "../../../../services/product-spec-service.service";
 import {PaginationService} from "../../../../services/pagination.service";
 import {environment} from "../../../../../environments/environment";
+import { FormChangeState } from "src/app/models/interfaces";
+import { Subscription } from "rxjs";
+
+interface ProductSpec {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+  isBundle: boolean;
+  lastUpdate: string | null;
+}
 
 @Component({
   selector: 'app-prod-spec-form',
@@ -28,14 +39,18 @@ import {environment} from "../../../../../environments/environment";
   templateUrl: './prod-spec.component.html',
   styleUrl: './prod-spec.component.css'
 })
-export class ProdSpecComponent implements ControlValueAccessor, OnInit {
-
+export class ProdSpecComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input() formType!: string;
   @Input() data: any;
   @Input() partyId: any;
   @Input() bundleChecked: boolean = false;
+  @Output() formChange = new EventEmitter<FormChangeState>();
 
-  selectedProdSpecInternal: any = null;
+  selectedProdSpecInternal: ProductSpec | null = null;
+  private originalValue: ProductSpec | null = null;
+  private formSubscription: Subscription | null = null;
+  private hasBeenModified: boolean = false;
+  isEditMode: boolean = false;
 
   //PAGE SIZES:
   PROD_SPEC_LIMIT: number = environment.PROD_SPEC_LIMIT;
@@ -51,10 +66,41 @@ export class ProdSpecComponent implements ControlValueAccessor, OnInit {
 
   constructor(private prodSpecService: ProductSpecServiceService,
               private paginationService: PaginationService) {
+    console.log('🔄 Initializing ProdSpecComponent');
   }
 
   async ngOnInit() {
+    console.log('📝 Initializing form in', this.formType, 'mode');
+    this.isEditMode = this.formType === 'update';
     await this.getSellerProdSpecs(false);
+  }
+
+  ngOnDestroy() {
+    console.log('🗑️ Destroying ProdSpecComponent');
+    if (this.formSubscription) {
+      this.formSubscription.unsubscribe();
+    }
+
+    // Solo emitir cambios si estamos en modo edición y hay cambios reales
+    if (this.isEditMode && this.hasBeenModified) {
+      const dirtyFields = this.getDirtyFields();
+      if (dirtyFields.length > 0) {
+        const changeState: FormChangeState = {
+          subformType: 'productSpecification',
+          isDirty: true,
+          dirtyFields,
+          originalValue: this.originalValue,
+          currentValue: this.selectedProdSpecInternal
+        };
+
+        console.log('🚀 Emitting final change state:', changeState);
+        this.formChange.emit(changeState);
+      } else {
+        console.log('📝 No real changes detected, skipping emission');
+      }
+    } else if (!this.isEditMode) {
+      console.log('📝 Not in edit mode, skipping change detection');
+    }
   }
 
   async getSellerProdSpecs(next:boolean){
@@ -100,8 +146,13 @@ export class ProdSpecComponent implements ControlValueAccessor, OnInit {
   onChange: (value: any) => void = () => {};
   onTouched: () => void = () => {};
 
-  writeValue(prodSpec: any): void {
+  writeValue(prodSpec: ProductSpec): void {
+    console.log('📝 Writing value:', prodSpec);
     this.selectedProdSpecInternal = prodSpec;
+    if (this.isEditMode) {
+      this.originalValue = prodSpec;
+      this.hasBeenModified = false;
+    }
     this.onChange(prodSpec);
   }
 
@@ -117,7 +168,13 @@ export class ProdSpecComponent implements ControlValueAccessor, OnInit {
     return this.selectedProdSpecInternal?.id === prodId;
   }
 
-  toggleSelection(prod: any): void {
+  toggleSelection(prod: ProductSpec): void {
+    if (this.isEditMode) {
+      console.log('📝 Cannot change product spec in update mode');
+      return;
+    }
+    
+    console.log('🔄 Toggling selection:', prod);
     // Si el producto ya está seleccionado, lo deseleccionamos. Si no, lo seleccionamos.
     this.selectedProdSpecInternal = this.selectedProdSpecInternal?.id === prod.id ? null : prod;
     this.onChange(this.selectedProdSpecInternal);
@@ -128,6 +185,18 @@ export class ProdSpecComponent implements ControlValueAccessor, OnInit {
     return prodId === this.selectedProdSpecInternal?.id
       ? "bg-white dark:bg-secondary-100"
       : "bg-white dark:bg-secondary-300";
+  }
+
+  private getDirtyFields(): string[] {
+    if (!this.selectedProdSpecInternal || !this.originalValue) {
+      return [];
+    }
+
+    return Object.keys(this.selectedProdSpecInternal).filter(key => {
+      const currentValue = (this.selectedProdSpecInternal as any)[key];
+      const originalValue = (this.originalValue as any)[key];
+      return JSON.stringify(currentValue) !== JSON.stringify(originalValue);
+    });
   }
 }
 

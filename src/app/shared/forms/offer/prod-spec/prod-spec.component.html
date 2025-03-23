@@ -49,7 +49,7 @@
           <tbody>
             @for (prod of prodSpecs; track $index) {
               <tr class="border-b hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-secondary-200"
-                  (click)="toggleSelection(prod)"
+                  (click)="!isEditMode && toggleSelection(prod)"
                   [ngClass]="getRowClass(prod.id)">
 
                 <!-- Checkbox -->
@@ -58,7 +58,8 @@
                          name="prodSpecSelection"
                          class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                          [checked]="isSelected(prod.id)"
-                         (click)="$event.stopPropagation(); toggleSelection(prod)">
+                         [disabled]="isEditMode"
+                         (click)="$event.stopPropagation(); !isEditMode && toggleSelection(prod)">
                 </td>
 
                 <td class="px-6 py-4">{{ prod.name }}</td>

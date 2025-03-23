@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {GeneralInfoComponent} from "./general-info/general-info.component";
 import {TranslateModule} from "@ngx-translate/core";
@@ -15,6 +15,8 @@ import {OfferSummaryComponent} from "./offer-summary/offer-summary.component"
 import { lastValueFrom } from 'rxjs';
 import {components} from "src/app/models/product-catalog";
 import {EventMessageService} from "src/app/services/event-message.service";
+import {FormChangeState} from "../../../models/interfaces";
+import {Subscription} from "rxjs";
 import * as moment from 'moment';
 
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
@@ -27,7 +29,6 @@ type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
     GeneralInfoComponent,
     TranslateModule,
     ProdSpecComponent,
-    NgIf,
     ReactiveFormsModule,
     CategoryComponent,
     LicenseComponent,
@@ -41,7 +42,7 @@ type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
   templateUrl: './offer.component.html',
   styleUrl: './offer.component.css'
 })
-export class OfferComponent implements OnInit{
+export class OfferComponent implements OnInit, OnDestroy{
 
   @Input() formType: 'create' | 'update' = 'create';
   @Input() offer: any = {};
@@ -71,14 +72,18 @@ export class OfferComponent implements OnInit{
 
   offerToCreate:ProductOffering_Create | undefined;
 
+  private formChanges: { [key: string]: FormChangeState } = {};
+  private formSubscription: Subscription | null = null;
+  hasChanges: boolean = false;
+
   constructor(private api: ApiServiceService,
               private eventMessage: EventMessageService,
               private fb: FormBuilder) {
 
     this.productOfferForm = this.fb.group({
       generalInfo: this.fb.group({}),
-      prodSpec: new FormControl(null),
-      catalogue: new FormControl(null),
+      prodSpec: new FormControl(null, [Validators.required]),
+      catalogue: new FormControl(null, [Validators.required]),
       category: new FormControl([]),
       license: this.fb.group({}),
       pricePlans: new FormControl([]),
@@ -86,24 +91,85 @@ export class OfferComponent implements OnInit{
       replicationMode: this.fb.group({})
     });
 
-    // Suscribirse a cambios en la validación
+    // Subscribe to form validation changes
     this.productOfferForm.statusChanges.subscribe(status => {
       this.isFormValid = status === 'VALID';
     });
+
+    // Subscribe to subform changes
+    this.formSubscription = this.eventMessage.messages$.subscribe(message => {
+      if (message.type === 'SubformChange') {
+        const changeState = message.value as FormChangeState;
+        console.log('Received subform change:', changeState);
+        this.handleSubformChange(changeState);
+      }
+    });
+  }
+
+  handleSubformChange(change: FormChangeState) {
+    console.log('📝 Subform change received:', change);
+    this.formChanges[change.subformType] = change;
+    this.hasChanges = Object.keys(this.formChanges).length > 0;
+    console.log('📝 Has changes:', this.hasChanges);
+  }
+
+  ngOnDestroy() {
+    if (this.formSubscription) {
+      this.formSubscription.unsubscribe();
+    }
   }
 
   goToStep(index: number) {
+    // Solo validar en modo creación
+    if (this.formType === 'create' && index > this.currentStep) {
+      // Validar el paso actual
+      const currentStepValid = this.validateCurrentStep();
+      if (!currentStepValid) {
+        return; // No permitir avanzar si el paso actual no es válido
+      }
+    }
+    
     this.currentStep = index;
   }
 
+  validateCurrentStep(): boolean {
+    switch (this.currentStep) {
+      case 0: // General Info
+        return this.productOfferForm.get('generalInfo')?.valid || false;
+      case 1: // Product Specification
+        return !!this.productOfferForm.get('prodSpec')?.value;
+      case 2: // Catalogue
+        return !!this.productOfferForm.get('catalogue')?.value;
+      case 3: // Category
+        return true; // Las categorías no son obligatorias
+      case 4: // License
+        return this.productOfferForm.get('license')?.valid || false;
+      case 5: // Price Plans
+        return true;
+      case 6: // Procurement Mode
+        return this.productOfferForm.get('procurementMode')?.valid || false;
+      case 7: // Replication & Visibility
+        return this.productOfferForm.get('replicationMode')?.valid || false;
+      default:
+        return true;
+    }
+  }
+
   submitForm() {
-    console.log(this.productOfferForm.value);
-    this.createOffer();
+    if (this.formType === 'update') {
+      console.log('🔄 Starting offer update process...');
+      console.log('📝 Current form changes:', this.formChanges);
+      
+      // Aquí irá la lógica de actualización
+      // Por ahora solo mostramos los cambios
+    } else {
+      // Lógica de creación existente
+      this.createOffer();
+    }
   }
 
   async ngOnInit() {
     if (this.formType === 'update' && this.offer) {
-      await this.loadOfferData();
       this.steps = [
         'General Info',
         'Product Specification',
@@ -115,6 +181,7 @@ export class OfferComponent implements OnInit{
         'Replication & Visibility',
         'Summary'
       ];
+      await this.loadOfferData();
     }
 
   }
@@ -140,6 +207,7 @@ export class OfferComponent implements OnInit{
 
     //LICENSE
     if(this.offer.productOfferingTerm){
+      console.log('Found productOfferingTerm:', this.offer.productOfferingTerm);
       this.productOfferForm.patchValue({
         license: {
           treatment: this.offer.productOfferingTerm[0].name,
@@ -148,16 +216,22 @@ export class OfferComponent implements OnInit{
       });
 
       //PROCUREMENT
+      /*console.log('Checking procurement terms...');
       this.offer.productOfferingTerm.forEach((term: any) => {
+        console.log('Checking term:', term);
         if(term.name == 'procurement') {
+          console.log('Found procurement term:', term);
+          const procurementValue = {
+            id: term.description,
+            name: term.description
+          };
+          console.log('Setting procurement value:', procurementValue);
           this.productOfferForm.patchValue({
-            procurementMode: {
-              treatment: term.name,
-              description: term.description
-            }
+            procurementMode: procurementValue
           });
+          console.log('Form value after patch:', this.productOfferForm.value);
         }
-      })
+      })*/
     }
 
     // Price Plans
@@ -492,7 +566,7 @@ export class OfferComponent implements OnInit{
         },
         {
           name: 'procurement',
-          description: formValue.procurementMode.id
+          description: formValue.procurementMode.mode
         }
       ]
     };
