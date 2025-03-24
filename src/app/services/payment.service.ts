@@ -13,9 +13,13 @@ export class PaymentService {
   constructor(private http: HttpClient) { }
 
   completePayment(params: any) {
-    const body = {
+    const body: any = {
       confirm_action: params.action,
       reference: params.ref
+    }
+
+    if (params.jwt) {
+      body.jwt = params.jwt;
     }
 
     // TODO: Different payment gatways may require extra params
