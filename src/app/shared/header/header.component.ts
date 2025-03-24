@@ -23,7 +23,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { Subscription, timer} from 'rxjs';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
-import { initFlowbite } from 'flowbite';
+import { initFlowbite, Dropdown } from 'flowbite';
 import { QrVerifierService } from 'src/app/services/qr-verifier.service';
 import * as uuid from 'uuid';
 import { TranslateService } from '@ngx-translate/core';
@@ -225,7 +225,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     } else {
       this.themeToggleDarkIcon.nativeElement.classList.remove('hidden');
     }
-
   }
   toggleDarkMode() {
     // toggle icons inside button
@@ -259,6 +258,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
 
   goTo(path:string) {
+    this.closeUserDropdown();
     this.router.navigate([path]);
   }
 
@@ -278,6 +278,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
 
   async logout(){
+    this.closeUserDropdown();
     this.localStorage.setObject('login_items',{});
     this.is_logged=false;
     this.username='';
@@ -293,6 +294,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
 
   changeSession(idx:number,exitOrgLogin:boolean){
+    this.closeUserDropdown();
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(exitOrgLogin){
       this.loginInfo = {"id": aux.id,
@@ -341,6 +343,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
 
   hideDropdown(dropdownId:any){
+    this.closeUserDropdown();
     const dropdown = document.getElementById(dropdownId);
     if (dropdown) {
       dropdown.classList.add('hidden');
@@ -398,6 +401,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     this.translate.use(language);
     this.localStorage.setItem('current_language', language);
     this.defaultLang=language;
+  }
+
+  closeUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+      dropdown.classList.add('hidden');
+    }
   }
 
   protected readonly faCartShopping = faCartShopping;
