@@ -209,6 +209,20 @@ export class OfferComponent implements OnInit, OnDestroy{
     //LICENSE
     if(this.offer.productOfferingTerm){
       console.log('Found productOfferingTerm:', this.offer.productOfferingTerm);
+      
+      // Limpiar términos vacíos
+      this.offer.productOfferingTerm = this.offer.productOfferingTerm.filter((term: any) => 
+        term.name && term.name.trim() !== '' && term.description && term.description.trim() !== ''
+      );
+      
+      // Asegurar que el término de licencia está en la posición 0
+      const licenseTerm = this.offer.productOfferingTerm.find((term: any) => term.name !== 'procurement');
+      if (licenseTerm) {
+        // Reordenar el array para que el término de licencia esté en la posición 0
+        this.offer.productOfferingTerm = this.offer.productOfferingTerm.filter((term: any) => term !== licenseTerm);
+        this.offer.productOfferingTerm.unshift(licenseTerm);
+      }
+
       this.productOfferForm.patchValue({
         license: {
           treatment: this.offer.productOfferingTerm[0].name,
@@ -684,7 +698,8 @@ export class OfferComponent implements OnInit, OnDestroy{
           if (licenseTerm) {
             licenseTerm.description = change.currentValue.description;
           } else {
-            basePayload.productOfferingTerm.push({
+            // Añadir el término de licencia al principio del array
+            basePayload.productOfferingTerm.unshift({
               name: change.currentValue.treatment,
               description: change.currentValue.description
             });
@@ -725,6 +740,13 @@ export class OfferComponent implements OnInit, OnDestroy{
         delete basePayload[key];
       }
     });
+
+    // Limpiar términos vacíos en productOfferingTerm
+    if (basePayload.productOfferingTerm) {
+      basePayload.productOfferingTerm = basePayload.productOfferingTerm.filter((term: any) => 
+        term.name && term.name.trim() !== '' && term.description && term.description.trim() !== ''
+      );
+    }
 
     console.log('📝 Final update payload:', basePayload);
 
