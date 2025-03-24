@@ -76,8 +76,7 @@ interface PricePlanChange {
     PricePlansTableComponent,
     TranslateModule,
     PricePlanDrawerComponent,
-    ReactiveFormsModule,
-    NgClass
+    ReactiveFormsModule
   ],
   providers: [
     {
@@ -532,6 +531,10 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
     this.showDrawer = true;
   }
 
+  closeDrawer() {
+    this.showDrawer = false;
+    this.removePricePlan(this.pricePlansForm.length - 1);
+  }
 
   editPricePlan(plan: any) {
     console.log('Editing Price Plan:', plan);
@@ -560,6 +563,12 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
     this.pricePlans = this.pricePlansForm.controls.map(control => control.getRawValue());
     this.form.get('pricePlans')?.setValue(this.pricePlans);
     this.onChange(this.pricePlans);
+    if (this.pricePlans.length === 0) {
+      this.paymentOnlineControl.enable();
+    } else {
+      this.paymentOnlineControl.disable();
+    }
+    this.cdr.detectChanges();
   }
 
   // Métodos del ControlValueAccessor para conectar con `formControlName`
