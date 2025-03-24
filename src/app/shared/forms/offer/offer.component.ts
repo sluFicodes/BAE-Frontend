@@ -210,18 +210,16 @@ export class OfferComponent implements OnInit, OnDestroy{
     if(this.offer.productOfferingTerm){
       console.log('Found productOfferingTerm:', this.offer.productOfferingTerm);
       
-      // Limpiar términos vacíos
-      this.offer.productOfferingTerm = this.offer.productOfferingTerm.filter((term: any) => 
+      // Mantener el primer término (licencia) incluso si está vacío
+      const licenseTerm = this.offer.productOfferingTerm[0];
+      
+      // Filtrar el resto de términos
+      const otherTerms = this.offer.productOfferingTerm.slice(1).filter((term: any) => 
         term.name && term.name.trim() !== '' && term.description && term.description.trim() !== ''
       );
       
-      // Asegurar que el término de licencia está en la posición 0
-      const licenseTerm = this.offer.productOfferingTerm.find((term: any) => term.name !== 'procurement');
-      if (licenseTerm) {
-        // Reordenar el array para que el término de licencia esté en la posición 0
-        this.offer.productOfferingTerm = this.offer.productOfferingTerm.filter((term: any) => term !== licenseTerm);
-        this.offer.productOfferingTerm.unshift(licenseTerm);
-      }
+      // Reconstruir el array con el término de licencia en la posición 0
+      this.offer.productOfferingTerm = [licenseTerm, ...otherTerms];
 
       this.productOfferForm.patchValue({
         license: {
@@ -743,9 +741,16 @@ export class OfferComponent implements OnInit, OnDestroy{
 
     // Limpiar términos vacíos en productOfferingTerm
     if (basePayload.productOfferingTerm) {
-      basePayload.productOfferingTerm = basePayload.productOfferingTerm.filter((term: any) => 
+      // Mantener el primer término (licencia) incluso si está vacío
+      const licenseTerm = basePayload.productOfferingTerm[0];
+      
+      // Filtrar el resto de términos
+      const otherTerms = basePayload.productOfferingTerm.slice(1).filter((term: any) => 
         term.name && term.name.trim() !== '' && term.description && term.description.trim() !== ''
       );
+      
+      // Reconstruir el array con el término de licencia en la posición 0
+      basePayload.productOfferingTerm = [licenseTerm, ...otherTerms];
     }
 
     console.log('📝 Final update payload:', basePayload);
