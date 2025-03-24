@@ -162,6 +162,7 @@ export class OfferComponent implements OnInit, OnDestroy{
       
       // Aquí irá la lógica de actualización
       // Por ahora solo mostramos los cambios
+      this.updateOffer();
     } else {
       // Lógica de creación existente
       this.createOffer();
@@ -630,5 +631,113 @@ export class OfferComponent implements OnInit, OnDestroy{
     const discountDuration = end.diff(start, unit);
   
     return discountDuration;
+  }
+
+  async updateOffer() {
+    console.log('🔄 Starting offer update process...');
+    console.log('📝 Current form changes:', this.formChanges);
+
+    // Preparar el payload base con los datos que no han cambiado
+    const basePayload: any = {
+      name: this.offer.name,
+      description: this.offer.description,
+      lifecycleStatus: this.offer.lifecycleStatus,
+      version: this.offer.version,
+      category: this.offer.category,
+      productOfferingPrice: this.offer.productOfferingPrice,
+      validFor: this.offer.validFor,
+      productOfferingTerm: this.offer.productOfferingTerm
+    };
+
+    // Procesar cada cambio emitido por los subformularios
+    for (const [subformType, change] of Object.entries(this.formChanges)) {
+      console.log(`📝 Processing changes for ${subformType}:`, change);
+
+      switch (subformType) {
+        case 'generalInfo':
+          // Actualizar información general
+          basePayload.name = change.currentValue.name;
+          basePayload.description = change.currentValue.description;
+          basePayload.version = change.currentValue.version;
+          basePayload.lifecycleStatus = change.currentValue.status;
+          break;
+
+        case 'productSpecification':
+          // Actualizar especificación del producto
+          basePayload.productSpecification = {
+            id: change.currentValue.id,
+            href: change.currentValue.id
+          };
+          break;
+
+        case 'category':
+          // Actualizar categorías
+          basePayload.category = change.currentValue.map((cat: any) => ({
+            id: cat.id,
+            href: cat.id
+          }));
+          break;
+
+        case 'license':
+          // Actualizar términos de licencia
+          const licenseTerm = basePayload.productOfferingTerm.find((term: any) => term.name === change.currentValue.treatment);
+          if (licenseTerm) {
+            licenseTerm.description = change.currentValue.description;
+          } else {
+            basePayload.productOfferingTerm.push({
+              name: change.currentValue.treatment,
+              description: change.currentValue.description
+            });
+          }
+          break;
+
+        case 'pricePlans':
+          // Actualizar planes de precios
+          basePayload.productOfferingPrice = change.currentValue.map((plan: any) => ({
+            id: plan.id,
+            href: plan.id
+          }));
+          break;
+
+        case 'procurement':
+          // Actualizar modo de adquisición
+          const procurementTerm = basePayload.productOfferingTerm.find((term: any) => term.name === 'procurement');
+          if (procurementTerm) {
+            procurementTerm.description = change.currentValue.id;
+          } else {
+            basePayload.productOfferingTerm.push({
+              name: 'procurement',
+              description: change.currentValue.id
+            });
+          }
+          break;
+
+        case 'replication':
+          // Actualizar configuración de replicación
+          // TODO: Implementar cuando se tenga la estructura de replicación
+          break;
+      }
+    }
+
+    // Eliminar campos undefined o null
+    Object.keys(basePayload).forEach(key => {
+      if (basePayload[key] === undefined || basePayload[key] === null) {
+        delete basePayload[key];
+      }
+    });
+
+    console.log('📝 Final update payload:', basePayload);
+
+    try {
+      // Llamar a la API para actualizar la oferta
+      await lastValueFrom(this.api.updateProductOffering(basePayload, this.offer.id));
+      console.log('✅ Offer updated successfully');
+      this.goBack();
+    } catch (error: any) {
+      console.error('❌ Error updating offer:', error);
+      this.errorMessage = error?.error?.error ? 'Error: ' + error.error.error : 'An error occurred while updating the offer!';
+      this.showError = true;
+      setTimeout(() => (this.showError = false), 3000);
+    }
   }
 }
