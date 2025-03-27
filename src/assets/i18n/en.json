@@ -469,7 +469,8 @@
         "_summary": "Product's summary",
         "_create_prod": "Create product",
         "_file_res": "File restrictions",
-        "_restrictions": "File size must be under 3MB. File names can only include alphabetical characters (A-Z, a-z), numbers (0-9) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.). "
+        "_restrictions": "File size must be under 3MB. File names can only include alphabetical characters (A-Z, a-z), numbers (0-9) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.). ",
+        "_file_name": "Image URL should end by png, jpg, jpeg, gif, bmp or webp format."
     },
     "UPDATE_PROD_SPEC":{
         "_back": "Back",
@@ -542,7 +543,8 @@
         "_verify_text": "To get a valid VC of the certificate you can access the ",
         "_dome_trust": "DOME Trust Service Provider for Certification",
         "_file_res": "File restrictions",
-        "_restrictions": "File size must be under 3MB. File names can only include characters (a-z), (A-Z), (0-9), and a limited set of symbols including underscores (_), hyphens (-), and periods (.). "
+        "_restrictions": "File size must be under 3MB. File names can only include characters (a-z), (A-Z), (0-9), and a limited set of symbols including underscores (_), hyphens (-), and periods (.). ",
+        "_file_name": "Image URL should end by png, jpg, jpeg, gif, bmp or webp format."
     },
     "CREATE_RES_SPEC": {
         "_back": "Back",

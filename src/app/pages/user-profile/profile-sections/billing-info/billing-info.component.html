@@ -17,13 +17,13 @@
                         <th scope="col" class="px-6 py-3">
                             {{ 'BILLING._title' | translate }}
                         </th>
-                        <th scope="col" class="px-6 py-3 hidden lg:table-cell">
+                        <th scope="col" class="px-6 py-3">
                             {{ 'BILLING._email' | translate }}
                         </th>
-                        <th scope="col" class="px-6 py-3 hidden md:table-cell">
+                        <th scope="col" class="px-6 py-3">
                             {{ 'BILLING._postalAddress' | translate }}
                         </th>
-                        <th scope="col" class="px-6 py-3 hidden lg:table-cell">
+                        <th scope="col" class="px-6 py-3">
                             {{ 'BILLING._phone' | translate }}
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -37,14 +37,14 @@
                             <td class="px-6 py-4 text-wrap break-all">
                                 {{bill.name}}
                             </td>
-                            <td class="px-6 py-4 hidden lg:table-cell text-wrap break-all">
+                            <td class="px-6 py-4 text-wrap break-all">
                                 {{bill.email}}
                             </td>
-                            <td class="px-6 py-4 hidden md:table-cell text-wrap break-all">
-                                {{bill.postalAddress.street}}, {{bill.postalAddress.postCode}} ({{bill.postalAddress.city}}) {{bill.postalAddress.stateOrProvince}}
+                            <td class="px-6 py-4 text-wrap break-all">
+                                {{bill.postalAddress.street}}, {{bill.postalAddress.postCode}} ({{bill.postalAddress.city}}) {{bill.postalAddress.stateOrProvince}}, {{bill.postalAddress.country}}
                             </td>
-                            <td class="px-6 py-4 hidden lg:table-cell">
-                                {{bill.telephoneNumber}}
+                            <td class="px-6 py-4">
+                                ({{bill.telephoneType}}) {{bill.telephoneNumber}}
                             </td>
                             <td class="px-6 py-4 inline-flex">
                                 <button (click)="toggleEditBill(bill);$event.stopPropagation();" type="button" class="text-white bg-primary-100 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 lg:p-2.5 text-center inline-flex items-center me-2">
