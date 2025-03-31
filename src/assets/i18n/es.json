@@ -470,7 +470,8 @@
         "_create_prod": "Create product",
         "_file_res": "File restrictions",
         "_restrictions": "File size must be under 3MB. File names can only include alphabetical characters (A-Z, a-z), numbers (0-9) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.). ",
-        "_file_name": "Image URL should end by png, jpg, jpeg, gif, bmp or webp format."
+        "_file_name": "Image URL should end by png, jpg, jpeg, gif, bmp or webp format.",
+        "_file_check": "You need to upload a file before proceeding."
     },
     "UPDATE_PROD_SPEC":{
         "_back": "Back",
@@ -753,6 +754,7 @@
         "_no_prod_spec": "Bundled offers can't include product specifications.",
         "_cancel": "Cancel",
         "_no_prods": "There's no product specifications.",
+        "_no_prods_to_proceed": "Please add at least one product specification to proceed to the next step",
         "_no_cats": "There's no catalogues.",
         "_no_categories": "There's no categories",
         "_no_offer": "There's no offerings."
@@ -850,6 +852,7 @@
         "_no_prod_spec": "Bundled offers can't include product specifications.",
         "_cancel": "Cancel",
         "_no_prods": "There's no product specifications.",
+        "_no_prods_to_proceed": "Please add at least one product specification to proceed to the next step",
         "_no_cats": "There's no catalogues.",
         "_no_categories": "There's no categories",
         "_no_offer": "There's no offerings."
