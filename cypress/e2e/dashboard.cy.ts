@@ -1,6 +1,6 @@
 import { category_launched, init_config, init_stat, local_items, login_token, product_offering } from "../support/constants"
 import * as moment from 'moment';
-const checkHeaderPreLogin = () => {
+export const checkHeaderPreLogin = () => {
     // Mocks
     cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/stats'}, init_stat).as('stats')
     cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/catalog/productOffering?*'}, product_offering).as('productOffering')
@@ -35,10 +35,11 @@ const checkHeaderPreLogin = () => {
     cy.getBySel('knowledge').should('have.attr', 'href', init_config.knowledgeBaseUrl)
 };
 
-const checkHeaderPostLogin = () => {
+export const checkHeaderPostLogin = () => {
     // Verify header interactive elemements are displayed and work as expected
     cy.login().should('not.exist')
     cy.getBySel('registerAcc').should('not.exist')
+    cy.getBySel('loggedAcc').should('exist')
     cy.getBySel('publishOffering').should('exist')
     cy.getBySel('browse').should('exist')
     cy.getBySel('about').should('exist')
@@ -78,7 +79,7 @@ describe('/dashboard',{
                 body: login_token() // Llamada a la función que genera el token
               });
             }
-          ).as('login_token');          
+          ).as('login_token');     
 
         cy.visit('/dashboard?token=test')
 
@@ -92,8 +93,25 @@ describe('/dashboard',{
         cy.get('@category.all').should('have.length', 2)
         cy.wait('@login_token')
         cy.get('@login_token.all').should('have.length', 1)
+
         checkHeaderPostLogin()
 
     })
+
+    it('should have all required elements in dashboard', ()=>{
+        checkHeaderPreLogin()
+        cy.getBySel('browseServices').should('not.be.disabled')
+        cy.getBySel('mainText').should('exist')
+        cy.getBySel('publishOff').should('exist')
+        cy.getBySel('publishOff').should('have.attr', 'href', init_config.domeRegister)
+        cy.getBySel('vServices').should('exist')
+        cy.getBySel('vServices').should('have.text', '1 verified services')
+        cy.getBySel('rPublishers').should('exist')
+        cy.getBySel('rPublishers').should('have.text', '1 registered publishers')
+        cy.getBySel('nameServices').invoke('text').should('include', init_stat.services[0])
+        cy.getBySel('nameOrgs').invoke('text').should('include', init_stat.organizations[0])
+
     })
+
+})
 

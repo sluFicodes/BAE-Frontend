@@ -26,7 +26,7 @@ export const init_config = {
        
 }
 
-export const init_stat = {"_id":"677ff8d160055e7a1e2544ff","services":[],"organizations":[],"__v":0}
+export const init_stat = {"_id":"677ff8d160055e7a1e2544ff","services":["Service test 1"],"organizations":["org test 1"],"__v":0}
 
 export const category_launched = [{
     "id": "urn:ngsi-ld:category:e4522ff8-2f25-4cd8-b30f-04a0caefbdb5",
