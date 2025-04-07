@@ -169,14 +169,15 @@ export class UpdateResourceSpecComponent implements OnInit {
       if(this.creatingChars.length==0){
         this.creatingChars.push({
           isDefault:true,
-          value: this.stringValue as any
+          value:this.stringValue as any
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
           value:this.stringValue as any
         })
-      }      
+      }
+      this.stringValue='';  
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
@@ -191,7 +192,9 @@ export class UpdateResourceSpecComponent implements OnInit {
           value:this.numberValue as any,
           unitOfMeasure:this.numberUnit
         })
-      } 
+      }
+      this.numberUnit='';
+      this.numberValue='';
     }else{
       console.log('range')
       if(this.creatingChars.length==0){
@@ -209,6 +212,9 @@ export class UpdateResourceSpecComponent implements OnInit {
           unitOfMeasure:this.rangeUnit})
       } 
     }
+    this.fromValue='';
+    this.toValue='';
+    this.rangeUnit='';
   }
 
   selectDefaultChar(char:any,idx:any){
