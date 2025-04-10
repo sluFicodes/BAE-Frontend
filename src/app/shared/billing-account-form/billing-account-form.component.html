@@ -1,8 +1,12 @@
 <form novalidate="" class="grid h-full grid-cols-2 gap-5 m-4" [formGroup]="billingForm">
     <div class="col-span-2">
-        <label for="title" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._title' | translate }}</label>
-        <input id="title" formControlName="name" name="title" type="text" [ngClass]="billingForm.get('name')?.touched && billingForm.get('name')?.invalid == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+        <label for="title" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._title' | translate }} (*)</label>
+        <input id="title" formControlName="name" name="title" type="text" 
+        [ngClass]="billingForm.get('name')?.touched && billingForm.get('name')?.invalid == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
         class="mb-2 bg-gray-50 border text-gray-900 dark:bg-secondary-300 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        @if(billingForm.get('name')?.invalid && billingForm.get('name')?.errors?.['required'] && (billingForm.get('name')?.touched && billingForm.value.name=='')){
+            <p class="text-sm text-red-600 dark:text-red-500"><span class="font-medium">This field is mandatory.</span></p>
+        }
     </div>
     <div>
         <label for="address.country" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._country' | translate }}</label>
@@ -30,9 +34,20 @@
         class="mb-2 min-h-fit bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" rows="4"></textarea>
     </div>
     <div class="col-span-2">
-        <label for="email" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._email' | translate }}</label>
-        <input id="email" [ngClass]="billingForm.get('email')?.touched && billingForm.get('email')?.invalid == true && billingForm.value.email!='' ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'" formControlName="email" name="email"
+        <label for="email" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._email' | translate }} (*)</label>
+        <input id="email" 
+        [ngClass]="(billingForm.get('email')?.invalid == true && billingForm.value.email!='') || (billingForm.get('email')?.touched && billingForm.value.email=='') ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
+        formControlName="email" name="email"
         class="mb-2 bg-gray-50 border text-gray-900 dark:bg-secondary-300 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+        @if(billingForm.get('email')?.invalid && billingForm.get('email')?.errors?.['maxlength']){
+            <p class="text-sm text-red-600 dark:text-red-500"><span class="font-medium">Email is too long. Must be less than 320 characters.</span></p>
+        }
+        @if(billingForm.get('email')?.invalid && billingForm.get('email')?.errors?.['pattern']){
+            <p class="text-sm text-red-600 dark:text-red-500"><span class="font-medium">Email must follow the following format: example&#64;example.example</span></p>
+        }
+        @if(billingForm.get('email')?.invalid && billingForm.get('email')?.errors?.['required'] && (billingForm.get('email')?.touched && billingForm.value.email=='')){
+            <p class="text-sm text-red-600 dark:text-red-500"><span class="font-medium">This field is mandatory.</span></p>
+        }
     </div>
     <div class="col-span-2 lg:col-span-1">
         <label for="phoneType" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._phone_type' | translate }}</label>
@@ -46,7 +61,7 @@
         </select>
     </div>
     <div class="col-span-2 lg:col-span-1">
-        <label for="phoneNumber" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._phone' | translate }}</label>
+        <label for="phoneNumber" class="mb-3 block text-sm font-semibold leading-none text-body-dark dark:text-white">{{ 'BILLING._phone' | translate }} (*)</label>
         <div class="w-full">
             <div class="relative flex items-center">
                 <button (click)="prefixCheck=!prefixCheck"
@@ -72,6 +87,9 @@
                 <input id="phoneNumber" formControlName="telephoneNumber" name="phoneNumber" type="number" [ngClass]="billingForm.get('telephoneNumber')?.touched && billingForm.get('telephoneNumber')?.invalid == true ? 'border-red-600' : 'border-gray-300 dark:border-secondary-200'"
                 class="mb-2 bg-gray-50 border text-gray-900 text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-secondary-300 dark:text-white">
             </div>
+            @if(billingForm.get('telephoneNumber')?.invalid && billingForm.get('telephoneNumber')?.errors?.['required'] && (billingForm.get('telephoneNumber')?.touched && billingForm.value.telephoneNumber=='')){
+                <p class="text-sm text-red-600 dark:text-red-500"><span class="font-medium">This field is mandatory.</span></p>
+            }
         </div>
     </div>
     <div class="flex w-full justify-end col-span-2">

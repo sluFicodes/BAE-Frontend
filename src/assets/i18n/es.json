@@ -985,7 +985,8 @@
         "_completed": "Completed",
         "_failed": "Failed",
         "_pending": "Pending",
-        "_cancelled": "Cancelled"
+        "_cancelled": "Cancelled",
+        "_unchecked": "Unchecked"
 
     },
   "FORMS": {
