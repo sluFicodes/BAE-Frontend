@@ -48,12 +48,12 @@ export class PriceComponentDrawerComponent implements OnInit {
 
     this.priceComponentForm = this.fb.group({
       name: ['', Validators.required],
-      price:['', Validators.required],
+      price:['', [Validators.required, Validators.min(0.01), Validators.max(1000000000)]],
       description: [''],
       priceType: ['one time', Validators.required],
-      discountValue: [null],
+      discountValue: [null, [Validators.min(0), Validators.max(100)]],
       discountUnit: ['percentage'],
-      discountDuration: [null],
+      discountDuration: [null, [Validators.min(1)]],
       discountDurationUnit: ['days'],
       recurringPeriod: ['month'],
       usageUnit: [''],

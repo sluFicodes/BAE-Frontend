@@ -324,6 +324,7 @@
         "_start_date": "Start operating date",
         "_order_id": "Order Id",
         "_state": "State",
+        "_status": "Status",
         "_priority": "Priority",
         "_desc": "Description",
         "_price": "Price",
