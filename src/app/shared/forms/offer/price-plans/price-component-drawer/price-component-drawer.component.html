@@ -34,11 +34,9 @@
           type="number"
           step="0.1"
           (blur)="priceComponentForm.get('price')?.markAsTouched()"
-          [ngClass]="{
-            'border-red-500': priceComponentForm.get('price')?.invalid && (priceComponentForm.get('price')?.touched || priceComponentForm.get('price')?.dirty)
-          }"
+          [ngClass]="(priceComponentForm.get('price')?.invalid == true && priceComponentForm.value.price!='') || (priceComponentForm.get('price')?.touched && priceComponentForm.value.price=='') ? 'border-red-600' : 'dark:border-gray-600'"
           class="mb-2 bg-gray-50 dark:bg-secondary-300 border text-sm rounded-lg block w-full p-2.5
-            text-gray-900 dark:border-secondary-200 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
+            text-gray-900 dark:text-gray-100 focus:ring-blue-500 focus:border-blue-500"
         />
       
         <!-- Validation Messages -->
@@ -131,12 +129,19 @@
 
       <!-- Descuento -->
       <div class="flex items-center mb-4">
-        <input type="checkbox" id="showDiscount" [checked]="showDiscount" (click)="showDiscount=!showDiscount"
-               class="w-4 h-4 text-blue-600 border-gray-300 rounded cursor-pointer dark:text-gray-100">
-        <label class="ml-2 font-medium text-base dark:text-white">
+        <input
+          type="checkbox"
+          [(ngModel)]="showDiscount"
+          [ngModelOptions]="{ standalone: true }"
+          class="w-4 h-4 text-blue-600 border-gray-300 rounded cursor-pointer
+                 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700
+                 checked:bg-blue-600 checked:border-blue-600"
+        />
+        <label for="showDiscount" class="ml-2 font-medium text-base text-gray-900 dark:text-white">
           Does this price component include a discount?
         </label>
       </div>
+      
       @if(showDiscount){
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -147,7 +152,8 @@
               formControlName="discountValue"
               type="number"
               placeholder="Amount"
-              class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+              class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:text-gray-100"
+              [ngClass]="(priceComponentForm.get('discountValue')?.invalid == true && priceComponentForm.value.discountValue!='') || (priceComponentForm.get('discountValue')?.touched && priceComponentForm.value.discountValue=='') ? 'border-red-600' : 'dark:border-gray-600'"
             >
             <select
               formControlName="discountUnit"
@@ -186,7 +192,8 @@
               formControlName="discountDuration"
               type="number"
               placeholder="Duration"
-              class="w-1/2 p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+              class="w-1/2 p-2 rounded dark:bg-gray-700 dark:text-gray-100"
+              [ngClass]="(priceComponentForm.get('discountDuration')?.invalid == true && priceComponentForm.value.discountDuration!='') || (priceComponentForm.get('discountDuration')?.touched && priceComponentForm.value.discountDuration=='') ? 'border-red-600' : 'dark:border-gray-600'"
             >
             <select
               formControlName="discountDurationUnit"

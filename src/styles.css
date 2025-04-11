@@ -194,3 +194,44 @@ markdown a:hover {
        }
      }
    }
+
+/* Autofill background configuration */
+:root {
+  --autofill-bg-light: #f0f0f0;  
+  --autofill-text-light: #000000; 
+}
+
+[data-theme='dark'] {
+  --autofill-bg-dark: #182740;  
+  --autofill-text-dark: #ffffff; 
+}
+
+input:-webkit-autofill {
+  background-color: var(--autofill-bg-light) !important;
+  color: var(--autofill-text-light) !important;
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+}
+
+[data-theme='dark'] input:-webkit-autofill {
+  background-color: var(--autofill-bg-dark) !important;
+  color: var(--autofill-text-dark) !important;
+}
+
+input:-webkit-autofill::first-line {
+  color: inherit;
+}
+
+textarea:-webkit-autofill {
+  background-color: var(--autofill-bg-light) !important;
+  color: var(--autofill-text-light) !important;
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+}
+
+[data-theme='dark'] textarea:-webkit-autofill {
+  background-color: var(--autofill-bg-dark) !important;
+  color: var(--autofill-text-dark) !important;
+}
+
+textarea:-webkit-autofill::first-line {
+  color: inherit;
+}
