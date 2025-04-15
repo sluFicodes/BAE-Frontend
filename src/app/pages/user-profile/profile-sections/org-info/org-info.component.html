@@ -160,17 +160,34 @@
                 </ngx-file-drop>
             </div>
             <label class="font-bold ml-6 dark:text-white">{{ 'PROFILE._add_logo_url' | translate }}</label>
-            <div class="flex items-center h-fit ml-6 mt-2 mb-2 w-full justify-between">
-                <input #imgURL type="text" id="att-name"
-                    [formControl]="attImageName"
-                    class="w-full bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" />
-                <button (click)="saveImgFromURL()"
-                    [disabled]="!attImageName.valid" [ngClass]="!attImageName.valid ? 'opacity-50' : 'hover:bg-primary-50'"
-                    class="text-white bg-primary-100 rounded-3xl p-1 ml-2 h-fit">
-                    <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>                                    
-                    </svg>                                  
-                </button>
+            <div class="relative w-full ml-6 mt-2 mb-2">
+                <!-- Tooltip (Above the Input, Positioned Up) -->
+                <div *ngIf="attImageName.invalid && attImageName.touched"
+                    class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-gray-900 text-white text-xs rounded-lg p-2 shadow-lg z-50">
+                    {{ 'UPDATE_PROD_SPEC._file_name' | translate }}
+                    <!-- Tooltip Arrow -->
+                    <div class="absolute left-1/2 transform -translate-x-1/2 translate-y-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                </div>
+            
+                <div class="flex items-center h-fit w-full justify-between">
+                    <!-- Input Field -->
+                    <input #imgURL type="text" id="att-name"
+                        [formControl]="attImageName"
+                        (blur)="attImageName.markAsTouched()"
+                        class="w-full bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+                        [ngClass]="attImageName.invalid && attImageName.touched ? 'border-red-500' : 'dark:border-secondary-200'"
+                    />
+                    
+                    <!-- Submit Button -->
+                    <button (click)="saveImgFromURL()"
+                        [disabled]="!attImageName.valid" 
+                        [ngClass]="!attImageName.valid ? 'opacity-50' : 'hover:bg-primary-50'"
+                        class="text-white bg-primary-100 rounded-3xl p-1 ml-2 h-fit">
+                        <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>                                    
+                        </svg>                                  
+                    </button>
+                </div>
             </div>
         }
        

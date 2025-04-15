@@ -71,6 +71,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   loginSubscription: Subscription = new Subscription();
   roles:string[]=[];
   knowledge: string = environment.KNOWLEDGE_BASE_URL
+  knowledge_onboarding: string = environment.KB_ONBOARDING_GUIDELINES_URL
+  knowledge_guidelines: string = environment.KB_GUIDELNES_URL
+  registration: string = environment.REGISTRATION_FORM_URL
   ticketing: string = environment.TICKETING_SYSTEM_URL
   domeAbout: string = environment.DOME_ABOUT_LINK
   domeRegister: string = environment.DOME_REGISTER_LINK
@@ -226,9 +229,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       if (localStorage.getItem('color-theme') === 'light') {
         document.documentElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
       } else {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('color-theme', 'light');
+        document.body.removeAttribute('data-theme');
       }
 
       // if NOT set via local storage previously
@@ -236,9 +241,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       if (document.documentElement.classList.contains('dark')) {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('color-theme', 'light');
+        document.body.removeAttribute('data-theme');
       } else {
         document.documentElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
       }
     }
   }

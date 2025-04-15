@@ -161,7 +161,8 @@ export class CreateServiceSpecComponent implements OnInit {
           isDefault:false,
           value:this.stringValue as any
         })
-      }      
+      }
+      this.stringValue='';  
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
@@ -176,7 +177,9 @@ export class CreateServiceSpecComponent implements OnInit {
           value:this.numberValue as any,
           unitOfMeasure:this.numberUnit
         })
-      } 
+      }
+      this.numberUnit='';
+      this.numberValue='';
     }else{
       console.log('range')
       if(this.creatingChars.length==0){
@@ -194,6 +197,9 @@ export class CreateServiceSpecComponent implements OnInit {
           unitOfMeasure:this.rangeUnit})
       } 
     }
+    this.fromValue='';
+    this.toValue='';
+    this.rangeUnit='';
   }
 
   selectDefaultChar(char:any,idx:any){
