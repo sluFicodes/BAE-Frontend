@@ -236,9 +236,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       if (localStorage.getItem('color-theme') === 'light') {
         document.documentElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
       } else {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('color-theme', 'light');
+        document.body.removeAttribute('data-theme');
       }
 
       // if NOT set via local storage previously
@@ -246,9 +248,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       if (document.documentElement.classList.contains('dark')) {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('color-theme', 'light');
+        document.body.removeAttribute('data-theme');
       } else {
         document.documentElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
+        document.body.setAttribute('data-theme', 'dark');
       }
     }
   }

@@ -40,14 +40,9 @@
         <div id="searchDropdownMenu" class="z-10 hidden bg-secondary-50 divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
           <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="searchDropdown">
               <li>
-                <button (click)="goTo('/search')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                  {{ 'HEADER._services' | translate }}
-                </button>
-              </li>
-              <li>
-                <button (click)="goTo('/catalogues')" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                  {{ 'HEADER._catalogs' | translate }}
-                </button>
+                <a href="{{knowledge_guidelines}}" target="_blank"  class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                  {{ 'HEADER._guideline_publish' | translate }}
+                </a>
               </li>
           </ul>
         </div>
@@ -91,6 +86,13 @@
             </fa-layers>
           </button>
         }
+        <button #navbarbutton type="button" (click)="toggleNavBar();$event.stopPropagation();"
+        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-dropdown" aria-expanded="false">
+          <span class="sr-only">{{ 'HEADER._open_menu' | translate }}</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+          </svg>
+        </button>      
       </div>
       <!-- LANG SWITCHER
       <div class="flex mr-2 min-w-10 min-h-10">
@@ -107,18 +109,11 @@
               </li>
             </ul>
           }
-        </div>
-      </div>-->
-      @if (is_logged) {
-      <!-- User menu section -->
-      <div data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-end" class="relative mr-2 inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600 cursor-pointer">
-        <span class="font-medium text-gray-600 dark:text-gray-300">{{usercharacters}}</span>
+          <!--<li>
+            <button data-dropdown-toggle="support-dropdown" data-dropdown-placement="bottom-end" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-secondary-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-secondary-50 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent" aria-current="page">{{ 'HEADER._support' | translate }}</button>
+          </li>-->
+        </ul>
       </div>
-      } @else {
-        <a href="{{domeRegister}}" target="_blank" type="button" class="hidden lg:block w-full mr-2 text-white dark:text-gray-400 hover:bg-secondary-50 hover:text-primary-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5 text-center" aria-current="page">{{ 'HEADER._register' | translate }}</a>
-        <button (click)="onLoginClick()" type="button" class="w-full mr-2 text-white dark:text-gray-400 hover:bg-secondary-50 hover:text-primary-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5">
-          Login
-        </button>
       }
       <button #navbarbutton type="button" (click)="toggleNavBar();$event.stopPropagation();"
       class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-dropdown" aria-expanded="false">
@@ -128,33 +123,14 @@
         </svg>
       </button>
     </div>
-
-    @if(isNavBarOpen){
-    <div class="w-full bg-primary-100 dark:bg-secondary-100 rounded-lg" id="navbar-dropdown">
-      <ul class="flex flex-col font-medium p-4 lg:p-0 rounded-lg lg:text-white lg:flex-row lg:space-x-8 lg:mt-0 lg:border-0">
+    <div id="support-dropdown" class="z-50 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
+      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
         <li>
-          <a (click)="goTo('/search')" class="block cursor-pointer py-2 pl-3 pr-4 text-white rounded hover:bg-secondary-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-secondary-50 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent" aria-current="page">{{ 'HEADER._search' | translate }}</a>
+          <a href="{{ knowledge }}" target="_blank" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faBrain" class="mr-2"></fa-icon>{{ 'HEADER._knowledge' | translate }}</a>
         </li>
         <li>
-          <a (click)="goTo('/catalogues')" class="block cursor-pointer py-2 pl-3 pr-4 text-white rounded hover:bg-secondary-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-secondary-50 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent" aria-current="page">{{ 'HEADER._catalogs' | translate }}</a>
+          <a href="{{ ticketing }}" target="_blank" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faClipboardCheck" class="mr-2"></fa-icon>{{ 'HEADER._ticketing' | translate }}</a>
         </li>
-        <li>
-          <a href="{{domeAbout}}" target="_blank" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-secondary-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-secondary-50 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent">{{ 'HEADER._about' | translate }}</a>
-        </li>
-        <li>
-          <a href="{{domePublish}}" target="_blank" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-secondary-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-secondary-50 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent">{{ 'HEADER._publish' | translate }}</a>
-        </li>
-        <li>
-          <a href="{{ knowledge }}" target="_blank" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-secondary-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-secondary-50 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent">{{ 'HEADER._info' | translate }}</a>
-        </li>
-        @if (!is_logged) {
-        <li>
-          <a href="{{domeRegister}}" target="_blank" type="button" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-secondary-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-secondary-50 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent" aria-current="page">{{ 'HEADER._register' | translate }}</a>
-        </li>
-        }
-        <!--<li>
-          <button data-dropdown-toggle="support-dropdown" data-dropdown-placement="bottom-end" class="block py-2 pl-3 pr-4 text-white rounded hover:bg-secondary-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-secondary-50 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent" aria-current="page">{{ 'HEADER._support' | translate }}</button>
-        </li>-->
       </ul>
     </div>
     }
@@ -195,27 +171,9 @@
           @if(orgs.length > 0 && isAdmin) {
             <button data-dropdown-toggle="orgs-dropdown" data-dropdown-placement="left-start" class="flex w-full justify-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faAnglesLeft" class="mr-2"></fa-icon>{{ 'HEADER._change_session' | translate }}</button>
           }
-          <button (click)="logout();" class="flex w-full justify-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"><fa-icon [icon]="faArrowRightFromBracket" class="mr-2"></fa-icon>{{ 'HEADER._sign_out' | translate }}</button>
-        </div>
-      </div>
-    }
-  </div>
-  <div id="support-dropdown" class="z-50 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
-    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-      <li>
-        <a href="{{ knowledge }}" target="_blank" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faBrain" class="mr-2"></fa-icon>{{ 'HEADER._knowledge' | translate }}</a>
-      </li>
-      <li>
-        <a href="{{ ticketing }}" target="_blank" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faClipboardCheck" class="mr-2"></fa-icon>{{ 'HEADER._ticketing' | translate }}</a>
-      </li>
-    </ul>
-  </div>
-  <div id="orgs-dropdown" class="z-50 hidden bg-secondary-50 divide-y divide-primary-100/50 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 ">
-    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
-        @for (org of orgs; track org.id; let idx = $index) {
-          @if(org.id != loginInfo.logged_as || loginInfo.logged_as == loginInfo.id){
+          @if(loggedAsOrg){
             <li>
-              <button (click)="changeSession(idx,false);hideDropdown('orgs-dropdown');" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faUsers" class="mr-2"></fa-icon>{{ org.name }}</button>
+              <button (click)="changeSession(0,true);hideDropdown('orgs-dropdown');" class="flex w-full justify-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><fa-icon [icon]="faUser" class="mr-2"></fa-icon>{{ loginInfo.user }}</button>
             </li>
           }
         }

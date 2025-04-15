@@ -954,7 +954,8 @@ export class CreateProductSpecComponent implements OnInit {
           value:this.stringValue as any,
           valueType: "string"
         })
-      }      
+      }
+      this.stringValue='';  
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
@@ -971,7 +972,9 @@ export class CreateProductSpecComponent implements OnInit {
           unitOfMeasure:this.numberUnit,
           valueType: "number"
         })
-      } 
+      }
+      this.numberUnit='';
+      this.numberValue='';
     }else{
       console.log('range')
       if(this.creatingChars.length==0){
@@ -993,6 +996,9 @@ export class CreateProductSpecComponent implements OnInit {
     }
     console.log('--- added ----')
     console.log(this.creatingChars)
+    this.fromValue='';
+    this.toValue='';
+    this.rangeUnit='';
   }
 
   removeCharValue(char:any,idx:any){
