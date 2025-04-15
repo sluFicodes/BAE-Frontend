@@ -10,12 +10,13 @@ import {AttachmentServiceService} from "src/app/services/attachment-service.serv
 import { ServiceSpecServiceService } from 'src/app/services/service-spec-service.service';
 import { ResourceSpecServiceService } from 'src/app/services/resource-spec-service.service';
 import { PaginationService } from 'src/app/services/pagination.service';
-import { LoginInfo } from 'src/app/models/interfaces';
+import { LoginInfo, ProductOfferingPrice_DTO } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { currencies } from 'currencies.json';
+import { lastValueFrom } from 'rxjs';
 
 type ProductOffering_Update = components["schemas"]["ProductOffering_Update"];
 type BundledProductOffering = components["schemas"]["BundledProductOffering"];
@@ -46,13 +47,14 @@ export class UpdateOfferComponent implements OnInit{
   showLicense:boolean=false;
   showSLA:boolean=false;
   showPrice:boolean=false;
+  showProcurement:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price','summary'];
-  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','summary-circle'];
+  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price', 'procurement', 'replication', 'summary'];
+  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle', 'procurement-circle', 'replication-circle','summary-circle'];
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
-  description:string='';  
+  description:string='';
   partyId:any='';
 
   //OFFER GENERAL INFO:
@@ -68,12 +70,12 @@ export class UpdateOfferComponent implements OnInit{
   bundlePage=0;
   bundlePageCheck:boolean=false;
   loadingBundle:boolean=false;
-  loadingBundle_more:boolean=false;  
+  loadingBundle_more:boolean=false;
   //final selected products inside bundle
   offersBundle:BundledProductOffering[]=[];
   bundledOffers:any[]=[];
   nextBundledOffers:BundledProductOffering[]=[];
-  
+
   //PROD SPEC INFO:
   prodSpecPage=0;
   prodSpecPageCheck:boolean=false;
@@ -124,7 +126,7 @@ export class UpdateOfferComponent implements OnInit{
   priceToUpdate:any;
   selectedPriceType:any='CUSTOM';
   currencies=currencies;
-  createdPrices:ProductOfferingPriceRefOrValue[]=[];
+  createdPrices:ProductOfferingPrice_DTO[]=[];
   oldPrices:any[]=[];
   creatingPrice:any;
   priceDescription:string='';
@@ -150,13 +152,34 @@ export class UpdateOfferComponent implements OnInit{
     condition: new FormControl(''),
     description: new FormControl(''),
   });
-  selectedPriceUnit:any=currencies[0].code;
+  selectedPriceUnit:any=currencies[2].code;
   priceTypeAlter:any='ONE TIME';
   priceComponentSelected:boolean=false;
   discountSelected:boolean=false;
   noAlterSelected:boolean=true;
   allowCustom:boolean=true;
   allowOthers:boolean=true;
+
+  //PRICEPROFILE
+  showProfile:boolean=false;
+  editProfile:boolean=false;
+
+  //PROCUREMENT
+  procurementModes = [{
+    id: 'manual',
+    name: 'Manual'
+  }, {
+    id: 'payment-automatic',
+    name: 'Payment Automatic - Procurement Manual'
+  }, {
+    id: 'automatic',
+    name: 'Automatic'
+  }];
+  procurementMode: string = 'manual';
+
+  //REPLICATION
+  showReplication:boolean=false;
+  selectedCountries:any[]=[];
 
   errorMessage:any='';
   showError:boolean=false;
@@ -166,12 +189,15 @@ export class UpdateOfferComponent implements OnInit{
   //FINAL OFFER USING API CALL STRUCTURE
   offerToUpdate:ProductOffering_Update | undefined;
 
+  availableCountries:any[]=['Austria','Belgium','Germany','Hungary','Luxembourg','Poland','Romania','Spain']
+  availableMarketplaces:any[]=['BEIA Software Services','CloudFerro','CSI Piemonte','digitanimal','Digitel TS','DOME']
+
   @ViewChild('updatemetric') updatemetric!: ElementRef;
   @ViewChild('responsemetric') responsemetric!: ElementRef;
   @ViewChild('delaymetric') delaymetric!: ElementRef;
   @ViewChild('usageUnit') usageUnit!: ElementRef;
   @ViewChild('usageUnitUpdate') usageUnitUpdate!: ElementRef;
-  @ViewChild('usageUnitAlter') usageUnitAlter!: ElementRef;  
+  @ViewChild('usageUnitAlter') usageUnitAlter!: ElementRef;
 
   constructor(
     private router: Router,
@@ -193,8 +219,28 @@ export class UpdateOfferComponent implements OnInit{
       if(ev.type === 'ChangedSession') {
         this.initPartyInfo();
       }
+      if(ev.type === 'SavePricePlan') {
+        this.createdPrices.push(ev.value as ProductOfferingPrice_DTO)
+        if(this.showCreatePrice){
+          this.showCreatePrice=false;
+        }
+      }
+      if(ev.type === 'UpdatePricePlan') {
+        let price = ev.value as ProductOfferingPrice_DTO
+        const index = this.createdPrices.findIndex((item) => item.id === price.id);
+        if(index!=-1){
+          console.log('updating price values...')
+          //this.createdPrices[index]=price;
+          this.createdPrices = this.createdPrices.map((item, index) =>
+            index === index ? price : item
+          );
+        }
+        if(this.editPrice){
+          this.editPrice=false;
+        }
+      }
     })
-    
+
   }
 
   @HostListener('document:click')
@@ -203,17 +249,16 @@ export class UpdateOfferComponent implements OnInit{
       this.showEmoji=false;
       this.cdr.detectChanges();
     }
-    if(this.editPrice==true){
-      this.closeEditPrice();
-      this.cdr.detectChanges();
-    }
   }
 
   ngOnInit() {
     console.log(this.offer)
     this.initPartyInfo();
     this.populateOfferInfo();
-    this.clearPriceFormInfo();
+    console.log('offer to update')
+    console.log(this.offer)
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   initPartyInfo(){
@@ -228,7 +273,7 @@ export class UpdateOfferComponent implements OnInit{
     }
   }
 
-  populateOfferInfo(){
+  async populateOfferInfo(){
     //GENERAL INFORMATION
     this.generalForm.controls['name'].setValue(this.offer.name);
     this.generalForm.controls['description'].setValue(this.offer.description);
@@ -245,8 +290,13 @@ export class UpdateOfferComponent implements OnInit{
 
     //PRODUCT SPECIFICATION
     if(this.offer.productSpecification){
-      this.selectedProdSpec=this.offer.productSpecification;
+      //this.selectedProdSpec=this.offer.productSpecification;
+      await this.api.getProductSpecification(this.offer.productSpecification.id).then(async data => {
+        this.selectedProdSpec=data;
+      })
     }
+    console.log('--PROD SPEC')
+    console.log(this.selectedProdSpec)
 
     //CATALOG COMO LO CONSIGO?
 
@@ -262,53 +312,59 @@ export class UpdateOfferComponent implements OnInit{
       this.licenseForm.controls['description'].setValue(this.offer.productOfferingTerm[0].description);
       this.createdLicense.treatment=this.offer.productOfferingTerm[0].name;
       this.createdLicense.description=this.offer.productOfferingTerm[0].description;
-    }
 
-    //SLA
-    /*this.api.getSLA(this.offer.id).then(data => {
-      this.createdSLAs=data.services;
-    })*/
+      //PROCUREMENT
+      this.offer.productOfferingTerm.forEach((term: any) => {
+        if(term.name == 'procurement') {
+          this.procurementMode = term.description;
+        }
+      })
+    }
 
     //PRICEPLANS
     if(this.offer.productOfferingPrice){
       //this.createdPrices=this.offer.productOfferingPrice;
       for(let i=0;i<this.offer.productOfferingPrice.length;i++){
-        this.api.getOfferingPrice(this.offer.productOfferingPrice[i].id).then(data => {   
-          console.log('price')
+        this.api.getOfferingPrice(this.offer.productOfferingPrice[i].id).then(async data => {
+          console.log('priceplan:')
           console.log(data)
-          let priceInfo: ProductOfferingPriceRefOrValue = {
+          let priceInfo: ProductOfferingPrice_DTO = {
             id: data.id,
             name: data.name,
             description: data.description,
             lifecycleStatus: data.lifecycleStatus,
-            priceType: data.priceType,
-            price: {
-              percentage: 0,
-              taxRate: 20,
-              dutyFreeAmount: {
-                  unit: data.price.unit,
-                  value: 0
-              },
-              taxIncludedAmount: {
-                  unit: data.price.unit,
-                  value: data.price.value
-              }
-            }
           }
+          if(data.priceType){
+            priceInfo.priceType=data.priceType;
+          }
+          if(data.prodSpecCharValueUse){
+            priceInfo.prodSpecCharValueUse=data.prodSpecCharValueUse;
+          }
+          if(data.bundledPopRelationship){
+            let relatedPrices:any[] = [];
+            for(let i=0;i<data.bundledPopRelationship.length;i++){
+              await this.api.getOfferingPrice(data.bundledPopRelationship[i].id).then(data => {
+                relatedPrices.push(data)
+              })
+            }
+            console.log(relatedPrices)
+            priceInfo.bundledPopRelationship=relatedPrices;
+            console.log(priceInfo)
+          }
+
           if(data.recurringChargePeriodType){
             console.log('recurring')
-            priceInfo.recurringChargePeriod=data.recurringChargePeriodType;
+            //priceInfo.recurringChargePeriod=data.recurringChargePeriodType;
           }
           if(data.unitOfMeasure){
             console.log('usage')
             priceInfo.unitOfMeasure=data.unitOfMeasure;
           }
-          this.createdPrices.push(priceInfo)
-          this.oldPrices.push(priceInfo)
+          this.createdPrices.push(data)
+          this.oldPrices.push(data)
         })
       }
     }
-
   }
 
   goBack() {
@@ -332,7 +388,9 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleBundle(){
@@ -347,7 +405,9 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleBundleCheck(){
@@ -377,8 +437,11 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleCatalogs(){
@@ -396,8 +459,11 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleCategories(){
@@ -416,8 +482,11 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleLicense(){
@@ -431,8 +500,11 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=true;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleSLA(){
@@ -446,11 +518,14 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=true;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
-  togglePrice(){    
+  togglePrice(){
     this.selectStep('price','price-circle');
     this.showBundle=false;
     this.showGeneral=false;
@@ -461,8 +536,48 @@ export class UpdateOfferComponent implements OnInit{
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=true;
+    this.showProcurement=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+  }
+
+  toggleProcurement() {
+    this.selectStep('procurement','procurement-circle');
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showSummary=false;
+    this.showProdSpec=false;
+    this.showCatalog=false;
+    this.showCategory=false;
+    this.showLicense=false;
+    this.showSLA=false;
+    this.showPrice=false;
+    this.showProcurement=true;
+    this.showPreview=false;
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+  }
+
+  toggleReplication(){
+    this.selectStep('replication','replication-circle');
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showSummary=false;
+    this.showProdSpec=false;
+    this.showCatalog=false;
+    this.showCategory=false;
+    this.showLicense=false;
+    this.showSLA=false;
+    this.showPrice=false;
+    this.showProcurement=false;
+    this.showPreview=false;
+    this.showReplication=true;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+    initFlowbite();
   }
 
   saveLicense(){
@@ -475,7 +590,7 @@ export class UpdateOfferComponent implements OnInit{
       this.createdLicense={
         treatment: '',
         description: ''
-      };      
+      };
     }
     this.showPreview=false;
   }
@@ -491,299 +606,20 @@ export class UpdateOfferComponent implements OnInit{
     console.log(this.createdLicense.treatment)
   }
 
-  onPriceTypeSelected(event: any){
-    if(event.target.value=='ONE TIME'){
-      this.oneTimeSelected=true;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (event.target.value=='RECURRING'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=true;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (event.target.value=='USAGE'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=true;
-      this.customSelected=false;
-    } else if (event.target.value=='CUSTOM'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=true;
-    }
-    this.checkValidPrice();
-  }
-
-  onPriceTypeAlterSelected(event: any){
-    this.priceTypeAlter=event.target.value;
-  }
-
-  onPriceAlterSelected(event: any){
-    if(event.target.value=='none'){
-      this.priceComponentSelected=false;
-      this.discountSelected=false;
-      this.noAlterSelected=true;
-    } else if (event.target.value=='price'){
-      this.priceComponentSelected=true;
-      this.discountSelected=false;
-      this.noAlterSelected=false;
-    } else if (event.target.value=='discount'){
-      this.priceComponentSelected=false;
-      this.discountSelected=true;
-      this.noAlterSelected=false;
-    }
-  }
-
-  onPricePeriodChange(event: any){
-    this.selectedPeriod=event.target.value;
-    this.checkValidPrice();
-  }
-
-  onPricePeriodAlterChange(event: any){
-    this.selectedPeriodAlter=event.target.value;
-    this.checkValidPrice();
-  }
-
-  onPriceUnitChange(event:any){
-    this.selectedPriceUnit=event.target.value;
-    this.checkValidPrice();
-  }
-
-  checkValidPrice(){
-    const index = this.createdPrices.findIndex(item => item.name === this.priceForm.value.name);
-    if (index !== -1) {
-      if(this.editPrice && this.createdPrices[index].name == this.priceToUpdate.name){
-        this.priceForm.controls.name.setErrors(null)
-        this.priceForm.controls.name.updateValueAndValidity();
-        if(this.customSelected && this.priceForm.value.name != ''){
-          this.validPriceCheck=false;
-        } else if (this.usageSelected){
-          if(this.usageUnitUpdate.nativeElement.value != ''){
-            this.validPriceCheck=false;
-          } else {
-            this.validPriceCheck=true;
-          }     
-        } else if(!this.priceForm.invalid){
-          this.validPriceCheck=false;
-        } else {
-          this.validPriceCheck=true;
-        }
-      } else {
-        this.priceForm.controls.name.setErrors({invalidName:true})
-        this.validPriceCheck=true;
-      }      
-    } else {
-      this.priceForm.controls.name.setErrors(null)
-      this.priceForm.controls.name.updateValueAndValidity();
-      if(this.customSelected && this.priceForm.value.name != ''){
-        this.validPriceCheck=false;
-      } else if (this.usageSelected){
-        if(this.usageUnit.nativeElement.value != ''){
-          this.validPriceCheck=false;
-        } else {
-          this.validPriceCheck=true;
-        }    
-      } else if(!this.priceForm.invalid){
-        this.validPriceCheck=false;
-      } else {
-        this.validPriceCheck=true;
-      }
-    }
-    this.cdr.detectChanges();
-  }
-
-  savePrice(){
-    if(this.priceForm.value.name){
-      let priceToCreate: ProductOfferingPriceRefOrValue = {
-        id: uuidv4(),
-        name: this.priceForm.value.name,
-        description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",
-        priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-      }
-      if(!this.customSelected && this.priceForm.value.price){
-        priceToCreate.price = {
-          percentage: 0,
-          taxRate: 20,
-          dutyFreeAmount: {
-              unit: this.selectedPriceUnit,
-              value: 0
-          },
-          taxIncludedAmount: {
-              unit: this.selectedPriceUnit,
-              value: parseFloat(this.priceForm.value.price)
-          }
-        }
-      }
-      if(this.recurringSelected){
-        console.log('recurring')
-        priceToCreate.recurringChargePeriod=this.selectedPeriod;
-      }
-      if(this.usageSelected){
-        console.log('usage')
-        priceToCreate.unitOfMeasure= {
-          amount: 1,
-          units: this.usageUnit.nativeElement.value
-        }
-      }
-      if(this.priceComponentSelected && this.priceAlterForm.value.price){
-        priceToCreate.priceAlteration = [
-          {
-              description: this.priceAlterForm.value.description ? this.priceAlterForm.value.description : '',
-              name: "fee",
-              priceType: this.priceComponentSelected ? this.priceTypeAlter : this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-              priority: 0,
-              recurringChargePeriod: (this.priceComponentSelected && this.priceTypeAlter == 'RECURRING') ? this.selectedPeriodAlter  : '',
-              price: {
-                  percentage: this.discountSelected ? parseFloat(this.priceAlterForm.value.price) : 0,
-                  dutyFreeAmount: {
-                      unit: this.selectedPriceUnit,
-                      value: 0
-                  },
-                  taxIncludedAmount: {
-                      unit: this.selectedPriceUnit,
-                      value: this.priceComponentSelected ? parseFloat(this.priceAlterForm.value.price) : 0
-                  }
-              },
-              unitOfMeasure: {
-                  amount: 1,
-                  units: (this.priceComponentSelected && this.priceTypeAlter == 'USAGE') ? this.usageUnitAlter.nativeElement.value  : '',
-              }
-          }
-        ]
-      }
-      this.createdPrices.push(priceToCreate)     
-      console.log('--- price ---')
-      console.log(this.createdPrices)      
-    }
-
-    this.clearPriceFormInfo();
-  }
-
   showUpdatePrice(price:any){
+    console.log('---PRICE TO UPDATE---')
     this.priceToUpdate=price;
-    console.log(this.priceToUpdate)
+
     console.log(this.priceToUpdate)
     this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
     this.priceForm.controls['description'].setValue(this.priceToUpdate.description);
-    if(this.priceToUpdate.priceType!='custom'){
+    /*if(this.priceToUpdate.priceType!='custom'){
       this.priceForm.controls['price'].setValue(this.priceToUpdate.price.taxIncludedAmount.value);
       this.selectedPriceUnit=this.priceToUpdate.price.taxIncludedAmount.unit;
-    }
-    this.cdr.detectChanges();
-    console.log(this.selectedPriceUnit)
-    console.log(this.priceToUpdate.priceType)
-    if(this.priceToUpdate.priceType=='one time'){
-      this.selectedPriceType='ONE TIME';
-      this.oneTimeSelected=true;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (this.priceToUpdate.priceType=='recurring'){
-      this.selectedPriceType='RECURRING';
-      this.oneTimeSelected=false;
-      this.recurringSelected=true;
-      this.usageSelected=false;
-      this.customSelected=false;
-      this.selectedPeriod=this.priceToUpdate.recurringChargePeriod;
-      this.cdr.detectChanges();
-    } else if (this.priceToUpdate.priceType=='usage'){
-      this.selectedPriceType='USAGE';
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=true;
-      this.customSelected=false;
-      //document.getElementById('usageUnitUpdate').value=this.priceToUpdate.unitOfMeasure.units;
-      this.cdr.detectChanges();
-    } else {
-      console.log('custom')
-      this.selectedPriceType='CUSTOM';
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=true;
-    }
-    console.log('-selected-')
-    console.log(this.selectedPriceType)
-    if(this.createdPrices.length==0){
-      this.allowCustom=true;
-      this.allowOthers=true;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        console.log(this.createdPrices[i].priceType)
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
-        }
-      }
-      if(check==true){
-        this.allowCustom=false;
-        this.allowOthers=true;
-      } else {
-        this.allowCustom=true;
-        this.allowOthers=false;  
-      }
-    }
-    this.cdr.detectChanges();
-    this.validPriceCheck=false;
-    this.editPrice=true;
-  }
-
-  updatePrice(){
-    if(this.priceForm.value.name){
-      console.log(this.priceToUpdate.id)
-      let priceToCreate: ProductOfferingPriceRefOrValue = {
-        //id: uuidv4(),
-        id: this.priceToUpdate.id,
-        name: this.priceForm.value.name,
-        description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",    
-        //percentage: 0,
-        priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom'
-      }
-      if(!this.customSelected && this.priceForm.value.price){
-        priceToCreate.price = {
-          percentage: 0,
-          taxRate: 20,
-          dutyFreeAmount: {
-              unit: this.selectedPriceUnit,
-              value: 0
-          },
-          taxIncludedAmount: {
-              unit: this.selectedPriceUnit,
-              value: parseFloat(this.priceForm.value.price)
-          }
-        }
-      }
-      if(this.recurringSelected){
-        console.log('recurring')
-        priceToCreate.recurringChargePeriod=this.selectedPeriod;
-      }
-      if(this.usageSelected){
-        console.log('usage')
-        priceToCreate.unitOfMeasure= {
-          amount: 1,
-          units: this.usageUnitUpdate.nativeElement.value
-        }
-      }
-      const index = this.createdPrices.findIndex(item => item.id === this.priceToUpdate.id);
-      if (index !== -1) {
-        this.createdPrices[index]=priceToCreate;
-      }
-      console.log('--- price ---')
-      console.log(this.createdPrices)      
-    }
-    this.closeEditPrice();
-  }
-
-  closeEditPrice(){
-    this.priceForm.reset();
-    this.priceForm.controls['name'].setValue('');
-    this.priceForm.controls['price'].setValue('');
-    this.clearPriceFormInfo();
-    this.editPrice=false;
+    }*/
+    this.editPrice=!this.editPrice;
+    this.priceToUpdate=price;
+    this.showCreatePrice=false;
   }
 
   removePrice(price:any){
@@ -791,86 +627,12 @@ export class UpdateOfferComponent implements OnInit{
     if (index !== -1) {
       this.createdPrices.splice(index, 1);
     }
-    this.checkCustom();
-    this.clearPriceFormInfo();
   }
 
   showNewPrice(){
-    this.checkCustom();
-    this.showCreatePrice=!this.showCreatePrice;    
-  }
-
-  checkCustom(){
-    if(this.createdPrices.length==0){
-      this.allowCustom=true;
-      this.allowOthers=true;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        console.log(this.createdPrices[i].priceType)
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
-        }
-      }
-      if(check==true){
-        this.allowCustom=false;
-        this.allowOthers=true;
-      } else {
-        this.allowCustom=true;
-        this.allowOthers=false;  
-      }
-    }
-    this.clearPriceFormInfo();
-    console.log(this.customSelected)
-    this.cdr.detectChanges();
-  }
-
-  clearPriceFormInfo(){
-    console.log('clear')
-    if(this.createdPrices.length==0){
-      this.customSelected=true;
-      this.oneTimeSelected=false;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
-        }
-      }
-      if(check==true){
-        this.oneTimeSelected=true;
-        this.customSelected=false;
-      } else {
-        this.oneTimeSelected=false;
-        this.customSelected=true;        
-      }
-    }
-    this.selectedPeriod='DAILY';
-    this.selectedPeriodAlter='DAILY';
-    this.selectedPriceUnit=currencies[0].code;
-    this.priceTypeAlter='ONE TIME';
-    this.priceComponentSelected=false;
-    this.discountSelected=false;
-    this.noAlterSelected=true;
-    this.showCreatePrice=false;    
-    this.usageSelected=false;
-    this.recurringSelected=false;    
-    this.showPreview=false;
-
-    this.priceAlterForm.reset();
-    this.priceAlterForm.controls['condition'].setValue('');
-    this.priceAlterForm.controls['price'].setValue('');
-    this.priceForm.reset();
-    this.priceForm.controls['name'].setValue('');
-    this.priceForm.controls['price'].setValue('');
-    this.priceForm.controls['description'].setValue('');
-    // Explicitly mark all controls as pristine and untouched
-    Object.keys(this.priceForm.controls).forEach(key => {
-      this.priceForm.get(key)?.markAsPristine();
-      this.priceForm.get(key)?.markAsUntouched();
-      this.priceForm.get(key)?.updateValueAndValidity();
-    });
-    this.validPriceCheck=true;
+    this.priceToUpdate=undefined;
+    this.showCreatePrice=!this.showCreatePrice;
+    this.editPrice=false;
   }
 
   onSLAMetricChange(event: any) {
@@ -981,7 +743,7 @@ export class UpdateOfferComponent implements OnInit{
 
   getCategories(){
     console.log('Getting categories...')
-    this.api.getLaunchedCategories().then(data => {      
+    this.api.getLaunchedCategories().then(data => {
       for(let i=0; i < data.length; i++){
         this.findChildren(data[i],data);
         this.unformattedCategories.push(data[i]);
@@ -989,7 +751,7 @@ export class UpdateOfferComponent implements OnInit{
       this.loadingCategory=false;
       this.cdr.detectChanges();
       initFlowbite();
-    }) 
+    })
   }
 
   findChildren(parent:any,data:any[]){
@@ -1031,21 +793,21 @@ export class UpdateOfferComponent implements OnInit{
     for(let i=0; i < superCategories.length; i++){
       let children = superCategories[i].children;
       if (children != undefined){
-        let check = children.find((element: { id: any; }) => element.id == parent.id) 
+        let check = children.find((element: { id: any; }) => element.id == parent.id)
         if (check != undefined) {
           let idx = children.findIndex((element: { id: any; }) => element.id == parent.id)
           children[idx] = parent
-          superCategories[i].children = children         
+          superCategories[i].children = children
         }
         this.saveChildren(children,parent)
-      }          
+      }
     }
   }
 
-  addParent(parentId:any){    
+  addParent(parentId:any){
     const index = this.unformattedCategories.findIndex(item => item.id === parentId);
     if (index != -1) {
-      //Si el padre no está seleccionado se añade a la selección      
+      //Si el padre no está seleccionado se añade a la selección
       if(this.unformattedCategories[index].isRoot==false){
         this.addCategory(this.unformattedCategories[index])
       } else {
@@ -1062,13 +824,13 @@ export class UpdateOfferComponent implements OnInit{
     } else {
       console.log('añadir')
       this.selectedCategories.push(cat);
-    } 
+    }
 
     if(cat.isRoot==false){
       //const parentIdx = this.categories.findIndex(item => item.id === cat.parentId);
       const parentIdxSelected = this.selectedCategories.findIndex(item => item.id === cat.parentId);
       if (index==-1 && parentIdxSelected == -1) {
-        this.addParent(cat.parentId);     
+        this.addParent(cat.parentId);
       }
     }
     console.log(this.selectedCategories)
@@ -1082,7 +844,7 @@ export class UpdateOfferComponent implements OnInit{
       return true;
     } else {
       return false;
-    } 
+    }
   }
 
   selectCatalog(cat:any){
@@ -1094,7 +856,7 @@ export class UpdateOfferComponent implements OnInit{
     if(next==false){
       this.loadingCatalog=true;
     }
-    
+
     let options = {
       "keywords": undefined,
       "filters": ['Active','Launched'],
@@ -1103,7 +865,7 @@ export class UpdateOfferComponent implements OnInit{
 
     this.paginationService.getItemsPaginated(this.catalogPage, this.CATALOG_LIMIT, next, this.catalogs,this.nextCatalogs, options,
       this.api.getCatalogsByUser.bind(this.api)).then(data => {
-      this.catalogPageCheck=data.page_check;      
+      this.catalogPageCheck=data.page_check;
       this.catalogs=data.items;
       this.nextCatalogs=data.nextItems;
       this.catalogPage=data.page;
@@ -1124,7 +886,7 @@ export class UpdateOfferComponent implements OnInit{
     if(next==false){
       this.loadingProdSpec=true;
     }
-    
+
     let options = {
       "filters": ['Active','Launched'],
       "partyId": this.partyId,
@@ -1134,7 +896,7 @@ export class UpdateOfferComponent implements OnInit{
 
     this.paginationService.getItemsPaginated(this.prodSpecPage, this.PROD_SPEC_LIMIT, next, this.prodSpecs,this.nextProdSpecs, options,
       this.prodSpecService.getProdSpecByUser.bind(this.prodSpecService)).then(data => {
-      this.prodSpecPageCheck=data.page_check;      
+      this.prodSpecPageCheck=data.page_check;
       this.prodSpecs=data.items;
       this.nextProdSpecs=data.nextItems;
       this.prodSpecPage=data.page;
@@ -1151,7 +913,7 @@ export class UpdateOfferComponent implements OnInit{
     if(next==false){
       this.loadingBundle=true;
     }
-    
+
     let options = {
       "filters": ['Active','Launched'],
       "partyId": this.partyId,
@@ -1161,7 +923,7 @@ export class UpdateOfferComponent implements OnInit{
 
     this.paginationService.getItemsPaginated(this.bundlePage, this.PRODUCT_LIMIT, next, this.bundledOffers,this.nextBundledOffers, options,
       this.api.getProductOfferByOwner.bind(this.api)).then(data => {
-      this.bundlePageCheck=data.page_check;      
+      this.bundlePageCheck=data.page_check;
       this.bundledOffers=data.items;
       this.nextBundledOffers=data.nextItems;
       this.bundlePage=data.page;
@@ -1187,7 +949,7 @@ export class UpdateOfferComponent implements OnInit{
         lifecycleStatus: prod.lifecycleStatus,
         name: prod.name
       });
-    }    
+    }
     this.cdr.detectChanges();
     console.log(this.offersBundle)
   }
@@ -1198,11 +960,16 @@ export class UpdateOfferComponent implements OnInit{
       return true
     } else {
       return false;
-    } 
+    }
+  }
+
+  changeProcurement(event: any) {
+    this.procurementMode = event.target.value;
   }
 
   showFinish(){
-    this.clearPriceFormInfo();
+    this.editPrice=false;
+    this.showCreatePrice=false;
     this.saveLicense();
     if(this.generalForm.value.name && this.generalForm.value.version){
       this.offerToUpdate={
@@ -1215,7 +982,7 @@ export class UpdateOfferComponent implements OnInit{
 
     this.selectStep('summary','summary-circle');
     this.showBundle=false;
-    this.showGeneral=false;    
+    this.showGeneral=false;
     this.showProdSpec=false;
     this.showCatalog=false;
     this.showCategory=false;
@@ -1223,6 +990,7 @@ export class UpdateOfferComponent implements OnInit{
     this.showSLA=false;
     this.showPrice=false;
     this.showSummary=true;
+    this.showReplication=false;
     this.showPreview=false;
   }
 
@@ -1255,98 +1023,491 @@ export class UpdateOfferComponent implements OnInit{
           if (index == -1) {
             console.log('precio nuevo')
             //Crear el precio porque es nuevo
+            //Si el precio es bundle
+            if(this.createdPrices[i].isBundle==true){
+              let components=this.createdPrices[i].bundledPopRelationship;
+              let compRel:any[]=[];
+              if(components != undefined){
+                for(let j=0;j<components.length;j++){
+                  //Creating price component
+                  let priceCompToCreate: ProductOfferingPrice = {
+                    name: components[j].name,
+                    description: components[j].description,
+                    lifecycleStatus: components[j].lifecycleStatus,
+                    priceType: components[j].priceType,
+                    price: {
+                      unit: components[j]?.price?.unit,
+                      value: components[j]?.price?.value
+                    }
+                  }
+                  if(components[j].priceType=='recurring'){
+                    priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                    priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+                  }
+                  if(components[j].priceType=='recurring-prepaid'){
+                    priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                    priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+                  }
+                  if(components[j].priceType=='usage'){
+                    priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+                  }
+                  if(components[j].prodSpecCharValueUse){
+                    priceCompToCreate.prodSpecCharValueUse=components[j].prodSpecCharValueUse
+                  }
+                  if(components[j].unitOfMeasure){
+                    priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+                  }
+                  let priceAlterations = components[j].popRelationship;
+                  if(priceAlterations != undefined){
+                    //Creating price alteration
+                    let priceAlterToCreate: ProductOfferingPrice ={
+                      name: priceAlterations[0]?.name,
+                      priceType: priceAlterations[0]?.priceType,
+                      validFor: priceAlterations[0]?.validFor,
+                    }
+                    if(priceAlterations[0].percentage){
+                      priceAlterToCreate.percentage = priceAlterations[0]?.percentage;
+                    } else {
+                      priceAlterToCreate.price = priceAlterations[0]?.price;
+                    }
+                    try{
+                      let priceAlterCreated = await lastValueFrom(this.api.postOfferingPrice(priceAlterToCreate))
+                      console.log('price Alteration')
+                      console.log(priceAlterCreated)
+                      priceCompToCreate.popRelationship=[{
+                        id: priceAlterCreated.id,
+                        href: priceAlterCreated.id,
+                        name: priceAlterCreated.name
+                      }]
+                    } catch (error:any) {
+                      console.error('There was an error while creating offers price!', error);
+                      if(error.error.error){
+                        console.log(error)
+                        this.errorMessage='Error: '+error.error.error;
+                      } else {
+                        this.errorMessage='There was an error while creating offers price!';
+                      }
+                      this.showError=true;
+                      setTimeout(() => {
+                        this.showError = false;
+                      }, 3000);
+                    }
+                  }
+                  try{
+                    let priceCompCreated = await lastValueFrom(this.api.postOfferingPrice(priceCompToCreate))
+                    compRel.push({
+                      id: priceCompCreated.id,
+                      href: priceCompCreated.id,
+                      name: priceCompCreated.name
+                    })
+                    console.log('componente')
+                    console.log(priceCompCreated)
+                  } catch (error:any) {
+                    console.error('There was an error while creating offers price!', error);
+                    if(error.error.error){
+                      console.log(error)
+                      this.errorMessage='Error: '+error.error.error;
+                    } else {
+                      this.errorMessage='There was an error while creating offers price!';
+                    }
+                    this.showError=true;
+                    setTimeout(() => {
+                      this.showError = false;
+                    }, 3000);
+                  }
+                }
+              }
+            //Creating price plan
             let priceToCreate: ProductOfferingPrice = {
+              name: this.createdPrices[i].name,
+              isBundle: true,
               description: this.createdPrices[i].description,
               lifecycleStatus: this.createdPrices[i].lifecycleStatus,
+              bundledPopRelationship: compRel
+            }
+            if(this.createdPrices[i].prodSpecCharValueUse){
+              priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse
+            }
+            if(this.createdPrices[i].unitOfMeasure){
+              priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
+            }
+            try {
+              let pricePlanCreated = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
+              console.log('precio')
+              console.log(pricePlanCreated)
+              this.createdPrices[i].id=pricePlanCreated.id;
+              if(i==this.createdPrices.length-1){
+                this.saveOfferInfo();
+              }
+            } catch (error:any){
+              console.error('There was an error while creating offers price!', error);
+              if(error.error.error){
+                console.log(error)
+                this.errorMessage='Error: '+error.error.error;
+              } else {
+                this.errorMessage='There was an error while creating offers price!';
+              }
+              this.showError=true;
+              setTimeout(() => {
+                this.showError = false;
+              }, 3000);
+            }
+          //Not bundled price plan
+          } else {
+            let priceToCreate: ProductOfferingPrice = {
               name: this.createdPrices[i].name,
+              isBundle: false,
+              description: this.createdPrices[i].description,
+              lifecycleStatus: this.createdPrices[i].lifecycleStatus,
               priceType: this.createdPrices[i].priceType,
-              price: {
-                  unit: this.createdPrices[i].price?.taxIncludedAmount?.unit,
-                  value: this.createdPrices[i].price?.taxIncludedAmount?.value
+            }
+            if(this.createdPrices[i].priceType!='custom'){
+              priceToCreate.price= {
+                unit: this.createdPrices[i]?.price?.unit,
+                value: this.createdPrices[i]?.price?.value
               }
             }
-            if(this.createdPrices[i].priceType == 'recurring'){
-              console.log('recurring')
-              priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
+            if(this.createdPrices[i].priceType=='recurring'){
+              priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriodType;
+              priceToCreate.recurringChargePeriodLength=this.createdPrices[i].recurringChargePeriodLength;
             }
-            if(this.createdPrices[i].priceType == 'usage'){
-              console.log('usage')
-              priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
+            if(this.createdPrices[i].priceType=='recurring-prepaid'){
+              priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriodType;
+              priceToCreate.recurringChargePeriodLength=this.createdPrices[i].recurringChargePeriodLength;
             }
-            await this.api.postOfferingPrice(priceToCreate).subscribe({
-              next: data => {
-                console.log('precio')
-                console.log(data)
-                this.createdPrices[i].id=data.id;
-                if(checkCreate){
-                  this.saveOfferInfo();
-                }            
-              },
-              error: error => {
-                console.error('There was an error while creating offers price!', error);
-                if(error.error.error){
-                  console.log(error)
-                  this.errorMessage='Error: '+error.error.error;
-                } else {
-                  this.errorMessage='There was an error while creating offers price!';
-                }
-                this.showError=true;
-                setTimeout(() => {
-                  this.showError = false;
-                }, 3000);
+            if(this.createdPrices[i].priceType=='usage'){
+              priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
+            }
+            if(this.createdPrices[i].prodSpecCharValueUse){
+              priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse;
+            }
+            if(this.createdPrices[i].unitOfMeasure){
+              priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
+            }
+            try {
+              let createdPrices = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
+              console.log('precio')
+              console.log(createdPrices)
+              this.createdPrices[i].id=createdPrices.id;
+              if(i==this.createdPrices.length-1){
+                this.saveOfferInfo();
               }
-            });
+            } catch (error:any){
+              console.error('There was an error while creating offers price!', error);
+              if(error.error.error){
+                console.log(error)
+                this.errorMessage='Error: '+error.error.error;
+              } else {
+                this.errorMessage='There was an error while creating offers price!';
+              }
+              this.showError=true;
+              setTimeout(() => {
+                this.showError = false;
+              }, 3000);
+            }
+          }
+          //EL PRECIO EXISTE -- UPDATE
           } else {
             console.log('precio existente -update')
             //Ver si se ha modificado y modificarlo si es necesario
             if(this.oldPrices[index]!=this.createdPrices[i]){
-              console.log('diferentes')
-              let priceToUpdate: ProductOfferingPrice = {
-                id: this.createdPrices[i].id,
-                description: this.createdPrices[i].description,
-                lifecycleStatus: this.createdPrices[i].lifecycleStatus,
-                name: this.createdPrices[i].name,
-                priceType: this.createdPrices[i].priceType,
-                price: {
-                    unit: this.createdPrices[i].price?.taxIncludedAmount?.unit,
-                    value: this.createdPrices[i].price?.taxIncludedAmount?.value
+              //Si es bundle
+              if(this.createdPrices[i].isBundle==true){
+                let components=this.createdPrices[i].bundledPopRelationship;
+                let compRel:any[]=[];
+                if(components != undefined){
+                  for(let j=0;j<components?.length;j++){
+                    let compIdx = this.oldPrices[index].bundledPopRelationship.findIndex((item: { id: any; }) => item.id === components?.[j]?.id);
+                    if(!this.oldPrices[index].bundledPopRelationship[compIdx].id.startsWith('urn:ngsi')){
+                      compIdx=-1;
+                    }
+                    if(compIdx!=-1){
+                      //UPDATE COMPONENT
+                      let priceCompToUpdate: ProductOfferingPrice = {
+                        id: components[j].id,
+                        name: components[j].name,
+                        description: components[j].description,
+                        lifecycleStatus: components[j].lifecycleStatus,
+                        priceType: components[j].priceType,
+                        price: {
+                          unit: components[j]?.price?.unit,
+                          value: components[j]?.price?.value
+                        }
+                      }
+                      if(components[j].priceType=='recurring'){
+                        priceCompToUpdate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                        priceCompToUpdate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+                      }
+                      if(components[j].priceType=='recurring-prepaid'){
+                        priceCompToUpdate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                        priceCompToUpdate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+                      }
+                      if(components[j].priceType=='usage'){
+                        priceCompToUpdate.unitOfMeasure=components[j].unitOfMeasure
+                      }
+                      if(components[j].prodSpecCharValueUse){
+                        priceCompToUpdate.prodSpecCharValueUse=components[j].prodSpecCharValueUse
+                      }
+                      if(components[j].unitOfMeasure){
+                        priceCompToUpdate.unitOfMeasure=components[j].unitOfMeasure
+                      }
+                      let priceAlterations = components[j].popRelationship;
+                      let oldPriceAlterations = this.oldPrices[index].bundledPopRelationship[compIdx].popRelationship;
+
+                      //SI SE HA CREADO DESCUENTO
+                      if(priceAlterations != undefined){
+                        if(oldPriceAlterations != undefined && oldPriceAlterations != priceAlterations){
+                          //UPDATE price alteration
+                          let priceAlterToUpdate: ProductOfferingPrice ={
+                            id: priceAlterations[0]?.id,
+                            name: priceAlterations[0]?.name,
+                            priceType: priceAlterations[0]?.priceType,
+                            validFor: priceAlterations[0]?.validFor,
+                          }
+                          if(priceAlterations[0].percentage){
+                            priceAlterToUpdate.percentage = priceAlterations[0]?.percentage;
+                          } else {
+                            priceAlterToUpdate.price = priceAlterations[0]?.price;
+                          }
+                          try{
+                            let priceAlterToUpdateId=priceAlterToUpdate.id;
+                            delete priceAlterToUpdate.id;
+                            await lastValueFrom(this.api.updateOfferingPrice(priceAlterToUpdate,priceAlterToUpdateId))
+                          } catch (error:any) {
+                            console.error('There was an error while creating offers price!', error);
+                            if(error.error.error){
+                              console.log(error)
+                              this.errorMessage='Error: '+error.error.error;
+                            } else {
+                              this.errorMessage='There was an error while creating offers price!';
+                            }
+                            this.showError=true;
+                            setTimeout(() => {
+                              this.showError = false;
+                            }, 3000);
+                          }
+                        } else {
+                          //CREATE
+                          let priceAlterToCreate: ProductOfferingPrice ={
+                            name: priceAlterations[0]?.name,
+                            priceType: priceAlterations[0]?.priceType,
+                            validFor: priceAlterations[0]?.validFor,
+                          }
+                          if(priceAlterations[0].percentage){
+                            priceAlterToCreate.percentage = priceAlterations[0]?.percentage;
+                          } else {
+                            priceAlterToCreate.price = priceAlterations[0]?.price;
+                          }
+                          try{
+                            let priceAlterCreated = await lastValueFrom(this.api.postOfferingPrice(priceAlterToCreate))
+                            console.log('price Alteration')
+                            console.log(priceAlterCreated)
+                            priceCompToUpdate.popRelationship=[{
+                              id: priceAlterCreated.id,
+                              href: priceAlterCreated.id,
+                              name: priceAlterCreated.name
+                            }]
+                          } catch (error:any) {
+                            console.error('There was an error while creating offers price!', error);
+                            if(error.error.error){
+                              console.log(error)
+                              this.errorMessage='Error: '+error.error.error;
+                            } else {
+                              this.errorMessage='There was an error while creating offers price!';
+                            }
+                            this.showError=true;
+                            setTimeout(() => {
+                              this.showError = false;
+                            }, 3000);
+                          }
+                        }
+                      }
+
+                      try{
+                        console.log('--PRICE TO UPDATE---------')
+                        console.log(priceCompToUpdate)
+                        console.log('id')
+                        console.log(priceCompToUpdate.id)
+                        let priceCompToUpdateId=priceCompToUpdate.id;
+                        delete priceCompToUpdate.id;
+                        await lastValueFrom(this.api.updateOfferingPrice(priceCompToUpdate,priceCompToUpdateId))
+                      } catch (error:any) {
+                        console.error('There was an error while creating offers price!', error);
+                        if(error.error.error){
+                          console.log(error)
+                          this.errorMessage='Error: '+error.error.error;
+                        } else {
+                          this.errorMessage='There was an error while creating offers price!';
+                        }
+                        this.showError=true;
+                        setTimeout(() => {
+                          this.showError = false;
+                        }, 3000);
+                      }
+                    }else{
+                      //CREATE COMPONENT
+                      let priceCompToCreate: ProductOfferingPrice = {
+                        name: components[j].name,
+                        description: components[j].description,
+                        lifecycleStatus: components[j].lifecycleStatus,
+                        priceType: components[j].priceType,
+                        price: {
+                          unit: components[j]?.price?.unit,
+                          value: components[j]?.price?.value
+                        }
+                      }
+                      if(components[j].priceType=='recurring'){
+                        priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                        priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+                      }
+                      if(components[j].priceType=='recurring-prepaid'){
+                        priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                        priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+                      }
+                      if(components[j].priceType=='usage'){
+                        priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+                      }
+                      if(components[j].prodSpecCharValueUse){
+                        priceCompToCreate.prodSpecCharValueUse=components[j].prodSpecCharValueUse
+                      }
+                      if(components[j].unitOfMeasure){
+                        priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+                      }
+                      let priceAlterations = components[j].popRelationship;
+                      if(priceAlterations != undefined){
+                        //Creating price alteration
+                        let priceAlterToCreate: ProductOfferingPrice ={
+                          name: priceAlterations[0]?.name,
+                          priceType: priceAlterations[0]?.priceType,
+                          validFor: priceAlterations[0]?.validFor,
+                        }
+                        if(priceAlterations[0].percentage){
+                          priceAlterToCreate.percentage = priceAlterations[0]?.percentage;
+                        } else {
+                          priceAlterToCreate.price = priceAlterations[0]?.price;
+                        }
+                        try{
+                          let priceAlterCreated = await lastValueFrom(this.api.postOfferingPrice(priceAlterToCreate))
+                          console.log('price Alteration')
+                          console.log(priceAlterCreated)
+                          priceCompToCreate.popRelationship=[{
+                            id: priceAlterCreated.id,
+                            href: priceAlterCreated.id,
+                            name: priceAlterCreated.name
+                          }]
+                        } catch (error:any) {
+                          console.error('There was an error while creating offers price!', error);
+                          if(error.error.error){
+                            console.log(error)
+                            this.errorMessage='Error: '+error.error.error;
+                          } else {
+                            this.errorMessage='There was an error while creating offers price!';
+                          }
+                          this.showError=true;
+                          setTimeout(() => {
+                            this.showError = false;
+                          }, 3000);
+                        }
+                      }
+                      try{
+                        let priceCompCreated = await lastValueFrom(this.api.postOfferingPrice(priceCompToCreate))
+                        compRel.push({
+                          id: priceCompCreated.id,
+                          href: priceCompCreated.id,
+                          name: priceCompCreated.name
+                        })
+                        console.log('componente')
+                        console.log(priceCompCreated)
+                      } catch (error:any) {
+                        console.error('There was an error while creating offers price!', error);
+                        if(error.error.error){
+                          console.log(error)
+                          this.errorMessage='Error: '+error.error.error;
+                        } else {
+                          this.errorMessage='There was an error while creating offers price!';
+                        }
+                        this.showError=true;
+                        setTimeout(() => {
+                          this.showError = false;
+                        }, 3000);
+                      }
+                    }
+                  }
                 }
-              }
-              if(this.createdPrices[i].priceType == 'recurring'){
-                console.log('recurring')
-                priceToUpdate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
-              }
-              if(this.createdPrices[i].priceType == 'usage'){
-                console.log('usage')
-                priceToUpdate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
-              }
-              await this.api.updateOfferingPrice(priceToUpdate).subscribe({
-                next: data => {
+                //UPDATE price plan
+                console.log('prices----')
+                console.log(this.createdPrices[i])
+                let mappedCreatedPriced = this.createdPrices[i].bundledPopRelationship?.map(({ id, href, name }) => ({ id, href, name }));
+
+                let priceToUpdate: ProductOfferingPrice = {
+                  id: this.createdPrices[i].id,
+                  name: this.createdPrices[i].name,
+                  isBundle: true,
+                  description: this.createdPrices[i].description,
+                  lifecycleStatus: this.createdPrices[i].lifecycleStatus,
+                  bundledPopRelationship: mappedCreatedPriced?.concat(compRel).filter(item => item.id && item.id.startsWith("urn:ngsi"))
+                }
+                try{
+                  let priceToUpdateId=priceToUpdate.id;
+                  delete priceToUpdate.id;
+                  let pricePlanUpdated = await lastValueFrom(this.api.updateOfferingPrice(priceToUpdate,priceToUpdateId))
                   console.log('precio')
-                  console.log(data)
-                  this.createdPrices[i].id=data.id;
+                  console.log(pricePlanUpdated)
+                  this.createdPrices[i].id=pricePlanUpdated.id;
                   if(checkCreate==false && i==lastIndex){
                     this.saveOfferInfo();
-                  }            
-                },
-                error: error => {
-                  console.error('There was an error while updating!', error);
+                  }
+                } catch (error:any){
+                  console.error('There was an error while creating offers price!', error);
                   if(error.error.error){
                     console.log(error)
                     this.errorMessage='Error: '+error.error.error;
                   } else {
-                    this.errorMessage='There was an error while updating offers price!';
+                    this.errorMessage='There was an error while creating offers price!';
                   }
                   this.showError=true;
                   setTimeout(() => {
                     this.showError = false;
                   }, 3000);
                 }
-              });
+              //Si no simplemente se actualiza el priceplan
+              } else {
+                //UPDATE price plan
+                let priceToUpdate: ProductOfferingPrice = {
+                  id: this.createdPrices[i].id,
+                  name: this.createdPrices[i].name,
+                  isBundle: true,
+                  description: this.createdPrices[i].description,
+                  lifecycleStatus: this.createdPrices[i].lifecycleStatus
+                }
+                try{
+                  let priceToUpdateId=priceToUpdate.id;
+                  delete priceToUpdate.id;
+                  let pricePlanUpdated = await lastValueFrom(this.api.updateOfferingPrice(priceToUpdate,priceToUpdateId))
+                  console.log('precio')
+                  console.log(pricePlanUpdated)
+                  this.createdPrices[i].id=pricePlanUpdated.id;
+                  if(checkCreate==false && i==lastIndex){
+                    this.saveOfferInfo();
+                  }
+                } catch (error:any){
+                  console.error('There was an error while creating offers price!', error);
+                  if(error.error.error){
+                    console.log(error)
+                    this.errorMessage='Error: '+error.error.error;
+                  } else {
+                    this.errorMessage='There was an error while creating offers price!';
+                  }
+                  this.showError=true;
+                  setTimeout(() => {
+                    this.showError = false;
+                  }, 3000);
+                }
+              }
             }
           }
         }
-      }      
+      }
     } else {
       this.createdPrices=[];
       this.saveOfferInfo();
@@ -1395,35 +1556,25 @@ export class UpdateOfferComponent implements OnInit{
           }
         ]
       } else {
-        this.offerToUpdate.productOfferingTerm= [
+        this.offerToUpdate.productOfferingTerm = [
           {
               name: '',
               description: '',
               validFor: {}
           }
-        ]        
+        ]
       }
+
+      this.offerToUpdate.productOfferingTerm.push({
+        name: 'procurement',
+        description: this.procurementMode,
+      })
     }
 
     this.api.updateProductOffering(this.offerToUpdate,this.offer.id).subscribe({
       next: data => {
         console.log('product offer created:')
         console.log(data)
-        /*if(this.createdSLAs.length!=0){
-          let sla = {
-            offerId: data.id,
-            services: this.createdSLAs
-          }
-          this.api.postSLA(sla).subscribe({
-            next: data => {
-              console.log('SLA')
-              console.log(data)              
-            },
-            error: error => {
-              console.error('There was an error while updating!', error);
-            }
-          });
-        }*/
         this.goBack();
       },
       error: error => {
@@ -1448,10 +1599,10 @@ export class UpdateOfferComponent implements OnInit{
     if (index !== -1) {
       this.stepsElements.splice(index, 1);
       this.selectMenu(document.getElementById(step),'text-primary-100 dark:text-primary-50')
-      this.unselectMenu(document.getElementById(step),'text-gray-500') 
+      this.unselectMenu(document.getElementById(step),'text-gray-500')
       for(let i=0; i<this.stepsElements.length;i++){
         this.unselectMenu(document.getElementById(this.stepsElements[i]),'text-primary-100 dark:text-primary-50')
-        this.selectMenu(document.getElementById(this.stepsElements[i]),'text-gray-500') 
+        this.selectMenu(document.getElementById(this.stepsElements[i]),'text-gray-500')
       }
       this.stepsElements.push(step);
     }
@@ -1482,7 +1633,7 @@ export class UpdateOfferComponent implements OnInit{
       if(elem.className.match(cls)){
         this.removeClass(elem,cls)
       } else {
-        console.log('already unselected')
+        //console.log('already unselected')
       }
     }
   }
@@ -1490,7 +1641,7 @@ export class UpdateOfferComponent implements OnInit{
   selectMenu(elem:HTMLElement| null,cls:string){
     if(elem != null){
       if(elem.className.match(cls)){
-        console.log('already selected')
+        //console.log('already selected')
       } else {
         this.addClass(elem,cls)
       }
@@ -1513,7 +1664,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' **bold text** '
-      });    
+      });
     }
 
   }
@@ -1533,7 +1684,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' _italicized text_ '
-      });    
+      });
     }
   }
 
@@ -1552,7 +1703,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n- First item\n- Second item'
-      });    
+      });
     }
   }
 
@@ -1571,8 +1722,8 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n1. First item\n2. Second item'
-      });    
-    } 
+      });
+    }
   }
 
   addCode(){
@@ -1590,7 +1741,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n`code`'
-      });    
+      });
     }
   }
 
@@ -1609,7 +1760,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n```\ncode\n```'
-      });    
+      });
     }
   }
 
@@ -1618,7 +1769,7 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.generalForm.value.description;
       this.generalForm.patchValue({
         description: currentText + '\n> blockquote'
-      }); 
+      });
     } else if(this.showPrice) {
       const currentText = this.priceForm.value.description;
       this.priceForm.patchValue({
@@ -1628,8 +1779,8 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n> blockquote'
-      });    
-    }   
+      });
+    }
   }
 
   addLink(){
@@ -1647,9 +1798,9 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' [title](https://www.example.com) '
-      });    
-    }  
-  } 
+      });
+    }
+  }
 
   addTable(){
     if(this.showGeneral){
@@ -1666,8 +1817,8 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
-      });    
-    } 
+      });
+    }
   }
 
   addEmoji(event:any){
@@ -1686,8 +1837,8 @@ export class UpdateOfferComponent implements OnInit{
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + event.emoji.native
-      });    
-    } 
+      });
+    }
   }
 
   togglePreview(){
@@ -1709,6 +1860,12 @@ export class UpdateOfferComponent implements OnInit{
       } else {
         this.licenseDescription=''
       }
-    } 
+    }
   }
+
+  handleSelectionChange(items: string[]) {
+    console.log('selected items...')
+    console.log(items)
+  }
+
 }

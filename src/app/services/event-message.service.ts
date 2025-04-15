@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Subject} from "rxjs";
-import {Category, cartProduct} from "../models/interfaces";
+import {Category, cartProduct, FormChangeState, PricePlanChangeState, SubformType} from "../models/interfaces";
 import { LoginInfo } from 'src/app/models/interfaces';
 
 export interface EventMessage {
@@ -8,9 +8,11 @@ export interface EventMessage {
   'SellerProductSpec' | 'SellerCreateProductSpec' | 'SellerServiceSpec' | 'SellerCreateServiceSpec' | 'SellerResourceSpec' | 'SellerCreateResourceSpec' |
   'SellerOffer' | 'SellerCreateOffer' | 'SellerUpdateProductSpec' | 'SellerUpdateServiceSpec' | 'SellerUpdateResourceSpec' | 'SellerUpdateOffer' |
   'SellerCatalog' | 'SellerCatalogCreate' | 'SellerCatalogUpdate' | 'CategoryAdded' | 'CategoryRemoved' | 'ChangedSession' | 'CloseCartCard'|
-  'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails' | 'OpenProductInvDetails' | 'CloseFeedback';
+  'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails' | 'OpenProductInvDetails' |
+  'SavePricePlan' | 'UpdatePricePlan' | 'ToggleEditPrice' | 'ToggleNewPrice' |
+  'SubformChange' | 'CloseFeedback';
   text?: string,
-  value?: object | boolean
+  value?: object | boolean | FormChangeState | PricePlanChangeState
 }
 
 
@@ -170,7 +172,30 @@ export class EventMessageService {
     this.eventMessageSubject.next({type: 'OpenProductInvDetails', value: id})
   }
 
-  emitCloseFeedback(show:boolean){
+  emitSavePricePlan(pricePlan:any){
+    this.eventMessageSubject.next({type: 'SavePricePlan', value: pricePlan})
+  }
+
+  emitUpdatePricePlan(pricePlan:any){
+    this.eventMessageSubject.next({type: 'UpdatePricePlan', value: pricePlan})
+  }
+
+  emitToggleEditPricePlan(pricePlan:any){
+    this.eventMessageSubject.next({type: 'ToggleEditPrice', value: pricePlan})
+  }
+
+  emitToggleNewPricePlan(pricePlan:any){
+    this.eventMessageSubject.next({type: 'ToggleNewPrice', value: pricePlan})
+  }
+
+  emitSubformChange(changeState: FormChangeState | PricePlanChangeState) {
+    this.eventMessageSubject.next({
+      type: 'SubformChange', 
+      value: changeState 
+    });
+  }
+
+  emitCloseFeedback(show:boolean) {
     this.eventMessageSubject.next({type: 'CloseFeedback', value: show})
   }
 }

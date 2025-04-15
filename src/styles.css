@@ -64,6 +64,35 @@ markdown h6 {
   margin-bottom: 0.5em;
 }
 
+.price-plan markdown h1 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.price-plan markdown h2 {
+  font-size: 1em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.price-plan markdown h3 {
+  font-size: 0.83em;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+.price-plan markdown h4 {
+  font-size: 0.67em;
+  margin-bottom: 0.5em;
+}
+.price-plan markdown h5 {
+  font-size: 0.5em;
+  margin-bottom: 0.5em;
+}
+.price-plan markdown h6 {
+  font-size: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+
 markdown p {
   margin-bottom: 1em;
 }
@@ -153,6 +182,18 @@ markdown a:hover {
   text-decoration: underline;
 }
 
+   :root {
+     fa-layers {
+       /*font-size: 1.5em;*/
+
+       fa-layers-counter {
+         font-size: 2em;
+         position: absolute;
+         top: -0.1em;
+         right: -0.1em;
+       }
+     }
+   }
 
 /* Autofill background configuration */
 :root {
@@ -180,12 +221,17 @@ input:-webkit-autofill::first-line {
   color: inherit;
 }
 
+textarea:-webkit-autofill {
+  background-color: var(--autofill-bg-light) !important;
+  color: var(--autofill-text-light) !important;
+  transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+}
 
+[data-theme='dark'] textarea:-webkit-autofill {
+  background-color: var(--autofill-bg-dark) !important;
+  color: var(--autofill-text-dark) !important;
+}
 
-
-
-
-
-
-
-
+textarea:-webkit-autofill::first-line {
+  color: inherit;
+}

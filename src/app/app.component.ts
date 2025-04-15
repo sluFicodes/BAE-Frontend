@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
         //this.refreshApi.startInterval(3000, ev.value);
       }
     })
-    let aux =this.localStorage.getObject('login_items') as LoginInfo;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) === '{}'){
       //this.siopInfo.getSiopInfo().subscribe((data)=>{
       //  environment.SIOP_INFO = data

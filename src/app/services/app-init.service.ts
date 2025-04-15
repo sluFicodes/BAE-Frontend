@@ -23,6 +23,7 @@ export class AppInitService {
                 environment.SEARCH_ENABLED = config.searchEnabled;
                 environment.DOME_TRUST_LINK = config.domeTrust;
                 environment.DOME_ABOUT_LINK = config.domeAbout;
+                environment.PURCHASE_ENABLED = config.purchaseEnabled;
                 environment.DOME_REGISTER_LINK = config.domeRegister;
                 environment.DOME_PUBLISH_LINK = config.domePublish;
                 environment.PURCHASE_ENABLED = config.purchaseEnabled;

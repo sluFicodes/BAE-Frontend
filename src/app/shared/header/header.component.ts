@@ -10,7 +10,8 @@ import {
   faAnglesLeft,
   faUser,
   faUsers,
-  faCogs
+  faCogs,
+  faReceipt
 } from "@fortawesome/sharp-solid-svg-icons";
 import {LocalStorageService} from "../../services/local-storage.service";
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -22,10 +23,11 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { Subscription, timer} from 'rxjs';
 import * as moment from 'moment';
 import { ActivatedRoute } from '@angular/router';
-import { initFlowbite } from 'flowbite';
+import { initFlowbite, Dropdown } from 'flowbite';
 import { QrVerifierService } from 'src/app/services/qr-verifier.service';
 import * as uuid from 'uuid';
 import { TranslateService } from '@ngx-translate/core';
+import {ShoppingCartServiceService} from "../../services/shopping-cart-service.service";
 
 @Component({
   selector: 'bae-header',
@@ -48,7 +50,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
               private route: ActivatedRoute,
               private eventMessage: EventMessageService,
               private router: Router,
-              private qrVerifier: QrVerifierService) {
+              private qrVerifier: QrVerifierService,
+              private sc: ShoppingCartServiceService) {
 
     this.themeToggleDarkIcon = themeToggleDarkIcon;
     this.themeToggleLightIcon = themeToggleLightIcon;
@@ -81,6 +84,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   public static BASE_URL: String = environment.BASE_URL;
   isNavBarOpen:boolean = false;
   flagDropdownOpen:boolean=false;
+  cartCount: number = 0;
 
   ngOnDestroy(): void {
       this.qrWindow?.close()
@@ -102,10 +106,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     if (this.isNavBarOpen) {
       this.isNavBarOpen = false;
     }
-  }  
+  }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: Event) {    
+  onResize(event: Event) {
     if (this.isNavBarOpen) {
       this.navbarbutton.nativeElement.blur();
       this.isNavBarOpen = false;
@@ -138,13 +142,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
           this.isAdmin=true;
           this.cdr.detectChanges();
         }
-      }     
+      }
       if(aux.logged_as == aux.id){
         this.username=aux.user;
         this.usercharacters=(aux.user.slice(0, 2)).toUpperCase();
         this.email=aux.email;
         for(let i=0;i<aux.roles.length;i++){
-          this.roles.push(aux.roles[i].name)          
+          this.roles.push(aux.roles[i].name)
         }
         console.log(this.roles)
       } else {
@@ -162,7 +166,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       }
       this.cdr.detectChanges();
     }
-    
+
+    this.sc.cart$.subscribe(cart => {
+      this.cartCount = cart.length; // Updates counter on icon
+    });
+
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'ToggleCartDrawer') {
         this.showCart=false;
@@ -217,7 +225,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     } else {
       this.themeToggleDarkIcon.nativeElement.classList.remove('hidden');
     }
-
   }
   toggleDarkMode() {
     // toggle icons inside button
@@ -249,18 +256,19 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       }
     }
   }
-  
+
   goToCatalogSearch(id:any) {
     this.router.navigate(['/search/catalogue', id]);
   }
 
   goTo(path:string) {
+    this.closeUserDropdown();
     this.router.navigate([path]);
   }
 
   toggleCartDrawer(){
     this.showCart=!this.showCart;
-    this.cdr.detectChanges();    
+    this.cdr.detectChanges();
   }
 
   async toggleLogin(){
@@ -268,12 +276,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     this.showLogin=true;
     //this.api.getLogin()
     //await (window.location.href='http://localhost:8004/login');
-    
+
     this.loginService.doLogin();
     this.cdr.detectChanges();
   }
 
   async logout(){
+    this.closeUserDropdown();
     this.localStorage.setObject('login_items',{});
     this.is_logged=false;
     this.username='';
@@ -283,12 +292,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       window.location.reload();
     } else {
       this.router.navigate(['/dashboard']);
-    }    
-    await this.loginService.logout();    
+    }
+    await this.loginService.logout();
     this.cdr.detectChanges();
   }
 
   changeSession(idx:number,exitOrgLogin:boolean){
+    this.closeUserDropdown();
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(exitOrgLogin){
       this.loginInfo = {"id": aux.id,
@@ -337,6 +347,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
 
   hideDropdown(dropdownId:any){
+    this.closeUserDropdown();
     const dropdown = document.getElementById(dropdownId);
     if (dropdown) {
       dropdown.classList.add('hidden');
@@ -383,7 +394,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
 
   private initChecking():void {
-    this.qrVerifier.pollServer(this.qrWindow, this.statePair); 
+    this.qrVerifier.pollServer(this.qrWindow, this.statePair);
   }
 
   toggleNavBar() {
@@ -391,9 +402,16 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   }
 
   switchLanguage(language: string) {
-    this.translate.use(language);    
+    this.translate.use(language);
     this.localStorage.setItem('current_language', language);
     this.defaultLang=language;
+  }
+
+  closeUserDropdown() {
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+      dropdown.classList.add('hidden');
+    }
   }
 
   protected readonly faCartShopping = faCartShopping;
@@ -407,4 +425,5 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   protected readonly faUser = faUser;
   protected  readonly faUsers = faUsers;
   protected readonly faCogs = faCogs;
+  protected readonly faReceipt = faReceipt;
 }

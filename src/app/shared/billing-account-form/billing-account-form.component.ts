@@ -37,14 +37,14 @@ export class BillingAccountFormComponent implements OnInit {
 
   billingForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.maxLength(320)]),
     country: new FormControl(''),
     city: new FormControl(''),
     stateOrProvince: new FormControl(''),
     postCode: new FormControl(''),
     street: new FormControl(''),
     telephoneNumber: new FormControl('', [Validators.required]),
-    telephoneType: new FormControl('')
+    telephoneType: new FormControl('Mobile')
   });
   prefixes: any[] = phoneNumbers;
   countries: any[] = countries;

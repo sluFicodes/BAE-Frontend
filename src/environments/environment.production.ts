@@ -7,10 +7,18 @@ export const environment = {
     PRODUCT_SPEC: '/productSpecification',
     SERVICE_SPEC: '/serviceSpecification',
     RESOURCE_SPEC: '/resourceSpecification',
+    CUSTOMER_BILLING:'/appliedCustomerBillingRate',
+
     ACCOUNT: '/account',
     SHOPPING_CART: '/shoppingCart',
     INVENTORY: '/inventory',
     PRODUCT_ORDER: '/ordering',
+    BILLING: '/billing',
+    CHARGING: '/charging',
+
+    CONSUMER_BILLING_URL: 'http://localhost:8640',
+    INVOICE_LIMIT: 100,
+
     //API PAGINATION
     PRODUCT_LIMIT: 6,
     CATALOG_LIMIT: 8,
@@ -20,7 +28,7 @@ export const environment = {
     PROD_SPEC_LIMIT: 6,
     SERV_SPEC_LIMIT: 6,
     RES_SPEC_LIMIT: 6,
-    ORDER_LIMIT: 6,
+    ORDER_LIMIT: 1000,
     CATEGORY_LIMIT: 100,
     SIOP: true,
     //SIOP: false,

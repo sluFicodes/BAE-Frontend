@@ -19,6 +19,7 @@ import { jwtDecode } from "jwt-decode";
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { Location } from '@angular/common';
+import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-product-details',
@@ -109,7 +110,7 @@ export class ProductDetailsComponent implements OnInit {
         if(ev.value!=undefined){
           this.lastAddedProd=ev.value;
           this.toastVisibility=true;
-  
+
           this.cdr.detectChanges();
           //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
           let element = document.getElementById("progress-bar")
@@ -129,14 +130,14 @@ export class ProductDetailsComponent implements OnInit {
     })
   }
 
-  @HostListener('window:scroll', ['$event']) 
+  @HostListener('window:scroll', ['$event'])
   updateTabs(event:any) {
     let tabs_container = document.getElementById('tabs-container');
     let tabsOffset = 0;
     if(tabs_container){
       tabsOffset=tabs_container.offsetHeight
     }
-    let details_container = document.getElementById('details-container')    
+    let details_container = document.getElementById('details-container')
     let chars_container = document.getElementById('chars-container')
     let attach_container = document.getElementById('attach-container')
     let agreements_container = document.getElementById('agreements-container')
@@ -180,7 +181,7 @@ export class ProductDetailsComponent implements OnInit {
     window.scrollTo(0, 0);
     this.id = this.route.snapshot.paramMap.get('id');
     console.log('--- Details ID:')
-    console.log(this.id)    
+    console.log(this.id)
     this.api.getProductById(this.id).then(prod => {
       console.log('prod')
       console.log(prod)
@@ -243,7 +244,7 @@ export class ProductDetailsComponent implements OnInit {
             })
           }
         }
-        
+
         console.log('serv specs')
         console.log(this.serviceSpecs)
         this.productOff={
@@ -400,12 +401,12 @@ export class ProductDetailsComponent implements OnInit {
     if (this.check_prices==false && this.check_char == false && this.check_terms == false){
       this.addProductToCart(this.productOff,false);
     } else {
-      this.cartSelection=true;      
+      this.cartSelection=true;
       this.cdr.detectChanges();
     }
   }
 
-  async addProductToCart(productOff:Product| undefined,options:boolean){
+  /*async addProductToCart(productOff:Product| undefined,options:boolean){
     //this.localStorage.addCartItem(productOff as Product);
     if(options==true){
       console.log('termschecked:')
@@ -518,16 +519,91 @@ export class ProductDetailsComponent implements OnInit {
       this.cdr.detectChanges();
     }
     this.cdr.detectChanges();
+  } */
+
+
+  async addProductToCart(productOff: Product | undefined, options: boolean) {
+    if (!productOff || !productOff.productOfferingPrice) return;
+
+    const prodOptions = this.createProdOptions(productOff, options);
+    this.lastAddedProd = prodOptions;
+
+    try {
+      // Añadir el producto al carrito
+      await this.cartService.addItemShoppingCart(prodOptions);
+      console.log('Update successful');
+      this.showToast();
+
+      // Emitir evento de producto añadido
+      this.eventMessage.emitAddedCartItem(productOff as cartProduct);
+    } catch (error) {
+      this.handleError(error, 'There was an error while adding item to the cart!');
+    }
+
+    // Restablecer selecciones si es necesario
+    if (this.cartSelection) {
+      this.resetSelections();
+    }
   }
 
-  deleteProduct(product: Product | undefined){
+  private createProdOptions(productOff: Product, options: boolean) {
+    return {
+      id: productOff.id,
+      name: productOff.name,
+      image: this.getProductImage(),
+      href: productOff.href,
+      options: {
+        characteristics: this.selected_chars,
+        pricing: this.selected_price,
+      },
+      termsAccepted: options ? this.selected_terms : true,
+    };
+  }
+
+  private showToast() {
+    this.toastVisibility = true;
+    this.cdr.detectChanges();
+
+    const element = document.getElementById('progress-bar');
+    const parent = document.getElementById('toast-add-cart');
+    if (element && parent) {
+      element.style.width = '0%'; // Reset width
+      element.offsetWidth; // Trigger reflow
+      element.style.width = '100%'; // Fill progress bar
+      setTimeout(() => {
+        this.toastVisibility = false; // Hide the toast after 3.5 seconds
+      }, 3500);
+    }
+  }
+
+  private handleError(error: any, defaultMessage: string) {
+    console.error(defaultMessage, error);
+    this.errorMessage = error?.error?.error ? `Error: ${error.error.error}` : defaultMessage;
+    this.showError = true;
+    setTimeout(() => (this.showError = false), 3000);
+  }
+
+  private resetSelections() {
+    this.cartSelection = false;
+    this.check_char = false;
+    this.check_terms = false;
+    this.check_prices = false;
+    this.selected_chars = [];
+    this.selected_price = {};
+    this.selected_terms = false;
+    this.cdr.detectChanges();
+  }
+
+
+async deleteProduct(product: Product | undefined){
     if(product !== undefined) {
       //this.localStorage.removeCartItem(product);
-      this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('removed'));
+      await this.cartService.removeItemShoppingCart(product.id);
+      console.log('removed');
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
-  }  
+  }
 
   hideCartSelection(){
     this.cartSelection=false;
@@ -679,7 +755,7 @@ export class ProductDetailsComponent implements OnInit {
       document?.getElementById('terms-markdown')?.classList.add('line-clamp-5')
     }
     this.showTermsMore=!this.showTermsMore;
-    
+
   }
 
   goToLink(url: any){
@@ -704,6 +780,15 @@ export class ProductDetailsComponent implements OnInit {
   goToOrgDetails(id:any) {
     //document.querySelector("body > div[modal-backdrop]")?.remove()
     this.router.navigate(['/org-details', id]);
+  }
+
+  isDrawerOpen = false;
+  openDrawer(): void {
+    this.isDrawerOpen = true;
+  }
+
+  closeDrawer(): void {
+    this.isDrawerOpen = false;
   }
 
 }

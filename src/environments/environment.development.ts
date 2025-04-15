@@ -14,6 +14,13 @@ export const environment = {
     SHOPPING_CART: '/shoppingCart',
     INVENTORY: '/inventory',
     PRODUCT_ORDER: '/ordering',
+    BILLING: '/billing',
+    CHARGING: '/charging',
+
+    CUSTOMER_BILLING:'/appliedCustomerBillingRate',
+    CONSUMER_BILLING_URL: 'http://localhost:8640',
+    INVOICE_LIMIT: 100,
+
     //API PAGINATION
     PRODUCT_LIMIT: 6,
     CATALOG_LIMIT: 8,
@@ -23,7 +30,7 @@ export const environment = {
     PROD_SPEC_LIMIT: 6,
     SERV_SPEC_LIMIT: 6,
     RES_SPEC_LIMIT: 6,
-    ORDER_LIMIT: 6,
+    ORDER_LIMIT: 1000,
     CATEGORY_LIMIT: 100,
     TAX_RATE: 20,
     CHAT_API: 'https://eng-gpt.dome-marketplace-sbx.org/predict',

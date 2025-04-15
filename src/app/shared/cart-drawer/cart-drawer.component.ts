@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 })
 export class CartDrawerComponent implements OnInit{
   protected readonly faCartShopping = faCartShopping;
-  items: cartProduct[] = [];
+  items: any[] = [];
   totalPrice:any;
   showBackDrop:boolean=true;
   check_custom:boolean=false;
@@ -91,6 +91,8 @@ export class CartDrawerComponent implements OnInit{
 
   getPrice(item: any) {
     if(item.options.pricing != undefined){
+      console.log('PRECIO----')
+      console.log(item.options.pricing)
       if(item.options.pricing.priceType=='custom'){
         this.check_custom=true;
         return null
@@ -107,7 +109,15 @@ export class CartDrawerComponent implements OnInit{
     }
   }
 
-  getTotalPrice() {
+  get objectKeys() {
+    return Object.keys;
+  }
+
+  getPricingValue(pricing: Record<string, any>, key: string): any {
+    return pricing[key];
+  }
+
+  /*getTotalPrice() {
     this.totalPrice = [];
     let insertCheck = false;
     this.check_custom=false;
@@ -144,10 +154,32 @@ export class CartDrawerComponent implements OnInit{
       }
     }
     console.log(this.totalPrice)
+  }*/
+
+  hasKey(obj: any, key: string): boolean {
+    return key in obj;
   }
 
-  deleteProduct(product: cartProduct){
-    this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('deleted'));
+  getTotalPrice() {
+    this.totalPrice = [];
+    let insertCheck = false;
+    this.check_custom=false;
+    this.cdr.detectChanges();
+    for (let i = 0; i < this.items.length; i++) {
+      let price = this.items[i].options.pricing
+      console.log(this.items[i].options.pricing)
+      if(price != undefined){
+        this.totalPrice=price;
+        //this.totalPrice.push(priceInfo);
+      }
+    }
+    //this.totalPrice.push(priceInfo);
+    console.log(this.totalPrice)
+  }
+
+  async deleteProduct(product: cartProduct){
+    await this.cartService.removeItemShoppingCart(product.id);
+    console.log('deleted');
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 

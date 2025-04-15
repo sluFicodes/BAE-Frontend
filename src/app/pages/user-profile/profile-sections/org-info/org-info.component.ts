@@ -34,6 +34,7 @@ export class OrgInfoComponent {
     name: new FormControl('', [Validators.required]),
     website: new FormControl(''),
     description: new FormControl(''),
+    country: new FormControl(''),
   });
   mediumForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
@@ -70,6 +71,38 @@ export class OrgInfoComponent {
   attImageName = new FormControl('', [Validators.required, Validators.pattern('^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp)$')])
   filenameRegex = /^[A-Za-z0-9_.-]+$/;
   MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
+
+  selectedCountry: string = ''; // Stores the selected country code
+
+  euCountries = [
+    { code: 'AT', name: 'Austria' },
+    { code: 'BE', name: 'Belgium' },
+    { code: 'BG', name: 'Bulgaria' },
+    { code: 'HR', name: 'Croatia' },
+    { code: 'CY', name: 'Cyprus' },
+    { code: 'CZ', name: 'Czech Republic' },
+    { code: 'DK', name: 'Denmark' },
+    { code: 'EE', name: 'Estonia' },
+    { code: 'FI', name: 'Finland' },
+    { code: 'FR', name: 'France' },
+    { code: 'DE', name: 'Germany' },
+    { code: 'GR', name: 'Greece' },
+    { code: 'HU', name: 'Hungary' },
+    { code: 'IE', name: 'Ireland' },
+    { code: 'IT', name: 'Italy' },
+    { code: 'LV', name: 'Latvia' },
+    { code: 'LT', name: 'Lithuania' },
+    { code: 'LU', name: 'Luxembourg' },
+    { code: 'MT', name: 'Malta' },
+    { code: 'NL', name: 'Netherlands' },
+    { code: 'PL', name: 'Poland' },
+    { code: 'PT', name: 'Portugal' },
+    { code: 'RO', name: 'Romania' },
+    { code: 'SK', name: 'Slovakia' },
+    { code: 'SI', name: 'Slovenia' },
+    { code: 'ES', name: 'Spain' },
+    { code: 'SE', name: 'Sweden' }
+  ];
 
   @ViewChild('imgURL') imgURL!: ElementRef;
 
@@ -148,6 +181,12 @@ export class OrgInfoComponent {
         value: this.profileForm.value.website
       })       
     }
+    if(this.profileForm.value.country != ''){
+      chars.push({
+        name: 'country',
+        value: this.profileForm.value.country
+      })       
+    }
     for(let i=0; i<this.contactmediums.length; i++){
       console.log(this.contactmediums)
       if(this.contactmediums[i].mediumType == 'Email'){
@@ -186,8 +225,6 @@ export class OrgInfoComponent {
     }
     
     let profile = {
-      "id": this.partyId,
-      "href": this.partyId,
       "tradingName": this.profileForm.value.name,
       "contactMedium": mediums,
       "partyCharacteristic": chars
@@ -261,14 +298,16 @@ export class OrgInfoComponent {
     }
     if(profile.partyCharacteristic){
       for(let i=0;i<profile.partyCharacteristic.length;i++){
-        if(profile.partyCharacteristic[i].name=='logo'){
+        if(profile.partyCharacteristic[i].name == 'logo'){
           this.imgPreview=profile.partyCharacteristic[i].value
           this.showImgPreview=true;
-        } else if(profile.partyCharacteristic[i].name=='description'){
-          this.profileForm.controls['description'].setValue(profile.partyCharacteristic[i].value);    
+        } else if(profile.partyCharacteristic[i].name=='description') {
+          this.profileForm.controls['description'].setValue(profile.partyCharacteristic[i].value);
           this.description=profile.partyCharacteristic[i].value;
-        }else if(profile.partyCharacteristic[i].name=='website'){            
+        }else if(profile.partyCharacteristic[i].name=='website') {
           this.profileForm.controls['website'].setValue(profile.partyCharacteristic[i].value);    
+        } else if(profile.partyCharacteristic[i].name=='country') {
+          this.profileForm.controls['country'].setValue(profile.partyCharacteristic[i].value);
         }
       }
     }

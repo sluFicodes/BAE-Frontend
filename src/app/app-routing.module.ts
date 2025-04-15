@@ -15,6 +15,7 @@ import { AdminComponent } from "./pages/admin/admin.component";
 import { ContactUsFormComponent } from "./pages/contact-us/contact-us-form.component";
 import { AuthGuard } from './guard/auth.guard';
 import { OrganizationDetailsComponent } from "./pages/organization-details/organization-details.component"
+import { ProductOrdersComponent } from './pages/product-orders/product-orders.component';
 
 const routes: Routes = [
   {
@@ -66,6 +67,10 @@ const routes: Routes = [
   },
   { path: 'contact-us',
     component: ContactUsFormComponent
+  },
+  { path: 'product-orders',
+    component: ProductOrdersComponent,
+    canActivate: [AuthGuard], data: { roles: [] }
   },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
 ]

@@ -35,6 +35,8 @@ import { environment } from 'src/environments/environment';
 export class CardComponent implements OnInit, AfterViewInit {
 
   @Input() productOff: Product | undefined;
+  @Input() cardId: number;
+
   category: string = 'none';
   categories: any[] | undefined  = [];
   categoriesMore: any[] | undefined  = [];
@@ -72,6 +74,11 @@ export class CardComponent implements OnInit, AfterViewInit {
   showError:boolean=false;
   orgInfo:any=undefined;
 
+  selectedPricePlanId: string | null = null;
+  selectedPricePlan:any = null;
+
+
+
   constructor(
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
@@ -92,7 +99,7 @@ export class CardComponent implements OnInit, AfterViewInit {
           if(ev.value!=undefined){
             this.lastAddedProd=ev.value;
             this.toastVisibility=true;
-    
+
             this.cdr.detectChanges();
             //document.getElementById("progress-bar")?.classList.toggle("hover:w-100");
             let element = document.getElementById("progress-bar")
@@ -106,7 +113,7 @@ export class CardComponent implements OnInit, AfterViewInit {
               }, 3500);
             }
           }
-  
+
           this.cdr.detectChanges();
         }
       })
@@ -155,7 +162,7 @@ export class CardComponent implements OnInit, AfterViewInit {
     } else {
       this.categories = this.productOff?.category;
       this.checkMoreCats=false;
-    }    
+    }
     //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
     //  this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
     let profile = this.productOff?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
@@ -232,6 +239,8 @@ export class CardComponent implements OnInit, AfterViewInit {
       "text": result.text
     }
 
+    this.prepareOffData();
+
     this.cdr.detectChanges();
   }
 
@@ -265,7 +274,7 @@ export class CardComponent implements OnInit, AfterViewInit {
       });*/
   }
 
-  async addProductToCart(productOff:Product| undefined,options:boolean){
+  /* async addProductToCart(productOff:Product| undefined,options:boolean){
     //this.localStorage.addCartItem(productOff as Product);
     if(options==true){
       console.log('termschecked:')
@@ -383,12 +392,91 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
     }
     this.cdr.detectChanges();
+  } */
+
+
+  async addProductToCart(productOff: Product | undefined, options: boolean) {
+    if (!productOff || !productOff.productOfferingPrice) return;
+
+    const prodOptions = this.createProdOptions(productOff, options);
+    this.lastAddedProd = prodOptions;
+
+    try {
+      // Añadir producto al carrito
+      await this.cartService.addItemShoppingCart(prodOptions);
+      console.log('Update successful');
+
+      // Mostrar el toast
+      this.showToast();
+
+      // Emitir evento de producto añadido
+      this.eventMessage.emitAddedCartItem(productOff as cartProduct);
+    } catch (error) {
+      this.handleError(error, 'There was an error while adding item to the cart!');
+    }
+
+    // Restablecer selecciones si es necesario
+    if (this.cartSelection) {
+      this.resetSelections();
+    }
+
+    this.cdr.detectChanges();
   }
 
-  deleteProduct(product: Product | undefined){
+  private createProdOptions(productOff: Product, options: boolean) {
+    return {
+      id: productOff.id,
+      name: productOff.name,
+      image: this.getProductImage(),
+      href: productOff.href,
+      options: {
+        characteristics: this.selected_chars,
+        pricing: this.selected_price,
+      },
+      termsAccepted: options ? this.selected_terms : true,
+    };
+  }
+
+  private showToast() {
+    this.toastVisibility = true;
+    this.cdr.detectChanges();
+
+    const element = document.getElementById('progress-bar');
+    const parent = document.getElementById('toast-add-cart');
+    if (element && parent) {
+      element.style.width = '0%'; // Reinicia el ancho
+      element.offsetWidth; // Forzar el reflujo
+      element.style.width = '100%'; // Llena la barra de progreso
+      setTimeout(() => {
+        this.toastVisibility = false; // Ocultar el toast tras 3.5 segundos
+      }, 3500);
+    }
+  }
+
+  private handleError(error: any, defaultMessage: string) {
+    console.error(defaultMessage, error);
+    this.errorMessage = error?.error?.error ? `Error: ${error.error.error}` : defaultMessage;
+    this.showError = true;
+    setTimeout(() => (this.showError = false), 3000);
+  }
+
+  private resetSelections() {
+    this.cartSelection = false;
+    this.check_char = false;
+    this.check_terms = false;
+    this.check_prices = false;
+    this.selected_chars = [];
+    this.selected_price = {};
+    this.selected_terms = false;
+    this.cdr.detectChanges();
+  }
+
+
+async deleteProduct(product: Product | undefined){
     if(product !== undefined) {
       //this.localStorage.removeCartItem(product);
-      this.cartService.removeItemShoppingCart(product.id).subscribe(() => console.log('removed'));
+      await this.cartService.removeItemShoppingCart(product.id);
+      console.log('removed');
       this.eventMessage.emitRemovedCartItem(product as Product);
     }
     this.toastVisibility=false;
@@ -415,8 +503,6 @@ export class CardComponent implements OnInit, AfterViewInit {
       } else {
         this.selected_price=this.productOff?.productOfferingPrice[0]
       }
-
-      this.cdr.detectChanges();
     }
 
     if(this.productOff?.productOfferingTerm != undefined){
@@ -426,7 +512,17 @@ export class CardComponent implements OnInit, AfterViewInit {
         this.check_terms=true;
       }
     }
+    //this.prepareOffData();
 
+    if (this.check_prices==false && this.check_char == false && this.check_terms == false){
+      this.addProductToCart(this.productOff,false);
+    } else {
+      this.cartSelection=true;
+      this.cdr.detectChanges();
+    }
+  }
+
+  prepareOffData() {
     if(this.prodSpec.productSpecCharacteristic != undefined){
       for(let i=0; i<this.prodSpec.productSpecCharacteristic.length; i++){
         let charvalue = this.prodSpec.productSpecCharacteristic[i].productSpecCharacteristicValue;
@@ -438,21 +534,15 @@ export class CardComponent implements OnInit, AfterViewInit {
             if(charvalue[j]?.isDefault == true){
               this.selected_chars.push(
                 {
-                "characteristic": this.prodSpec.productSpecCharacteristic[i],
-                "value": charvalue[j]
-              });
+                  "characteristic": this.prodSpec.productSpecCharacteristic[i],
+                  "value": charvalue[j]
+                });
             }
           }
         }
       }
+      console.log('Calculando characteristics...')
       console.log(this.selected_chars)
-    }
-
-    if (this.check_prices==false && this.check_char == false && this.check_terms == false){
-      this.addProductToCart(this.productOff,false);
-    } else {
-      this.cartSelection=true;      
-      this.cdr.detectChanges();
     }
   }
 
@@ -504,4 +594,26 @@ export class CardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  onPricePlanSelected(pricePlan:any) {
+    console.log(pricePlan.id);
+    this.selectedPricePlanId = pricePlan.id;
+    this.selectedPricePlan = pricePlan;
+  }
+
+  onValueChange(event: { characteristicId: string; selectedValue: any }): void {
+    //this.form.get(event.characteristicId)?.setValue(event.selectedValue);
+    console.log('Selected Value:', event);
+  }
+
+  isDrawerOpen = false;
+  openDrawer(): void {
+    if(this.showModal) this.showModal = false;
+    this.isDrawerOpen = true;
+  }
+
+  closeDrawer(): void {
+    this.isDrawerOpen = false;
+  }
+
+  protected readonly JSON = JSON;
 }

@@ -176,7 +176,7 @@ export class UpdateCategoryComponent implements OnInit {
 
   }
 
-  saveChildren(superCategories:any[],parent:any){
+  saveChildren(superCategories:any[],parent:any) {
     for(let i=0; i < superCategories.length; i++){
       let children = superCategories[i].children;
       if (children != undefined){
@@ -187,11 +187,11 @@ export class UpdateCategoryComponent implements OnInit {
           superCategories[i].children = children         
         }
         this.saveChildren(children,parent)
-      }          
+      }
     }
   }
 
-  toggleGeneral(){
+  toggleGeneral() {
     this.selectStep('general-info','general-circle');
     this.showGeneral=true;
     this.showSummary=false;

@@ -14,6 +14,11 @@ export const environment = {
     SHOPPING_CART: '/shoppingCart',
     INVENTORY: '/inventory',
     PRODUCT_ORDER: '/ordering',
+    CHARGING: '/charging',
+    BILLING: '/billing',
+
+    CUSTOMER_BILLING:'/appliedCustomerBillingRate',
+    CONSUMER_BILLING_URL: 'http://localhost:8640',
     //API PAGINATION
     PRODUCT_LIMIT: 6,
     CATALOG_LIMIT: 8,
@@ -23,8 +28,9 @@ export const environment = {
     PROD_SPEC_LIMIT: 6,
     SERV_SPEC_LIMIT: 6,
     RES_SPEC_LIMIT: 6,
-    ORDER_LIMIT: 6,
+    ORDER_LIMIT: 1000,
     CATEGORY_LIMIT: 100,
+    INVOICE_LIMIT: 100,
     SIOP: false,
     TAX_RATE: 20,
     CHAT_API: 'https://85.215.243.214:5000/predict',

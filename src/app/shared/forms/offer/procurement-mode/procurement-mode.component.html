@@ -1,0 +1,16 @@
+<p class="mb-3 text-gray-500 dark:text-gray-400">Define which parts of the procurement/activation process will be performed automatically and which ones will be performed manually by the provider</p>
+
+<div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-2">
+    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+      {{ 'FORMS.PROCUREMENT_MODE._title' | translate }}
+    </label>
+    <div [formGroup]="formGroup">
+      <select formControlName="mode" class="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        @for (mode of procurementModes; track mode.id) {
+          <option [value]="mode.id">{{ mode.name }}</option>
+        }
+      </select>
+    </div>
+  </div>
+</div>
