@@ -169,14 +169,12 @@ export class UpdateResourceSpecComponent implements OnInit {
       if(this.creatingChars.length==0){
         this.creatingChars.push({
           isDefault:true,
-          value: this.stringValue as any,
-          valueType: "string"
+          value:this.stringValue as any
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
-          value:this.stringValue as any,
-          valueType: "string"
+          value:this.stringValue as any
         })
       }
       this.stringValue='';  
@@ -186,15 +184,13 @@ export class UpdateResourceSpecComponent implements OnInit {
         this.creatingChars.push({
           isDefault:true,
           value:this.numberValue as any,
-          unitOfMeasure:this.numberUnit,
-          valueType: "number"
+          unitOfMeasure:this.numberUnit
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
           value:this.numberValue as any,
-          unitOfMeasure:this.numberUnit,
-          valueType: "number"
+          unitOfMeasure:this.numberUnit
         })
       }
       this.numberUnit='';
@@ -206,16 +202,14 @@ export class UpdateResourceSpecComponent implements OnInit {
           isDefault:true,
           valueFrom:this.fromValue as any,
           valueTo:this.toValue as any,
-          unitOfMeasure:this.rangeUnit,
-          valueType: "number"
+          unitOfMeasure:this.rangeUnit
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
           valueFrom:this.fromValue as any,
           valueTo:this.toValue as any,
-          unitOfMeasure:this.rangeUnit,
-          valueType: "number"})
+          unitOfMeasure:this.rangeUnit})
       } 
     }
     this.fromValue='';
