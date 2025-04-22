@@ -393,6 +393,7 @@ export class ShoppingCartComponent implements OnInit, AfterViewInit{
 
 
 goToInventory() {
-    this.router.navigate(['/product-inventory']);
+    //this.router.navigate(['/product-inventory']);
+    this.router.navigate(['/product-orders']);
   }
 }
