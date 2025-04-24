@@ -264,6 +264,8 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
   closeDrawer(): void {
     if (this.drawerInstance) {
       this.drawerInstance.hide();
+      //Clear note's textarea
+      this.newNoteText = '';
     }
     this.isDrawerOpen = false;
   }
@@ -309,7 +311,23 @@ export class OrderInfoComponent implements OnInit, AfterViewInit {
         console.log(data)
         console.log(this.orders)
       this.page_check=data.page_check;
-      this.orders=data.items;
+      //this.orders=data.items;
+      this.orders=[{
+        id: '12345',
+        /** @description Quantity ordered */
+        quantity: 1,
+        action: 'add',
+        //billingAccount?: components["schemas"]["BillingAccountRef"];
+        itemPrice: [],
+        itemTerm: [],
+        itemTotalPrice: [],
+        payment: [],
+        product: {},
+        productOffering: {},
+        productOrderItem: [],
+        productOrderItemRelationship: [],
+        state: 'acknowledged'
+    }]
       this.nextOrders=data.nextItems;
       this.page=data.page;
       this.loading=false;

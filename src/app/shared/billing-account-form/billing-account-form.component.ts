@@ -36,13 +36,13 @@ export class BillingAccountFormComponent implements OnInit {
   @Input() preferred: boolean | undefined;
 
   billingForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(250)]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.maxLength(320)]),
-    country: new FormControl(''),
-    city: new FormControl(''),
-    stateOrProvince: new FormControl(''),
-    postCode: new FormControl(''),
-    street: new FormControl(''),
+    country: new FormControl('', Validators.maxLength(250)),
+    city: new FormControl('', Validators.maxLength(250)),
+    stateOrProvince: new FormControl('', Validators.maxLength(250)),
+    postCode: new FormControl('', Validators.maxLength(250)),
+    street: new FormControl('', Validators.maxLength(1000)),
     telephoneNumber: new FormControl('', [Validators.required]),
     telephoneType: new FormControl('Mobile')
   });

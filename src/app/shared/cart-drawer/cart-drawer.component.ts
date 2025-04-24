@@ -183,6 +183,11 @@ export class CartDrawerComponent implements OnInit{
     this.eventMessage.emitRemovedCartItem(product as cartProduct);
   }
 
+  goToProdDetails(product: cartProduct){
+    this.hideCart();
+    this.router.navigate(['/search/', product.id]);
+  }
+
   hideCart(){
     this.eventMessage.emitToggleDrawer(false);
   }
