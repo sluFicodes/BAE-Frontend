@@ -44,7 +44,7 @@
                 </button>
                 @if(BUNDLE_ENABLED){
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone"
+                <button id="bundle" (click)="toggleBundle()" [disabled]="!bundleDone || generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="bundle-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         2
@@ -56,7 +56,7 @@
                 </button>
                 }
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="compliance" (click)="toggleCompliance()" [disabled]="!complianceDone"
+                <button id="compliance" (click)="toggleCompliance()" [disabled]="!complianceDone || generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="compliance-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 3 : 2 }}
@@ -67,7 +67,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="chars" (click)="toggleChars()" [disabled]="!charsDone"
+                <button id="chars" (click)="toggleChars()" [disabled]="!charsDone || generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="chars-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 4 : 3 }}
@@ -78,7 +78,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="resource" (click)="toggleResource()" [disabled]="!resourceDone"
+                <button id="resource" (click)="toggleResource()" [disabled]="!resourceDone || generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="resource-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 5 : 4 }}
@@ -89,7 +89,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="service" (click)="toggleService()" [disabled]="!serviceDone"
+                <button id="service" (click)="toggleService()" [disabled]="!serviceDone || generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="service-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 6 : 5 }}
@@ -100,7 +100,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="attach" (click)="toggleAttach()" [disabled]="!attachDone"
+                <button id="attach" (click)="toggleAttach()" [disabled]="!attachDone || generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="attach-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 7 : 6 }}
@@ -111,7 +111,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="relationships" (click)="toggleRelationship()" [disabled]="!relationshipDone"
+                <button id="relationships" (click)="toggleRelationship()" [disabled]="!relationshipDone || generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="relationships-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 8 : 7 }}
@@ -122,7 +122,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="summary" [disabled]="!finishDone" (click)="showFinish()"
+                <button id="summary" [disabled]="!finishDone || generalForm.invalid" (click)="showFinish()"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="summary-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 9 : 8 }}
