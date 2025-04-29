@@ -89,7 +89,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
       console.log('Initializing form in create mode');
       this.formGroup.addControl('name', new FormControl<string>('', [Validators.required, Validators.maxLength(100)]));
       this.formGroup.addControl('status', new FormControl<string>('Active', [Validators.required]));
-      this.formGroup.addControl('description', new FormControl<string>('', [Validators.required]));
+      this.formGroup.addControl('description', new FormControl<string>(''));
       this.formGroup.addControl('version', new FormControl<string>('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]));
     }
 
