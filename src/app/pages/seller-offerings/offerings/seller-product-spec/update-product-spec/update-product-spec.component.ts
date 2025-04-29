@@ -1279,7 +1279,7 @@ export class UpdateProductSpecComponent implements OnInit {
         rels.push({
           id: this.prodRelationships[i].id,
           href: this.prodRelationships[i].href,
-          name: this.prodRelationships[i].productSpec.name,
+          name: this.prodRelationships[i].name,
           relationshipType: this.prodRelationships[i].relationshipType
         })
       }
