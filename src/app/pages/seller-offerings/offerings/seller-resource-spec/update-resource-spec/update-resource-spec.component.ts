@@ -42,7 +42,7 @@ export class UpdateResourceSpecComponent implements OnInit {
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.maxLength(100000)),
   });
   resStatus:any;
 

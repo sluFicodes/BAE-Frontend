@@ -78,7 +78,7 @@ export class CreateProductSpecComponent implements OnInit {
     brand: new FormControl('', [Validators.required, noWhitespaceValidator]),
     version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$'), noWhitespaceValidator]),
     number: new FormControl(''),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.maxLength(100000)),
   });
 
   //CHARS INFO

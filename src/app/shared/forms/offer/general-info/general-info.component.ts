@@ -74,7 +74,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
       console.log('Initializing form in update mode with data:', this.data);
       this.formGroup.addControl('name', new FormControl<string>(this.data.name, [Validators.required, Validators.maxLength(100), noWhitespaceValidator]));
       this.formGroup.addControl('status', new FormControl<string>(this.data.lifecycleStatus));
-      this.formGroup.addControl('description', new FormControl<string>(this.data.description));
+      this.formGroup.addControl('description', new FormControl<string>(this.data.description, Validators.maxLength(100000)));
       this.formGroup.addControl('version', new FormControl<string>(this.data.version, [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$'), noWhitespaceValidator]));
       
       // Store original value only in edit mode
