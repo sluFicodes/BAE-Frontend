@@ -53,6 +53,11 @@ export class BillingAccountFormComponent implements OnInit {
   toastVisibility: boolean = false;
 
   partyId: any;
+  partyInfo:any = {
+    id: '',
+    name: '',
+    href: ''
+  }
   loading: boolean = false;
   is_create: boolean = false;
 
@@ -96,9 +101,25 @@ export class BillingAccountFormComponent implements OnInit {
     if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix()) - 4) > 0)) {
       if(aux.logged_as==aux.id){
         this.partyId = aux.partyId;
+        console.log('init party info')
+        console.log(aux)
+        this.partyInfo = {
+          id: this.partyId,
+          name: aux.user,
+          href : this.partyId,
+          role: "Owner"
+        }
       } else {
         let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
-        this.partyId = loggedOrg.partyId
+        this.partyId = loggedOrg.partyId;
+        console.log('loggedOrg info')
+        console.log(loggedOrg)
+        this.partyInfo = {
+          id: this.partyId,
+          name: loggedOrg.name,
+          href : this.partyId,
+          role: "Owner"
+        }
       }
     }
   }
@@ -186,11 +207,7 @@ export class BillingAccountFormComponent implements OnInit {
             }
           ]
         }],
-        relatedParty: [{
-          href: this.partyId,
-          id: this.partyId,
-          role: "Owner"
-        }],
+        relatedParty: [this.partyInfo],
         state: "Defined"
       }
       this.accountService.postBillingAccount(billacc).subscribe({
@@ -280,11 +297,7 @@ export class BillingAccountFormComponent implements OnInit {
               }
             ]
           }],
-          relatedParty: [{
-            href: this.partyId,
-            id: this.partyId,
-            role: "Owner"
-          }],
+          relatedParty: [this.partyInfo],
           state: "Defined"
         }
         this.accountService.updateBillingAccount(this.billAcc.id, bill_body).subscribe({
