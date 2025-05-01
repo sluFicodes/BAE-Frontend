@@ -99,6 +99,7 @@
                   placeholder="Add product description..."
                   [value]="value"
                   rows="8"
+                  maxLength="100000"
                   (input)="updateValue($event)"></textarea>
       }
       @if(showEmoji){

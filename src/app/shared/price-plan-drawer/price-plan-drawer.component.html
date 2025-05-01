@@ -58,7 +58,7 @@
             <app-characteristic [characteristic]="ch" [readOnly]="true" (valueChange)="onValueChange($event)"></app-characteristic>
           }
         </div>
-      } @else {
+      } @else if(filteredCharacteristics.length > 0) {
         <p class="mt-6 text-sm text-gray-500 dark:text-gray-400">Please select the characteristics you need to suit this offer to you.</p>
         <div class="rounded-lg border border-dashed border-primary-100 bg-white p-2 m-2 dark:bg-gray-800">
           @for (ch of filteredCharacteristics ; track ch.id) {

@@ -12,11 +12,12 @@ import { ResourceSpecServiceService } from 'src/app/services/resource-spec-servi
 import { PaginationService } from 'src/app/services/pagination.service';
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { noWhitespaceValidator } from 'src/app/validators/validators';
 
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 type ProductSpecification_Create = components["schemas"]["ProductSpecification_Create"];
@@ -73,16 +74,16 @@ export class CreateProductSpecComponent implements OnInit {
 
   //PRODUCT GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    brand: new FormControl('', [Validators.required]),
-    version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
+    brand: new FormControl('', [Validators.required, noWhitespaceValidator]),
+    version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$'), noWhitespaceValidator]),
     number: new FormControl(''),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.maxLength(100000)),
   });
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;
@@ -1070,7 +1071,7 @@ export class CreateProductSpecComponent implements OnInit {
       rels.push({
         id: this.prodRelationships[i].id,
         href: this.prodRelationships[i].href,
-        name: this.prodRelationships[i].productSpec.name,
+        name: this.prodRelationships[i].name,
         relationshipType: this.prodRelationships[i].relationshipType
       })
     }

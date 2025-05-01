@@ -227,9 +227,9 @@
                                 @if(medium.mediumType == 'Email'){
                                     {{medium.characteristic.emailAddress}}
                                 } @else if(medium.mediumType == 'PostalAddress') {
-                                    {{medium.characteristic.street1}}, {{medium.characteristic.postCode}} ({{medium.characteristic.city}}) {{medium.characteristic.stateOrProvince}}
+                                    {{medium.characteristic.street1}}, {{medium.characteristic.postCode}} ({{medium.characteristic.city}}) {{medium.characteristic.stateOrProvince}}, {{medium.characteristic.country}}
                                 } @else {
-                                    {{medium.characteristic.phoneNumber}}
+                                    ({{medium.characteristic.contactType}}) {{medium.characteristic.phoneNumber}}
                                 }                                
                             </td> 
                             <td class="px-6 py-4 inline-flex">

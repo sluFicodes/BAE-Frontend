@@ -7,6 +7,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { noWhitespaceValidator } from 'src/app/validators/validators';
 
 import {components} from "src/app/models/service-catalog";
 type ServiceSpecification_Create = components["schemas"]["ServiceSpecification_Create"];
@@ -43,13 +44,13 @@ export class CreateServiceSpecComponent implements OnInit {
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    description: new FormControl(''),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
+    description: new FormControl('', Validators.maxLength(100000)),
   });
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;
@@ -147,7 +148,7 @@ export class CreateServiceSpecComponent implements OnInit {
     }
     this.creatingChars=[];
   }
-  
+
   addCharValue(){
     if(this.stringCharSelected){
       console.log('string')

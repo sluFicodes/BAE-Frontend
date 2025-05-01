@@ -19,7 +19,7 @@
             <div class="flex mt-2 mb-2 rounded-lg bg-secondary-50/95 dark:bg-gray-700 dark:border-gray-800 border-secondary-50 border">
                <div class="flex flex-col w-full">
                   <div class="flex justify-between w-full">
-                     <button type="button" (click)="deleteProduct(item)" class="flex p-2 box-decoration-clone">
+                     <button type="button" (click)="goToProdDetails(item)" class="flex p-2 box-decoration-clone">
                         @if (item.image) {
                            <img class="rounded-t-lg w-fit h-[100px]" src="{{item.image}}" alt="">
                         } @else {

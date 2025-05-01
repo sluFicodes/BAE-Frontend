@@ -24,6 +24,11 @@ export class BillingInfoComponent implements OnInit{
   orders:any[]=[];
   profile:any;
   partyId:any='';
+  partyInfo:any = {
+    id: '',
+    name: '',
+    href: ''
+  }
   billing_accounts: billingAccountCart[] =[];
   selectedBilling:any;
   billToDelete:any;
@@ -89,7 +94,28 @@ export class BillingInfoComponent implements OnInit{
   initPartyInfo(){
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
-      this.partyId = aux.partyId;
+      if (aux.logged_as !== aux.id) {
+        let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
+        this.partyId = loggedOrg.partyId;
+        console.log('loggedOrg info')
+        console.log(loggedOrg)
+        this.partyInfo = {
+          id: this.partyId,
+          name: loggedOrg.name,
+          href : this.partyId,
+          role: "Owner"
+        }
+      } else {
+        this.partyId = aux.partyId;
+        console.log('init party info')
+        console.log(aux)
+        this.partyInfo = {
+          id: this.partyId,
+          name: aux.user,
+          href : this.partyId,
+          role: "Owner"
+        }
+      }
       this.getBilling();
     }
     initFlowbite();
@@ -176,7 +202,14 @@ export class BillingInfoComponent implements OnInit{
       } else {
         this.billing_accounts[i].selected=false;
       }
-      this.updateBilling(this.billing_accounts[i])
+      if(this.billing_accounts[i].selected==false){
+        this.updateBilling(this.billing_accounts[i])
+      }      
+    }
+    for(let i=0; i < this.billing_accounts.length; i++){
+      if(this.billing_accounts[i].selected==true){
+        this.updateBilling(this.billing_accounts[i])
+      }      
     }
     this.cdr.detectChanges();
   }
@@ -215,7 +248,9 @@ export class BillingInfoComponent implements OnInit{
               }
             }
           ]
-        }]
+        }],
+        relatedParty: [this.partyInfo],
+        state: "Defined"
       }
       this.accountService.updateBillingAccount(bill.id, bill_body).subscribe({
         next: data => {

@@ -7,6 +7,7 @@ import {EventMessageService} from "../../../../services/event-message.service";
 import {FormChangeState} from "../../../../models/interfaces";
 import {Subscription} from "rxjs";
 import {debounceTime} from "rxjs/operators";
+import { noWhitespaceValidator } from 'src/app/validators/validators';
 
 interface GeneralInfo {
   name: string;
@@ -71,10 +72,10 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
     
     if (this.isEditMode && this.data) {
       console.log('Initializing form in update mode with data:', this.data);
-      this.formGroup.addControl('name', new FormControl<string>(this.data.name, [Validators.required, Validators.maxLength(100)]));
+      this.formGroup.addControl('name', new FormControl<string>(this.data.name, [Validators.required, Validators.maxLength(100), noWhitespaceValidator]));
       this.formGroup.addControl('status', new FormControl<string>(this.data.lifecycleStatus));
-      this.formGroup.addControl('description', new FormControl<string>(this.data.description));
-      this.formGroup.addControl('version', new FormControl<string>(this.data.version, [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]));
+      this.formGroup.addControl('description', new FormControl<string>(this.data.description, Validators.maxLength(100000)));
+      this.formGroup.addControl('version', new FormControl<string>(this.data.version, [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$'), noWhitespaceValidator]));
       
       // Store original value only in edit mode
       this.originalValue = {
@@ -88,7 +89,7 @@ export class GeneralInfoComponent implements OnInit, OnDestroy {
       console.log('Initializing form in create mode');
       this.formGroup.addControl('name', new FormControl<string>('', [Validators.required, Validators.maxLength(100)]));
       this.formGroup.addControl('status', new FormControl<string>('Active', [Validators.required]));
-      this.formGroup.addControl('description', new FormControl<string>('', [Validators.required]));
+      this.formGroup.addControl('description', new FormControl<string>(''));
       this.formGroup.addControl('version', new FormControl<string>('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]));
     }
 

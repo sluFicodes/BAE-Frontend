@@ -155,6 +155,21 @@ export class OfferComponent implements OnInit, OnDestroy{
     }
   }
 
+  canNavigate(index: number) {
+    if(this.formType == 'create'){
+      return this.productOfferForm.get('generalInfo')?.valid &&  (index <= this.currentStep);
+    } else {
+      return this.productOfferForm.get('generalInfo')?.valid
+    }
+  }  
+
+  handleStepClick(index: number): void {
+    if (this.canNavigate(index)) {
+      this.goToStep(index);
+    }
+  }
+  
+
   submitForm() {
     if (this.formType === 'update') {
       console.log('🔄 Starting offer update process...');
