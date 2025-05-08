@@ -50,6 +50,7 @@ export class OfferComponent implements OnInit, OnDestroy{
 
   productOfferForm: FormGroup;
   currentStep = 0;
+  highestStep = 0;
   steps = [
     'General Info',
     'Product Specification',
@@ -130,6 +131,9 @@ export class OfferComponent implements OnInit, OnDestroy{
     }
     
     this.currentStep = index;
+    if(this.currentStep>this.highestStep){
+      this.highestStep=this.currentStep
+    }
   }
 
   validateCurrentStep(): boolean {
@@ -157,7 +161,7 @@ export class OfferComponent implements OnInit, OnDestroy{
 
   canNavigate(index: number) {
     if(this.formType == 'create'){
-      return this.productOfferForm.get('generalInfo')?.valid &&  (index <= this.currentStep);
+      return (this.productOfferForm.get('generalInfo')?.valid &&  (index <= this.currentStep)) || (this.productOfferForm.get('generalInfo')?.valid &&  (index <= this.highestStep));
     } else {
       return this.productOfferForm.get('generalInfo')?.valid
     }
