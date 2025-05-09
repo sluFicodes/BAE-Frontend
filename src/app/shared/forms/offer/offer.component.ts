@@ -59,7 +59,7 @@ export class OfferComponent implements OnInit, OnDestroy{
     'License',
     'Price Plans',
     'Procurement Mode',
-    'Replication & Visibility',
+    //'Replication & Visibility',
     'Summary'
   ];
   isFormValid = false;
@@ -152,8 +152,8 @@ export class OfferComponent implements OnInit, OnDestroy{
         return true;
       case 6: // Procurement Mode
         return this.productOfferForm.get('procurementMode')?.valid || false;
-      case 7: // Replication & Visibility
-        return this.productOfferForm.get('replicationMode')?.valid || false;
+      /*case 7: // Replication & Visibility
+        return this.productOfferForm.get('replicationMode')?.valid || false;*/
       default:
         return true;
     }
@@ -198,7 +198,7 @@ export class OfferComponent implements OnInit, OnDestroy{
         'License',
         'Price Plans',
         'Procurement Mode',
-        'Replication & Visibility',
+        //'Replication & Visibility',
         'Summary'
       ];
       await this.loadOfferData();
