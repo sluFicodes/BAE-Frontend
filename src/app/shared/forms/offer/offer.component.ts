@@ -513,6 +513,11 @@ export class OfferComponent implements OnInit, OnDestroy{
       price.prodSpecCharValueUse = comp.selectedCharacteristic;
     }
 
+    if (comp.discountValue != null) {
+      const discount = await this.createPriceAlteration(comp, plan.currency);
+      price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
+    }
+
     if (plan.prodSpecCharValueUse) {
       price.prodSpecCharValueUse = plan.prodSpecCharValueUse.map((item: any) => ({
         ...item,
