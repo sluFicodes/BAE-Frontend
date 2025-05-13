@@ -63,9 +63,9 @@ export class PriceComponentDrawerComponent implements OnInit {
     if (this.component) {
       this.priceComponentForm.patchValue(this.component);
       this.cdr.detectChanges();
-      console.log('---- EDIITA')
+      console.log('---- Editing the following price component...')
       console.log(this.priceComponentForm.value)
-      console.log(this.priceComponentForm.get('selectedCharacteristic')?.value[0])
+      
       /*if(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue){
         console.log('---hola')
         this.showValueSelect=true
@@ -76,6 +76,7 @@ export class PriceComponentDrawerComponent implements OnInit {
       const selectedChar = this.priceComponentForm.get('selectedCharacteristic')?.value?.[0];
 
       if (selectedChar) {
+        console.log(selectedChar)
         this.selectedCharacteristic = selectedChar;
         console.log('selected char')
         console.log(this.selectedCharacteristic)
