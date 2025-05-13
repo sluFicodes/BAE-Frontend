@@ -256,6 +256,8 @@ export interface PricePlanChangeState extends FormChangeState {
   priceComponentsChanged: boolean;
   profileChanged: boolean;
   modifiedPricePlans: {
+    newValue?: any;
+    oldValue?: any;
     id: string;
     isNew: boolean;
     modifiedFields: string[];
@@ -267,6 +269,10 @@ export interface PricePlanChangeState extends FormChangeState {
         currency: string;
         recurringPeriod?: string;
         usageUnit?: string;
+        discountValue?: number;
+        discountUnit?: string;
+        discountDuration?: number|null;
+        discountDurationUnit?: string;
       }>;
       modified: Array<{
         id: string;
@@ -276,6 +282,10 @@ export interface PricePlanChangeState extends FormChangeState {
         recurringPeriod?: string;
         usageUnit?: string;
         modifiedFields: string[];
+        discountValue?: number;
+        discountUnit?: string;
+        discountDuration?: number|null;
+        discountDurationUnit?: string;
       }>;
       deleted: string[]; // IDs de los componentes eliminados
     };

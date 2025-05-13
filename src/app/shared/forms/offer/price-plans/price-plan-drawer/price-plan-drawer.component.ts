@@ -101,6 +101,9 @@ export class PricePlanDrawerComponent implements OnInit {
         // Editar componente existente
         const index = components.findIndex((c: { id: string }) => c.id === this.editingComponent.id);
         if (index > -1) {
+          if (!this.editingComponent.id?.startsWith('temp-id')) {
+            updatedComponent.id = this.editingComponent.id
+          }          
           components[index] = updatedComponent;
         }
       } else {
