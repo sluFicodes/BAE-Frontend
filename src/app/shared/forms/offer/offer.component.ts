@@ -15,7 +15,7 @@ import {OfferSummaryComponent} from "./offer-summary/offer-summary.component"
 import { lastValueFrom } from 'rxjs';
 import {components} from "src/app/models/product-catalog";
 import {EventMessageService} from "src/app/services/event-message.service";
-import {FormChangeState} from "../../../models/interfaces";
+import {FormChangeState, PricePlanChangeState} from "../../../models/interfaces";
 import {Subscription} from "rxjs";
 import * as moment from 'moment';
 
@@ -288,7 +288,7 @@ export class OfferComponent implements OnInit, OnDestroy{
       if(pricePlan?.price?.unit){
         priceInfo.currency=pricePlan?.price?.unit
       }
-      if(pricePlan?.price?.value){
+      if(pricePlan?.price?.value && pricePlan.isBundle==false){
         priceInfo.paymentOnline=true
         priceInfo.price=pricePlan?.price?.value
         relatedPrices.push({
@@ -312,7 +312,8 @@ export class OfferComponent implements OnInit, OnDestroy{
       }
       console.log('price components---')
       console.log(relatedPrices)
-      if(pricePlan.bundledPopRelationship){  
+      //if(pricePlan.bundledPopRelationship){
+      if(pricePlan.isBundle==true){  
       for(let i=0;i<pricePlan.bundledPopRelationship.length;i++){
         let data = await this.api.getOfferingPrice(pricePlan.bundledPopRelationship[i].id)
           let priceComp:any = {
@@ -425,50 +426,107 @@ export class OfferComponent implements OnInit, OnDestroy{
   }
 
   private async createPriceComponent(component: any, currency: string): Promise<any> {
-    const priceComp: ProductOfferingPrice = {
+    console.log('component format')
+    console.log(component)
+    let priceComp: ProductOfferingPrice = {
       name: component.name,
-      description: component.description,
-      lifecycleStatus: component.lifecycleStatus,
-      priceType: component.priceType,
-      price: { unit: currency, value: component?.price },
+      description: component.description ?? component?.newValue.description,
+      lifecycleStatus: component?.lifecycleStatus ?? component?.newValue?.lifecycleStatus ?? 'Active',
+      priceType: component.priceType ?? component?.newValue?.priceType,
+      price: { unit: currency, value: component?.price ?? component?.newValue.price },
       recurringChargePeriodType: undefined,
       recurringChargePeriodLength: undefined,
       unitOfMeasure: undefined,
       prodSpecCharValueUse: undefined
     };
 
-    if (['recurring', 'recurring-prepaid'].includes(component.priceType)) {
+    let priceType = component.priceType ?? component?.newValue?.priceType;
+
+    if (['recurring', 'recurring-prepaid'].includes(priceType)) {
       priceComp.recurringChargePeriodType = component.recurringPeriod;
       priceComp.recurringChargePeriodLength = 1;
     }
 
-    if (component.priceType === 'usage') {
-      priceComp.unitOfMeasure = { amount: 1, units: component.usageUnit };
+    if (priceType === 'usage') {
+      priceComp.unitOfMeasure = { amount: 1, units: component.usageUnit ?? component.newValue.usageUnit };
     }
 
-    if (component.selectedCharacteristic) {
-      priceComp.prodSpecCharValueUse = component.selectedCharacteristic;
+    if (component?.selectedCharacteristic || component?.newValue?.selectedCharacteristic) {
+      priceComp.prodSpecCharValueUse = component.selectedCharacteristic ?? component.newValue.selectedCharacteristic;
     }
 
-    if (component.unitOfMeasure) {
+    if (component?.unitOfMeasure) {
       priceComp.unitOfMeasure = component.usageUnit;
     }
 
-    if (component.discountValue != null) {
+    if (component?.discountValue != null) {
       const discount = await this.createPriceAlteration(component, currency);
       priceComp.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
     }
-
+    console.log('create price comp')
+    console.log(priceComp)
     const created = await lastValueFrom(this.api.postOfferingPrice(priceComp));
     return { id: created.id, href: created.id, name: created.name };
   }
 
+  private async updatePriceComponent(component: any, currency: string): Promise<any> {
+    console.log('update function')
+    console.log(component)
+    console.log(currency)
+    console.log('------')
+    let priceComp: ProductOfferingPrice = {
+      name: component.newValue.name,
+      description: component.newValue.description,
+      lifecycleStatus: component.newValue.lifecycleStatus,
+      priceType: component.newValue.priceType,
+      price: { unit: currency, value: component.newValue.price }
+    };
+
+    if (['recurring', 'recurring-prepaid'].includes(component.newValue.priceType)) {
+      priceComp.recurringChargePeriodType = component.newValue.recurringPeriod;
+      priceComp.recurringChargePeriodLength = 1;
+    }
+
+    if (component.newValue.priceType === 'usage') {
+      priceComp.unitOfMeasure = { amount: 1, units: component.newValue.usageUnit };
+    }
+
+    if (component.newValue.selectedCharacteristic) {
+      priceComp.prodSpecCharValueUse = component.newValue.selectedCharacteristic;
+    }
+
+    if (component.newValue.unitOfMeasure) {
+      priceComp.unitOfMeasure = component.newValue.usageUnit;
+    }
+
+    if (component.newValue.discountValue != null) {
+      let discountMock:any = {
+        discountValue: component.newValue.discountValue
+      }
+      if(component.newValue.discountUnit){
+        discountMock.discountUnit=component.newValue.discountUnit
+      }
+      if(component.newValue.discountDuration){
+        discountMock.discountDuration=component.newValue.discountDuration
+      }
+      if(component.newValue.discountDurationUnit){
+        discountMock.discountDurationUnit=component.newValue.discountDurationUnit
+      }
+      const discount = await this.createPriceAlteration(discountMock, currency);
+      priceComp.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
+    }
+    console.log('update price comp')
+    console.log(priceComp)
+    const updated = await lastValueFrom(this.api.updateOfferingPrice(priceComp,component.id));
+    return { id: updated.id, href: updated.id, name: updated.name };
+  }
+
   private createBundledPricePlan(plan: any, compRel: any[]): ProductOfferingPrice {
     const price: ProductOfferingPrice = {
-      name: plan.name,
+      name: plan.name ?? plan?.newValue.name,
       isBundle: true,
-      description: plan.description,
-      lifecycleStatus: plan.lifecycleStatus,
+      description: plan.description ?? plan?.newValue.description,
+      lifecycleStatus: plan.lifecycleStatus ?? plan?.newValue.lifecycleStatus,
       bundledPopRelationship: compRel
     };
 
@@ -479,8 +537,19 @@ export class OfferComponent implements OnInit, OnDestroy{
       }));
     }
 
+    if(plan?.newValue?.prodSpecCharValueUse){
+      price.prodSpecCharValueUse = plan?.newValue.prodSpecCharValueUse.map((item: any) => ({
+        ...item,
+        productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
+      }));
+    }
+
     if (plan.usageUnit) {
       price.unitOfMeasure = plan.usageUnit;
+    }
+
+    if(plan?.newValue?.usageUnit){
+      price.unitOfMeasure = plan?.newValue.usageUnit;
     }
 
     return price;
@@ -488,33 +557,54 @@ export class OfferComponent implements OnInit, OnDestroy{
 
   private async createSinglePricePlan(plan: any, comp: any): Promise<ProductOfferingPrice> {
     const price: ProductOfferingPrice = {
-      name: plan.name,
+      name: plan.name ?? plan?.newValue.name,
       isBundle: false,
-      description: plan.description,
-      lifecycleStatus: plan.status,
-      priceType: comp?.priceType ?? plan.priceType,
-      price: comp?.price ? { value: comp.price, unit: plan.currency } : undefined,
+      description: plan.description ?? plan?.newValue.description,
+      lifecycleStatus: plan.status ?? plan?.newValue.lifecycleStatus,
+      priceType: comp?.priceType ?? plan?.newValue.priceComponents[0].priceType ?? plan.priceType ?? plan?.newValue.priceType,
+      //price: comp?.price ? { value: comp.price ?? plan?.newValue.priceComponents[0].price, unit: plan.currency ?? plan?.newValue.priceComponents[0].currency } : undefined,
       recurringChargePeriodType: undefined,
       recurringChargePeriodLength: undefined,
       unitOfMeasure: undefined,
       prodSpecCharValueUse: undefined
     };
 
-    if (['recurring', 'recurring-prepaid'].includes(comp?.priceType)) {
-      price.recurringChargePeriodType = comp.recurringPeriod;
+    if(comp.price){
+      price.price = {
+        value: comp.price,
+        unit: plan.currency
+      }
+    } else if (plan.newValue && !plan?.newValue.isBundle){
+      price.price = {
+        value: plan?.newValue.priceComponents[0].price,
+        unit: plan?.newValue.currency
+      }
+    } else {
+      price.price = undefined
+    }
+
+    let priceType = comp?.priceType ?? plan?.newValue.priceComponents[0].priceType
+
+    if (['recurring', 'recurring-prepaid'].includes(priceType)) {
+      price.recurringChargePeriodType = comp.recurringPeriod ?? plan?.newValue.priceComponents[0].recurringPeriod;
       price.recurringChargePeriodLength = 1;
     }
 
-    if (comp?.priceType === 'usage') {
-      price.unitOfMeasure = { amount: 1, units: comp.usageUnit };
+    if (priceType === 'usage') {
+      price.unitOfMeasure = { amount: 1, units: comp.usageUnit ?? plan?.newValue.priceComponents[0].usageUnit };
     }
 
-    if (comp?.selectedCharacteristic) {
-      price.prodSpecCharValueUse = comp.selectedCharacteristic;
+    if (comp?.selectedCharacteristic || plan?.newValue.priceComponents[0].selectedCharacteristic) {
+      price.prodSpecCharValueUse = comp.selectedCharacteristic ?? plan?.newValue.priceComponents[0].selectedCharacteristic;
     }
 
     if (comp.discountValue != null) {
       const discount = await this.createPriceAlteration(comp, plan.currency);
+      price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
+    }
+
+    if(plan?.newValue.priceComponents[0].discountValue){
+      const discount = await this.createPriceAlteration(plan?.newValue.priceComponents[0], plan?.newValue.currency);
       price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
     }
 
@@ -525,7 +615,91 @@ export class OfferComponent implements OnInit, OnDestroy{
       }));
     }
 
+    if(plan?.newValue?.prodSpecCharValueUse){
+      price.prodSpecCharValueUse = plan?.newValue.prodSpecCharValueUse.map((item: any) => ({
+        ...item,
+        productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
+      }));
+    }
+
     return price;
+  }
+
+  async updatePricePlan(plan: any, compRel: any[], modifiedFields: string[]): Promise<ProductOfferingPrice> {
+
+    console.log('plan info')
+    console.log(plan)
+    console.log(plan.id)
+    console.log(compRel)
+    let price : ProductOfferingPrice = {
+      name: plan.newValue.name,
+      isBundle: true,
+      bundledPopRelationship: compRel
+    }
+    if(compRel.length==1){
+      price = {
+        name: plan.newValue.name,
+        isBundle: false,
+        price: plan.newValue.priceComponents[0]?.price ? { value: plan.newValue.priceComponents[0].price, unit: plan.newValue.currency } : undefined
+      };
+      if(plan.newValue.priceComponents[0]?.priceType != plan.oldValue.priceType){
+        price.priceType = plan.newValue.priceComponents[0]?.priceType
+      }
+      if (['recurring', 'recurring-prepaid'].includes(plan.newValue.priceComponents[0]?.priceType)) {
+        price.recurringChargePeriodType = plan.newValue.priceComponents[0].recurringPeriod;
+        price.recurringChargePeriodLength = 1;
+      }
+  
+      if (plan.newValue.priceComponents[0]?.priceType === 'usage') {
+        price.unitOfMeasure = { amount: 1, units: plan.newValue.priceComponents[0].usageUnit };
+      }
+  
+      if (plan.newValue.priceComponents[0]?.selectedCharacteristic) {
+        price.prodSpecCharValueUse = plan.newValue.priceComponents[0].selectedCharacteristic;
+      }
+
+      if(plan.oldValue?.priceComponents && plan.oldValue?.priceComponents.length>1){
+        console.log('tenia bundle pero ahora undefined')
+        price.bundledPopRelationship=undefined
+        console.log(price)
+      }
+
+      if(plan.newValue.priceComponents[0].prodSpecCharValueUse != null){
+        price.prodSpecCharValueUse = plan.newValue.priceComponents[0].prodSpecCharValueUse.map((item: any) => ({
+          ...item,
+          productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
+        }));
+      }
+  
+      if (plan.newValue.priceComponents[0].discountValue != null) {
+        const discount = await this.createPriceAlteration(compRel[0], plan.newValue.currency);
+        price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
+      }
+      
+    } else if (plan.oldValue.price!=null){
+      price.price = undefined;
+      price.priceType = undefined;
+      if('recurringChargePeriodType' in plan.oldValue){
+        price.recurringChargePeriodType = undefined
+      }
+      if('recurringChargePeriodLength' in plan.oldValue){
+        price.recurringChargePeriodLength = undefined
+      }
+      if('unitOfMeasure' in plan.oldValue){
+        price.unitOfMeasure = undefined
+      }
+    }
+    if(modifiedFields.includes('description')){
+      price.description = plan.newValue.description
+    }
+    if(modifiedFields.includes('prodSpecCharValueUse') && plan.newValue.prodSpecCharValueUse != null){
+      price.prodSpecCharValueUse = plan.newValue.prodSpecCharValueUse.map((item: any) => ({
+        ...item,
+        productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
+      }));
+    }
+    let updatedPrice =await lastValueFrom(this.api.updateOfferingPrice(price,plan.id))
+    return updatedPrice;
   }
 
   async createOffer() {
@@ -734,6 +908,62 @@ export class OfferComponent implements OnInit, OnDestroy{
             id: plan.id,
             href: plan.id
           }));
+          console.log('Cambio en el plan de precios')
+          console.log(basePayload.productOfferingPrice)
+          console.log((change as PricePlanChangeState).modifiedPricePlans)          
+          let pricePlanChangeInfo = (change as PricePlanChangeState).modifiedPricePlans;
+          for(let i=0;i< pricePlanChangeInfo.length; i++){
+            let finalPriceComps:any[]=[];
+            if(pricePlanChangeInfo[i].priceComponents.added.length>0){
+              //Crear price comp
+              for(let j=0;j< pricePlanChangeInfo[i].priceComponents.added.length; j++){
+                //finalPriceComps.push(this.createPriceComponent(pricePlanChangeInfo[i].priceComponents.added[j],change.currentValue.currency))
+                let compCreated = await this.createPriceComponent(pricePlanChangeInfo[i].priceComponents.added[j],pricePlanChangeInfo[i]?.newValue.currency)
+                finalPriceComps.push(compCreated)
+              } 
+              console.log('The following price comps has been created:')
+              console.log(finalPriceComps)
+            }
+            if(pricePlanChangeInfo[i].priceComponents.modified.length>0){
+              //Modificar price comp
+              for(let j=0; j < pricePlanChangeInfo[i].priceComponents.modified.length ;j++){
+                //Revisar que en el caso de actualizar un componente que tenga el mismo id que el price plan (que antes no fuese bundle) ahora hay que crear el componente
+                console.log('antes del check')
+                console.log(pricePlanChangeInfo[i])
+                console.log(pricePlanChangeInfo[i]?.oldValue.isBundle)
+                console.log((!pricePlanChangeInfo[i]?.oldValue.isBundle && pricePlanChangeInfo[i].priceComponents.added.length>0))
+                console.log(pricePlanChangeInfo[i].priceComponents.modified[j].id == pricePlanChangeInfo[i].id)
+                if((pricePlanChangeInfo[i].priceComponents.modified[j].id == pricePlanChangeInfo[i].id) && (!pricePlanChangeInfo[i]?.oldValue.isBundle && pricePlanChangeInfo[i].priceComponents.added.length>0)){
+                  console.log('Si entra en el check')
+                  let compUpdated = await this.createPriceComponent(pricePlanChangeInfo[i].priceComponents.modified[j],pricePlanChangeInfo[i]?.newValue.currency)
+                  finalPriceComps.push(compUpdated)
+                } else if(pricePlanChangeInfo[i].priceComponents.modified[j].id != pricePlanChangeInfo[i].id){
+                  let compUpdated = await this.updatePriceComponent(pricePlanChangeInfo[i].priceComponents.modified[j],pricePlanChangeInfo[i]?.newValue.currency)
+                  finalPriceComps.push(compUpdated)
+                }          
+                
+                console.log('The following price comp has been updated:')
+                console.log(pricePlanChangeInfo[i].priceComponents.modified[j])
+              }
+            }
+            //Modificar el plan
+            if (!pricePlanChangeInfo[i].id.startsWith('temp-id')) {
+              let updatedPricePlan = await this.updatePricePlan(pricePlanChangeInfo[i],finalPriceComps,pricePlanChangeInfo[i].modifiedFields);
+            
+              console.log('Modified price plan')
+              console.log(updatedPricePlan)
+            } else {
+              if (finalPriceComps.length > 1) {
+                let createdPricePlan = await this.createBundledPricePlan(pricePlanChangeInfo[i],finalPriceComps);
+                console.log('New price plan')
+                console.log(createdPricePlan)
+              } else {
+                let createdPricePlan = await this.createSinglePricePlan(pricePlanChangeInfo[i],finalPriceComps[0]);
+                console.log('New price plan')
+                console.log(createdPricePlan)
+              }
+            }
+          }
           break;
 
         case 'procurement':
