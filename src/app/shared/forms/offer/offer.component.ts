@@ -523,10 +523,10 @@ export class OfferComponent implements OnInit, OnDestroy{
 
   private createBundledPricePlan(plan: any, compRel: any[]): ProductOfferingPrice {
     const price: ProductOfferingPrice = {
-      name: plan.name ?? plan?.newValue.name,
+      name: plan.name ?? plan?.newValue?.name,
       isBundle: true,
-      description: plan.description ?? plan?.newValue.description,
-      lifecycleStatus: plan.lifecycleStatus ?? plan?.newValue.lifecycleStatus,
+      description: plan.description ?? plan?.newValue?.description,
+      lifecycleStatus: plan.lifecycleStatus ?? plan?.newValue?.lifecycleStatus,
       bundledPopRelationship: compRel
     };
 
@@ -538,7 +538,7 @@ export class OfferComponent implements OnInit, OnDestroy{
     }
 
     if(plan?.newValue?.prodSpecCharValueUse){
-      price.prodSpecCharValueUse = plan?.newValue.prodSpecCharValueUse.map((item: any) => ({
+      price.prodSpecCharValueUse = plan?.newValue?.prodSpecCharValueUse.map((item: any) => ({
         ...item,
         productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
       }));
@@ -549,7 +549,7 @@ export class OfferComponent implements OnInit, OnDestroy{
     }
 
     if(plan?.newValue?.usageUnit){
-      price.unitOfMeasure = plan?.newValue.usageUnit;
+      price.unitOfMeasure = plan?.newValue?.usageUnit;
     }
 
     return price;
@@ -557,11 +557,11 @@ export class OfferComponent implements OnInit, OnDestroy{
 
   private async createSinglePricePlan(plan: any, comp: any): Promise<ProductOfferingPrice> {
     const price: ProductOfferingPrice = {
-      name: plan.name ?? plan?.newValue.name,
+      name: plan.name ?? plan?.newValue?.name,
       isBundle: false,
-      description: plan.description ?? plan?.newValue.description,
-      lifecycleStatus: plan.status ?? plan?.newValue.lifecycleStatus,
-      priceType: comp?.priceType ?? plan?.newValue.priceComponents[0].priceType ?? plan.priceType ?? plan?.newValue.priceType,
+      description: plan.description ?? plan?.newValue?.description,
+      lifecycleStatus: plan.status ?? plan?.newValue?.lifecycleStatus,
+      priceType: comp?.priceType ?? plan?.newValue?.priceComponents[0]?.priceType ?? plan?.priceType ?? plan?.newValue?.priceType,
       //price: comp?.price ? { value: comp.price ?? plan?.newValue.priceComponents[0].price, unit: plan.currency ?? plan?.newValue.priceComponents[0].currency } : undefined,
       recurringChargePeriodType: undefined,
       recurringChargePeriodLength: undefined,
@@ -574,27 +574,27 @@ export class OfferComponent implements OnInit, OnDestroy{
         value: comp.price,
         unit: plan.currency
       }
-    } else if (plan.newValue && !plan?.newValue.isBundle){
+    } else if (plan?.newValue && !plan?.newValue?.isBundle){
       price.price = {
-        value: plan?.newValue.priceComponents[0].price,
-        unit: plan?.newValue.currency
+        value: plan?.newValue?.priceComponents[0].price,
+        unit: plan?.newValue?.currency
       }
     } else {
       price.price = undefined
     }
 
-    let priceType = comp?.priceType ?? plan?.newValue.priceComponents[0].priceType
+    let priceType = comp?.priceType ?? plan?.newValue?.priceComponents[0]?.priceType
 
     if (['recurring', 'recurring-prepaid'].includes(priceType)) {
-      price.recurringChargePeriodType = comp.recurringPeriod ?? plan?.newValue.priceComponents[0].recurringPeriod;
+      price.recurringChargePeriodType = comp.recurringPeriod ?? plan?.newValue?.priceComponents[0]?.recurringPeriod;
       price.recurringChargePeriodLength = 1;
     }
 
     if (priceType === 'usage') {
-      price.unitOfMeasure = { amount: 1, units: comp.usageUnit ?? plan?.newValue.priceComponents[0].usageUnit };
+      price.unitOfMeasure = { amount: 1, units: comp.usageUnit ?? plan?.newValue?.priceComponents[0]?.usageUnit };
     }
 
-    if (comp?.selectedCharacteristic || plan?.newValue.priceComponents[0].selectedCharacteristic) {
+    if (comp?.selectedCharacteristic || plan?.newValue?.priceComponents[0]?.selectedCharacteristic) {
       price.prodSpecCharValueUse = comp.selectedCharacteristic ?? plan?.newValue.priceComponents[0].selectedCharacteristic;
     }
 
@@ -603,8 +603,8 @@ export class OfferComponent implements OnInit, OnDestroy{
       price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
     }
 
-    if(plan?.newValue.priceComponents[0].discountValue){
-      const discount = await this.createPriceAlteration(plan?.newValue.priceComponents[0], plan?.newValue.currency);
+    if(plan?.newValue?.priceComponents[0].discountValue){
+      const discount = await this.createPriceAlteration(plan?.newValue?.priceComponents[0], plan?.newValue?.currency);
       price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
     }
 
@@ -616,7 +616,7 @@ export class OfferComponent implements OnInit, OnDestroy{
     }
 
     if(plan?.newValue?.prodSpecCharValueUse){
-      price.prodSpecCharValueUse = plan?.newValue.prodSpecCharValueUse.map((item: any) => ({
+      price.prodSpecCharValueUse = plan?.newValue?.prodSpecCharValueUse.map((item: any) => ({
         ...item,
         productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
       }));
@@ -636,7 +636,7 @@ export class OfferComponent implements OnInit, OnDestroy{
       isBundle: true,
       bundledPopRelationship: compRel
     }
-    if(compRel.length==1){
+    if(compRel.length<=1){
       price = {
         name: plan.newValue.name,
         isBundle: false,
