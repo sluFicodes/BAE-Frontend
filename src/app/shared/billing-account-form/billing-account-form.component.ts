@@ -171,7 +171,7 @@ export class BillingAccountFormComponent implements OnInit {
         this.billingForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
         this.toastVisibility = true;
         setTimeout(() => {
-          this.toastVisibility = false
+        this.toastVisibility = false
         }, 2000);
         return;
     }
