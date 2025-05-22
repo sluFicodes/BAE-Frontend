@@ -65,7 +65,6 @@ export class OfferComponent implements OnInit, OnDestroy{
   isFormValid = false;
   selectedProdSpec: any;
   pricePlans:any = [];
-
   errorMessage:any='';
   showError:boolean=false;
   bundleChecked:boolean=false;
