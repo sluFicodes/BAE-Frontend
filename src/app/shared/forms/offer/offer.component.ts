@@ -943,7 +943,7 @@ export class OfferComponent implements OnInit, OnDestroy{
                 } else if(pricePlanChangeInfo[i].priceComponents.modified[j].id != pricePlanChangeInfo[i].id){
                   let compUpdated = await this.updatePriceComponent(pricePlanChangeInfo[i].priceComponents.modified[j],pricePlanChangeInfo[i]?.newValue.currency)
                   finalPriceComps.push(compUpdated)
-                }          
+                } 
                 
                 console.log('The following price comp has been updated:')
                 console.log(pricePlanChangeInfo[i].priceComponents.modified[j])
@@ -958,10 +958,22 @@ export class OfferComponent implements OnInit, OnDestroy{
             } else {
               if (finalPriceComps.length > 1) {
                 let createdPricePlan = await this.createBundledPricePlan(pricePlanChangeInfo[i],finalPriceComps);
+                const created = await lastValueFrom(this.api.postOfferingPrice(createdPricePlan));
+                let index = basePayload.productOfferingPrice.findIndex(
+                  (plan: any) => plan.id === pricePlanChangeInfo[i].id
+                );
+                basePayload.productOfferingPrice[index].id = created.id;
+                basePayload.productOfferingPrice[index].href = created.id;
                 console.log('New price plan')
                 console.log(createdPricePlan)
               } else {
                 let createdPricePlan = await this.createSinglePricePlan(pricePlanChangeInfo[i],finalPriceComps[0]);
+                const created = await lastValueFrom(this.api.postOfferingPrice(createdPricePlan));
+                let index = basePayload.productOfferingPrice.findIndex(
+                  (plan: any) => plan.id === pricePlanChangeInfo[i].id
+                );
+                basePayload.productOfferingPrice[index].id = created.id;
+                basePayload.productOfferingPrice[index].href = created.id;
                 console.log('New price plan')
                 console.log(createdPricePlan)
               }
