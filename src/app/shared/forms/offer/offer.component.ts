@@ -943,7 +943,7 @@ export class OfferComponent implements OnInit, OnDestroy{
                 } else if(pricePlanChangeInfo[i].priceComponents.modified[j].id != pricePlanChangeInfo[i].id){
                   let compUpdated = await this.updatePriceComponent(pricePlanChangeInfo[i].priceComponents.modified[j],pricePlanChangeInfo[i]?.newValue.currency)
                   finalPriceComps.push(compUpdated)
-                }          
+                } 
                 
                 console.log('The following price comp has been updated:')
                 console.log(pricePlanChangeInfo[i].priceComponents.modified[j])
@@ -958,10 +958,36 @@ export class OfferComponent implements OnInit, OnDestroy{
             } else {
               if (finalPriceComps.length > 1) {
                 let createdPricePlan = await this.createBundledPricePlan(pricePlanChangeInfo[i],finalPriceComps);
+                const created = await lastValueFrom(this.api.postOfferingPrice(createdPricePlan));
+                console.log('---- hERE')
+                console.log(pricePlanChangeInfo[i])
+                console.log(basePayload.productOfferingPrice)
+                let index = basePayload.productOfferingPrice.findIndex(
+                  (plan: any) => plan.id === pricePlanChangeInfo[i].id
+                );
+                console.log(basePayload.productOfferingPrice[index].id)
+                console.log(index)
+                console.log( basePayload.productOfferingPrice[index])
+                basePayload.productOfferingPrice[index].id = created.id;
+                basePayload.productOfferingPrice[index].href = created.id;
+                console.log( basePayload.productOfferingPrice[index])
                 console.log('New price plan')
                 console.log(createdPricePlan)
               } else {
                 let createdPricePlan = await this.createSinglePricePlan(pricePlanChangeInfo[i],finalPriceComps[0]);
+                const created = await lastValueFrom(this.api.postOfferingPrice(createdPricePlan));
+                console.log('---- hERE')
+                console.log(pricePlanChangeInfo[i])
+                console.log(basePayload.productOfferingPrice)
+                let index = basePayload.productOfferingPrice.findIndex(
+                  (plan: any) => plan.id === pricePlanChangeInfo[i].id
+                );
+                console.log(basePayload.productOfferingPrice[index].id)
+                console.log(index)
+                console.log( basePayload.productOfferingPrice[index])
+                basePayload.productOfferingPrice[index].id = created.id;
+                basePayload.productOfferingPrice[index].href = created.id;
+                console.log( basePayload.productOfferingPrice[index])
                 console.log('New price plan')
                 console.log(createdPricePlan)
               }

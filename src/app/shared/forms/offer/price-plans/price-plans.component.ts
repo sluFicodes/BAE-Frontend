@@ -228,7 +228,7 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
         .filter(key => this.pricePlansForm.get(key)?.dirty),
       originalValue: this.originalValue,
       currentValue,
-      priceComponentsChanged: changes.some(change => 
+      priceComponentsChanged: changes.some(change =>
         change.priceComponents.added.length > 0 || 
         change.priceComponents.modified.length > 0 || 
         change.priceComponents.deleted.length > 0
