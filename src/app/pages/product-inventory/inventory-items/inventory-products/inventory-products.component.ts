@@ -85,7 +85,7 @@ export class InventoryProductsComponent implements OnInit {
   }
 
   initInventory(){
-    this.loading=true;
+    this.loading = true;
 
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
@@ -145,10 +145,10 @@ export class InventoryProductsComponent implements OnInit {
   }
 
   async getInventory(next:boolean){
-    if(next==false){
-      this.loading=true;
+    if(next == false){
+      this.loading = true;
     }
-    
+
     let options = {
       "keywords": this.keywordFilter,
       "filters": this.filters,
@@ -157,18 +157,18 @@ export class InventoryProductsComponent implements OnInit {
     
     await this.paginationService.getItemsPaginated(this.page, this.INVENTORY_LIMIT, next, this.inventory, this.nextInventory, options,
       this.paginationService.getInventory.bind(this.paginationService)).then(data => {
-      this.page_check=data.page_check;      
-      this.inventory=data.items;
-      this.nextInventory=data.nextItems;
-      this.page=data.page;
-      this.loading=false;
-      this.loading_more=false;
-      initFlowbite();
-      if(this.prodId!=undefined && this.checkFrom){
-        let idx = this.inventory.findIndex(element => element.id == this.prodId)
-        this.selectProduct(this.inventory[idx])
-        this.checkFrom=false;
-      }
+        this.page_check = data.page_check;
+        this.inventory = data.items;
+        this.nextInventory = data.nextItems;
+        this.page = data.page;
+        this.loading = false;
+        this.loading_more = false;
+        initFlowbite();
+        if(this.prodId!=undefined && this.checkFrom){
+          let idx = this.inventory.findIndex(element => element.id == this.prodId)
+          this.selectProduct(this.inventory[idx])
+          this.checkFrom=false;
+        }
     })
   }
 

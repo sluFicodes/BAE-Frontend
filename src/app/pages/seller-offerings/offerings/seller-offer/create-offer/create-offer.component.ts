@@ -16,6 +16,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { currencies } from 'currencies.json';
+import { certifications } from 'src/app/models/certification-standards.const';
+import {ProductOfferingPrice_DTO} from 'src/app/models/interfaces';
+import { lastValueFrom } from 'rxjs';
 
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type BundledProductOffering = components["schemas"]["BundledProductOffering"];
@@ -46,6 +49,7 @@ export class CreateOfferComponent implements OnInit {
   showLicense:boolean=false;
   showSLA:boolean=false;
   showPrice:boolean=false;
+  showProcurement:boolean=false;
 
   //Check if step was done
   generalDone:boolean=false;
@@ -56,10 +60,12 @@ export class CreateOfferComponent implements OnInit {
   licenseDone:boolean=false;
   slaDone:boolean=false;
   priceDone:boolean=false;
+  procurementDone:boolean=false;
   finishDone:boolean=false;
+  replicationDone:boolean=false;
 
-  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price','summary'];
-  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle','summary-circle'];
+  stepsElements:string[]=['general-info','bundle','prodspec','catalog','category','license','sla','price', 'procurement', 'replication','summary'];
+  stepsCircles:string[]=['general-circle','bundle-circle','prodspec-circle','catalog-circle','category-circle','license-circle','sla-circle','price-circle', 'procurement-circle', 'replication-circle','summary-circle'];
 
   showPreview:boolean=false;
   showEmoji:boolean=false;
@@ -131,10 +137,11 @@ export class CreateOfferComponent implements OnInit {
 
   //PRICE
   currencies=currencies;
-  createdPrices:ProductOfferingPriceRefOrValue[]=[];
+  createdPrices:ProductOfferingPrice_DTO[]=[];
   postedPrices:any[]=[];
   creatingPrice:any;
   priceDescription:string='';
+  priceComponentDescription:string='';
   showCreatePrice:boolean=false;
   toggleOpenPrice:boolean=false;
   oneTimeSelected:boolean=true;
@@ -143,18 +150,9 @@ export class CreateOfferComponent implements OnInit {
   selectedPeriodAlter:any='DAILY';
   usageSelected:boolean=false;
   customSelected:boolean=false;
-  priceForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    price: new FormControl('', [Validators.required]),
-    description: new FormControl(''),
-  });
-  priceAlterForm = new FormGroup({
-    price: new FormControl('', [Validators.required]),
-    condition: new FormControl(''),
-    description: new FormControl(''),
-  });
+
   validPriceCheck:boolean=true;
-  selectedPriceUnit:any=currencies[0].code;
+  selectedPriceUnit:any=currencies[2].code;
   priceTypeAlter:any='ONE TIME';
   priceComponentSelected:boolean=false;
   discountSelected:boolean=false;
@@ -164,6 +162,41 @@ export class CreateOfferComponent implements OnInit {
   priceToUpdate:any;
   selectedPriceType:any='CUSTOM';
   editPrice:boolean=false;
+  showPriceComponents:boolean=false;
+
+  //PRICECOMPONENT
+  selectedCharacteristic:any=undefined;
+  touchedCharCheck:boolean=false;
+  selectedCharacteristicVal:any
+  showValueSelect:boolean=false;
+  isDiscount:boolean=false;
+  createdPriceComponents:any[]=[];  
+  createdPriceAlterations:any[]=[];
+  createdPriceProfile:any;
+  createdPriceComponentsRelatedToPlan:any[]=[];
+  createdPriceAlterationsRelatedToPlan:any[]=[];
+  hideStringCharOption:boolean=true;
+
+  //PRICEPROFILE
+  showProfile:boolean=false;
+  editProfile:boolean=false;
+
+  //PROCUREMENT
+  procurementModes = [{
+    id: 'manual',
+    name: 'Manual'
+  }, {
+    id: 'payment-automatic',
+    name: 'Payment Automatic - Procurement Manual'
+  }, {
+    id: 'automatic',
+    name: 'Automatic'
+  }];
+  procurementMode: string = 'manual';
+
+  //REPLICATION
+  showReplication:boolean=false;
+  selectedCountries:any[]=[];
 
   errorMessage:any='';
   showError:boolean=false;
@@ -198,6 +231,26 @@ export class CreateOfferComponent implements OnInit {
       if(ev.type === 'ChangedSession') {
         this.initPartyInfo();
       }
+      if(ev.type === 'SavePricePlan') {
+        this.createdPrices.push(ev.value as ProductOfferingPrice_DTO)
+        if(this.showCreatePrice){
+          this.showCreatePrice=false;
+        }
+      }
+      if(ev.type === 'UpdatePricePlan') {
+        let price = ev.value as ProductOfferingPrice_DTO
+        const index = this.createdPrices.findIndex((item) => item.id === price.id);
+        if(index!=-1){
+          console.log('updating price values...')
+          //this.createdPrices[index]=price;
+          this.createdPrices = this.createdPrices.map((item, index) => 
+            index === index ? price : item
+          );
+        }
+        if(this.editPrice){
+          this.editPrice=false;
+        }
+      }
     })
   }
 
@@ -205,6 +258,14 @@ export class CreateOfferComponent implements OnInit {
   onClick() {
     if(this.showEmoji==true){
       this.showEmoji=false;
+      this.cdr.detectChanges();
+    }
+    if(this.showPriceComponents==true){
+      this.showPriceComponents=false;
+      this.cdr.detectChanges();
+    }
+    if(this.showProfile==true){
+      this.showProfile=false;
       this.cdr.detectChanges();
     }
   }
@@ -240,8 +301,11 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
+    this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleBundle(){
@@ -255,8 +319,11 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
+    this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleBundleCheck(){
@@ -286,8 +353,11 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
+    this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleCatalogs(){
@@ -305,8 +375,11 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
+    this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleCategories(){
@@ -325,8 +398,11 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
+    this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleLicense(){
@@ -340,8 +416,10 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=true;
     this.showSLA=false;
     this.showPrice=false;
+    this.showProcurement=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   toggleSLA(){
@@ -356,8 +434,11 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=true;
     this.showPrice=false;
+    this.showProcurement=false;
+    this.showReplication=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.editPrice=false;
+    this.showCreatePrice=false;
   }
 
   togglePrice(){
@@ -372,8 +453,53 @@ export class CreateOfferComponent implements OnInit {
     this.showLicense=false;
     this.showSLA=false;
     this.showPrice=true;
+    this.showProcurement=false;
     this.showPreview=false;
-    this.clearPriceFormInfo();
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+    initFlowbite();
+  }
+
+  toggleProcurement() {
+    this.selectStep('procurement','procurement-circle');
+
+    this.priceDone=true;
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showSummary=false;
+    this.showProdSpec=false;
+    this.showCatalog=false;
+    this.showCategory=false;
+    this.showLicense=false;
+    this.showSLA=false;
+    this.showPrice=false;
+    this.showProcurement=true;
+    this.showPreview=false;
+    this.showReplication=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+    initFlowbite();
+  }
+
+  toggleReplication(){
+    this.procurementDone=true;
+    this.selectStep('replication','replication-circle');
+    this.showBundle=false;
+    this.showGeneral=false;
+    this.showSummary=false;
+    this.showProdSpec=false;
+    this.showCatalog=false;
+    this.showCategory=false;
+    this.showLicense=false;
+    this.showSLA=false;
+    this.showPrice=false;
+    this.showProcurement=false;
+    this.showPreview=false;
+    this.showReplication=true;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+    initFlowbite();
   }
 
   saveLicense(){
@@ -402,377 +528,25 @@ export class CreateOfferComponent implements OnInit {
     console.log(this.createdLicense.treatment)
   }
 
-  onPriceTypeSelected(event: any){
-    if(event.target.value=='ONE TIME'){
-      this.oneTimeSelected=true;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (event.target.value=='RECURRING'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=true;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (event.target.value=='USAGE'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=true;
-      this.customSelected=false;
-    } else if (event.target.value=='CUSTOM'){
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=true;
-    }
-    this.checkValidPrice();
-  }
 
-  onPriceTypeAlterSelected(event: any){
-    this.priceTypeAlter=event.target.value;
-  }
-
-  onPriceAlterSelected(event: any){
-    if(event.target.value=='none'){
-      this.priceComponentSelected=false;
-      this.discountSelected=false;
-      this.noAlterSelected=true;
-    } else if (event.target.value=='price'){
-      this.priceComponentSelected=true;
-      this.discountSelected=false;
-      this.noAlterSelected=false;
-    } else if (event.target.value=='discount'){
-      this.priceComponentSelected=false;
-      this.discountSelected=true;
-      this.noAlterSelected=false;
-    }
-  }
-
-  onPricePeriodChange(event: any){
-    this.selectedPeriod=event.target.value;
-    this.checkValidPrice();
-  }
-
-  onPricePeriodAlterChange(event: any){
-    this.selectedPeriodAlter=event.target.value;
-    this.checkValidPrice();
-  }
-
-  onPriceUnitChange(event:any){
-    this.selectedPriceUnit=event.target.value;
-    this.checkValidPrice();
-  }
-
-  checkValidPrice(){
-    const index = this.createdPrices.findIndex(item => item.name === this.priceForm.value.name);
-    if (index !== -1) {
-      if(this.editPrice && this.createdPrices[index].name == this.priceToUpdate.name){
-        this.priceForm.controls.name.setErrors(null)
-        this.priceForm.controls.name.updateValueAndValidity();
-        if(this.customSelected && this.priceForm.value.name != ''){
-          this.validPriceCheck=false;
-        } else if (this.usageSelected){
-          if(this.usageUnitUpdate.nativeElement.value != ''){
-            this.validPriceCheck=false;
-          } else {
-            this.validPriceCheck=true;
-          }     
-        } else if(!this.priceForm.invalid){
-          this.validPriceCheck=false;
-        } else {
-          this.validPriceCheck=true;
-        }
-      } else {
-        this.priceForm.controls.name.setErrors({invalidName:true})
-        this.validPriceCheck=true;
-      }      
-    } else {
-      this.priceForm.controls.name.setErrors(null)
-      this.priceForm.controls.name.updateValueAndValidity();
-      if(this.customSelected && this.priceForm.value.name != ''){
-        this.validPriceCheck=false;
-      } else if (this.usageSelected){
-        if(this.usageUnit.nativeElement.value != ''){
-          this.validPriceCheck=false;
-        } else {
-          this.validPriceCheck=true;
-        }    
-      } else if(!this.priceForm.invalid){
-        this.validPriceCheck=false;
-      } else {
-        this.validPriceCheck=true;
-      }
-    }
-    this.cdr.detectChanges();
-  }
-
-  savePrice(){
-    if(this.priceForm.value.name){
-      let priceToCreate: ProductOfferingPriceRefOrValue = {
-        id: uuidv4(),
-        name: this.priceForm.value.name,
-        description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",
-        priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-      }
-      if(!this.customSelected && this.priceForm.value.price){
-        priceToCreate.price = {
-          percentage: 0,
-          taxRate: 20,
-          dutyFreeAmount: {
-              unit: this.selectedPriceUnit,
-              value: 0
-          },
-          taxIncludedAmount: {
-              unit: this.selectedPriceUnit,
-              value: parseFloat(this.priceForm.value.price)
-          }
-        }
-      }
-      if(this.recurringSelected){
-        console.log('recurring')
-        priceToCreate.recurringChargePeriod=this.selectedPeriod;
-      }
-      if(this.usageSelected){
-        console.log('usage')
-        priceToCreate.unitOfMeasure= {
-          amount: 1,
-          units: this.usageUnit.nativeElement.value
-        }
-      }
-      if(this.priceComponentSelected && this.priceAlterForm.value.price){
-        priceToCreate.priceAlteration = [
-          {
-              description: this.priceAlterForm.value.description ? this.priceAlterForm.value.description : '',
-              name: "fee",
-              priceType: this.priceComponentSelected ? this.priceTypeAlter : this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom',
-              priority: 0,
-              recurringChargePeriod: (this.priceComponentSelected && this.priceTypeAlter == 'RECURRING') ? this.selectedPeriodAlter  : '',
-              price: {
-                  percentage: this.discountSelected ? parseFloat(this.priceAlterForm.value.price) : 0,
-                  dutyFreeAmount: {
-                      unit: this.selectedPriceUnit,
-                      value: 0
-                  },
-                  taxIncludedAmount: {
-                      unit: this.selectedPriceUnit,
-                      value: this.priceComponentSelected ? parseFloat(this.priceAlterForm.value.price) : 0
-                  }
-              },
-              unitOfMeasure: {
-                  amount: 1,
-                  units: (this.priceComponentSelected && this.priceTypeAlter == 'USAGE') ? this.usageUnitAlter.nativeElement.value  : '',
-              }
-          }
-        ]
-      }
-      this.createdPrices.push(priceToCreate)   
-      console.log('--- price ---')
-      console.log(this.createdPrices)      
-    }
-    this.clearPriceFormInfo();
-  }
 
   removePrice(price:any){
     const index = this.createdPrices.findIndex(item => item.id === price.id);
     if (index !== -1) {
       this.createdPrices.splice(index, 1);
     }
-    this.checkCustom();
-    this.clearPriceFormInfo();
-  }
-
-  showUpdatePrice(price:any){
-    this.priceToUpdate=price;
-    console.log(this.priceToUpdate)
-    this.priceForm.controls['name'].setValue(this.priceToUpdate.name);
-    this.priceForm.controls['description'].setValue(this.priceToUpdate.description);
-    if(this.priceToUpdate.priceType!='custom'){
-      this.priceForm.controls['price'].setValue(this.priceToUpdate.price.taxIncludedAmount.value);
-      this.selectedPriceUnit=this.priceToUpdate.price.taxIncludedAmount.unit;
-    }
-    this.cdr.detectChanges();
-    console.log(this.selectedPriceUnit)
-    if(this.priceToUpdate.priceType=='one time'){
-      this.selectedPriceType='ONE TIME';
-      this.oneTimeSelected=true;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=false;
-    } else if (this.priceToUpdate.priceType=='recurring'){
-      this.selectedPriceType='RECURRING';
-      this.oneTimeSelected=false;
-      this.recurringSelected=true;
-      this.usageSelected=false;
-      this.customSelected=false;
-      this.selectedPeriod=this.priceToUpdate.recurringChargePeriod;
-      this.cdr.detectChanges();
-    } else if (this.priceToUpdate.priceType=='usage'){
-      this.selectedPriceType='USAGE';
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=true;
-      this.customSelected=false;
-      //document.getElementById('usageUnitUpdate').value=this.priceToUpdate.unitOfMeasure.units;
-      this.cdr.detectChanges();
-    } else {
-      this.selectedPriceType='CUSTOM';
-      this.oneTimeSelected=false;
-      this.recurringSelected=false;
-      this.usageSelected=false;
-      this.customSelected=true;
-    }
-    if(this.createdPrices.length==0){
-      this.allowCustom=true;
-      this.allowOthers=true;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        console.log(this.createdPrices[i].priceType)
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
-        }
-      }
-      if(check==true){
-        this.allowCustom=false;
-        this.allowOthers=true;
-      } else {
-        this.allowCustom=true;
-        this.allowOthers=false;  
-      }
-    }
-    this.cdr.detectChanges();
-    this.validPriceCheck=false;
-    this.editPrice=true;
-  }
-
-  updatePrice(){
-    if(this.priceForm.value.name){
-      console.log(this.priceToUpdate.id)
-      let priceToCreate: ProductOfferingPriceRefOrValue = {
-        //id: uuidv4(),
-        id: this.priceToUpdate.id,
-        name: this.priceForm.value.name,
-        description: this.priceForm.value.description ? this.priceForm.value.description : '',
-        lifecycleStatus: "Active",    
-        //percentage: 0,
-        priceType: this.recurringSelected ? 'recurring' : this.usageSelected ? 'usage' : this.oneTimeSelected ? 'one time' : 'custom'
-      }
-      if(!this.customSelected && this.priceForm.value.price){
-        priceToCreate.price = {
-          percentage: 0,
-          taxRate: 20,
-          dutyFreeAmount: {
-              unit: this.selectedPriceUnit,
-              value: 0
-          },
-          taxIncludedAmount: {
-              unit: this.selectedPriceUnit,
-              value: parseFloat(this.priceForm.value.price)
-          }
-        }
-      }
-      if(this.recurringSelected){
-        console.log('recurring')
-        priceToCreate.recurringChargePeriod=this.selectedPeriod;
-      }
-      if(this.usageSelected){
-        console.log('usage')
-        priceToCreate.unitOfMeasure= {
-          amount: 1,
-          units: this.usageUnitUpdate.nativeElement.value
-        }
-      }
-      const index = this.createdPrices.findIndex(item => item.id === this.priceToUpdate.id);
-      if (index !== -1) {
-        this.createdPrices[index]=priceToCreate;
-      } 
-      console.log('--- price ---')
-      console.log(this.createdPrices)      
-    }
-    this.closeEditPrice();
-  }
-
-  closeEditPrice(){
-    this.clearPriceFormInfo();
-    this.editPrice=false;
   }
 
   showNewPrice(){
-    this.checkCustom();
-    this.showCreatePrice=!this.showCreatePrice;    
+    this.priceToUpdate=undefined;
+    this.showCreatePrice=!this.showCreatePrice;
+    this.editPrice=false;
   }
 
-  checkCustom(){
-    if(this.createdPrices.length==0){
-      this.allowCustom=true;
-      this.allowOthers=true;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        console.log(this.createdPrices[i].priceType)
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
-        }
-      }
-      if(check==true){
-        this.allowCustom=false;
-        this.allowOthers=true;
-      } else {
-        this.allowCustom=true;
-        this.allowOthers=false;  
-      }
-    }
-    this.clearPriceFormInfo();
-    console.log(this.customSelected)
-    this.cdr.detectChanges();
-  }
-
-  clearPriceFormInfo(){
-    console.log('clear')
-    if(this.createdPrices.length==0){
-      this.customSelected=true;
-      this.oneTimeSelected=false;
-    } else {
-      let check=false;
-      for(let i=0;i<this.createdPrices.length;i++){
-        if(this.createdPrices[i].priceType!='custom'){
-          check=true;
-        }
-      }
-      if(check==true){
-        this.oneTimeSelected=true;
-        this.customSelected=false;
-      } else {
-        this.oneTimeSelected=false;
-        this.customSelected=true;        
-      }
-    }
-    this.selectedPeriod='DAILY';
-    this.selectedPeriodAlter='DAILY';
-    this.selectedPriceUnit=currencies[0].code;
-    this.priceTypeAlter='ONE TIME';
-    this.priceComponentSelected=false;
-    this.discountSelected=false;
-    this.noAlterSelected=true;
-    this.showCreatePrice=false;    
-    this.usageSelected=false;
-    this.recurringSelected=false;    
-    this.showPreview=false;
-
-    this.priceAlterForm.reset();
-    this.priceAlterForm.controls['condition'].setValue('');
-    this.priceAlterForm.controls['price'].setValue('');
-    this.priceForm.reset();
-    this.priceForm.controls['name'].setValue('');
-    this.priceForm.controls['price'].setValue('');
-    this.priceForm.controls['description'].setValue('');
-    // Explicitly mark all controls as pristine and untouched
-    Object.keys(this.priceForm.controls).forEach(key => {
-      this.priceForm.get(key)?.markAsPristine();
-      this.priceForm.get(key)?.markAsUntouched();
-      this.priceForm.get(key)?.updateValueAndValidity();
-    });
-    this.validPriceCheck=true;
+  showEditPrice(price:any){
+    this.editPrice=!this.editPrice;
+    this.priceToUpdate=price;
+    this.showCreatePrice=false;
   }
 
   onSLAMetricChange(event: any) {
@@ -882,24 +656,6 @@ export class CreateOfferComponent implements OnInit {
   }
 
   getCategories(){
-    /*this.api.getCatalog(this.selectedCatalog.id).then(data => {
-      if(data.category){
-        for (let i=0; i<data.category.length; i++){
-          this.api.getCategoryById(data.category[i].id).then(categoryInfo => {
-            this.findChildrenByParent(categoryInfo);
-          })
-        }
-        initFlowbite();
-      } else {
-        this.api.getCategories().then(data => {
-          for(let i=0; i < data.length; i++){
-            this.findChildren(data[i],data)
-          }
-          this.cdr.detectChanges();
-          initFlowbite();
-        })           
-      }
-    })*/
     console.log('Getting categories...')
     this.api.getLaunchedCategories().then(data => {      
       for(let i=0; i < data.length; i++){
@@ -1124,7 +880,6 @@ export class CreateOfferComponent implements OnInit {
   showFinish(){
     this.priceDone=true;
     this.finishDone=true;
-    this.clearPriceFormInfo();
     this.saveLicense();
     if(this.generalForm.value.name && this.generalForm.value.version){
       this.offerToCreate={
@@ -1145,42 +900,189 @@ export class CreateOfferComponent implements OnInit {
     this.showSLA=false;
     this.showPrice=false;
     this.showSummary=true;
+    this.showReplication=false;
     this.showPreview=false;
+    this.editPrice=false;
+    this.showCreatePrice=false;
+  }
+
+  changeProcurement(event: any) {
+    this.procurementMode = event.target.value;
   }
 
   async createOffer(){
     this.postedPrices=[];
     if(this.createdPrices.length>0){
       for(let i=0; i < this.createdPrices.length; i++){
-        let priceToCreate: ProductOfferingPrice = {
-          description: this.createdPrices[i].description,
-          lifecycleStatus: this.createdPrices[i].lifecycleStatus,
-          name: this.createdPrices[i].name,
-          //percentage: 0,
-          priceType: this.createdPrices[i].priceType,
-          price: {
-              unit: this.createdPrices[i].price?.taxIncludedAmount?.unit,
-              value: this.createdPrices[i].price?.taxIncludedAmount?.value
+        if(this.createdPrices[i].isBundle==true){
+          let components=this.createdPrices[i].bundledPopRelationship;
+          let compRel:any[]=[];
+          if(components != undefined){
+            for(let j=0;j<components.length;j++){
+              //Creating price component
+              let priceCompToCreate: ProductOfferingPrice = {        
+                name: components[j].name,
+                description: components[j].description,
+                lifecycleStatus: components[j].lifecycleStatus,
+                priceType: components[j].priceType,
+                price: {
+                  unit: components[j]?.price?.unit,
+                  value: components[j]?.price?.value
+                }
+              }
+              if(components[j].priceType=='recurring'){
+                priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+              }
+              if(components[j].priceType=='recurring-prepaid'){
+                priceCompToCreate.recurringChargePeriodType=components[j].recurringChargePeriodType;
+                priceCompToCreate.recurringChargePeriodLength=components[j].recurringChargePeriodLength;
+              }
+              if(components[j].priceType=='usage'){
+                priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+              }
+              if(components[j].prodSpecCharValueUse){
+                priceCompToCreate.prodSpecCharValueUse=components[j].prodSpecCharValueUse
+              }
+              if(components[j].unitOfMeasure){
+                priceCompToCreate.unitOfMeasure=components[j].unitOfMeasure
+              }
+              let priceAlterations = components[j].popRelationship;
+              if(priceAlterations != undefined){
+                //Creating price alteration
+                let priceAlterToCreate: ProductOfferingPrice ={
+                  name: priceAlterations[0]?.name,
+                  priceType: priceAlterations[0]?.priceType,
+                  validFor: priceAlterations[0]?.validFor,
+                }
+                if(priceAlterations[0].percentage){
+                  priceAlterToCreate.percentage = priceAlterations[0]?.percentage;
+                } else {
+                  priceAlterToCreate.price = priceAlterations[0]?.price;
+                }
+                try{
+                  let priceAlterCreated = await lastValueFrom(this.api.postOfferingPrice(priceAlterToCreate))
+                  console.log('price Alteration')
+                  console.log(priceAlterCreated)
+                  priceCompToCreate.popRelationship=[{
+                    id: priceAlterCreated.id,
+                    href: priceAlterCreated.id,
+                    name: priceAlterCreated.name
+                  }]
+                } catch (error:any) {
+                  console.error('There was an error while creating offers price!', error);
+                  if(error.error.error){
+                    console.log(error)
+                    this.errorMessage='Error: '+error.error.error;
+                  } else {
+                    this.errorMessage='There was an error while creating offers price!';
+                  }
+                  this.showError=true;
+                  setTimeout(() => {
+                    this.showError = false;
+                  }, 3000);     
+                }
+              }
+              try{
+                let priceCompCreated = await lastValueFrom(this.api.postOfferingPrice(priceCompToCreate))
+                compRel.push({
+                  id: priceCompCreated.id,
+                  href: priceCompCreated.id,
+                  name: priceCompCreated.name
+                }) 
+                console.log('componente')
+                console.log(priceCompCreated)
+              } catch (error:any) {
+                console.error('There was an error while creating offers price!', error);
+                if(error.error.error){
+                  console.log(error)
+                  this.errorMessage='Error: '+error.error.error;
+                } else {
+                  this.errorMessage='There was an error while creating offers price!';
+                }
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);     
+              }
+            }
+            //Creating price plan
+            let priceToCreate: ProductOfferingPrice = {
+              name: this.createdPrices[i].name,
+              isBundle: true,
+              description: this.createdPrices[i].description,
+              lifecycleStatus: this.createdPrices[i].lifecycleStatus,
+              bundledPopRelationship: compRel
+            }
+            if(this.createdPrices[i].prodSpecCharValueUse){
+              priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse
+            }
+            if(this.createdPrices[i].unitOfMeasure){
+              priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
+            }
+            try{
+              let pricePlanCreated = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
+              console.log('precio')
+              console.log(pricePlanCreated)
+              this.createdPrices[i].id=pricePlanCreated.id;
+              if(i==this.createdPrices.length-1){
+                this.saveOfferInfo();
+              }
+            } catch (error:any){
+              console.error('There was an error while creating offers price!', error);
+              if(error.error.error){
+                console.log(error)
+                this.errorMessage='Error: '+error.error.error;
+              } else {
+                this.errorMessage='There was an error while creating offers price!';
+              }
+              this.showError=true;
+              setTimeout(() => {
+                this.showError = false;
+              }, 3000);
+            }
+        }
+        }else{  
+          //Not bundled price plan        
+          let priceToCreate: ProductOfferingPrice = {
+            name: this.createdPrices[i].name,
+            isBundle: false,
+            description: this.createdPrices[i].description,
+            lifecycleStatus: this.createdPrices[i].lifecycleStatus,
+            priceType: this.createdPrices[i].priceType,   
           }
-        }
-        if(this.createdPrices[i].priceType == 'recurring'){
-          console.log('recurring')
-          priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriod;
-        }
-        if(this.createdPrices[i].priceType == 'usage'){
-          console.log('usage')
-          priceToCreate.unitOfMeasure= this.createdPrices[i].unitOfMeasure
-        }
-        await this.api.postOfferingPrice(priceToCreate).subscribe({
-          next: data => {
+          if(this.createdPrices[i].priceType!='custom'){
+            priceToCreate.price= {
+              unit: this.createdPrices[i]?.price?.unit,
+              value: this.createdPrices[i]?.price?.value
+            }
+          }
+          if(this.createdPrices[i].priceType=='recurring'){
+            priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriodType;
+            priceToCreate.recurringChargePeriodLength=this.createdPrices[i].recurringChargePeriodLength;
+          }
+          if(this.createdPrices[i].priceType=='recurring-prepaid'){
+            priceToCreate.recurringChargePeriodType=this.createdPrices[i].recurringChargePeriodType;
+            priceToCreate.recurringChargePeriodLength=this.createdPrices[i].recurringChargePeriodLength;
+          }
+          if(this.createdPrices[i].priceType=='usage'){
+            priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
+          }
+          if(this.createdPrices[i].prodSpecCharValueUse){
+            priceToCreate.prodSpecCharValueUse=this.createdPrices[i].prodSpecCharValueUse;
+          }
+          if(this.createdPrices[i].unitOfMeasure){
+            priceToCreate.unitOfMeasure=this.createdPrices[i].unitOfMeasure
+          }
+          try{
+            let createdPrices = await lastValueFrom(this.api.postOfferingPrice(priceToCreate))
             console.log('precio')
-            console.log(data)
-            this.createdPrices[i].id=data.id;
+            console.log(createdPrices)
+            this.createdPrices[i].id=createdPrices.id;
             if(i==this.createdPrices.length-1){
               this.saveOfferInfo();
-            }            
-          },
-          error: error => {
+            }
+          } catch (error:any){
             console.error('There was an error while creating offers price!', error);
             if(error.error.error){
               console.log(error)
@@ -1193,14 +1095,13 @@ export class CreateOfferComponent implements OnInit {
               this.showError = false;
             }, 3000);
           }
-        });
+        }
       }
     } else {
       this.createdPrices=[];
       this.saveOfferInfo();
     }
     console.log(this.offerToCreate)
-
   }
 
   saveOfferInfo(){
@@ -1248,7 +1149,7 @@ export class CreateOfferComponent implements OnInit {
           }
         ]
       } else {
-        this.offerToCreate.productOfferingTerm= [
+        this.offerToCreate.productOfferingTerm = [
           {
               name: '',
               description: '',
@@ -1256,6 +1157,11 @@ export class CreateOfferComponent implements OnInit {
           }
         ]        
       }
+
+      this.offerToCreate.productOfferingTerm.push({
+        name: 'procurement',
+        description: this.procurementMode,
+      })
     }
 
     this.api.postProductOffering(this.offerToCreate,this.selectedCatalog.id).subscribe({
@@ -1296,7 +1202,7 @@ export class CreateOfferComponent implements OnInit {
   }
 
   //STEPS CSS EFFECTS:
-  selectStep(step:string,stepCircle:string){
+  selectStep(step:string, stepCircle:string){
     const index = this.stepsElements.findIndex(item => item === step);
     if (index !== -1) {
       this.stepsElements.splice(index, 1);
@@ -1357,29 +1263,18 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + ' **bold text** '
       });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + ' **bold text** '
-      });
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' **bold text** '
       });    
     }
-
   }
 
   addItalic() {
     if(this.showGeneral){
       const currentText = this.generalForm.value.description;
       this.generalForm.patchValue({
-        description: currentText + ' _italicized text_ '
-      });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
         description: currentText + ' _italicized text_ '
       });
     } else if(this.showLicense){
@@ -1396,11 +1291,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n- First item\n- Second item'
       });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n- First item\n- Second item'
-      });
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1415,28 +1305,18 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n1. First item\n2. Second item'
       });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n1. First item\n2. Second item'
-      });
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n1. First item\n2. Second item'
       });    
-    } 
+    }
   }
 
   addCode(){
     if(this.showGeneral){
       const currentText = this.generalForm.value.description;
       this.generalForm.patchValue({
-        description: currentText + '\n`code`'
-      });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
         description: currentText + '\n`code`'
       });
     } else if(this.showLicense){
@@ -1453,11 +1333,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n```\ncode\n```'
       });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n```\ncode\n```'
-      });
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1472,11 +1347,6 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n> blockquote'
       }); 
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n> blockquote'
-      });
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
@@ -1491,17 +1361,12 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + ' [title](https://www.example.com) '
       });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + ' [title](https://www.example.com) '
-      });
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + ' [title](https://www.example.com) '
       });    
-    }  
+    } 
   } 
 
   addTable(){
@@ -1510,17 +1375,12 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
       });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
-      });
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + '\n| Syntax | Description |\n| ----------- | ----------- |\n| Header | Title |\n| Paragraph | Text |'
       });    
-    } 
+    }
   }
 
   addEmoji(event:any){
@@ -1530,17 +1390,12 @@ export class CreateOfferComponent implements OnInit {
       this.generalForm.patchValue({
         description: currentText + event.emoji.native
       });
-    } else if(this.showPrice) {
-      const currentText = this.priceForm.value.description;
-      this.priceForm.patchValue({
-        description: currentText + event.emoji.native
-      });
     } else if(this.showLicense){
       const currentText = this.licenseForm.value.description;
       this.licenseForm.patchValue({
         description: currentText + event.emoji.native
       });    
-    } 
+    }
   }
 
   togglePreview(){
@@ -1550,18 +1405,12 @@ export class CreateOfferComponent implements OnInit {
       } else {
         this.description=''
       }
-    } else if(this.showPrice) {
-      if(this.priceForm.value.description){
-        this.priceDescription=this.priceForm.value.description;
-      } else {
-        this.priceDescription=''
-      }
     } else if(this.showLicense) {
       if(this.licenseForm.value.description){
         this.licenseDescription=this.licenseForm.value.description;
       } else {
         this.licenseDescription=''
       }
-    } 
+    }
   }
 }

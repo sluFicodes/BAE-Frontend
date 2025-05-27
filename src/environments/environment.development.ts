@@ -14,6 +14,13 @@ export const environment = {
     SHOPPING_CART: '/shoppingCart',
     INVENTORY: '/inventory',
     PRODUCT_ORDER: '/ordering',
+    BILLING: '/billing',
+    CHARGING: '/charging',
+
+    CUSTOMER_BILLING:'/appliedCustomerBillingRate',
+    CONSUMER_BILLING_URL: 'http://localhost:8640',
+    INVOICE_LIMIT: 100,
+
     //API PAGINATION
     PRODUCT_LIMIT: 6,
     CATALOG_LIMIT: 8,
@@ -23,7 +30,7 @@ export const environment = {
     PROD_SPEC_LIMIT: 6,
     SERV_SPEC_LIMIT: 6,
     RES_SPEC_LIMIT: 6,
-    ORDER_LIMIT: 6,
+    ORDER_LIMIT: 1000,
     CATEGORY_LIMIT: 100,
     TAX_RATE: 20,
     CHAT_API: 'https://eng-gpt.dome-marketplace-sbx.org/predict',
@@ -42,6 +49,9 @@ export const environment = {
     MATOMO_SITE_ID: "",
     TICKETING_SYSTEM_URL: "",
     KNOWLEDGE_BASE_URL: "https://knowledgebase.dome-marketplace.org/",
+    KB_ONBOARDING_GUIDELINES_URL: "https://knowledgebase.dome-marketplace.org/",
+    KB_GUIDELNES_URL:"https://knowledgebase.dome-marketplace.org/",
+    REGISTRATION_FORM_URL: "https://knowledgebase.dome-marketplace.org/",
     SEARCH_ENABLED: true,
     PURCHASE_ENABLED: true,
     DOME_TRUST_LINK: "",
@@ -51,5 +61,7 @@ export const environment = {
     DOME_LINKEDIN: 'https://www.linkedin.com/company/dome-marketplace/',
     DOME_YOUTUBE: 'https://www.youtube.com/channel/UC8UiL59S0JiaYYr14w5eOzA',
     DOME_X: 'https://x.com/DomeMarketplace',
-    BUNDLE_ENABLED: false
+    BUNDLE_ENABLED: false,
+    DFT_CATALOG_ID: '',
+    MAX_FILE_SIZE:3145728
 };

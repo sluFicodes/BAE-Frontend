@@ -3,7 +3,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { AccountServiceService } from 'src/app/services/account-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { phoneNumbers, countries } from 'src/app/models/country.const'
 import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {parsePhoneNumber, getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
 import {AttachmentServiceService} from "src/app/services/attachment-service.service";
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
+import { environment } from 'src/environments/environment';
 
 type OrganizationUpdate = components["schemas"]["Organization_Update"];
 
@@ -30,19 +31,20 @@ export class OrgInfoComponent {
   email:string='';
   selectedDate:any;
   profileForm = new FormGroup({
-    name: new FormControl(''),
+    name: new FormControl('', [Validators.required]),
     website: new FormControl(''),
     description: new FormControl(''),
+    country: new FormControl(''),
   });
   mediumForm = new FormGroup({
-    email: new FormControl('', [Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
-    country: new FormControl(''),
-    city: new FormControl(''),
-    stateOrProvince: new FormControl(''),
-    postCode: new FormControl(''),
-    street: new FormControl(''),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.maxLength(320)]),
+    country: new FormControl('', Validators.maxLength(250)),
+    city: new FormControl('', Validators.maxLength(250)),
+    stateOrProvince: new FormControl('', Validators.maxLength(250)),
+    postCode: new FormControl('', Validators.maxLength(250)),
+    street: new FormControl('', Validators.maxLength(1000)),
     telephoneNumber: new FormControl(''),
-    telephoneType: new FormControl('')
+    telephoneType: new FormControl('Mobile')
   });
   contactmediums:any[]=[];
   emailSelected:boolean=true;
@@ -68,6 +70,39 @@ export class OrgInfoComponent {
   attFileName = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z0-9 _.-]*')]);
   attImageName = new FormControl('', [Validators.required, Validators.pattern('^https?:\\/\\/.*\\.(?:png|jpg|jpeg|gif|bmp|webp)$')])
   filenameRegex = /^[A-Za-z0-9_.-]+$/;
+  MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
+
+  selectedCountry: string = ''; // Stores the selected country code
+
+  euCountries = [
+    { code: 'AT', name: 'Austria' },
+    { code: 'BE', name: 'Belgium' },
+    { code: 'BG', name: 'Bulgaria' },
+    { code: 'HR', name: 'Croatia' },
+    { code: 'CY', name: 'Cyprus' },
+    { code: 'CZ', name: 'Czech Republic' },
+    { code: 'DK', name: 'Denmark' },
+    { code: 'EE', name: 'Estonia' },
+    { code: 'FI', name: 'Finland' },
+    { code: 'FR', name: 'France' },
+    { code: 'DE', name: 'Germany' },
+    { code: 'GR', name: 'Greece' },
+    { code: 'HU', name: 'Hungary' },
+    { code: 'IE', name: 'Ireland' },
+    { code: 'IT', name: 'Italy' },
+    { code: 'LV', name: 'Latvia' },
+    { code: 'LT', name: 'Lithuania' },
+    { code: 'LU', name: 'Luxembourg' },
+    { code: 'MT', name: 'Malta' },
+    { code: 'NL', name: 'Netherlands' },
+    { code: 'PL', name: 'Poland' },
+    { code: 'PT', name: 'Portugal' },
+    { code: 'RO', name: 'Romania' },
+    { code: 'SK', name: 'Slovakia' },
+    { code: 'SI', name: 'Slovenia' },
+    { code: 'ES', name: 'Spain' },
+    { code: 'SE', name: 'Sweden' }
+  ];
 
   @ViewChild('imgURL') imgURL!: ElementRef;
 
@@ -146,6 +181,12 @@ export class OrgInfoComponent {
         value: this.profileForm.value.website
       })       
     }
+    if(this.profileForm.value.country != ''){
+      chars.push({
+        name: 'country',
+        value: this.profileForm.value.country
+      })       
+    }
     for(let i=0; i<this.contactmediums.length; i++){
       console.log(this.contactmediums)
       if(this.contactmediums[i].mediumType == 'Email'){
@@ -184,8 +225,6 @@ export class OrgInfoComponent {
     }
     
     let profile = {
-      "id": this.partyId,
-      "href": this.partyId,
       "tradingName": this.profileForm.value.name,
       "contactMedium": mediums,
       "partyCharacteristic": chars
@@ -259,14 +298,16 @@ export class OrgInfoComponent {
     }
     if(profile.partyCharacteristic){
       for(let i=0;i<profile.partyCharacteristic.length;i++){
-        if(profile.partyCharacteristic[i].name=='logo'){
+        if(profile.partyCharacteristic[i].name == 'logo'){
           this.imgPreview=profile.partyCharacteristic[i].value
           this.showImgPreview=true;
-        } else if(profile.partyCharacteristic[i].name=='description'){
-          this.profileForm.controls['description'].setValue(profile.partyCharacteristic[i].value);    
+        } else if(profile.partyCharacteristic[i].name=='description') {
+          this.profileForm.controls['description'].setValue(profile.partyCharacteristic[i].value);
           this.description=profile.partyCharacteristic[i].value;
-        }else if(profile.partyCharacteristic[i].name=='website'){            
+        }else if(profile.partyCharacteristic[i].name=='website') {
           this.profileForm.controls['website'].setValue(profile.partyCharacteristic[i].value);    
+        } else if(profile.partyCharacteristic[i].name=='country') {
+          this.profileForm.controls['country'].setValue(profile.partyCharacteristic[i].value);
         }
       }
     }
@@ -274,21 +315,30 @@ export class OrgInfoComponent {
 
   saveMedium(){
     if(this.phoneSelected){
-      const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.mediumForm.value.telephoneNumber);
-      if (phoneNumber) {
-        if (!phoneNumber.isValid()) {
-          console.log('NUMERO INVALIDO')
-          this.mediumForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
-          this.toastVisibility = true;
-          setTimeout(() => {
+        try{
+            const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.mediumForm.value.telephoneNumber);
+            if (phoneNumber) {
+            if (!phoneNumber.isValid()) {
+                console.log('NUMERO INVALIDO')
+                this.mediumForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+                this.toastVisibility = true;
+                setTimeout(() => {
+                this.toastVisibility = false
+                }, 2000);
+                return;
+            } else {
+                this.mediumForm.controls['telephoneNumber'].setErrors(null);
+                this.toastVisibility = false;
+            }
+            }
+        }catch (e : any){
+            this.mediumForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+            this.toastVisibility = true;
+            setTimeout(() => {
             this.toastVisibility = false
-          }, 2000);
-          return;
-        } else {
-          this.mediumForm.controls['telephoneNumber'].setErrors(null);
-          this.toastVisibility = false;
+            }, 2000);
+            return;
         }
-      }
     }
 
     if (this.mediumForm.invalid) {
@@ -346,34 +396,17 @@ export class OrgInfoComponent {
   }
 
   editMedium(){
-    console.log(this.phoneSelected)
-    if(this.phoneSelected){
-      const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.mediumForm.value.telephoneNumber);
-      if (phoneNumber) {
-        if (!phoneNumber.isValid()) {
-          console.log('NUMERO INVALIDO')
-          this.mediumForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
-          this.toastVisibility = true;
-          setTimeout(() => {
-            this.toastVisibility = false
-          }, 2000);
-          return;
-        } else {
-          this.mediumForm.controls['telephoneNumber'].setErrors(null);
-          this.toastVisibility = false;
-        }
-      }
-    }
-    if (this.mediumForm.invalid) {
-      this.toastVisibility = true;
-      setTimeout(() => {
-        this.toastVisibility = false
-      }, 2000);
-      return;
-    } else {
-      const index = this.contactmediums.findIndex(item => item.id === this.selectedMedium.id);
+
+    const index = this.contactmediums.findIndex(item => item.id === this.selectedMedium.id);
       if (index !== -1) {
-        if(this.emailSelected){
+        if(this.selectedMedium.mediumType=='Email'){
+          if (this.mediumForm.get('email')?.invalid) {
+            this.toastVisibility = true;
+            setTimeout(() => {
+              this.toastVisibility = false
+            }, 2000);
+            return;
+          }
           this.contactmediums[index]={
             id: this.contactmediums[index].id,
             mediumType: 'Email',
@@ -383,7 +416,19 @@ export class OrgInfoComponent {
               emailAddress: this.mediumForm.value.email
             }
           }
-        } else if(this.addressSelected){
+        } else if(this.selectedMedium.mediumType=='PostalAddress'){
+          let fieldsToCheck = ['country', 'city', 'stateOrProvince', 'street'];
+
+          fieldsToCheck.forEach(fieldName => {
+            const control = this.mediumForm.get(fieldName);
+            if (control?.invalid) {
+              this.toastVisibility = true;
+              setTimeout(() => {
+                this.toastVisibility = false
+              }, 2000);
+              return;
+            }
+          });
           this.contactmediums[index]={
             id: this.contactmediums[index].id,
             mediumType: 'PostalAddress',
@@ -398,6 +443,31 @@ export class OrgInfoComponent {
             }
           }
         } else {
+            try{
+                const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.mediumForm.value.telephoneNumber);
+                if (phoneNumber) {
+                  if (!phoneNumber.isValid()) {
+                    console.log('NUMERO INVALIDO')
+                    this.mediumForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+                    this.toastVisibility = true;
+                    setTimeout(() => {
+                      this.toastVisibility = false
+                    }, 2000);
+                    return;
+                  } else {
+                    this.mediumForm.controls['telephoneNumber'].setErrors(null);
+                    this.toastVisibility = false;
+                  }
+                }
+            }
+            catch(error){
+                this.mediumForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+                    this.toastVisibility = true;
+                    setTimeout(() => {
+                      this.toastVisibility = false
+                    }, 2000);
+                    return;
+            }
           this.contactmediums[index]={
             id: this.contactmediums[index].id,
             mediumType: 'TelephoneNumber',
@@ -411,7 +481,6 @@ export class OrgInfoComponent {
         this.mediumForm.reset();
         this.showEditMedium=false;
       }
-    }
   }
 
   showEdit(medium:any){
@@ -419,9 +488,6 @@ export class OrgInfoComponent {
     if(this.selectedMedium.mediumType=='Email'){
       this.selectedMediumType='email';
       this.mediumForm.controls['email'].setValue(this.selectedMedium.characteristic.emailAddress);
-      this.emailSelected=true;
-      this.addressSelected=false;
-      this.phoneSelected=false;
     } else if(this.selectedMedium.mediumType=='PostalAddress'){
       this.selectedMediumType='address';
       this.mediumForm.controls['country'].setValue(this.selectedMedium.characteristic.country);
@@ -429,9 +495,6 @@ export class OrgInfoComponent {
       this.mediumForm.controls['stateOrProvince'].setValue(this.selectedMedium.characteristic.stateOrProvince);
       this.mediumForm.controls['postCode'].setValue(this.selectedMedium.characteristic.postCode);
       this.mediumForm.controls['street'].setValue(this.selectedMedium.characteristic.street1);
-      this.emailSelected=false;
-      this.addressSelected=true;
-      this.phoneSelected=false;
     } else {
       this.selectedMediumType='phone';
       const phoneNumber = parsePhoneNumber(this.selectedMedium.characteristic.phoneNumber)
@@ -442,10 +505,7 @@ export class OrgInfoComponent {
         }
         this.mediumForm.controls['telephoneNumber'].setValue(phoneNumber.nationalNumber);
       }
-      this.mediumForm.controls['telephoneType'].setValue(this.selectedMedium.characteristic.contactType);
-      this.emailSelected=false;
-      this.addressSelected=false;
-      this.phoneSelected=true;      
+      this.mediumForm.controls['telephoneType'].setValue(this.selectedMedium.characteristic.contactType);     
     }
     this.showEditMedium=true;
   }
@@ -457,21 +517,107 @@ export class OrgInfoComponent {
   }
 
   onTypeChange(event: any) {
+    this.mediumForm.reset();
     if(event.target.value=='email'){
       this.emailSelected=true;
       this.addressSelected=false;
       this.phoneSelected=false;
+      this.mediumForm.get('country')?.clearValidators();
+      this.mediumForm.get('country')?.setValue('');
+      this.mediumForm.get('city')?.clearValidators();
+      this.mediumForm.get('city')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.clearValidators();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
+      this.mediumForm.get('postCode')?.clearValidators();
+      this.mediumForm.get('postCode')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.setValue('');
+      this.mediumForm.get('street')?.clearValidators();
+      this.mediumForm.get('street')?.setValue('');
+      this.mediumForm.get('telephoneNumber')?.clearValidators();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
+      this.mediumForm.get('email')?.setValidators([Validators.required,Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]);
+      this.mediumForm.get('email')?.markAsUntouched();
+      this.mediumForm.get('email')?.setValue('');
+      this.cdr.detectChanges();
     }else if (event.target.value=='address'){
       this.emailSelected=false;
       this.addressSelected=true;
       this.phoneSelected=false;
+      this.mediumForm.get('telephoneNumber')?.clearValidators();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
+      this.mediumForm.get('email')?.clearValidators();
+      this.mediumForm.get('email')?.setValue('');
+      this.mediumForm.get('country')?.setValidators([Validators.required]);
+      this.mediumForm.get('country')?.markAsUntouched();
+      this.mediumForm.get('country')?.setValue('');
+      this.mediumForm.get('city')?.setValidators([Validators.required]);
+      this.mediumForm.get('city')?.markAsUntouched();
+      this.mediumForm.get('city')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.setValidators([Validators.required]);
+      this.mediumForm.get('stateOrProvince')?.markAsUntouched();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
+      this.mediumForm.get('postCode')?.setValidators([Validators.required]);
+      this.mediumForm.get('postCode')?.markAsUntouched();
+      this.mediumForm.get('postCode')?.setValue('');
+      this.mediumForm.get('street')?.setValidators([Validators.required]);
+      this.mediumForm.get('street')?.markAsUntouched();
+      this.mediumForm.get('street')?.setValue('');
+      this.cdr.detectChanges();
     }else{
       this.emailSelected=false;
       this.addressSelected=false;
       this.phoneSelected=true;
+      this.mediumForm.get('country')?.clearValidators();
+      this.mediumForm.get('country')?.setValue('');
+      this.mediumForm.get('city')?.clearValidators();
+      this.mediumForm.get('city')?.setValue('');
+      this.mediumForm.get('stateOrProvince')?.clearValidators();
+      this.mediumForm.get('stateOrProvince')?.setValue('');
+      this.mediumForm.get('postCode')?.clearValidators();
+      this.mediumForm.get('postCode')?.setValue('');
+      this.mediumForm.get('street')?.clearValidators();
+      this.mediumForm.get('street')?.setValue('');
+      this.mediumForm.get('email')?.clearValidators();
+      this.mediumForm.get('email')?.setValue('');
+      this.mediumForm.get('telephoneNumber')?.setValidators([Validators.required]);
+      this.mediumForm.get('telephoneNumber')?.markAsUntouched();
+      this.mediumForm.get('telephoneNumber')?.setValue('');
+      this.cdr.detectChanges();
     }
-    this.mediumForm.reset();
+    console.log(this.mediumForm)
+    console.log(this.printAllActiveValidators());
+
   }
+  showMedium(){
+    console.log('--- SHOW MEDIUM')
+    console.log(this.mediumForm)
+    console.log(this.printAllActiveValidators());
+    console.log('--value')
+    console.log(this.mediumForm.get('email')?.value)
+  }
+
+  printActiveValidators(controlName: string) {
+    const control = this.mediumForm.get(controlName);
+    if (!control || !control.validator) {
+      console.log(`No active validators for ${controlName}`);
+      return;
+    }
+  
+    const validatorFn = control.validator({} as AbstractControl);
+    if (!validatorFn) {
+      console.log(`No active validators for ${controlName}`);
+      return;
+    }
+  
+    console.log(`Active validators for ${controlName}:`, Object.keys(validatorFn));
+  }
+
+  printAllActiveValidators() {
+    Object.keys(this.mediumForm.controls).forEach(controlName => {
+      this.printActiveValidators(controlName);
+    });
+  }
+  
 
 
   public dropped(files: NgxFileDropEntry[],sel:any) {
@@ -500,6 +646,16 @@ export class OrgInfoComponent {
               }
               if(!this.isValidFilename(fileBody.content.name)){
                 this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
+              //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
+              if(file.size>this.MAX_FILE_SIZE){
+                this.errorMessage='File size must be under 3MB.';
                 console.error('There was an error while uploading file!');
                 this.showError=true;
                 setTimeout(() => {

@@ -44,7 +44,7 @@
                 </button>
                 @if(BUNDLE_ENABLED){
                     <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                    <button id="bundle" (click)="toggleBundle()"
+                    <button id="bundle" (click)="toggleBundle()" [disabled]="generalForm.invalid"
                     class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                         <span id="bundle-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                             2
@@ -56,7 +56,7 @@
                     </button>
                 }
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="compliance" (click)="toggleCompliance()"
+                <button id="compliance" (click)="toggleCompliance()" [disabled]="generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="compliance-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 3 : 2 }}
@@ -67,7 +67,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="chars" (click)="toggleChars()"
+                <button id="chars" (click)="toggleChars()" [disabled]="generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="chars-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 4 : 3 }}
@@ -78,7 +78,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="resource" (click)="toggleResource()"
+                <button id="resource" (click)="toggleResource()" [disabled]="generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="resource-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 5 : 4 }}
@@ -89,7 +89,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="service" (click)="toggleService()"
+                <button id="service" (click)="toggleService()" [disabled]="generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="service-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 6 : 5 }}
@@ -100,7 +100,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="attach" (click)="toggleAttach()"
+                <button id="attach" (click)="toggleAttach()" [disabled]="generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="attach-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 7 : 6 }}
@@ -111,7 +111,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="relationships" (click)="toggleRelationship()"
+                <button id="relationships" (click)="toggleRelationship()" [disabled]="generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="relationships-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 8 : 7 }}
@@ -122,7 +122,7 @@
                     </span>
                 </button>
                 <hr class="h-px mb-2 bg-gray-300 dark:bg-gray-200 border-0">
-                <button id="summary" (click)="showFinish()"
+                <button id="summary" (click)="showFinish()" [disabled]="generalForm.invalid"
                 class="grid sm:grid-rows-2 md:grid-rows-1 md:grid-cols-25/75 xl:grid-cols-20/80 mb-2 mr-2 md:mr-0 text-gray-500 justify-items-center md:justify-items-start">
                     <span id="summary-circle" class="flex items-center justify-center w-6 h-6 md:w-8 md:h-8 border border-2 border-gray-400 rounded-full shrink-0">
                         {{ BUNDLE_ENABLED ? 9 : 8 }}
@@ -330,7 +330,7 @@
                                         <markdown class="bg-gray-50 dark:bg-secondary-300 dark:text-white text-gray-900 text-wrap break-all" [data]="description"></markdown>
                                     
                                 }@else{
-                                    <textarea id="editor" formControlName="description" rows="8" class="block w-full min-h-fit px-0 text-sm text-gray-800 min-h-fit dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
+                                    <textarea id="editor" formControlName="description" rows="8" maxLength="100000" class="block w-full min-h-fit px-0 text-sm text-gray-800 min-h-fit dark:text-gray-200 bg-white dark:bg-secondary-300 border-0" placeholder="Add product description..." ></textarea>
                                 }
                                 @if(showEmoji){
                                     <emoji-mart (click)="$event.stopPropagation();" [darkMode]="false" [style]="{ position: 'relative', left: '200px', top: '-500px' }" (emojiClick)="addEmoji($event)"></emoji-mart>
@@ -594,16 +594,36 @@
                         </table>
                     </div>
 
-                    <div class="flex w-full justify-items-end justify-end ml-4">
-                        <button type="button" (click)="toggleChars();"
-                            [disabled]="checkValidISOS()" [ngClass]="checkValidISOS() ? 'opacity-50' : 'hover:bg-primary-50'"
-                            class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
-                            {{ 'UPDATE_PROD_SPEC._next' | translate }}
-                            <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
-                            </svg>
-                        </button>
+                    <!-- Wrapper for button & tooltip -->
+                    <div class="relative flex w-full justify-end ml-4">
+                        <!-- Group container to enable hover effects -->
+                        <div class="relative inline-block group">
+                            <!-- Tooltip (Only exists if checkValidISOS() is true and only appears on hover) -->
+                            <div *ngIf="checkValidISOS()" 
+                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 
+                                    bg-gray-900 text-white text-xs rounded-lg p-2 shadow-lg z-50 
+                                    transition-opacity duration-200 w-max max-w-xs whitespace-normal break-words 
+                                    opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+                                    {{ 'CREATE_PROD_SPEC._file_check' | translate }}
+                                <!-- Tooltip Arrow -->
+                                <div class="absolute left-1/2 transform -translate-x-1/2 translate-y-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                            </div>
+
+                            <!-- Button -->
+                            <button type="button" (click)="toggleChars();"
+                                    [disabled]="checkValidISOS()" 
+                                    [ngClass]="checkValidISOS() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-50'"
+                                    class="flex text-white bg-primary-100 focus:ring-4 focus:outline-none 
+                                        focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 
+                                        text-center inline-flex items-center">
+                                {{ 'CREATE_PROD_SPEC._next' | translate }}
+                                <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
+
     
                 }
                 @if(showChars){
@@ -1092,17 +1112,34 @@
                             </ngx-file-drop>
                         </div>
                         <label class="font-bold ml-6 dark:text-white">{{ 'UPDATE_PROD_SPEC._add_prod_img_url' | translate }}</label>
-                        <div class="flex items-center h-fit ml-6 mt-2 mb-2 w-full justify-between">
-                            <input #imgURL type="text" id="att-name"
-                                [formControl]="attImageName"
-                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5" />
-                            <button (click)="saveImgFromURL()"
-                                [disabled]="!attImageName.valid" [ngClass]="!attImageName.valid ? 'opacity-50' : 'hover:bg-primary-50'"
-                                class="text-white bg-primary-100 rounded-3xl p-1 ml-2 h-fit">
-                                <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>                                    
-                                </svg>                                  
-                            </button>
+                        <div class="relative w-full ml-6 mt-2 mb-2">
+                            <!-- Tooltip (Above the Input, Positioned Up) -->
+                            <div *ngIf="attImageName.invalid && attImageName.touched"
+                                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max bg-gray-900 text-white text-xs rounded-lg p-2 shadow-lg z-50">
+                                {{ 'UPDATE_PROD_SPEC._file_name' | translate }}
+                                <!-- Tooltip Arrow -->
+                                <div class="absolute left-1/2 transform -translate-x-1/2 translate-y-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+                            </div>
+                        
+                            <div class="flex items-center h-fit w-full justify-between">
+                                <!-- Input Field -->
+                                <input #imgURL type="text" id="att-name"
+                                    [formControl]="attImageName"
+                                    (blur)="attImageName.markAsTouched()"
+                                    class="w-full bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+                                    [ngClass]="attImageName.invalid && attImageName.touched ? 'border-red-500' : 'dark:border-secondary-200'"
+                                />
+                                
+                                <!-- Submit Button -->
+                                <button (click)="saveImgFromURL()"
+                                    [disabled]="!attImageName.valid" 
+                                    [ngClass]="!attImageName.valid ? 'opacity-50' : 'hover:bg-primary-50'"
+                                    class="text-white bg-primary-100 rounded-3xl p-1 ml-2 h-fit">
+                                    <svg class="w-4 h-4 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5"/>                                    
+                                    </svg>                                  
+                                </button>
+                            </div>
                         </div>
                     }
                     <h4 class="text-lg font-bold ml-4 dark:text-white">{{ 'UPDATE_PROD_SPEC._add_att' | translate }}</h4>
@@ -1251,12 +1288,6 @@
                                             <th scope="col" class="px-6 py-3">
                                                 {{ 'UPDATE_PROD_SPEC._product_name' | translate }}
                                             </th>
-                                            <th scope="col" class="hidden md:table-cell px-6 py-3">
-                                                {{ 'UPDATE_PROD_SPEC._type' | translate }}
-                                            </th>
-                                            <th scope="col" class="hidden lg:table-cell px-6 py-3">
-                                                {{ 'UPDATE_PROD_SPEC._last_update' | translate }}
-                                            </th>
                                             <th scope="col" class="px-6 py-3">
                                                 Actions
                                             </th>
@@ -1269,21 +1300,7 @@
                                                     {{rel.relationshipType}}
                                                 </td>
                                                 <td class="px-6 py-4 text-wrap break-all">
-                                                    {{rel.productSpec.name}}
-                                                </td>
-                                                <td class="hidden md:table-cell px-6 py-4">
-                                                    @if(rel.productSpec.lifecycleStatus == 'Active'){
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Launched') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Retired') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Obsolete') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    }
-                                                </td>
-                                                <td class="hidden lg:table-cell px-6 py-4">
-                                                    {{rel.productSpec.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                                    {{rel.name}}
                                                 </td>
                                                 <td class="px-6 py-4">
                                                     <button (click)="deleteRel(rel)" class="font-bold text-white bg-red-500 rounded-3xl">
@@ -1397,7 +1414,7 @@
                                 }
                             }
                             <div class="flex w-full justify-items-center justify-center mt-4">
-                                <button type="button" (click)="saveRel()" [disabled]="prodSpecRels.length==0" [ngClass]="prodSpecRels.length==0 ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                                <button type="button" (click)="saveRel()" [disabled]="prodSpecRels.length==0 || selectedProdSpec.id == ''" [ngClass]="prodSpecRels.length==0 || selectedProdSpec.id == '' ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                                     {{ 'UPDATE_PROD_SPEC._save_relationship' | translate }}
                                     <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
@@ -1656,12 +1673,6 @@
                                             <th scope="col" class="px-6 py-3">
                                                 {{ 'UPDATE_PROD_SPEC._product_name' | translate }}
                                             </th>
-                                            <th scope="col" class="hidden md:table-cell px-6 py-3">
-                                                {{ 'UPDATE_PROD_SPEC._type' | translate }}
-                                            </th>
-                                            <th scope="col" class="hidden lg:table-cell px-6 py-3">
-                                                {{ 'UPDATE_PROD_SPEC._last_update' | translate }}
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1671,21 +1682,7 @@
                                                     {{rel.relationshipType}}
                                                 </td>
                                                 <td class="px-6 py-4 text-wrap break-all">
-                                                    {{rel.productSpec.name}}
-                                                </td>
-                                                <td class="hidden md:table-cell px-6 py-4">
-                                                    @if(rel.productSpec.lifecycleStatus == 'Active'){
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-blue-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-blue-400">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Launched') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Retired') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-yellow-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-yellow-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    } @else if(rel.productSpec.lifecycleStatus == 'Obsolete') {
-                                                        <span class="bg-blue-100 dark:bg-secondary-300 text-red-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-red-500">{{rel.productSpec.lifecycleStatus}}</span>
-                                                    }
-                                                </td>
-                                                <td class="hidden lg:table-cell px-6 py-4">
-                                                    {{rel.productSpec.lastUpdate | date:'EEEE, dd/MM/yy, HH:mm'}} 
+                                                    {{rel.name}}
                                                 </td>
                                             </tr>
                                         }

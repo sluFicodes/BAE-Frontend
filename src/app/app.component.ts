@@ -64,14 +64,14 @@ export class AppComponent implements OnInit {
 
         console.log('STARTING INTERVAL')
         console.log(info.expire)
-        console.log(((info.expire - moment().unix())-4))
+        console.log(((info.expire - moment().unix()) - 4))
 
         this.refreshApi.startInterval(((info.expire - moment().unix())-4)*1000, ev);
 
         //this.refreshApi.startInterval(3000, ev.value);
       }
     })
-    let aux =this.localStorage.getObject('login_items') as LoginInfo;
+    let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) === '{}'){
       //this.siopInfo.getSiopInfo().subscribe((data)=>{
       //  environment.SIOP_INFO = data

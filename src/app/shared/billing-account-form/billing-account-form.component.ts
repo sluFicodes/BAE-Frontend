@@ -36,15 +36,15 @@ export class BillingAccountFormComponent implements OnInit {
   @Input() preferred: boolean | undefined;
 
   billingForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
-    country: new FormControl(''),
-    city: new FormControl(''),
-    stateOrProvince: new FormControl(''),
-    postCode: new FormControl(''),
-    street: new FormControl(''),
+    name: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.maxLength(320)]),
+    country: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+    city: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+    stateOrProvince: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+    postCode: new FormControl('', [Validators.required, Validators.maxLength(250)]),
+    street: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
     telephoneNumber: new FormControl('', [Validators.required]),
-    telephoneType: new FormControl('')
+    telephoneType: new FormControl('Mobile')
   });
   prefixes: any[] = phoneNumbers;
   countries: any[] = countries;
@@ -53,6 +53,11 @@ export class BillingAccountFormComponent implements OnInit {
   toastVisibility: boolean = false;
 
   partyId: any;
+  partyInfo:any = {
+    id: '',
+    name: '',
+    href: ''
+  }
   loading: boolean = false;
   is_create: boolean = false;
 
@@ -96,9 +101,25 @@ export class BillingAccountFormComponent implements OnInit {
     if (JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix()) - 4) > 0)) {
       if(aux.logged_as==aux.id){
         this.partyId = aux.partyId;
+        console.log('init party info')
+        console.log(aux)
+        this.partyInfo = {
+          id: this.partyId,
+          name: aux.user,
+          href : this.partyId,
+          role: "Owner"
+        }
       } else {
         let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
-        this.partyId = loggedOrg.partyId
+        this.partyId = loggedOrg.partyId;
+        console.log('loggedOrg info')
+        console.log(loggedOrg)
+        this.partyInfo = {
+          id: this.partyId,
+          name: loggedOrg.name,
+          href : this.partyId,
+          role: "Owner"
+        }
       }
     }
   }
@@ -129,20 +150,30 @@ export class BillingAccountFormComponent implements OnInit {
   createBilling() {
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
 
-    const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.billingForm.value.telephoneNumber);
-    if (phoneNumber) {
-      if (!phoneNumber.isValid()) {
-        console.log('NUMERO INVALIDO')
+    try{
+        const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.billingForm.value.telephoneNumber);
+        if (phoneNumber) {
+        if (!phoneNumber.isValid()) {
+            console.log('NUMERO INVALIDO')
+            this.billingForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+            this.toastVisibility = true;
+            setTimeout(() => {
+            this.toastVisibility = false
+            }, 2000);
+            return;
+        } else {
+            this.billingForm.controls['telephoneNumber'].setErrors(null);
+            this.toastVisibility = false;
+        }
+        }
+    }
+    catch (error){
         this.billingForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
         this.toastVisibility = true;
         setTimeout(() => {
-          this.toastVisibility = false
+        this.toastVisibility = false
         }, 2000);
         return;
-      } else {
-        this.billingForm.controls['telephoneNumber'].setErrors(null);
-        this.toastVisibility = false;
-      }
     }
 
     if (this.billingForm.invalid) {
@@ -186,11 +217,7 @@ export class BillingAccountFormComponent implements OnInit {
             }
           ]
         }],
-        relatedParty: [{
-          href: this.partyId,
-          id: this.partyId,
-          role: "Owner"
-        }],
+        relatedParty: [this.partyInfo],
         state: "Defined"
       }
       this.accountService.postBillingAccount(billacc).subscribe({
@@ -217,20 +244,29 @@ export class BillingAccountFormComponent implements OnInit {
 
   updateBilling() {
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
-    const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.billingForm.value.telephoneNumber);
-    if (phoneNumber) {
-      if (!phoneNumber.isValid()) {
-        console.log('NUMERO INVALIDO')
+    try{
+        const phoneNumber = parsePhoneNumber(this.phonePrefix.code + this.billingForm.value.telephoneNumber);
+        if (phoneNumber) {
+          if (!phoneNumber.isValid()) {
+            console.log('NUMERO INVALIDO')
+            this.billingForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
+            this.toastVisibility = true;
+            setTimeout(() => {
+              this.toastVisibility = false
+            }, 2000);
+            return;
+          } else {
+            this.billingForm.controls['telephoneNumber'].setErrors(null);
+            this.toastVisibility = false;
+          }
+        }
+    }catch (error){
         this.billingForm.controls['telephoneNumber'].setErrors({'invalidPhoneNumber': true});
         this.toastVisibility = true;
         setTimeout(() => {
-          this.toastVisibility = false
+            this.toastVisibility = false
         }, 2000);
         return;
-      } else {
-        this.billingForm.controls['telephoneNumber'].setErrors(null);
-        this.toastVisibility = false;
-      }
     }
     if (this.billingForm.invalid) {
       if (this.billingForm.get('email')?.invalid == true) {
@@ -280,11 +316,7 @@ export class BillingAccountFormComponent implements OnInit {
               }
             ]
           }],
-          relatedParty: [{
-            href: this.partyId,
-            id: this.partyId,
-            role: "Owner"
-          }],
+          relatedParty: [this.partyInfo],
           state: "Defined"
         }
         this.accountService.updateBillingAccount(this.billAcc.id, bill_body).subscribe({

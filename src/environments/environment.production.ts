@@ -7,10 +7,18 @@ export const environment = {
     PRODUCT_SPEC: '/productSpecification',
     SERVICE_SPEC: '/serviceSpecification',
     RESOURCE_SPEC: '/resourceSpecification',
+    CUSTOMER_BILLING:'/appliedCustomerBillingRate',
+
     ACCOUNT: '/account',
     SHOPPING_CART: '/shoppingCart',
     INVENTORY: '/inventory',
     PRODUCT_ORDER: '/ordering',
+    BILLING: '/billing',
+    CHARGING: '/charging',
+
+    CONSUMER_BILLING_URL: 'http://localhost:8640',
+    INVOICE_LIMIT: 100,
+
     //API PAGINATION
     PRODUCT_LIMIT: 6,
     CATALOG_LIMIT: 8,
@@ -20,7 +28,7 @@ export const environment = {
     PROD_SPEC_LIMIT: 6,
     SERV_SPEC_LIMIT: 6,
     RES_SPEC_LIMIT: 6,
-    ORDER_LIMIT: 6,
+    ORDER_LIMIT: 1000,
     CATEGORY_LIMIT: 100,
     SIOP: true,
     //SIOP: false,
@@ -41,6 +49,9 @@ export const environment = {
     MATOMO_SITE_ID: "",
     TICKETING_SYSTEM_URL: "",
     KNOWLEDGE_BASE_URL: "",
+    KB_ONBOARDING_GUIDELINES_URL: "",
+    KB_GUIDELNES_URL:"",
+    REGISTRATION_FORM_URL: "",
     SEARCH_ENABLED: true,
     PURCHASE_ENABLED: false,
     DOME_TRUST_LINK: "https://dome-certification.dome-marketplace.org",
@@ -50,5 +61,7 @@ export const environment = {
     DOME_LINKEDIN: 'https://www.linkedin.com/company/dome-marketplace/',
     DOME_YOUTUBE: 'https://www.youtube.com/channel/UC8UiL59S0JiaYYr14w5eOzA',
     DOME_X: 'https://x.com/DomeMarketplace',
-    BUNDLE_ENABLED: false
+    BUNDLE_ENABLED: false,
+    DFT_CATALOG_ID: '',
+    MAX_FILE_SIZE:3145728
 };

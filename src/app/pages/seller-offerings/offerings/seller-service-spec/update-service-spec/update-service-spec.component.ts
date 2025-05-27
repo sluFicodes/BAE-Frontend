@@ -8,6 +8,7 @@ import { initFlowbite } from 'flowbite';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { noWhitespaceValidator } from 'src/app/validators/validators';
 
 import {components} from "src/app/models/service-catalog";
 type ServiceSpecification_Update = components["schemas"]["ServiceSpecification_Update"];
@@ -41,14 +42,14 @@ export class UpdateServiceSpecComponent implements OnInit {
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    description: new FormControl(''),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
+    description: new FormControl('', Validators.maxLength(100000)),
   });
   servStatus:any;
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;
@@ -177,7 +178,8 @@ export class UpdateServiceSpecComponent implements OnInit {
           isDefault:false,
           value:this.stringValue as any
         })
-      }      
+      }
+      this.stringValue='';  
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
@@ -192,7 +194,9 @@ export class UpdateServiceSpecComponent implements OnInit {
           value:this.numberValue as any,
           unitOfMeasure:this.numberUnit
         })
-      } 
+      }
+      this.numberUnit='';
+      this.numberValue='';
     }else{
       console.log('range')
       if(this.creatingChars.length==0){
@@ -210,6 +214,9 @@ export class UpdateServiceSpecComponent implements OnInit {
           unitOfMeasure:this.rangeUnit})
       } 
     }
+    this.fromValue='';
+    this.toValue='';
+    this.rangeUnit='';
   }
 
   selectDefaultChar(char:any,idx:any){

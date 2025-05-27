@@ -6,7 +6,7 @@
       </svg>
       <span class="sr-only">Loading...</span>
     </div>
-} @else {    
+} @else {
     <div class="bg-secondary-50 dark:bg-secondary-100 border border-secondary-50 dark:border-gray-800 p-8 rounded-lg">
         <h2 class="md:text-3xl lg:text-4xl font-bold text-primary-100 ml-4 dark:text-white m-4">{{ 'PROFILE._mybills' | translate }}</h2>
         <hr class="h-px mr-4 ml-4 bg-primary-100 dark:bg-white border-0">
@@ -17,13 +17,13 @@
                         <th scope="col" class="px-6 py-3">
                             {{ 'BILLING._title' | translate }}
                         </th>
-                        <th scope="col" class="px-6 py-3 hidden lg:table-cell">
+                        <th scope="col" class="px-6 py-3">
                             {{ 'BILLING._email' | translate }}
                         </th>
-                        <th scope="col" class="px-6 py-3 hidden md:table-cell">
+                        <th scope="col" class="px-6 py-3">
                             {{ 'BILLING._postalAddress' | translate }}
                         </th>
-                        <th scope="col" class="px-6 py-3 hidden lg:table-cell">
+                        <th scope="col" class="px-6 py-3">
                             {{ 'BILLING._phone' | translate }}
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -37,14 +37,14 @@
                             <td class="px-6 py-4 text-wrap break-all">
                                 {{bill.name}}
                             </td>
-                            <td class="px-6 py-4 hidden lg:table-cell text-wrap break-all">
+                            <td class="px-6 py-4 text-wrap break-all">
                                 {{bill.email}}
                             </td>
-                            <td class="px-6 py-4 hidden md:table-cell text-wrap break-all">
-                                {{bill.postalAddress.street}}, {{bill.postalAddress.postCode}} ({{bill.postalAddress.city}}) {{bill.postalAddress.stateOrProvince}}
+                            <td class="px-6 py-4 text-wrap break-all">
+                                {{bill.postalAddress.street}}, {{bill.postalAddress.postCode}} ({{bill.postalAddress.city}}) {{bill.postalAddress.stateOrProvince}}, {{bill.postalAddress.country}}
                             </td>
-                            <td class="px-6 py-4 hidden lg:table-cell">
-                                {{bill.telephoneNumber}}
+                            <td class="px-6 py-4">
+                                ({{bill.telephoneType}}) {{bill.telephoneNumber}}
                             </td>
                             <td class="px-6 py-4 inline-flex">
                                 <button (click)="toggleEditBill(bill);$event.stopPropagation();" type="button" class="text-white bg-primary-100 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 lg:p-2.5 text-center inline-flex items-center me-2">

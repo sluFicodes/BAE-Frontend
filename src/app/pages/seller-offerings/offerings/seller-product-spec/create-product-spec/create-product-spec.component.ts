@@ -12,11 +12,12 @@ import { ResourceSpecServiceService } from 'src/app/services/resource-spec-servi
 import { PaginationService } from 'src/app/services/pagination.service';
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { noWhitespaceValidator } from 'src/app/validators/validators';
 
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 type ProductSpecification_Create = components["schemas"]["ProductSpecification_Create"];
@@ -39,6 +40,7 @@ export class CreateProductSpecComponent implements OnInit {
   SERV_SPEC_LIMIT: number = environment.SERV_SPEC_LIMIT;
   RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
   BUNDLE_ENABLED: boolean= environment.BUNDLE_ENABLED;
+  MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
@@ -72,16 +74,16 @@ export class CreateProductSpecComponent implements OnInit {
 
   //PRODUCT GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    brand: new FormControl('', [Validators.required]),
-    version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
+    brand: new FormControl('', [Validators.required, noWhitespaceValidator]),
+    version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$'), noWhitespaceValidator]),
     number: new FormControl(''),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.maxLength(100000)),
   });
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;
@@ -413,6 +415,16 @@ export class CreateProductSpecComponent implements OnInit {
               }
               if(!this.isValidFilename(fileBody.content.name)){
                 this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
+              //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
+              if(file.size>this.MAX_FILE_SIZE){
+                this.errorMessage='File size must be under 3MB.';
                 console.error('There was an error while uploading file!');
                 this.showError=true;
                 setTimeout(() => {
@@ -941,7 +953,8 @@ export class CreateProductSpecComponent implements OnInit {
           isDefault:false,
           value:this.stringValue as any
         })
-      }      
+      }
+      this.stringValue='';  
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
@@ -956,7 +969,9 @@ export class CreateProductSpecComponent implements OnInit {
           value:this.numberValue as any,
           unitOfMeasure:this.numberUnit
         })
-      } 
+      }
+      this.numberUnit='';
+      this.numberValue='';
     }else{
       console.log('range')
       if(this.creatingChars.length==0){
@@ -974,6 +989,9 @@ export class CreateProductSpecComponent implements OnInit {
           unitOfMeasure:this.rangeUnit})
       } 
     }
+    this.fromValue='';
+    this.toValue='';
+    this.rangeUnit='';
   }
 
   removeCharValue(char:any,idx:any){
@@ -1053,7 +1071,7 @@ export class CreateProductSpecComponent implements OnInit {
       rels.push({
         id: this.prodRelationships[i].id,
         href: this.prodRelationships[i].href,
-        name: this.prodRelationships[i].productSpec.name,
+        name: this.prodRelationships[i].name,
         relationshipType: this.prodRelationships[i].relationshipType
       })
     }

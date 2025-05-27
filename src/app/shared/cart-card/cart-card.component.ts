@@ -105,7 +105,7 @@ export class CartCardComponent implements OnInit {
     }
   }
 
-  async addProductToCart(productOff:Product| undefined,options:boolean){
+  /*async addProductToCart(productOff:Product| undefined,options:boolean){
     //this.localStorage.addCartItem(productOff as Product);
     if(options==true){
       console.log('termschecked:')
@@ -192,6 +192,64 @@ export class CartCardComponent implements OnInit {
 
     this.cdr.detectChanges();
   }
+*/
+
+  async addProductToCart(productOff: Product | undefined, options: boolean) {
+    if (!productOff || !productOff.productOfferingPrice) return;
+
+    try {
+      // Crear objeto prodOptions
+      const prodOptions = this.createProdOptions(productOff, options);
+      this.lastAddedProd = prodOptions;
+
+      // Añadir el producto al carrito
+      await this.cartService.addItemShoppingCart(prodOptions);
+      console.log('Update successful');
+
+      // Emitir eventos
+      this.eventMessage.emitAddedCartItem(productOff as cartProduct);
+      this.eventMessage.emitCloseCartCard(productOff as cartProduct);
+
+      // Resetear las selecciones
+      this.resetSelections();
+    } catch (error) {
+      this.handleError(error, 'There was an error while adding item to the cart!');
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  private createProdOptions(productOff: Product, options: boolean) {
+    return {
+      id: productOff.id,
+      name: productOff.name,
+      image: this.getProductImage(),
+      href: productOff.href,
+      options: {
+        characteristics: this.selected_chars,
+        pricing: this.selected_price,
+      },
+      termsAccepted: options ? this.selected_terms : true,
+    };
+  }
+
+  private handleError(error: any, defaultMessage: string) {
+    console.error(defaultMessage, error);
+    this.errorMessage = error?.error?.error ? `Error: ${error.error.error}` : defaultMessage;
+    this.showError = true;
+    setTimeout(() => (this.showError = false), 3000);
+  }
+
+  private resetSelections() {
+    this.check_char = false;
+    this.check_terms = false;
+    this.check_prices = false;
+    this.selected_chars = [];
+    this.selected_price = {};
+    this.selected_terms = false;
+    this.cdr.detectChanges();
+  }
+
 
   hideCartSelection(){
     this.eventMessage.emitCloseCartCard(undefined);
@@ -267,25 +325,25 @@ export class CartCardComponent implements OnInit {
 
   //STEPS CSS EFFECTS:
   selectStep(step:string,stepCircle:string, stepText:string){
-  
+
     this.unselectTag(document.getElementById(step),'text-gray-400 after:border-gray-400');
     this.selectTag(document.getElementById(step),'text-white after:border-primary-100');
-    
+
     this.unselectTag(document.getElementById(stepCircle),'bg-white dark:bg-secondary-100 border-2 border-gray-400');
     this.selectTag(document.getElementById(stepCircle),'bg-primary-100');
-    
+
     this.unselectTag(document.getElementById(stepText),'text-gray-400');
     this.selectTag(document.getElementById(stepText),'text-primary-100');
   }
 
   unselectStep(step:string,stepCircle:string, stepText:string){
-  
+
     this.selectTag(document.getElementById(step),'text-gray-400 after:border-gray-400');
     this.unselectTag(document.getElementById(step),'text-white after:border-primary-100');
-    
+
     this.selectTag(document.getElementById(stepCircle),'bg-white dark:bg-secondary-100 border-2 border-gray-400');
     this.unselectTag(document.getElementById(stepCircle),'bg-primary-100');
-    
+
     this.selectTag(document.getElementById(stepText),'text-gray-400');
     this.unselectTag(document.getElementById(stepText),'text-primary-100');
   }

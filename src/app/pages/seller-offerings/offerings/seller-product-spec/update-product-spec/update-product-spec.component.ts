@@ -12,13 +12,15 @@ import { ResourceSpecServiceService } from 'src/app/services/resource-spec-servi
 import { PaginationService } from 'src/app/services/pagination.service';
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { certifications } from 'src/app/models/certification-standards.const'
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { QrVerifierService } from 'src/app/services/qr-verifier.service';
 import { jwtDecode } from "jwt-decode";
+import { noWhitespaceValidator } from 'src/app/validators/validators';
+
 
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 type ProductSpecification_Update = components["schemas"]["ProductSpecification_Update"];
@@ -43,6 +45,7 @@ export class UpdateProductSpecComponent implements OnInit {
   RES_SPEC_LIMIT: number = environment.RES_SPEC_LIMIT;
   DOME_TRUST_LINK: string = environment.DOME_TRUST_LINK;
   BUNDLE_ENABLED: boolean= environment.BUNDLE_ENABLED;
+  MAX_FILE_SIZE: number=environment.MAX_FILE_SIZE;
 
   //CONTROL VARIABLES:
   showGeneral:boolean=true;
@@ -65,17 +68,17 @@ export class UpdateProductSpecComponent implements OnInit {
 
   //PRODUCT GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    brand: new FormControl('', [Validators.required]),
-    version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$')]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
+    brand: new FormControl('', [Validators.required, noWhitespaceValidator]),
+    version: new FormControl('0.1', [Validators.required,Validators.pattern('^-?[0-9]\\d*(\\.\\d*)?$'), noWhitespaceValidator]),
     number: new FormControl(''),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.maxLength(100000)),
   });
   prodStatus:any;
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;
@@ -341,15 +344,19 @@ export class UpdateProductSpecComponent implements OnInit {
     }
 
     //RELATIONSHIPS
+    console.log('----- RELACIONES')
+    console.log(this.prod.productSpecificationRelationship)
     if(this.prod.productSpecificationRelationship){
       for(let i=0; i< this.prod.productSpecificationRelationship.length; i++){
         this.prodSpecService.getResSpecById(this.prod.productSpecificationRelationship[i].id).then(data => {
+
           this.prodRelationships.push({
             id: this.prod.productSpecificationRelationship[i].id,
             href: this.prod.productSpecificationRelationship[i].id,
             //Que tipo de relacion le pongo? no viene en el prodspec
-            relationshipType: this.selectedRelType,
-            productSpec: data    
+            relationshipType: this.prod.productSpecificationRelationship[i].relationshipType ?? this.selectedRelType,
+            name: this.prod.productSpecificationRelationship[i].name,
+            productSpec: data
           });
         })
       }
@@ -593,6 +600,16 @@ export class UpdateProductSpecComponent implements OnInit {
               }                            
               if(!this.isValidFilename(fileBody.content.name)){
                 this.errorMessage='File names can only include alphabetical characters (A-Z, a-z) and a limited set of symbols, such as underscores (_), hyphens (-), and periods (.)';
+                console.error('There was an error while uploading file!');
+                this.showError=true;
+                setTimeout(() => {
+                  this.showError = false;
+                }, 3000);
+                return;
+              }
+              //IF FILES ARE HIGHER THAN 3MB THROW AN ERROR
+              if(file.size>this.MAX_FILE_SIZE){
+                this.errorMessage='File size must be under 3MB.';
                 console.error('There was an error while uploading file!');
                 this.showError=true;
                 setTimeout(() => {
@@ -1017,7 +1034,8 @@ export class UpdateProductSpecComponent implements OnInit {
       id: this.selectedProdSpec.id,
       href: this.selectedProdSpec.href,
       relationshipType: this.selectedRelType,
-      productSpec: this.selectedProdSpec      
+      name: this.selectedProdSpec.name
+      //productSpec: this.selectedProdSpec      
     });
     this.selectedRelType='migration';
     console.log(this.prodRelationships)
@@ -1130,7 +1148,8 @@ export class UpdateProductSpecComponent implements OnInit {
           isDefault:false,
           value:this.stringValue as any
         })
-      }      
+      }
+      this.stringValue='';  
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
@@ -1145,7 +1164,9 @@ export class UpdateProductSpecComponent implements OnInit {
           value:this.numberValue as any,
           unitOfMeasure:this.numberUnit
         })
-      } 
+      }
+      this.numberUnit='';
+      this.numberValue='';
     }else{
       console.log('range')
       if(this.creatingChars.length==0){
@@ -1163,6 +1184,9 @@ export class UpdateProductSpecComponent implements OnInit {
           unitOfMeasure:this.rangeUnit})
       } 
     }
+    this.fromValue='';
+    this.toValue='';
+    this.rangeUnit='';
   }
 
   removeCharValue(char:any,idx:any){
@@ -1250,6 +1274,15 @@ export class UpdateProductSpecComponent implements OnInit {
     }
 
     if(this.generalForm.value.name!=null && this.generalForm.value.version!=null && this.generalForm.value.brand!=null){
+      let rels = [];
+      for(let i=0; i<this.prodRelationships.length;i++){
+        rels.push({
+          id: this.prodRelationships[i].id,
+          href: this.prodRelationships[i].href,
+          name: this.prodRelationships[i].name,
+          relationshipType: this.prodRelationships[i].relationshipType
+        })
+      }
       this.productSpecToUpdate = {
         name: this.generalForm.value.name,
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
@@ -1260,7 +1293,7 @@ export class UpdateProductSpecComponent implements OnInit {
         //isBundle: this.bundleChecked,
         //bundledProductSpecification: this.prodSpecsBundle,
         productSpecCharacteristic: this.finishChars,
-        productSpecificationRelationship: this.prodRelationships,
+        productSpecificationRelationship: rels,
         attachment: this.prodAttachments,
         resourceSpecification: this.selectedResourceSpecs,
         serviceSpecification: this.selectedServiceSpecs  

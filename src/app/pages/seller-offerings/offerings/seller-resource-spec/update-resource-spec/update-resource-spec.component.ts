@@ -7,6 +7,7 @@ import { LoginInfo } from 'src/app/models/interfaces';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { noWhitespaceValidator } from 'src/app/validators/validators';
 
 import {components} from "src/app/models/resource-catalog";
 type ResourceSpecification_Update = components["schemas"]["ResourceSpecification_Update"];
@@ -40,14 +41,14 @@ export class UpdateResourceSpecComponent implements OnInit {
 
   //SERVICE GENERAL INFO:
   generalForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    description: new FormControl(''),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
+    description: new FormControl('', Validators.maxLength(100000)),
   });
   resStatus:any;
 
   //CHARS INFO
   charsForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(100), noWhitespaceValidator]),
     description: new FormControl('')
   });
   stringCharSelected:boolean=true;
@@ -169,14 +170,15 @@ export class UpdateResourceSpecComponent implements OnInit {
       if(this.creatingChars.length==0){
         this.creatingChars.push({
           isDefault:true,
-          value: this.stringValue as any
+          value:this.stringValue as any
         })
       } else{
         this.creatingChars.push({
           isDefault:false,
           value:this.stringValue as any
         })
-      }      
+      }
+      this.stringValue='';  
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
@@ -191,7 +193,9 @@ export class UpdateResourceSpecComponent implements OnInit {
           value:this.numberValue as any,
           unitOfMeasure:this.numberUnit
         })
-      } 
+      }
+      this.numberUnit='';
+      this.numberValue='';
     }else{
       console.log('range')
       if(this.creatingChars.length==0){
@@ -209,6 +213,9 @@ export class UpdateResourceSpecComponent implements OnInit {
           unitOfMeasure:this.rangeUnit})
       } 
     }
+    this.fromValue='';
+    this.toValue='';
+    this.rangeUnit='';
   }
 
   selectDefaultChar(char:any,idx:any){
