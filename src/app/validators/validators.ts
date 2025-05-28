@@ -11,6 +11,23 @@ export const pricePlanValidator: ValidatorFn = (form: AbstractControl): Validati
   return null; // Validation passes
 };
 
+export function uniqueNameValidatorFactory(getExistingNames: () => string[]): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const nameControl = control.get('name');
+    if (!nameControl) return null;
+
+    const name = nameControl.value?.trim().toLowerCase();
+    if (!name) return null;
+
+    const existingNames = getExistingNames().map(n => n?.trim().toLowerCase());
+
+    return existingNames.includes(name)
+      ? { nonUniqueName: true }
+      : null;
+  };
+}
+
+
 export function noWhitespaceValidator(control: AbstractControl): ValidationErrors | null {
   const isWhitespace = (control.value || '').trim().length === 0;
   const isValid = !isWhitespace;

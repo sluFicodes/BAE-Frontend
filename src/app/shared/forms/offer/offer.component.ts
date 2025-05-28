@@ -69,6 +69,7 @@ export class OfferComponent implements OnInit, OnDestroy{
   showError:boolean=false;
   bundleChecked:boolean=false;
   offersBundle:any[]=[];
+  loadingData:boolean=false;
 
   offerToCreate:ProductOffering_Create | undefined;
 
@@ -189,6 +190,7 @@ export class OfferComponent implements OnInit, OnDestroy{
 
   async ngOnInit() {
     if (this.formType === 'update' && this.offer) {
+      this.loadingData=true;
       this.steps = [
         'General Info',
         'Product Specification',
@@ -201,6 +203,7 @@ export class OfferComponent implements OnInit, OnDestroy{
         'Summary'
       ];
       await this.loadOfferData();
+      this.loadingData=false;
     }
 
   }
