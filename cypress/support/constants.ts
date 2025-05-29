@@ -177,6 +177,9 @@ export const local_items = {
   }
 
   export const checkHeaderPreLogin = () => {
+    cy.document().then((doc) => {
+        doc.documentElement.classList.add('dark');
+      });
     // Mocks
     cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/stats'}, init_stat).as('stats')
     cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/catalog/productOffering?*'}, product_offering).as('productOffering')
