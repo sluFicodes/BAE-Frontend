@@ -177,16 +177,15 @@ export const local_items = {
   }
 
   export const checkHeaderPreLogin = () => {
-    cy.document().then((doc) => {
-        doc.documentElement.classList.add('dark');
-      });
     // Mocks
     cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/stats'}, init_stat).as('stats')
     cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/catalog/productOffering?*'}, product_offering).as('productOffering')
     cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/config'}, init_config).as('config')
     cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/catalog/category?*'}, category_launched).as('category')
     // Verify mocks are called 1 time
-    cy.visit('/')
+    cy.visit('/', {onBeforeLoad(win) {
+        win.document.documentElement.classList.add('dark');
+      }})
     cy.wait('@stats')
     cy.get('@stats.all').should('have.length', 1)
     cy.wait('@config')
