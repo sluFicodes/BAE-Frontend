@@ -16,18 +16,17 @@ jobs:
       - name: Installing dependencies
         run: npm install
 
+      - name: Executing headless cypress testing
+        uses: cypress-io/github-action@v6
+        with:
+            start: npm start
+            wait-on: 'http://localhost:4200'
+            wait-on-timeout: 120
+            browser: chrome
+            config: defaultCommandTimeout=10000,pageLoadTimeout=60000
+            
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
           name: cypress-screenshots
           path: cypress/screenshots
-
-      - name: Executing headless cypress testing
-        uses: cypress-io/github-action@v6
-        with:
-          start: npm start
-          wait-on: 'http://localhost:4200'
-          wait-on-timeout: 120
-          browser: chrome
-          config: defaultCommandTimeout=10000,pageLoadTimeout=60000
-
