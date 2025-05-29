@@ -17,20 +17,17 @@ jobs:
         run: npm install
 
       - name: Executing headless cypress testing
-        run: npm run e2e:deploy
+        uses: cypress-io/github-action@v6
+        with:
+          start: ng serve --host 0.0.0.0 --port 4200
 
-    #   - name: Executing headless cypress testing
-    #     uses: cypress-io/github-action@v6
-    #     with:
-    #       build: npm run build
-    #       start: npm start
-    #       wait-on: 'http://localhost:4200'
-    #       wait-on-timeout: 120
-    #       browser: chrome
-    #       config: defaultCommandTimeout=10000,pageLoadTimeout=60000
+          wait-on: 'http://localhost:4200'
+          wait-on-timeout: 120
+          browser: chrome
+          config: defaultCommandTimeout=10000,pageLoadTimeout=60000
 
-    #   - name: Upload screenshots as artifacts
-    #     uses: actions/upload-artifact@v3
-    #     with:
-    #       name: cypress-screenshots
-    #       path: cypress/screenshots
+      - name: Upload screenshots as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
