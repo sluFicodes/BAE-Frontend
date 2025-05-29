@@ -17,17 +17,20 @@ jobs:
         run: npm install
 
       - name: Executing headless cypress testing
-        uses: cypress-io/github-action@v6
-        with:
-          build: npm run build
-          start: npm start
-          wait-on: 'http://localhost:4200'
-          wait-on-timeout: 120
-          browser: chrome
-          config: defaultCommandTimeout=10000,pageLoadTimeout=60000
+        run: npm run e2e:deploy
 
-      - name: Upload screenshots as artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: cypress-screenshots
-          path: cypress/screenshots
+    #   - name: Executing headless cypress testing
+    #     uses: cypress-io/github-action@v6
+    #     with:
+    #       build: npm run build
+    #       start: npm start
+    #       wait-on: 'http://localhost:4200'
+    #       wait-on-timeout: 120
+    #       browser: chrome
+    #       config: defaultCommandTimeout=10000,pageLoadTimeout=60000
+
+    #   - name: Upload screenshots as artifacts
+    #     uses: actions/upload-artifact@v3
+    #     with:
+    #       name: cypress-screenshots
+    #       path: cypress/screenshots
