@@ -1,4 +1,3 @@
-import { checkHeaderPostLogin, checkHeaderPreLogin } from "./dashboard.cy"
 
 describe('/search',{
     viewportHeight: 800,
