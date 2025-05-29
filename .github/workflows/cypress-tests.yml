@@ -6,6 +6,9 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
+    env:
+      TERM: xterm-256color
+
     steps:
       - name: Checkouts
         uses: actions/checkout@v4
