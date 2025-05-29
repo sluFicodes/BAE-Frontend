@@ -25,3 +25,9 @@ jobs:
           wait-on-timeout: 120
           browser: chrome
           config: defaultCommandTimeout=10000,pageLoadTimeout=60000
+
+      - name: Subir screenshots como artefacto
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
