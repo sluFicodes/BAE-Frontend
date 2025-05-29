@@ -11,10 +11,13 @@ jobs:
 
     steps:
       - name: Checkouts
-        uses: cypress-io/github-action@v6
+        uses: actions/checkout@v4
 
       - name: Installing dependencies
         run: npm install
 
       - name: Executing headless cypress testing
-        run: npm run e2e:deploy
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
