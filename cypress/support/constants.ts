@@ -184,7 +184,7 @@ export const local_items = {
     cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/catalog/category?*'}, category_launched).as('category')
     // Verify mocks are called 1 time
     cy.visit('/', {onBeforeLoad(win) {
-        win.document.documentElement.classList.add('dark');
+        win.localStorage.setItem('color-theme', 'dark');
       }})
     cy.wait('@stats')
     cy.get('@stats.all').should('have.length', 1)
@@ -254,7 +254,9 @@ export const loginAcc = () => {
             }
           ).as('login_token');
 
-        cy.visit('/dashboard?token=test')
+        cy.visit('/dashboard?token=test', {onBeforeLoad(win) {
+            win.localStorage.setItem('color-theme', 'dark');
+          }})
 
         cy.wait('@stats')
         cy.get('@stats.all').should('have.length', 2)
