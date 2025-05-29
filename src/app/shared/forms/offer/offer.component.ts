@@ -305,8 +305,8 @@ export class OfferComponent implements OnInit, OnDestroy{
       }
       if(pricePlan?.price?.value && pricePlan.isBundle==false){
         priceInfo.paymentOnline=true
-        priceInfo.price=pricePlan?.price?.value
-        relatedPrices.push({
+        priceInfo.price=pricePlan?.price?.value        
+        let pricePlanTmp:any = {
           id:pricePlan.id,
           href:pricePlan.href,
           name:pricePlan.name,
@@ -322,7 +322,20 @@ export class OfferComponent implements OnInit, OnDestroy{
           price: pricePlan?.price?.value,
           validFor: pricePlan?.validFor || null,
           usageUnit: pricePlan.usageUnit
-        })
+        }
+        if(pricePlan?.popRelationship){
+          let alter = await this.api.getOfferingPrice(pricePlan?.popRelationship[0].id)
+          if(alter.percentage){
+            pricePlanTmp.discountValue=alter?.percentage
+            pricePlanTmp.discountUnit='percentage'
+          }else{
+            pricePlanTmp.discountValue=alter?.price?.value
+            pricePlanTmp.discountUnit=alter?.price?.unit
+          }            
+          pricePlanTmp.discountDuration = alter?.unitOfMeasure?.amount            
+          pricePlanTmp.discountDurationUnit = alter?.unitOfMeasure?.units
+        }
+        relatedPrices.push(pricePlanTmp)
         priceInfo.priceComponents=relatedPrices;
       }
       console.log('price components---')
