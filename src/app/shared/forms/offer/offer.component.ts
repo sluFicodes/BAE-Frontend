@@ -65,7 +65,6 @@ export class OfferComponent implements OnInit, OnDestroy{
   isFormValid = false;
   selectedProdSpec: any;
   pricePlans:any = [];
-
   errorMessage:any='';
   showError:boolean=false;
   bundleChecked:boolean=false;
@@ -271,13 +270,17 @@ export class OfferComponent implements OnInit, OnDestroy{
      for (let pop of this.offer.productOfferingPrice) {
       let relatedPrices:any[] = [];
        const pricePlan = await this.api.getOfferingPrice(pop.id);
+       let configProfileCheck = true;
+       if(pricePlan?.prodSpecCharValueUse && pricePlan?.prodSpecCharValueUse.length < this.selectedProdSpec?.productSpecCharacteristic.length){
+        configProfileCheck=false
+       }
        let priceInfo: any = {
         id: pricePlan.id,
         name: pricePlan.name,
         description: pricePlan.description,
         lifecycleStatus: pricePlan.lifecycleStatus,
         paymentOnline: pricePlan?.paymentOnline ?? !!pricePlan?.bundledPopRelationship,
-        productProfile: this.mapProductProfile(pricePlan?.prodSpecCharValueUse || []),     
+        productProfile: configProfileCheck ? this.mapProductProfile(pricePlan?.prodSpecCharValueUse || []) : [],     
       }
       if(pricePlan.priceType){
         priceInfo.priceType=pricePlan.priceType;
@@ -300,10 +303,10 @@ export class OfferComponent implements OnInit, OnDestroy{
           lastUpdate:pricePlan?.lastUpdate,
           lifecycleStatus:pricePlan?.lifecycleStatus,
           paymentOnline: true,
-          selectedCharacteristic: pricePlan?.prodSpecCharValueUse || null,
+          selectedCharacteristic: configProfileCheck ? null : pricePlan?.prodSpecCharValueUse,
           currency: pricePlan?.price?.unit || 'EUR',
           recurringPeriod: pricePlan?.recurringChargePeriodType || 'month',
-          productProfile: this.mapProductProfile(pricePlan?.prodSpecCharValueUse || []),
+          productProfile: configProfileCheck ? this.mapProductProfile(pricePlan?.prodSpecCharValueUse || []) : [],
           price: pricePlan?.price?.value,
           validFor: pricePlan?.validFor || null,
           usageUnit: pricePlan.usageUnit
@@ -594,10 +597,6 @@ export class OfferComponent implements OnInit, OnDestroy{
       price.unitOfMeasure = { amount: 1, units: comp.usageUnit ?? plan?.newValue?.priceComponents[0]?.usageUnit };
     }
 
-    if (comp?.selectedCharacteristic || plan?.newValue?.priceComponents[0]?.selectedCharacteristic) {
-      price.prodSpecCharValueUse = comp.selectedCharacteristic ?? plan?.newValue.priceComponents[0].selectedCharacteristic;
-    }
-
     if (comp.discountValue != null) {
       const discount = await this.createPriceAlteration(comp, plan.currency);
       price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
@@ -606,6 +605,10 @@ export class OfferComponent implements OnInit, OnDestroy{
     if(plan?.newValue?.priceComponents[0].discountValue){
       const discount = await this.createPriceAlteration(plan?.newValue?.priceComponents[0], plan?.newValue?.currency);
       price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
+    }
+
+    if (comp?.selectedCharacteristic || plan?.newValue?.priceComponents[0]?.selectedCharacteristic) {
+      price.prodSpecCharValueUse = comp.selectedCharacteristic ?? plan?.newValue.priceComponents[0].selectedCharacteristic;
     }
 
     if (plan.prodSpecCharValueUse) {
@@ -940,7 +943,7 @@ export class OfferComponent implements OnInit, OnDestroy{
                 } else if(pricePlanChangeInfo[i].priceComponents.modified[j].id != pricePlanChangeInfo[i].id){
                   let compUpdated = await this.updatePriceComponent(pricePlanChangeInfo[i].priceComponents.modified[j],pricePlanChangeInfo[i]?.newValue.currency)
                   finalPriceComps.push(compUpdated)
-                }          
+                } 
                 
                 console.log('The following price comp has been updated:')
                 console.log(pricePlanChangeInfo[i].priceComponents.modified[j])
@@ -955,10 +958,22 @@ export class OfferComponent implements OnInit, OnDestroy{
             } else {
               if (finalPriceComps.length > 1) {
                 let createdPricePlan = await this.createBundledPricePlan(pricePlanChangeInfo[i],finalPriceComps);
+                const created = await lastValueFrom(this.api.postOfferingPrice(createdPricePlan));
+                let index = basePayload.productOfferingPrice.findIndex(
+                  (plan: any) => plan.id === pricePlanChangeInfo[i].id
+                );
+                basePayload.productOfferingPrice[index].id = created.id;
+                basePayload.productOfferingPrice[index].href = created.id;
                 console.log('New price plan')
                 console.log(createdPricePlan)
               } else {
                 let createdPricePlan = await this.createSinglePricePlan(pricePlanChangeInfo[i],finalPriceComps[0]);
+                const created = await lastValueFrom(this.api.postOfferingPrice(createdPricePlan));
+                let index = basePayload.productOfferingPrice.findIndex(
+                  (plan: any) => plan.id === pricePlanChangeInfo[i].id
+                );
+                basePayload.productOfferingPrice[index].id = created.id;
+                basePayload.productOfferingPrice[index].href = created.id;
                 console.log('New price plan')
                 console.log(createdPricePlan)
               }
