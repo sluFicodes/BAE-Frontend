@@ -74,17 +74,21 @@
           class="mb-2 mr-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
             @if(!selectedCharacteristic){
               <option value="">Select a characteristic</option>
-            }          
-              @for(char of prodChars; track char){                          
-                  <option  value="{{char.id}}">{{char.name}}</option>
+              @for(char of filteredChars; track char){
+                <option  value="{{char.id}}">{{char.name}}</option>
               }
+            } @else {
+              <option  value="{{selectedCharacteristic.id}}">{{selectedCharacteristic.name}}</option>
+              @for(char of filteredChars; track char){
+                @if(selectedCharacteristic.id != char.id){
+                  <option  value="{{char.id}}">{{char.name}}</option>
+                }
+              }
+            }
           </select>
           @if(showValueSelect){
               <select id="type" (change)="changePriceComponentCharValue($event)"
-              class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                  @if(hideStringCharOption){
-                      <option value="">Select a value</option>
-                  }  
+              class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-gray-100 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"> 
                   @for(val of selectedCharacteristic.productSpecCharacteristicValue; track val){
                       @if(hasKey(val, 'unitOfMeasure')){
                           <option value="{{val.value}}">{{val.value}} ({{val.unitOfMeasure}})</option>

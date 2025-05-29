@@ -453,6 +453,7 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
   }
 
   addPricePlan(plan?: any) {
+    console.log('add plan')
     // Determinar el valor correcto de paymentOnline
     const paymentOnlineValue = plan?.paymentOnline ?? this.paymentOnline;
 
@@ -462,7 +463,7 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
     });
     this.pricePlansForm.push(pricePlanGroup);
     this.existingPlanNames = this.pricePlans
-    .filter((p: PricePlan) => p.id !== this.selectedPricePlan.value.id) // exclude the one being edited
+    //.filter((p: PricePlan) => p.id !== this.selectedPricePlan.value.id) // exclude the one being edited
     .map(p => p.name)
     .filter(name => !!name);
     this.form.updateValueAndValidity();
@@ -525,6 +526,11 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
       } else {
         // Si no lo encuentra, creamos un nuevo FormGroup con los datos del plan
         this.selectedPricePlan = this.createPricePlanForm(plan);
+        this.existingPlanNames = this.pricePlans
+        .filter((p: PricePlan) => p.id !== this.selectedPricePlan.value.id) // exclude the one being edited
+        .map(p => p.name)
+        .filter(name => !!name);
+        this.form.updateValueAndValidity();
       }
 
       this.action = 'edit';
@@ -535,6 +541,10 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
       this.selectedPricePlan = this.createPricePlanForm({
         paymentOnline: this.paymentOnline
       });
+      this.existingPlanNames = this.pricePlans
+      .map(p => p.name)
+      .filter(name => !!name);
+      this.form.updateValueAndValidity();
       this.pricePlansForm.push(this.selectedPricePlan);
     }
 

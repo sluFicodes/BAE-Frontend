@@ -5,6 +5,7 @@ import {TranslateModule} from "@ngx-translate/core";
 import {NgClass} from "@angular/common";
 import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
+import { certifications } from 'src/app/models/certification-standards.const';
 
 @Component({
   selector: 'app-price-component-drawer',
@@ -31,11 +32,11 @@ export class PriceComponentDrawerComponent implements OnInit {
 
   priceComponentForm!: FormGroup;
   showValueSelect:boolean=false;
-  hideStringCharOption:boolean=true;
   selectedCharacteristic:any=undefined;
   touchedCharCheck:boolean=false;
   selectedCharacteristicVal:any;
   showDiscount:boolean=false;
+  filteredChars:any[]=[];
 
   constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef,) {}
 
@@ -45,6 +46,12 @@ export class PriceComponentDrawerComponent implements OnInit {
       this.isOpen = true;
       this.initialized = true;
     }, 50);
+
+    for(let i=0;i<this.prodChars.length;i++){
+      if (!certifications.some(certification => certification.name === this.prodChars[i].name)) {
+        this.filteredChars.push(this.prodChars[i]);
+      }
+    }
 
     this.priceComponentForm = this.fb.group({
       name: ['', Validators.required],
@@ -66,10 +73,18 @@ export class PriceComponentDrawerComponent implements OnInit {
       console.log('---- Editing the following price component...')
       console.log(this.priceComponentForm.value)
       
-      /*if(this.priceComponentForm.get('selectedCharacteristic')?.value[0].productSpecCharacteristicValue){
-        console.log('---hola')
-        this.showValueSelect=true
-      }*/
+      if(this.priceComponentForm.get('selectedCharacteristic')?.value[0]?.productSpecCharacteristicValue){
+        if(this.priceComponentForm.get('selectedCharacteristic')?.value[0]?.productSpecCharacteristicValue.length >0){
+          if('valueFrom' in this.priceComponentForm.get('selectedCharacteristic')?.value[0]?.productSpecCharacteristicValue[0]){
+            // This is a range characteristic, so no value to select
+            this.showValueSelect = false;
+          } else {
+            this.showValueSelect=true;
+          }          
+        } else {
+          this.showValueSelect=true;
+        }
+      }
       if(this.priceComponentForm.get('discountValue')?.value != null){
         this.showDiscount=true;
       }
@@ -115,7 +130,6 @@ export class PriceComponentDrawerComponent implements OnInit {
       // This is a string characteristic
       this.selectedCharacteristicVal = this.selectedCharacteristic.productSpecCharacteristicValue[0].value;
       this.showValueSelect = true;
-      this.hideStringCharOption = false;
     }
 
     this.priceComponentForm.patchValue({
