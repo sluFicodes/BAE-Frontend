@@ -16,12 +16,11 @@ jobs:
       - name: Installing dependencies
         run: npm install
 
-      - name: Save build folder
+      - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: build
-          if-no-files-found: error
-          path: build
+          name: dist
+          path: dist/
 
       - name: Executing headless cypress testing
         uses: cypress-io/github-action@v6
