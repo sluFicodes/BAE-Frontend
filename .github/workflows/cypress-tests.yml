@@ -16,6 +16,12 @@ jobs:
       - name: Installing dependencies
         run: npm install
 
+      - name: Upload build
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist/
+
       - name: Executing headless cypress testing
         uses: cypress-io/github-action@v6
         with:
@@ -25,8 +31,3 @@ jobs:
           browser: chrome
           config: defaultCommandTimeout=10000,pageLoadTimeout=60000
 
-    #   - name: Upload screenshots as artifacts
-    #     uses: actions/upload-artifact@v3
-    #     with:
-    #       name: cypress-screenshots
-    #       path: cypress/screenshots
