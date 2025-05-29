@@ -230,7 +230,6 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     // toggle icons inside button
     this.themeToggleDarkIcon.nativeElement.classList.toggle('hidden');
     this.themeToggleLightIcon.nativeElement.classList.toggle('hidden');
-    console.log('localStorage color-theme:', localStorage.getItem('color-theme'));
 
     // if set via local storage previously
     if (localStorage.getItem('color-theme')) {
@@ -247,10 +246,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       // if NOT set via local storage previously
     } else {
       if (document.documentElement.classList.contains('dark')) {
+        alert('dark')
         document.documentElement.classList.remove('dark');
         localStorage.setItem('color-theme', 'light');
         document.body.removeAttribute('data-theme');
       } else {
+        alert('light');
         document.documentElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
         document.body.setAttribute('data-theme', 'dark');
