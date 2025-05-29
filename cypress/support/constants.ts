@@ -246,8 +246,8 @@ export const loginAcc = () => {
             },
             (req) => {
               req.reply({
-                statusCode: 200,  // Código HTTP de respuesta
-                body: login_token() // Llamada a la función que genera el token
+                statusCode: 200,
+                body: login_token()
               });
             }
           ).as('login_token');

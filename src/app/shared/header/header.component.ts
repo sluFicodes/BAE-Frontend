@@ -230,6 +230,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
     // toggle icons inside button
     this.themeToggleDarkIcon.nativeElement.classList.toggle('hidden');
     this.themeToggleLightIcon.nativeElement.classList.toggle('hidden');
+    console.log('localStorage color-theme:', localStorage.getItem('color-theme'));
 
     // if set via local storage previously
     if (localStorage.getItem('color-theme')) {
