@@ -255,7 +255,7 @@ export const loginAcc = () => {
           ).as('login_token');
 
         cy.visit('/dashboard?token=test', {onBeforeLoad(win) {
-            win.localStorage.setItem('color-theme', 'dark');
+            win.document.documentElement.classList.add('dark');
           }})
 
         cy.wait('@stats')
