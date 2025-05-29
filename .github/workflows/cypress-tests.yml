@@ -19,8 +19,8 @@ jobs:
       - name: Upload build
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist/
+          name: cypress-screenshots
+          path: cypress/screenshots
 
       - name: Executing headless cypress testing
         uses: cypress-io/github-action@v6
