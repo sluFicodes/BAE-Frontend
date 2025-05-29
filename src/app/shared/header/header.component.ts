@@ -246,12 +246,10 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       // if NOT set via local storage previously
     } else {
       if (document.documentElement.classList.contains('dark')) {
-        alert('dark')
         document.documentElement.classList.remove('dark');
         localStorage.setItem('color-theme', 'light');
         document.body.removeAttribute('data-theme');
       } else {
-        alert('light');
         document.documentElement.classList.add('dark');
         localStorage.setItem('color-theme', 'dark');
         document.body.setAttribute('data-theme', 'dark');
