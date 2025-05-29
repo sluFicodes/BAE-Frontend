@@ -223,11 +223,11 @@ export const checkHeaderPostLogin = () => {
     cy.getBySel('darkMode').should('exist')
 
     cy.getBySel('darkMode').click()
-    cy.getBySel('moonSVG').should('have.class', 'hidden')
-    cy.getBySel('sunSVG').should('not.have.class', 'hidden')
+    cy.getBySel('moonSVG').should('be.hidden')
+    cy.getBySel('sunSVG').should('not.be.hidden')
     cy.getBySel('darkMode').click()
-    cy.getBySel('sunSVG').should('have.class', 'hidden')
-    cy.getBySel('moonSVG').should('not.have.class', 'hidden')
+    cy.getBySel('sunSVG').should('be.hidden')
+    cy.getBySel('moonSVG').should('not.be.hidden')
 
     cy.getBySel('knowledge').should('have.attr', 'href', init_config.knowledgeBaseUrl)
 };
