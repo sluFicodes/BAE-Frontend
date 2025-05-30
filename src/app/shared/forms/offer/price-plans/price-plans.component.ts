@@ -11,7 +11,7 @@ import {PricePlansTableComponent} from "./price-plans-table/price-plans-table.co
 import {TranslateModule} from "@ngx-translate/core";
 import {PricePlanDrawerComponent} from "./price-plan-drawer/price-plan-drawer.component";
 import { v4 as uuidv4 } from 'uuid';
-import {pricePlanValidator} from "../../../../validators/validators";
+import {pricePlanValidator, uniqueNameValidatorFactory} from "../../../../validators/validators";
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgClass } from "@angular/common";
 import { EventMessageService } from "src/app/services/event-message.service";
@@ -96,6 +96,7 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
   paymentOnlineControl = new FormControl({ value: false, disabled: false });
 
   pricePlans: any[] = [];
+  existingPlanNames: string[] = [];
   selectedPricePlan: any | null = null;
   showDrawer = false;
   pricePlanForm!: FormGroup;  // This will be passed to the drawer
@@ -177,6 +178,10 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
         usageUnit: comp['usageUnit']
       })) || []
     }));
+
+    this.existingPlanNames = this.pricePlans
+    .map(p => p.name)
+    .filter(name => !!name);
 
     console.log('📝 Original state:', this.originalPricePlans);
     console.log('🔍 Last known state:', this.lastKnownState);
@@ -426,7 +431,7 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
         priceComponents: [plan?.priceComponents || []],
         validFor: [plan?.validFor || null],
       },
-      { validators: [pricePlanValidator] } // Custom validator
+      { validators: [pricePlanValidator, uniqueNameValidatorFactory(() => this.existingPlanNames)] } // Custom validator
     );
   }
 
@@ -448,6 +453,7 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
   }
 
   addPricePlan(plan?: any) {
+    console.log('add plan')
     // Determinar el valor correcto de paymentOnline
     const paymentOnlineValue = plan?.paymentOnline ?? this.paymentOnline;
 
@@ -456,6 +462,11 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
       paymentOnline: paymentOnlineValue
     });
     this.pricePlansForm.push(pricePlanGroup);
+    this.existingPlanNames = this.pricePlans
+    //.filter((p: PricePlan) => p.id !== this.selectedPricePlan.value.id) // exclude the one being edited
+    .map(p => p.name)
+    .filter(name => !!name);
+    this.form.updateValueAndValidity();
     this.syncPricePlans();
   }
 
@@ -509,12 +520,17 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
 
       // Buscar el FormGroup en pricePlansForm en base al ID del plan
       const index = this.pricePlansForm.controls.findIndex(p => p.value.id === plan.id);
-
+      console.log(index)
       if (index !== -1) {
         this.selectedPricePlan = this.pricePlansForm.at(index) as FormGroup;
       } else {
         // Si no lo encuentra, creamos un nuevo FormGroup con los datos del plan
         this.selectedPricePlan = this.createPricePlanForm(plan);
+        this.existingPlanNames = this.pricePlans
+        .filter((p: PricePlan) => p.id !== this.selectedPricePlan.value.id) // exclude the one being edited
+        .map(p => p.name)
+        .filter(name => !!name);
+        this.form.updateValueAndValidity();
       }
 
       this.action = 'edit';
@@ -525,6 +541,10 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
       this.selectedPricePlan = this.createPricePlanForm({
         paymentOnline: this.paymentOnline
       });
+      this.existingPlanNames = this.pricePlans
+      .map(p => p.name)
+      .filter(name => !!name);
+      this.form.updateValueAndValidity();
       this.pricePlansForm.push(this.selectedPricePlan);
     }
 
@@ -548,11 +568,21 @@ export class PricePlansComponent implements OnInit, OnDestroy, ControlValueAcces
         ...plan,
         paymentOnline: plan.paymentOnline // Asegurarse de mantener el valor original
       });
+
+      this.existingPlanNames = this.pricePlans
+      .filter((p: PricePlan) => p.id !== this.selectedPricePlan.value.id) // exclude the one being edited
+      .map(p => p.name)
+      .filter(name => !!name);
+      this.form.updateValueAndValidity();
     } else {
       this.action = 'create';
       this.selectedPricePlan = this.createPricePlanForm({
         paymentOnline: this.paymentOnline // Usar el valor global para nuevos planes
       });
+      this.existingPlanNames = this.pricePlans
+      .map(p => p.name)
+      .filter(name => !!name);
+      this.form.updateValueAndValidity();
     }
 
     console.log('📝 Form after patching:', this.selectedPricePlan.value);

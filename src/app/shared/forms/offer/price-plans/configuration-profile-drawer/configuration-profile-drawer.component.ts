@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit, HostListener } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from "@angular/common";
+import { certifications } from 'src/app/models/certification-standards.const';
 
 @Component({
   selector: 'app-configuration-profile-drawer',
@@ -28,7 +29,14 @@ export class ConfigurationProfileDrawerComponent implements OnInit {
     console.log('Profile Data:', this.profileData);
 
     // Guard...
-    const characteristicsData = this.profileData || [];
+    //const characteristicsData = this.profileData || [];
+    let profileChars = [];
+    for(let i=0;i<this.profileData.length;i++){
+      if (!certifications.some(certification => certification.name === this.profileData[i].name)) {
+        profileChars.push(this.profileData[i]);
+      }
+    }
+    const characteristicsData = profileChars || [];
 
     this.form = this.fb.group({
       characteristics: this.fb.array(characteristicsData.map(char => this.createCharacteristicForm(char)))
