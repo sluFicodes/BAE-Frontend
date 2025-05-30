@@ -174,6 +174,18 @@ export class CategoryComponent implements ControlValueAccessor, OnInit, AfterVie
     }
     this.onChange([...this.selectedCategories]);
     this.onTouched();
+    const currentValue = [...this.selectedCategories];
+    const dirtyFields = this.getDirtyFields(currentValue);
+    const changeState: FormChangeState = {
+      subformType: 'category',
+      isDirty: true,
+      dirtyFields,
+      originalValue: this.originalValue,
+      currentValue
+    };
+
+    console.log('🚀 Emitting final change state:', changeState);
+    this.formChange.emit(changeState);
   }
 
   removeChildren(category: Category): void {
