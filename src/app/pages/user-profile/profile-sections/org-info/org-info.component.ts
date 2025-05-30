@@ -10,7 +10,8 @@ import { initFlowbite } from 'flowbite';
 import * as moment from 'moment';
 import {components} from "../../../../models/party-catalog";
 import { v4 as uuidv4 } from 'uuid';
-import {parsePhoneNumber, getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
+import {getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
+import {parsePhoneNumber} from 'libphonenumber-js/max'
 import {AttachmentServiceService} from "src/app/services/attachment-service.service";
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { environment } from 'src/environments/environment';

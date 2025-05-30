@@ -20,7 +20,8 @@ import {initFlowbite} from 'flowbite';
 import * as moment from 'moment';
 import {LoginInfo, billingAccountCart} from 'src/app/models/interfaces';
 import {EventMessageService} from "../../services/event-message.service";
-import {parsePhoneNumber, getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
+import {getCountries, getCountryCallingCode, CountryCode} from 'libphonenumber-js'
+import {parsePhoneNumber} from 'libphonenumber-js/max'
 import {TranslateModule} from "@ngx-translate/core";
 import { getLocaleId } from '@angular/common';
 
@@ -43,7 +44,7 @@ export class BillingAccountFormComponent implements OnInit {
     stateOrProvince: new FormControl('', [Validators.required, Validators.maxLength(250)]),
     postCode: new FormControl('', [Validators.required, Validators.maxLength(250)]),
     street: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
-    telephoneNumber: new FormControl('', [Validators.required]),
+    telephoneNumber: new FormControl('', [Validators.required, Validators.min(0)]),
     telephoneType: new FormControl('Mobile')
   });
   prefixes: any[] = phoneNumbers;
