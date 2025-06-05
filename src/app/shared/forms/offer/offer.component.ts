@@ -18,6 +18,7 @@ import {EventMessageService} from "src/app/services/event-message.service";
 import {FormChangeState, PricePlanChangeState} from "../../../models/interfaces";
 import {Subscription} from "rxjs";
 import * as moment from 'moment';
+import { certifications } from 'src/app/models/certification-standards.const';
 
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
@@ -69,6 +70,7 @@ export class OfferComponent implements OnInit, OnDestroy{
   showError:boolean=false;
   bundleChecked:boolean=false;
   offersBundle:any[]=[];
+  loadingData:boolean=false;
 
   offerToCreate:ProductOffering_Create | undefined;
 
@@ -189,6 +191,7 @@ export class OfferComponent implements OnInit, OnDestroy{
 
   async ngOnInit() {
     if (this.formType === 'update' && this.offer) {
+      this.loadingData=true;
       this.steps = [
         'General Info',
         'Product Specification',
@@ -201,6 +204,7 @@ export class OfferComponent implements OnInit, OnDestroy{
         'Summary'
       ];
       await this.loadOfferData();
+      this.loadingData=false;
     }
 
   }
@@ -270,8 +274,16 @@ export class OfferComponent implements OnInit, OnDestroy{
      for (let pop of this.offer.productOfferingPrice) {
       let relatedPrices:any[] = [];
        const pricePlan = await this.api.getOfferingPrice(pop.id);
+       console.log('-- price plan ----')
+       console.log(pricePlan)
        let configProfileCheck = true;
-       if(pricePlan?.prodSpecCharValueUse && pricePlan?.prodSpecCharValueUse.length < this.selectedProdSpec?.productSpecCharacteristic.length){
+       let realCharsLength = 0;
+       for(let i=0;i<this.selectedProdSpec?.productSpecCharacteristic.length;i++){
+          if (!certifications.some(certification => certification.name === this.selectedProdSpec?.productSpecCharacteristic[i].name)) {
+            realCharsLength++;
+          }
+        }
+       if(pricePlan?.prodSpecCharValueUse && pricePlan?.prodSpecCharValueUse.length < realCharsLength){
         configProfileCheck=false
        }
        let priceInfo: any = {
@@ -293,8 +305,8 @@ export class OfferComponent implements OnInit, OnDestroy{
       }
       if(pricePlan?.price?.value && pricePlan.isBundle==false){
         priceInfo.paymentOnline=true
-        priceInfo.price=pricePlan?.price?.value
-        relatedPrices.push({
+        priceInfo.price=pricePlan?.price?.value        
+        let pricePlanTmp:any = {
           id:pricePlan.id,
           href:pricePlan.href,
           name:pricePlan.name,
@@ -310,7 +322,20 @@ export class OfferComponent implements OnInit, OnDestroy{
           price: pricePlan?.price?.value,
           validFor: pricePlan?.validFor || null,
           usageUnit: pricePlan.usageUnit
-        })
+        }
+        if(pricePlan?.popRelationship){
+          let alter = await this.api.getOfferingPrice(pricePlan?.popRelationship[0].id)
+          if(alter.percentage){
+            pricePlanTmp.discountValue=alter?.percentage
+            pricePlanTmp.discountUnit='percentage'
+          }else{
+            pricePlanTmp.discountValue=alter?.price?.value
+            pricePlanTmp.discountUnit=alter?.price?.unit
+          }            
+          pricePlanTmp.discountDuration = alter?.unitOfMeasure?.amount            
+          pricePlanTmp.discountDurationUnit = alter?.unitOfMeasure?.units
+        }
+        relatedPrices.push(pricePlanTmp)
         priceInfo.priceComponents=relatedPrices;
       }
       console.log('price components---')
@@ -572,14 +597,14 @@ export class OfferComponent implements OnInit, OnDestroy{
       prodSpecCharValueUse: undefined
     };
 
-    if(comp.price){
+    if(comp?.price){
       price.price = {
         value: comp.price,
         unit: plan.currency
       }
-    } else if (plan?.newValue && !plan?.newValue?.isBundle){
+    } else if (plan?.newValue && !plan?.newValue?.isBundle && plan?.newValue?.priceComponents[0]?.price){
       price.price = {
-        value: plan?.newValue?.priceComponents[0].price,
+        value: plan?.newValue?.priceComponents[0]?.price,
         unit: plan?.newValue?.currency
       }
     } else {
@@ -597,12 +622,12 @@ export class OfferComponent implements OnInit, OnDestroy{
       price.unitOfMeasure = { amount: 1, units: comp.usageUnit ?? plan?.newValue?.priceComponents[0]?.usageUnit };
     }
 
-    if (comp.discountValue != null) {
+    if (comp?.discountValue != null) {
       const discount = await this.createPriceAlteration(comp, plan.currency);
       price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
     }
 
-    if(plan?.newValue?.priceComponents[0].discountValue){
+    if(plan?.newValue?.priceComponents[0]?.discountValue){
       const discount = await this.createPriceAlteration(plan?.newValue?.priceComponents[0], plan?.newValue?.currency);
       price.popRelationship = [{ id: discount.id, href: discount.id, name: discount.name }];
     }
@@ -611,7 +636,7 @@ export class OfferComponent implements OnInit, OnDestroy{
       price.prodSpecCharValueUse = comp.selectedCharacteristic ?? plan?.newValue.priceComponents[0].selectedCharacteristic;
     }
 
-    if (plan.prodSpecCharValueUse) {
+    if (plan?.prodSpecCharValueUse) {
       price.prodSpecCharValueUse = plan.prodSpecCharValueUse.map((item: any) => ({
         ...item,
         productSpecCharacteristicValue: item.productSpecCharacteristicValue.filter((v: any) => v.isDefault)
