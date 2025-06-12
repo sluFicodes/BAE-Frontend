@@ -60,7 +60,6 @@ export class SearchComponent implements OnInit {
   } 
 
   async ngOnInit() {
-    //this.feedback=true;
     this.products=[];
     this.nextProducts=[];
     /*await this.api.slaCheck().then(data => {  
@@ -92,7 +91,15 @@ export class SearchComponent implements OnInit {
           await this.getProducts(false);
         }
       });
-    }    
+    }
+    setTimeout(() => {
+      const userInfo = this.localStorage.getObject('login_items') as LoginInfo;
+
+      // The user is logged in
+      if ((JSON.stringify(userInfo) != '{}' && (((userInfo.expire - moment().unix())-4) > 0))) {
+        this.feedback = true;
+      }
+    });
   }
 
   @HostListener('document:click')
