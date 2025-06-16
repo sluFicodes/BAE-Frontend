@@ -11,9 +11,11 @@
 
     <!-- Footer Links -->
     <ul class="flex flex-wrap items-center text-sm font-medium text-gray-500 dark:text-gray-400">
-      <li>
-        <button (click)="feedback=!feedback;$event.stopPropagation();" class="mr-4 hover:underline md:mr-6">Feedback</button>
-      </li>
+      @if(checkLogged){
+        <li>
+          <button (click)="feedback=!feedback;$event.stopPropagation();" class="mr-4 hover:underline md:mr-6">Feedback</button>
+        </li>
+      }
       <li>
         <a href="../assets/documents/privacy.pdf" target="_blank" class="mr-4 hover:underline md:mr-6">{{ 'FOOTER._privacy' | translate }}</a>
       </li>
@@ -31,6 +33,9 @@
 
 </footer>
 @if(feedback){
-  <feedback-modal class="fixed inset-0 flex items-center justify-center z-40"></feedback-modal>
-
+  <feedback-modal 
+  rateMessage="How would you rate your overall experience with DOME?"
+  writeMessage="How can we improve DOME?"
+  type="experience"
+  class="fixed inset-0 flex items-center justify-center z-40"></feedback-modal>
 }
