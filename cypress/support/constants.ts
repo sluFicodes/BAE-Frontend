@@ -151,6 +151,19 @@ export const catalog_launched = [
     }
 ]
 
+export const category_dft = {
+    "id": "urn:ngsi-ld:category:e4522ff8-2f25-4cd8-b30f-04a0caefbdb5",
+    "href": "urn:ngsi-ld:category:e4522ff8-2f25-4cd8-b30f-04a0caefbdb5",
+    "description": "",
+    "isRoot": true,
+    "lastUpdate": "2025-02-18T14:59:54.493470129Z",
+    "lifecycleStatus": "Active",
+    "name": "dft cat",
+    "validFor": {
+        "startDateTime": "2025-02-18T14:59:54.308Z"
+    }
+}
+
 export const local_items = {
     "id": "admin",
     "user": "admin",
