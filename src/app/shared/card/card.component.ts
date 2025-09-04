@@ -4,7 +4,7 @@ import {
   OnInit,
   ChangeDetectorRef,
   HostListener,
-  ElementRef, ViewChild, AfterViewInit
+  ElementRef, ViewChild, AfterViewInit, OnDestroy
 } from '@angular/core';
 import {components} from "../../models/product-catalog";
 import { FastAverageColor } from 'fast-average-color';
@@ -26,18 +26,22 @@ import * as moment from 'moment';
 import { certifications } from 'src/app/models/certification-standards.const';
 import { jwtDecode } from "jwt-decode";
 import { environment } from 'src/environments/environment';
+import {ThemeConfig} from "../../themes";
+import {Subscription} from "rxjs";
+import {ThemeService} from "../../services/theme.service";
 
 @Component({
   selector: 'bae-off-card',
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })
-export class CardComponent implements OnInit, AfterViewInit {
+export class CardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() productOff: Product | undefined;
   @Input() prodSpecInput: ProductSpecification | undefined;
   @Input() cardId: number;
 
+  providerThemeName = environment.providerThemeName;
   category: string = 'none';
   categories: any[] | undefined  = [];
   categoriesMore: any[] | undefined  = [];
@@ -77,9 +81,15 @@ export class CardComponent implements OnInit, AfterViewInit {
 
   selectedPricePlanId: string | null = null;
   selectedPricePlan:any = null;
+
+  currentTheme: ThemeConfig | null = null;
+  private themeSubscription: Subscription = new Subscription();
+
+
   productAlreadyInCart:boolean=false;
-
-
+  showQuoteModal:boolean=false;
+  customerId:string='';
+  isCustomPrice:boolean = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -89,6 +99,7 @@ export class CardComponent implements OnInit, AfterViewInit {
     private priceService: PriceServiceService,
     private cartService: ShoppingCartServiceService,
     private accService: AccountServiceService,
+    private themeService: ThemeService,
     private router: Router
     ) {
       this.targetModal = document.getElementById('details-modal');
@@ -116,6 +127,32 @@ export class CardComponent implements OnInit, AfterViewInit {
             }
           }
 
+          this.cdr.detectChanges();
+        }
+        if(ev.type === 'CloseQuoteRequest'){
+          this.showQuoteModal=false;
+          this.cdr.detectChanges();
+        } else if (ev.type == 'RemovedCartItem'){
+          this.cartService.getShoppingCart().then(data => {
+            const exists = data.some((item: any) => item.id === this.productOff?.id);
+            if (exists) {
+              this.productAlreadyInCart=true;
+            } else {
+              this.productAlreadyInCart=false;
+            }
+          })
+        } else if (ev.type == 'AddedCartItem'){
+          this.cartService.getShoppingCart().then(data => {
+            const exists = data.some((item: any) => item.id === this.productOff?.id);
+            if (exists) {
+              this.productAlreadyInCart=true;
+            } else {
+              this.productAlreadyInCart=false;
+            }
+          })
+        }
+        if(ev.type === 'CloseQuoteRequest'){
+          this.showQuoteModal=false;
           this.cdr.detectChanges();
         } else if (ev.type == 'RemovedCartItem'){
           this.cartService.getShoppingCart().then(data => {
@@ -151,6 +188,9 @@ export class CardComponent implements OnInit, AfterViewInit {
       }
       this.cdr.detectChanges();
     }
+    if(this.showQuoteModal=true){
+      this.showQuoteModal=false;
+    }
     if(this.cartSelection==true){
       this.cartSelection=false;
       this.check_char=false;
@@ -163,13 +203,25 @@ export class CardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+  }
 
-  ngOnInit() {
-    console.log('----- CARD -----')
-    console.log(this.productOff)
+  async ngOnInit() {
+    this.themeSubscription = this.themeService.currentTheme$.subscribe(theme => {
+      this.currentTheme = theme;
+    });
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.check_logged=true;
+      if(aux.logged_as==aux.id){
+        this.customerId = aux.partyId;
+      } else {
+        let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
+        this.customerId = loggedOrg.partyId
+      }
       this.cdr.detectChanges();
     } else {
       this.check_logged=false,
@@ -185,8 +237,7 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.categories = this.productOff?.category;
       this.checkMoreCats=false;
     }
-    //this.price = this.productOff?.productOfferingPrice?.at(0)?.price?.value + ' ' +
-    //  this.productOff?.productOfferingPrice?.at(0)?.price?.unit ?? 'n/a';
+
     let profile = this.productOff?.attachment?.filter(item => item.name === 'Profile Picture') ?? [];
     if(profile.length==0){
       this.images = this.productOff?.attachment?.filter(item => item.attachmentType === 'Picture') ?? [];
@@ -213,13 +264,7 @@ export class CardComponent implements OnInit, AfterViewInit {
       this.prodSpec = this.prodSpecInput
     }*/
 
-    let result:any = this.priceService.formatCheapestPricePlan(this.productOff);
-    this.price = {
-      "price": result.price,
-      "unit": result.unit,
-      "priceType": result.priceType,
-      "text": result.text
-    }
+    this.isCustomPrice = await this.priceService.isCustomOffering(this.productOff)
 
     this.prepareOffData();
 
@@ -233,6 +278,10 @@ export class CardComponent implements OnInit, AfterViewInit {
     })
 
     this.cdr.detectChanges();
+  }
+
+  isCustom(): boolean {
+    return this.isCustomPrice;
   }
 
   getProductImage() {
@@ -506,7 +555,11 @@ async deleteProduct(product: Product | undefined){
     }
 
     if(this.productOff?.productOfferingTerm != undefined){
-      if(this.productOff.productOfferingTerm.length == 1 && this.productOff.productOfferingTerm[0].name == undefined){
+      const licenseTerm = this.productOff.productOfferingTerm.find(
+        element => element.name === 'License'
+      );
+
+      if (!licenseTerm) {
         this.check_terms=false;
       } else {
         this.check_terms=true;
@@ -613,6 +666,13 @@ async deleteProduct(product: Product | undefined){
 
   closeDrawer(): void {
     this.isDrawerOpen = false;
+  }
+
+  toggleQuoteModal(){
+    //Hides details modal
+    this.showModal=false;
+    //Show quote modal
+    this.showQuoteModal=true;
   }
 
   protected readonly JSON = JSON;

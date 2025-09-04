@@ -1,7 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+/* 1. DIRECTIVAS DE TAILWIND PRIMERO */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 2. IMPORTS DE LIBRERÍAS Y TEMAS DESPUÉS */
+@import '@ctrl/ngx-emoji-mart/picker';
+@import 'app/themes/dome.theme.scss';
+@import 'app/themes/bae.theme.scss';
+
+/* 3. CAPAS PERSONALIZADAS Y ESTILOS GLOBALES AL FINAL */
+/* You can add global styles to this file, and also import other style files */
 
 @layer base {
   html {
@@ -9,8 +17,7 @@
   }
 }
 
-@import '@ctrl/ngx-emoji-mart/picker';
-
+/* El resto de tus estilos... */
 :root {
   /* Default light mode colors */
   --blockquote-border-color: #ccc;
@@ -25,6 +32,10 @@
     --blockquote-bg-color: #0c1c38;
     --blockquote-text-color: #eee;
   }
+}
+
+ngx-file-drop .ngx-file-drop__drop-zone {
+  border-color: rgb(var(--theme-primary-100)) !important; /* your theme color */
 }
 
 /* Default styles for Markdown elements */
@@ -197,13 +208,13 @@ markdown a:hover {
 
 /* Autofill background configuration */
 :root {
-  --autofill-bg-light: #f0f0f0;  
-  --autofill-text-light: #000000; 
+  --autofill-bg-light: #f0f0f0;
+  --autofill-text-light: #000000;
 }
 
 [data-theme='dark'] {
-  --autofill-bg-dark: #182740;  
-  --autofill-text-dark: #ffffff; 
+  --autofill-bg-dark: #182740;
+  --autofill-text-dark: #ffffff;
 }
 
 input:-webkit-autofill {

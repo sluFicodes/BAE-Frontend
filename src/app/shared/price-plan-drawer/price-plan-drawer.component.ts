@@ -59,7 +59,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   selectedUsageSpecId: string | null = null;
   selectedUnitOfMeasure: string | null = null;
   metrics:any[]=[];
-  groupedMetrics: { [usageSpecId: string]: { usagespecid: string; name: string; unitOfMeasure: string }[] } = {};
+  groupedMetrics: { [usageSpecId: string]: { usageSpecId: string; name: string; unitOfMeasure: string }[] } = {};
 
   characteristics: ProductSpecificationCharacteristic[] = []; // Características dinámicas
   filteredCharacteristics: ProductSpecificationCharacteristic[] = [];
@@ -74,8 +74,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private priceService:
-    PriceServiceService,
+    private priceService: PriceServiceService,
     private cartService: ShoppingCartServiceService,
     private eventMessage: EventMessageService,
     private cdr: ChangeDetectorRef,
@@ -96,7 +95,17 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     // Escuchar eventos de teclado (por si necesitas otros)
     document.addEventListener('keydown', this.handleEscape.bind(this));
     // Configurar los términos y condiciones
-    this.tsAndCs = this.productOff?.productOfferingTerm?.[0] || { description: '' };
+    this.tsAndCs = { description: '' };
+
+    this.productOff?.productOfferingTerm?.forEach((term) => {
+      console.log(term.name)
+      console.log('----')
+      if (term.name != 'procurement') {
+        console.log('---- Setting the term')
+        this.tsAndCs = term;
+      }
+    });
+
     this.isFree = this.productOff?.productOfferingPrice?.length === 0;
 
     if (this.isFree) {
@@ -128,7 +137,20 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
       this.updateOrderChars();
     }
     if (changes['isOpen']?.currentValue === true) {
-      this.tsAndCs = this.productOff?.productOfferingTerm?.[0] || { description: '' };
+      this.tsAndCs = { description: '' };
+
+      /*this.productOff?.productOfferingTerm?.forEach((term) => {
+        if (term.name != 'procurement') {
+          console.log('---- Setting the term')
+          this.tsAndCs = term;
+        }
+      });*/
+      const licenseTerm = this.productOff?.productOfferingTerm?.find(
+        element => element.name === 'License'
+      );
+      if(licenseTerm){
+        this.tsAndCs={ description: licenseTerm.description };
+      }
       if(this.tsAndCs.description == ''){
         this.form.controls['tsAccepted'].setValue(true);
         this.cdr.detectChanges();
@@ -199,11 +221,11 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
 
     this.filterCharacteristics();
 
-    if(pricePlan.usagespecid && pricePlan.unitOfMeasure){
-      //let usageSpec = await this.usageService.getUsageSpec(pricePlan.usagespecid)
+    if(pricePlan.usageSpecId && pricePlan.unitOfMeasure){
+      //let usageSpec = await this.usageService.getUsageSpec(pricePlan.usageSpecId)
       this.metrics.push({
         priceId: pricePlan.id,
-        usagespecid: pricePlan.usagespecid,
+        usageSpecId: pricePlan.usageSpecId,
         //name: usageSpec.name,
         unitOfMeasure: pricePlan.unitOfMeasure.units,
         value: 0
@@ -211,11 +233,11 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     } else if(pricePlan.bundledPopRelationship) {
       for(let i=0;i<pricePlan.bundledPopRelationship.length;i++){
         let comp = await this.api.getOfferingPrice(pricePlan.bundledPopRelationship[i].id)
-        if(comp.usagespecid && comp.unitOfMeasure){
-          //let usageSpec = await this.usageService.getUsageSpec(comp.usagespecid)
+        if(comp.usageSpecId && comp.unitOfMeasure){
+          //let usageSpec = await this.usageService.getUsageSpec(comp.usageSpecId)
           this.metrics.push({
             priceId: comp.id,
-            usagespecid: comp.usagespecid,
+            usageSpecId: comp.usageSpecId,
             //name: usageSpec.name,
             unitOfMeasure: comp.unitOfMeasure.units,
             value: 0  
@@ -232,7 +254,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
       this.selectedMetric=this.metrics[0]
       this.selectedUnitOfMeasure=this.metrics[0].unitOfMeasure
       const grouped = this.metrics.reduce((acc, metric) => {
-        const key = metric.usagespecid;
+        const key = metric.usageSpecId;
       
         if (!acc[key]) {
           acc[key] = [];
@@ -361,17 +383,17 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
       }
     }
 
-    if(this.metrics.length>0){
-      prod.metrics = [];
-      for(let i=0; i < this.metrics.length; i++){
-        prod.metrics.push({
-          usagespecid: this.metrics[i].usagespecid,
-          unitOfMeasure: this.metrics[i].unitOfMeasure,
-          value: this.metrics[i].value
-        })
-      }
-      console.log('formato metrics')
-      console.log(prod.metrics)
+    let usage: any = [];
+    if(this.metrics.length > 0){
+      usage = this.metrics.map(metric => ({
+        usageSpecification: {
+          id: metric.usageSpecId
+        },
+        usageCharacteristic: [{
+          name: metric.unitOfMeasure,
+          value: metric.value
+        }]
+      }));
     }
 
     let orderItems = [];
@@ -379,9 +401,13 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
 
     let prodOrder = {
       "id": uuidv4(),
-      "productOrderItem":orderItems
+      "productOrderItem": orderItems
     }
 
+    const previewReq = {
+      productOrder: prodOrder,
+      usage: usage
+    }
     if (!selectedPricePlan) return;
 
     console.log('--- prod ---')
@@ -389,7 +415,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     console.log('--- prod ---')
 
     this.isLoading = true;
-    this.priceService.calculatePrice(prodOrder).subscribe({
+    this.priceService.calculatePrice(previewReq).subscribe({
       next: (response) => {
         console.log('calculate price...')
         console.log(response.orderTotalPrice)

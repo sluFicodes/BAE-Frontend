@@ -86,7 +86,16 @@ import { MultipleSelectComponent } from './shared/multiple-select/multiple-selec
 import {CharacteristicComponent} from "./shared/characteristic/characteristic.component";
 import {PricePlanDrawerComponent} from "./shared/price-plan-drawer/price-plan-drawer.component";
 import {OfferComponent} from "./shared/forms/offer/offer.component";
+import { ThemeService } from './services/theme.service';
+import { ThemeAwareTranslateLoader } from './services/theme-aware-translate.loader';
+
+// Función Factory requerida para crear el cargador con sus dependencias
+export function createThemeAwareLoader(http: HttpClient, themeService: ThemeService) {
+  return new ThemeAwareTranslateLoader(http, themeService);
+}
+
 import {AboutDomeComponent} from "src/app/pages/about-dome/about-dome.component"
+import { QuotesModule } from "src/app/features/quotes/quotes.module"
 import { MarkdownTextareaComponent } from "src/app/shared/forms/markdown-textarea/markdown-textarea.component"
 import { ProviderRevenueSharingComponent } from "src/app/pages/user-profile/profile-sections/provider-revenue-sharing/provider-revenue-sharing.component"
 import { OperatorRevenueSharingComponent } from "src/app/pages/admin/operator-revenue-sharing/operator-revenue-sharing.component"
@@ -167,13 +176,14 @@ import { OperatorRevenueSharingComponent } from "src/app/pages/admin/operator-re
         PickerComponent,
         NgxFileDropModule,
         ChatbotWidgetComponent,
+        QuotesModule,
         MarkdownModule.forRoot(),
         TranslateModule.forRoot({
             defaultLanguage: 'en',
             loader: {
                 provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
+                useFactory: (createThemeAwareLoader),
+                deps: [HttpClient, ThemeService]
             }
         }),
         CategoriesPanelComponent,

@@ -45,7 +45,7 @@ export class ProductDetailsComponent implements OnInit {
   @ViewChild('charsScrollAnchor') charsScrollAnchor!: ElementRef;
   @ViewChild('detailsScrollAnchor') detailsScrollAnchor!: ElementRef; 
   
-
+  providerThemeName = environment.providerThemeName;
   id:any;
   productOff: Product | undefined;
   category: string = 'none';
@@ -79,8 +79,10 @@ export class ProductDetailsComponent implements OnInit {
   showTermsMore:boolean=false;
   PURCHASE_ENABLED: boolean = environment.PURCHASE_ENABLED;
   showReadMoreButton:boolean=false;
+  customerId:string='';
 
   orgInfo:any=undefined;
+  showQuoteModal:boolean = false;
 
   protected readonly faScaleBalanced = faScaleBalanced;
   protected readonly faArrowProgress = faArrowProgress;
@@ -96,7 +98,7 @@ export class ProductDetailsComponent implements OnInit {
   stepsElements:string[]=['step-chars','step-price','step-terms','step-checkout'];
   stepsText:string[]=['text-chars','text-price','text-terms','text-checkout'];
   stepsCircles:string[]=['circle-chars','circle-price','circle-terms','circle-checkout'];
-
+  licenseTerm:any=undefined;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -135,7 +137,10 @@ export class ProductDetailsComponent implements OnInit {
         }
 
         this.cdr.detectChanges();
-      }
+      } else if(ev.type === 'CloseQuoteRequest'){
+          this.showQuoteModal=false;
+          this.cdr.detectChanges();
+        }
     })
   }
 
@@ -183,6 +188,14 @@ export class ProductDetailsComponent implements OnInit {
     if(JSON.stringify(aux) != '{}' && (((aux.expire - moment().unix())-4) > 0)) {
       this.check_logged=true;
       this.cdr.detectChanges();
+
+      if(aux.logged_as == aux.id){
+        this.customerId = aux.partyId;
+      } else {
+        let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as)
+        this.customerId = loggedOrg.partyId
+      }
+
     } else {
       this.check_logged=false,
       this.cdr.detectChanges();
@@ -207,7 +220,7 @@ export class ProductDetailsComponent implements OnInit {
               prices.push(price);
               console.log(price)
               if(price.priceType == 'custom'){
-                this.checkCustom=true;
+                this.checkCustom = true;
               }
             })
           }
@@ -284,6 +297,10 @@ export class ProductDetailsComponent implements OnInit {
           this.attatchments = this.productOff?.attachment?.filter(item => item.name != 'Profile Picture') ?? [];
         }
 
+        this.licenseTerm = this.productOff?.productOfferingTerm?.find(
+          element => element.name === 'License'
+        );
+
         if(this.prodSpec.productSpecCharacteristic != undefined) {
 
           // Find if there is a self attestement
@@ -301,6 +318,12 @@ export class ProductDetailsComponent implements OnInit {
         this.complianceDescription = this.getComplianceDescription();
       })
     })
+
+  }
+
+  toggleQuoteModal(){
+    //Show quote modal
+    this.showQuoteModal = true;
   }
 
   getComplianceDescription(): string {
@@ -320,6 +343,10 @@ export class ProductDetailsComponent implements OnInit {
 
   isVerified(char: any) {
     return char.verified == true
+  }
+
+  isCustom() {
+    return this.checkCustom;
   }
 
   ngAfterViewChecked() {
@@ -357,7 +384,10 @@ export class ProductDetailsComponent implements OnInit {
     }
 
     if(this.productOff?.productOfferingTerm != undefined){
-      if(this.productOff.productOfferingTerm.length == 1 && this.productOff.productOfferingTerm[0].name == undefined){
+      this.licenseTerm = this.productOff.productOfferingTerm.find(
+        element => element.name === 'License'
+      );
+      if(!this.licenseTerm){
         this.check_terms=false;
       } else {
         this.check_terms=true;
