@@ -435,23 +435,25 @@ export class CheckoutComponent implements OnInit {
       const updatedItems = JSON.parse(JSON.stringify(this.items)); // we need a deep clone isntead of shallow clone
       for (const cartItem of updatedItems){
           const response = await lastValueFrom( this.priceService.calculatePrice({
-                "id": uuidv4(),
-                "productOrderItem":[{
-                  action: "add",
-                  id: cartItem.id, // product offering id
-                  itemTotalPrice:[{
-                    productOfferingPrice:{
-                      id: cartItem.options.pricing[0].id, //product offering price parent id
-                      href: cartItem.options.pricing[0].id,
-                      name: "" // Not using the pricePlan name in backend, we can discard thiss
-                  }}],
-                  product: {productCharacteristic:  cartItem.options.characteristics},
-                  productOffering: {id: cartItem.id, href: cartItem.id},
-                  quantity: "1"
-                }],
-                billingAccount: {
-                  id: this.selectedBillingAddress.id,
-                  href: this.selectedBillingAddress.id
+                "productOrder":{
+                    "id": uuidv4(),
+                    "productOrderItem":[{
+                      action: "add",
+                      id: cartItem.id, // product offering id
+                      itemTotalPrice:[{
+                        productOfferingPrice:{
+                          id: cartItem.options.pricing[0].id, //product offering price parent id
+                          href: cartItem.options.pricing[0].id,
+                          name: "" // Not using the pricePlan name in backend, we can discard thiss
+                      }}],
+                      product: {productCharacteristic:  cartItem.options.characteristics},
+                      productOffering: {id: cartItem.id, href: cartItem.id},
+                      quantity: "1"
+                    }],
+                    billingAccount: {
+                      id: this.selectedBillingAddress.id,
+                      href: this.selectedBillingAddress.id
+                    }
                 }
               }));
           let pricing: any[] = response.orderTotalPrice;
