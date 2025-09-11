@@ -18,7 +18,7 @@ export class RevenueSharingService {
   constructor(private http: HttpClient,private localStorage: LocalStorageService) { }
 
   getRevenue(id:any){
-    let url = `${RevenueSharingService.PAYMENT_URL}/revenue/dashbord/${id}`;
+    let url = `${RevenueSharingService.PAYMENT_URL}/revenue/dashboard/${id}`;
     //url= "https://payment.dome-marketplace-sbx.org/revenue/dashboard/urn:ngsi-ld:organization:a195013a-a0e4-493a-810a-b040e10da58f"
  
     return lastValueFrom(this.http.get<any>(url));
