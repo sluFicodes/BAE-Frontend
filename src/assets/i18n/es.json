@@ -285,6 +285,7 @@
         "_birthdate": "Birthdate",
         "_date": "Date",
         "_country": "Country",
+        "_did": "DID",
         "_city": "City",
         "_mybills": "My billing addresses",
         "_user_id": "User id",
