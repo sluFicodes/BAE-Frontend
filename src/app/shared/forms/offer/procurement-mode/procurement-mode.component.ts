@@ -166,10 +166,6 @@ export class ProcurementModeComponent implements ControlValueAccessor, AfterView
           this.errorMessage = "";
           this.showProcurementError = false;
           this.form.setErrors(null)
-        } else if (this.gatewayCount == 0){
-          this.errorMessage = "You can't select this procurement mode as you are not registered on the payment gateway.";
-          this.showProcurementError = true;
-          this.form.setErrors({ invalidProcurement: true }); 
         }
 
         const mode = this.procurementModes.find(m => m.id === value.mode) || this.procurementModes[0];

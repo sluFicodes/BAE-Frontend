@@ -89,6 +89,8 @@ export class CreateProductSpecComponent implements OnInit {
   stringCharSelected:boolean=true;
   numberCharSelected:boolean=false;
   rangeCharSelected:boolean=false;
+  credentialsConfigSelected:boolean=false;
+  policyConfigSelected:boolean=false;
   prodChars:ProductSpecificationCharacteristic[]=[];
   finishChars:ProductSpecificationCharacteristic[]=[];
   creatingChars:CharacteristicValueSpecification[]=[];
@@ -169,6 +171,7 @@ export class CreateProductSpecComponent implements OnInit {
   fromValue: string = '';
   toValue: string = '';
   rangeUnit: string = '';
+  jsonValue: string = '';
 
   filenameRegex = /^[A-Za-z0-9_.-]+$/;
 
@@ -624,6 +627,8 @@ export class CreateProductSpecComponent implements OnInit {
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
+    this.credentialsConfigSelected=false;
+    this.policyConfigSelected=false;
     this.showPreview=false;
     this.refreshChars();
   }
@@ -928,9 +933,12 @@ export class CreateProductSpecComponent implements OnInit {
     this.fromValue = '';
     this.toValue = '';
     this.rangeUnit = '';
+    this.jsonValue = '';
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
+    this.credentialsConfigSelected=false;
+    this.policyConfigSelected=false;
     this.creatingChars=[];
   }
 
@@ -994,14 +1002,32 @@ export class CreateProductSpecComponent implements OnInit {
       this.stringCharSelected=true;
       this.numberCharSelected=false;
       this.rangeCharSelected=false;
+      this.credentialsConfigSelected=false;
+      this.policyConfigSelected=false;
     }else if (event.target.value=='number'){
       this.stringCharSelected=false;
       this.numberCharSelected=true;
       this.rangeCharSelected=false;
-    }else{
+      this.credentialsConfigSelected=false;
+      this.policyConfigSelected=false;
+    }else if(event.target.value=='range'){
       this.stringCharSelected=false;
       this.numberCharSelected=false;
       this.rangeCharSelected=true;
+      this.credentialsConfigSelected=false;
+      this.policyConfigSelected=false;
+    }else if(event.target.value=='credentialsConfiguration'){
+      this.stringCharSelected=false;
+      this.numberCharSelected=false;
+      this.rangeCharSelected=false;
+      this.credentialsConfigSelected=true;
+      this.policyConfigSelected=false;
+    }else if(event.target.value=='authorizationPolicy'){
+      this.stringCharSelected=false;
+      this.numberCharSelected=false;
+      this.rangeCharSelected=false;
+      this.credentialsConfigSelected=false;
+      this.policyConfigSelected=true;
     }
     this.creatingChars=[];
   }
@@ -1020,7 +1046,7 @@ export class CreateProductSpecComponent implements OnInit {
           value:this.stringValue as any
         })
       }
-      this.stringValue='';  
+      this.stringValue='';
     } else if (this.numberCharSelected){
       console.log('number')
       if(this.creatingChars.length==0){
@@ -1038,7 +1064,7 @@ export class CreateProductSpecComponent implements OnInit {
       }
       this.numberUnit='';
       this.numberValue='';
-    }else{
+    }else if(this.rangeCharSelected){
       console.log('range')
       if(this.creatingChars.length==0){
         this.creatingChars.push({
@@ -1053,11 +1079,34 @@ export class CreateProductSpecComponent implements OnInit {
           valueFrom:this.fromValue as any,
           valueTo:this.toValue as any,
           unitOfMeasure:this.rangeUnit})
-      } 
+      }
+      this.fromValue='';
+      this.toValue='';
+      this.rangeUnit='';
+    }else if(this.credentialsConfigSelected || this.policyConfigSelected){
+      console.log('json')
+      try {
+        const jsonObj = JSON.parse(this.jsonValue);
+        if(this.creatingChars.length==0){
+          this.creatingChars.push({
+            isDefault:true,
+            value:jsonObj as any
+          })
+        } else{
+          this.creatingChars.push({
+            isDefault:false,
+            value:jsonObj as any
+          })
+        }
+        this.jsonValue='';
+      } catch (e) {
+        this.errorMessage='Invalid JSON format';
+        this.showError=true;
+        setTimeout(() => {
+          this.showError = false;
+        }, 3000);
+      }
     }
-    this.fromValue='';
-    this.toValue='';
-    this.rangeUnit='';
   }
 
   removeCharValue(char:any,idx:any){
@@ -1078,12 +1127,22 @@ export class CreateProductSpecComponent implements OnInit {
 
   saveChar(){
     if(this.charsForm.value.name!=null){
-      this.prodChars.push({
+      let characteristic: any = {
         id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
         name: this.charsForm.value.name,
         description: this.charsForm.value.description != null ? this.charsForm.value.description : '',
         productSpecCharacteristicValue: this.creatingChars
-      })
+      };
+
+      if(this.credentialsConfigSelected){
+        characteristic.valueType = 'credentialsConfiguration';
+        characteristic['@schemaLocation'] = 'https://raw.githubusercontent.com/FIWARE/contract-management/refs/heads/main/schemas/credentials/credentialConfigCharacteristic.json';
+      } else if(this.policyConfigSelected){
+        characteristic.valueType = 'authorizationPolicy';
+        characteristic['@schemaLocation'] = 'https://raw.githubusercontent.com/FIWARE/contract-management/refs/heads/policy-support/schemas/odrl/policyCharacteristic.json';
+      }
+
+      this.prodChars.push(characteristic);
     }
 
     this.charsForm.reset();
@@ -1092,6 +1151,8 @@ export class CreateProductSpecComponent implements OnInit {
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
+    this.credentialsConfigSelected=false;
+    this.policyConfigSelected=false;
     this.refreshChars();
     this.cdr.detectChanges();
   }

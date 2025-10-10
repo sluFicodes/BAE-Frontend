@@ -196,7 +196,11 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   filterCharacteristics() {
     this.filteredCharacteristics = [];
     for(let i = 0; i < this.characteristics.length; i++){
-      if (!certifications.some(certification => certification.name === this.characteristics[i].name) && this.characteristics[i].name != 'Compliance:SelfAtt') {
+      if (!certifications.some(certification => certification.name === this.characteristics[i].name) 
+        && this.characteristics[i].name != 'Compliance:SelfAtt'
+        && this.characteristics[i].valueType != 'credentialsConfiguration'
+        && this.characteristics[i].valueType != 'authorizationPolicy'
+      ) {
         this.filteredCharacteristics.push(this.characteristics[i]);
       }
     }
