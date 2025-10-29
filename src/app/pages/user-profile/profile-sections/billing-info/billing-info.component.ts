@@ -103,7 +103,7 @@ export class BillingInfoComponent implements OnInit{
           id: this.partyId,
           name: loggedOrg.name,
           href : this.partyId,
-          role: "Owner"
+          role: environment.SELLER_ROLE
         }
       } else {
         this.partyId = aux.partyId;
@@ -113,7 +113,7 @@ export class BillingInfoComponent implements OnInit{
           id: this.partyId,
           name: aux.user,
           href : this.partyId,
-          role: "Owner"
+          role: environment.SELLER_ROLE
         }
       }
       this.getBilling();

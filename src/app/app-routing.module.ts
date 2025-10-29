@@ -19,6 +19,7 @@ import { ProductOrdersComponent } from './pages/product-orders/product-orders.co
 import {AboutDomeComponent} from "src/app/pages/about-dome/about-dome.component"
 import { QuoteListComponent } from "src/app/features/quotes/pages/quote-list/quote-list.component"
 import { UsageSpecsComponent } from "src/app/pages/usage-specs/usage-specs.component"
+import { environment } from 'src/environments/environment';
 
 const routes: Routes = [
   {
@@ -66,15 +67,15 @@ const routes: Routes = [
   },
   { path: 'profile',
   component: UserProfileComponent,
-  canActivate: [AuthGuard], data: { roles: ['individual','orgAdmin'] }
+  canActivate: [AuthGuard], data: { roles: ['individual', environment.ORG_ADMIN_ROLE] }
   },
   { path: 'my-offerings',
   component: SellerOfferingsComponent,
-  canActivate: [AuthGuard], data: { roles: ['seller'] }
+  canActivate: [AuthGuard], data: { roles: [environment.SELLER_ROLE] }
   },
   { path: 'admin',
   component: AdminComponent,
-  canActivate: [AuthGuard], data: { roles: ['admin', 'certifier'] }
+  canActivate: [AuthGuard], data: { roles: [environment.ADMIN_ROLE, 'certifier'] }
   },
   { path: 'contact-us',
     component: ContactUsFormComponent
@@ -90,7 +91,7 @@ const routes: Routes = [
   {
     path: 'usage-spec',
     component: UsageSpecsComponent,
-    canActivate: [AuthGuard], data: { roles: ['seller'] }
+    canActivate: [AuthGuard], data: { roles: [environment.SELLER_ROLE] }
   },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
 ]

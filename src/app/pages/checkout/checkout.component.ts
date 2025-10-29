@@ -257,7 +257,7 @@ export class CheckoutComponent implements OnInit {
         {
           id: this.relatedParty,
           href: this.relatedParty,
-          role: 'Customer'
+          role: environment.BUYER_ROLE
         }
       ],
       priority: '4',

@@ -98,7 +98,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   public headerLinks: NavLink[] = [];
   public themeAuthUrls: ThemeAuthUrlsConfig | undefined;
 
-
+  sellerRole: string = environment.SELLER_ROLE;
+  orgAdminRole: string = environment.ORG_ADMIN_ROLE;
 
   ngOnDestroy(): void {
       this.qrWindow?.close()
@@ -164,7 +165,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       console.log('--roles')
       console.log(aux.roles)
       for(let i=0; i < aux.roles.length; i++){
-        if(aux.roles[i].name == 'admin'){
+        if(aux.roles[i].name == environment.ADMIN_ROLE){
           this.isAdmin=true;
           this.cdr.detectChanges();
         }
@@ -213,7 +214,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
           this.cdr.detectChanges();
           this.orgs=aux.organizations;
           for(let i=0; i < aux.roles.length; i++){
-            if(aux.roles[i].name == 'admin'){
+            if(aux.roles[i].name == environment.ADMIN_ROLE){
               this.isAdmin=true;
               this.cdr.detectChanges();
             }

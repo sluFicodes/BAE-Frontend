@@ -81,5 +81,9 @@ export const environment = {
     },
     analytics: '',
     feedbackCampaign: false,
-    feedbackCampaignExpiration: 0
+    feedbackCampaignExpiration: 0,
+    SELLER_ROLE: '',
+    BUYER_ROLE: '',
+    ADMIN_ROLE: '',
+    ORG_ADMIN_ROLE: ''
 };
