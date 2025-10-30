@@ -1,5 +1,6 @@
 export const environment = {
     BASE_URL: 'http://localhost:8004',
+    isProduction: false,
     PAYMENT_URL: '/revenue',
     LEGACY_PREFIX: '',
     //API_PORT: 8632,

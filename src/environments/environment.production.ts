@@ -1,5 +1,6 @@
 export const environment = {
     BASE_URL: '',
+    isProduction: true,
     PAYMENT_URL: '/revenue',
     LEGACY_PREFIX: '/ux',
     PRODUCT_CATALOG: '/catalog',
