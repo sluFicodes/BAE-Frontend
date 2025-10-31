@@ -79,8 +79,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.statsService.getStats().then(data=> {
-      this.services=data?.services;
-      this.publishers=data?.organizations;
+      this.services=data?.services || [];
+      this.publishers=data?.organizations || [];
       this.startTagTransition();
     })
     this.isFilterPanelShown = JSON.parse(this.localStorage.getItem('is_filter_panel_shown') as string);
