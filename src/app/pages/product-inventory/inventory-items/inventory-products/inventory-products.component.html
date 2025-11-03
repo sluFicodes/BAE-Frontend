@@ -97,7 +97,7 @@
         } @else {
             <div class="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @for (inv of inventory; track inv.id; let idx = $index) {
-                    <div class="w-full h-full bg-secondary-50 dark:bg-secondary-100 dark:border-secondary-100 rounded-lg border-secondary-50 border ">
+                    <div data-cy="productInventory" class="w-full h-full bg-secondary-50 dark:bg-secondary-100 dark:border-secondary-100 rounded-lg border-secondary-50 border ">
 
                         <div (click)="selectProduct(inv)" class="rounded overflow-hidden cursor-pointer">
                             <div class="relative h-48 flex justify-center items-center">
