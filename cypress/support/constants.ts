@@ -156,7 +156,7 @@ export const catalog_launched = [
             {
                 "id": "urn:ngsi-ld:individual:b73dd8ce-b63f-4c5b-be07-ca7ea10ad78e",
                 "href": "urn:ngsi-ld:individual:b73dd8ce-b63f-4c5b-be07-ca7ea10ad78e",
-                "role": "Owner",
+                "role": "Seller",
                 "@referredType": ""
             }
         ],
@@ -312,7 +312,7 @@ export const productOffering = {
         {
             id: "urn:ngsi-ld:individual:56c77de4-f136-4167-95f0-92a36983ee0f",
             href: "urn:ngsi-ld:individual:56c77de4-f136-4167-95f0-92a36983ee0f",
-            role: "Owner",
+            role: "Seller",
             "@referredType": ""
         }
     ]
@@ -330,7 +330,7 @@ export const productSpec = {
         {
             id: "urn:ngsi-ld:individual:56c77de4-f136-4167-95f0-92a36983ee0f",
             href: "urn:ngsi-ld:individual:56c77de4-f136-4167-95f0-92a36983ee0f",
-            role: "Owner",
+            role: "Seller",
             "@referredType": ""
         }
     ],

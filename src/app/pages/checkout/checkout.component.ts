@@ -396,7 +396,7 @@ export class CheckoutComponent implements OnInit {
 
   groupItemsByOwner(ownerId: any) {
     const itemsForOwner = this.items.filter((item: any) => {
-      const owner = item.relatedParty?.find((rp: any) => rp.role === 'Owner')?.id;
+      const owner = item.relatedParty?.find((rp: any) => rp.role === environment.SELLER_ROLE)?.id;
       return owner === ownerId;
     });
   

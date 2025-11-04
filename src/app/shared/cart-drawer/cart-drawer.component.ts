@@ -13,6 +13,7 @@ import { AccountServiceService } from 'src/app/services/account-service.service'
 import { cartProduct } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-cart-drawer',
@@ -129,7 +130,7 @@ export class CartDrawerComponent implements OnInit{
     const groupedByOwner: any[][] = Object.values(
       this.items.reduce((groups: any, item: any) => {
         const owner = item.relatedParty
-          ?.find((rp: any) => rp.role === 'Owner')
+          ?.find((rp: any) => rp.role === environment.SELLER_ROLE)
           ?.id;
     
         if (owner) {
