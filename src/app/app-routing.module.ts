@@ -78,7 +78,7 @@ const routes: Routes = [
   },
   { path: 'admin',
   component: AdminComponent,
-  canActivate: [AuthGuard], data: { roles: [environment.ADMIN_ROLE, 'certifier'] }
+  canActivate: [AuthGuard], data: { roles: [environment.ADMIN_ROLE, environment.CERTIFIER_ROLE] }
   },
   { path: 'contact-us',
     component: ContactUsFormComponent

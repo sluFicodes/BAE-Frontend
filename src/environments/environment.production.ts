@@ -83,8 +83,9 @@ export const environment = {
     analytics: '',
     feedbackCampaign: false,
     feedbackCampaignExpiration: 0,
-    SELLER_ROLE: '',
-    BUYER_ROLE: '',
-    ADMIN_ROLE: '',
-    ORG_ADMIN_ROLE: ''
+    SELLER_ROLE: 'Seller',
+    BUYER_ROLE: 'Buyer',
+    ADMIN_ROLE: 'Admin',
+    ORG_ADMIN_ROLE: 'orgAdmin',
+    CERTIFIER_ROLE: 'certifier'
 };

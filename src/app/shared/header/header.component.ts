@@ -100,6 +100,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
 
   sellerRole: string = environment.SELLER_ROLE;
   orgAdminRole: string = environment.ORG_ADMIN_ROLE;
+  certifierRole: string = environment.CERTIFIER_ROLE;
 
   ngOnDestroy(): void {
       this.qrWindow?.close()
