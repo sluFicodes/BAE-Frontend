@@ -12,7 +12,7 @@ import { ApiServiceService } from 'src/app/services/product-service.service';
   styleUrl: './featured.component.css'
 })
 export class FeaturedComponent implements OnInit {
-  categories:any[]=[];
+  categories:any[]= [];
 
   constructor(
     private eventMessage: EventMessageService,
