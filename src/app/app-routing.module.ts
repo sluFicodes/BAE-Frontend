@@ -70,15 +70,15 @@ const routes: Routes = [
   },
   { path: 'profile',
   component: UserProfileComponent,
-  canActivate: [AuthGuard], data: { roles: ['individual', environment.ORG_ADMIN_ROLE] }
+  canActivate: [AuthGuard], data: { roles: ['individual', 'orgAdmin'] }
   },
   { path: 'my-offerings',
   component: SellerOfferingsComponent,
-  canActivate: [AuthGuard], data: { roles: [environment.SELLER_ROLE] }
+  canActivate: [AuthGuard], data: { roles: ['seller'] }
   },
   { path: 'admin',
   component: AdminComponent,
-  canActivate: [AuthGuard], data: { roles: [environment.ADMIN_ROLE, environment.CERTIFIER_ROLE] }
+  canActivate: [AuthGuard], data: { roles: ['admin', 'certifier'] }
   },
   { path: 'contact-us',
     component: ContactUsFormComponent
@@ -94,7 +94,7 @@ const routes: Routes = [
   {
     path: 'usage-spec',
     component: UsageSpecsComponent,
-    canActivate: [AuthGuard], data: { roles: [environment.SELLER_ROLE] }
+    canActivate: [AuthGuard], data: { roles: ['seller'] }
   },
   { path: 'blog',
     component: DomeBlogComponent
@@ -104,11 +104,11 @@ const routes: Routes = [
   },
   { path: 'blog-entry',
     component: EntryFormComponent,
-    canActivate: [AuthGuard], data: { roles: [environment.ADMIN_ROLE] }
+    canActivate: [AuthGuard], data: { roles: ['admin'] }
   },
   { path: 'blog-entry/:id',
     component: EntryFormComponent,
-    canActivate: [AuthGuard], data: { roles: [environment.ADMIN_ROLE] }
+    canActivate: [AuthGuard], data: { roles: ['admin'] }
   },
   { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
 ]
