@@ -69,16 +69,16 @@
                 <h2 class="text-3xl font-bold text-primary-100 ml-4 dark:text-white">{{ 'CREATE_RES_SPEC._general' | translate }}</h2>
                     <form class="m-4 gap-4" [formGroup]="generalForm">
                         <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_RES_SPEC._name' | translate }}</label>
-                        <input formControlName="name" type="text" id="prod-name" maxLength="100"
+                        <input data-cy="resSpecName" formControlName="name" type="text" id="prod-name" maxLength="100"
                         [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
                         class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"/>
-                        
+
                         <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_RES_SPEC._description' | translate }}</label>
-                        <app-markdown-textarea formControlName="description"></app-markdown-textarea>
+                        <app-markdown-textarea data-cy="resSpecDescription" formControlName="description"></app-markdown-textarea>
 
                     </form>
                     <div class="flex w-full justify-items-end justify-end">
-                        <button type="button" (click)="toggleChars();generalDone=true;" [disabled]="!generalForm.valid" [ngClass]="!generalForm.valid ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        <button data-cy="resSpecNextGeneral" type="button" (click)="toggleChars();generalDone=true;" [disabled]="!generalForm.valid" [ngClass]="!generalForm.valid ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                             {{ 'CREATE_RES_SPEC._next' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -168,24 +168,24 @@
                 }
                 @if(showCreateChar==false){
                     <div class="flex w-full justify-items-center justify-center">
-                        <button type="button" (click)="showCreateChar=!showCreateChar" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                        <button data-cy="resSpecNewChar" type="button" (click)="showCreateChar=!showCreateChar" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                             {{ 'CREATE_RES_SPEC._new_char' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-                            </svg>                                  
+                            </svg>
                         </button>
                     </div>
                 } @else {
                     <form class="m-4 md:grid md:grid-cols-2 gap-4" [formGroup]="charsForm">
                         <div>
                             <label for="prod-name" class="font-bold text-lg dark:text-white">{{ 'CREATE_RES_SPEC._name' | translate }}</label>
-                            <input formControlName="name" type="text" id="prod-name" maxLength="100"
+                            <input data-cy="resSpecCharName" formControlName="name" type="text" id="prod-name" maxLength="100"
                             class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                            
+
                         </div>
                         <div>
                             <label class="font-bold text-lg dark:text-white">{{ 'CREATE_RES_SPEC._type' | translate }}</label>
-                            <select id="type" (change)="onTypeChange($event)"
+                            <select data-cy="resSpecCharType" id="type" (change)="onTypeChange($event)"
                             class="mb-2 bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                                 <option selected value="string">String</option>
                                 <option value="number">Number</option>
@@ -194,7 +194,7 @@
                         </div>
                         <div class="col-span-2">
                             <label for="description" class="font-bold text-lg dark:text-white">{{ 'CREATE_RES_SPEC._description' | translate }}</label>
-                            <textarea id="description" formControlName="description" rows="4"
+                            <textarea data-cy="resSpecCharDescription" id="description" formControlName="description" rows="4"
                             class="mb-2 min-h-fit bg-gray-50 dark:bg-secondary-300 border border-gray-300 dark:border-secondary-200 dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"></textarea>
                         </div>                        
                     </form>
@@ -240,9 +240,9 @@
                         <label for="values" [ngClass]="rangeCharSelected && creatingChars.length==1 ? 'hidden' : ''" class="font-bold text-lg dark:text-white">{{ 'CREATE_RES_SPEC._add_values' | translate }}</label>
                         @if(stringCharSelected){
                             <div class="flex flex-row items-center align-items-middle">
-                                <input type="text" id="value" [(ngModel)]="stringValue"
+                                <input data-cy="resSpecCharValueString" type="text" id="value" [(ngModel)]="stringValue"
                                 class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                                <button (click)="addCharValue()" [disabled]="!stringValue" [ngClass]="!stringValue ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                <button data-cy="resSpecAddCharValue" (click)="addCharValue()" [disabled]="!stringValue" [ngClass]="!stringValue ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                     <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
                                     </svg>                                                                              
@@ -254,22 +254,22 @@
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-white">
                                         {{ 'CREATE_RES_SPEC._value' | translate }}
                                     </span>
-                                    <input type="number" pattern="[0-9]*" id="value" [(ngModel)]="numberValue"
+                                    <input data-cy="resSpecCharValueNumber" type="number" pattern="[0-9]*" id="value" [(ngModel)]="numberValue"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 </div>
                                 <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-white">
                                         {{ 'CREATE_RES_SPEC._unit' | translate }}
                                     </span>
-                                    <input type="text" id="value" [(ngModel)]="numberUnit"
+                                    <input data-cy="resSpecCharValueUnit" type="text" id="value" [(ngModel)]="numberUnit"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
-                                </div>                           
-                                
-                                <button (click)="addCharValue()" [disabled]="(numberValue === '' || numberValue === null || numberValue === undefined) || !numberUnit" [ngClass]="(numberValue === '' || numberValue === null || numberValue === undefined) || !numberUnit ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                </div>
+
+                                <button data-cy="resSpecAddCharValue" (click)="addCharValue()" [disabled]="(numberValue === '' || numberValue === null || numberValue === undefined) || !numberUnit" [ngClass]="(numberValue === '' || numberValue === null || numberValue === undefined) || !numberUnit ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                     <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-                                    </svg>                                                                              
-                                </button> 
+                                    </svg>
+                                </button>
                             </div>
                         } @else if (rangeCharSelected && creatingChars.length==0){
                             <div class="flex flex-col md:flex-row items-center align-items-middle">
@@ -277,43 +277,43 @@
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-white">
                                         {{ 'CREATE_RES_SPEC._from' | translate }}
                                     </span>
-                                    <input type="number" pattern="[0-9]*" id="value" [(ngModel)]="fromValue"
+                                    <input data-cy="resSpecCharValueFrom" type="number" pattern="[0-9]*" id="value" [(ngModel)]="fromValue"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 </div>
                                 <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-white">
                                         {{ 'CREATE_RES_SPEC._to' | translate }}
                                     </span>
-                                    <input type="number" pattern="[0-9]*" id="value" [(ngModel)]="toValue"
+                                    <input data-cy="resSpecCharValueTo" type="number" pattern="[0-9]*" id="value" [(ngModel)]="toValue"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 </div>
                                 <div class="flex w-full mb-2 md:mb-0">
                                     <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white border rounded-e-0 border-gray-300 border-e-0 rounded-s-md dark:text-white">
                                         {{ 'CREATE_RES_SPEC._unit' | translate }}
                                     </span>
-                                    <input type="text" id="value" [(ngModel)]="rangeUnit"
+                                    <input data-cy="resSpecCharValueUnit" type="text" id="value" [(ngModel)]="rangeUnit"
                                     class="mr-4 bg-gray-50 border border-gray-300 text-gray-900 dark:bg-secondary-300 dark:border-secondary-200 dark:text-white text-sm rounded-r-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
                                 </div>
-                                <button (click)="addCharValue()" [disabled]="(fromValue === '' || fromValue === null || fromValue === undefined) || (toValue === '' || toValue === null || toValue === undefined) || !rangeUnit" [ngClass]="(fromValue === '' || fromValue === null || fromValue === undefined) || (toValue === '' || toValue === null || toValue === undefined) || !rangeUnit ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
+                                <button data-cy="resSpecAddCharValue" (click)="addCharValue()" [disabled]="(fromValue === '' || fromValue === null || fromValue === undefined) || (toValue === '' || toValue === null || toValue === undefined) || !rangeUnit" [ngClass]="(fromValue === '' || fromValue === null || fromValue === undefined) || (toValue === '' || toValue === null || toValue === undefined) || !rangeUnit ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'" type="button" class="text-white w-fit h-full bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-1 text-center inline-flex items-center">
                                     <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
-                                    </svg>                                                                              
-                                </button> 
+                                    </svg>
+                                </button>
                             </div>
                         }
                         <div class="flex w-full justify-items-center justify-center mt-4">
-                            <button type="button" (click)="saveChar()"  [disabled]="!charsForm.valid || creatingChars.length==0" [ngClass]="!charsForm.valid || creatingChars.length==0 ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                            <button data-cy="resSpecSaveChar" type="button" (click)="saveChar()"  [disabled]="!charsForm.valid || creatingChars.length==0" [ngClass]="!charsForm.valid || creatingChars.length==0 ? 'opacity-50' : 'hover:bg-primary-50'" class="flex text-white justify-center bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                                 {{ 'CREATE_RES_SPEC._save_char' | translate }}
                                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M11 16h2m6.707-9.293-2.414-2.414A1 1 0 0 0 16.586 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7.414a1 1 0 0 0-.293-.707ZM16 20v-6a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v6h8ZM9 4h6v3a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V4Z"/>
-                                </svg>                                                                   
+                                </svg>
                             </button>
                         </div>
 
                     </div>
                 }
                 <div class="flex w-full justify-items-end justify-end ml-4 mt-4">
-                    <button type="button" (click)="showFinish();charsDone=true;" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
+                    <button data-cy="resSpecNextChars" type="button" (click)="showFinish();charsDone=true;" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center">
                         {{ 'CREATE_RES_SPEC._next' | translate }}
                         <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
@@ -420,7 +420,7 @@
                     }
                     }
                     <div class="flex w-full justify-items-end justify-end ml-4">
-                        <button type="button" (click)="createResource();" [disabled]="loading" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button data-cy="resSpecFinish" type="button" (click)="createResource();" [disabled]="loading" class="flex text-white justify-end bg-primary-100 hover:bg-primary-50 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
                             {{ 'CREATE_RES_SPEC._create_res' | translate }}
                             <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
