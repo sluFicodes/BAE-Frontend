@@ -204,7 +204,8 @@
         "_about": "About",
         "_verify": "Publish your offering",
         "_info": "Info",
-        "_orders": "Product Orders"
+        "_orders": "Product Orders",
+        "_blog": "Dome blog"
     },
     "PRODUCT_DETAILS": {
         "_back": "Back",
@@ -309,7 +310,7 @@
         "_delete": "Yes, delete",
         "_confirm_delete": "Are you sure about deleting the following billing address?",
         "_cancel": "No, cancel",
-        "_invalid_phone": "Phonenumber is invalid!",
+        "_invalid_phone": "Phone number is invalid!",
         "_invalid_email": "Email is invalid!",
         "_save": "Save",
         "_success": "Updated successfully",
@@ -318,6 +319,7 @@
         "_add_logo_url": "Add organization logo using a URL",
         "_acknowledged": "Acknowledged",
         "_in_progress": "In Progress",
+        "_partial": "Partial",
         "_completed": "Completed",
         "_failed": "Failed",
         "_pending": "Pending",
@@ -394,7 +396,7 @@
         "_delete": "Yes, delete",
         "_confirm_delete": "Are you sure about deleting the following billing address?",
         "_cancel": "No, cancel",
-        "_invalid_phone": "Phonenumber is invalid!",
+        "_invalid_phone": "Phone number is invalid!",
         "_invalid_email": "Email is invalid!",
         "_no_billing": "There's no billing information.",
         "_close_modal": "Close modal",
@@ -1072,6 +1074,7 @@
         "_filter_state": "Filter by status",
         "_acknowledged": "Acknowledged",
         "_in_progress": "In Progress",
+        "_partial": "Partial",
         "_completed": "Completed",
         "_failed": "Failed",
         "_pending": "Pending",

@@ -51,6 +51,7 @@ export class CheckoutComponent implements OnInit {
   showError: boolean = false;
   providerId:any = null;
   loadingItems:boolean=false;
+  orderNote: string = '';
 
   constructor(
     private localStorage: LocalStorageService,
@@ -66,7 +67,7 @@ export class CheckoutComponent implements OnInit {
     private route: ActivatedRoute) {
     // Bind the method to preserve context
     this.orderProduct = this.orderProduct.bind(this);
-    this.eventMessage.messages$.subscribe(ev => {
+    this.eventMessage.messages$.subscribe(async ev => {
       if (ev.type === 'BillAccChanged') {
         this.getBilling();
       }
@@ -74,7 +75,8 @@ export class CheckoutComponent implements OnInit {
         this.addBill = false;
       }
       if (ev.type === 'ChangedSession') {
-        this.initCheckoutData();
+        console.log('changing session...')
+        await this.initCheckoutData();
       }
       if(ev.type === 'AddedCartItem') {
         this.loadingItems=true;
@@ -198,21 +200,24 @@ export class CheckoutComponent implements OnInit {
 
     console.log('Productos creados:', products);
 
-    const productOrder = this.createProductOrder(products);
-    console.log('--- order ---');
-    console.log(productOrder);
-
     try {
-      const response = await firstValueFrom(this.orderService.postProductOrder(productOrder));
-      const redirectUrl = response.headers.get('X-redirect-url');
+      const productOrder = this.createProductOrder(products);
+      console.log('--- order ---');
+      console.log(productOrder);
 
+      const response = await firstValueFrom(this.orderService.postProductOrder(productOrder));
+      const redirectUrl = response.headers.get('X-Redirect-URL');
+
+      console.log(response.headers)
       console.log(redirectUrl);
       console.log('PROD ORDER DONE');
 
       if (redirectUrl) {
+        console.log('redirectURL')
         // Going to the payment gateway
         window.location.href = redirectUrl;
       } else {
+        console.log('non-redirectURL')
         // we clear the shopping cart only if no redirection is applied
         await this.emptyShoppingCart();
         this.goToInventory();
@@ -251,22 +256,35 @@ export class CheckoutComponent implements OnInit {
   }
 
   private createProductOrder(products: any[]) {
-    return {
-      productOrderItem: products,
-      relatedParty: [
-        {
-          id: this.relatedParty,
-          href: this.relatedParty,
-          role: 'Customer'
-        }
-      ],
-      priority: '4',
-      billingAccount: {
-        id: this.selectedBillingAddress.id,
-        href: this.selectedBillingAddress.id
-      },
-      notificationContact: this.selectedBillingAddress.email
-    };
+
+      let po:any = {
+        productOrderItem: products,
+        relatedParty: [
+          {
+            id: this.relatedParty,
+            href: this.relatedParty,
+            role: 'Customer'
+          }
+        ],
+        priority: '4',
+        billingAccount: {
+          id: this.selectedBillingAddress.id,
+          href: this.selectedBillingAddress.id
+        },
+        notificationContact: this.selectedBillingAddress.email
+      };
+
+      if(this.orderNote!=''){
+        const newNote = {
+          text: this.orderNote,
+          id: `urn:ngsi-ld:note:${uuidv4()}`,
+          author: this.relatedParty,
+          date: new Date().toISOString()
+        };
+        po['note']=[newNote]
+      }
+
+    return po
   }
 
   private async emptyShoppingCart() {
@@ -345,7 +363,7 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  initCheckoutData() {
+  async initCheckoutData() {
     this.providerId = this.route.snapshot.paramMap.get('id');
     let aux = this.localStorage.getObject('login_items') as LoginInfo;
     if (aux) {
@@ -362,7 +380,8 @@ export class CheckoutComponent implements OnInit {
     console.log('--- Login Info ---')
     console.log(aux)
 
-    this.cartService.getShoppingCart().then(async data => {
+    let data = await this.cartService.getShoppingCart();
+    //this.cartService.getShoppingCart().then(async data => {
       console.log('---CARRITO API---')
       console.log(data)
       this.items = data;
@@ -374,12 +393,12 @@ export class CheckoutComponent implements OnInit {
       this.cdr.detectChanges();
       this.getTotalPrice();
       console.log('------------------')
-    })
+    //})
     console.log('--- ITEMS ---')
     console.log(this.items)
 
     this.loading_baddrs = true;
-    this.getBilling();
+    await this.getBilling();
   }
 
   async getProviderInfo(){
@@ -402,10 +421,12 @@ export class CheckoutComponent implements OnInit {
   }
   
 
-  getBilling() {
+  async getBilling() {
+    this.selectedBillingAddress=null;
     let isBillSelected = false;
     this.billingAddresses = [];
-    this.account.getBillingAccount().then(data => {
+    let data = await this.account.getBillingAccount();
+    //this.account.getBillingAccount().then(data => {
       for (let i = 0; i < data.length; i++) {
         isBillSelected = false;
         let email = ''
@@ -452,17 +473,21 @@ export class CheckoutComponent implements OnInit {
         this.billingAddresses.push(baddr)
         if (isBillSelected) {
           this.selectedBillingAddress = baddr
+          this.cdr.detectChanges();
         }
       }
       console.log('billing account...')
       console.log(this.billingAddresses)
+      
       this.loading_baddrs = false;
       if (this.billingAddresses.length > 0) {
         this.preferred = false;
       } else {
         this.preferred = true;
       }
-    })
+    //})
+    this.validBillAddr = !!this.selectedBillingAddress?.id;
+    this.cdr.detectChanges();
   }
 
   async onSelected(baddr: billingAccountCart) {

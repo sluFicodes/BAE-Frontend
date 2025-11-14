@@ -31,12 +31,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   domeRegister: string = environment.DOME_REGISTER_LINK
   services: string[] = []
   publishers: string[] = []
-  categories:any[]=[];
   currentIndexServ: number = 0;
   currentIndexPub: number = 0;
   delay: number = 2000;
   currentTheme: ThemeConfig | null = null;
   private themeSubscription: Subscription = new Subscription();
+  providerThemeName=environment.providerThemeName;
 
   //loginSubscription: Subscription = new Subscription();;
   constructor(private localStorage: LocalStorageService,
@@ -80,8 +80,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
 
     this.statsService.getStats().then(data=> {
-      this.services=data?.services;
-      this.publishers=data?.organizations;
+      this.services=data?.services || [];
+      this.publishers=data?.organizations || [];
       this.startTagTransition();
     })
     this.isFilterPanelShown = JSON.parse(this.localStorage.getItem('is_filter_panel_shown') as string);
@@ -112,6 +112,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.localStorage.addLoginInfo(info);
         this.eventMessage.emitLogin(info);
+        initFlowbite();
         console.log('----')
         //this.refreshApi.stopInterval();
         //this.refreshApi.startInterval(((data.expire - moment().unix())-4)*1000, data);
@@ -131,15 +132,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         console.log(aux['expire'] - moment().unix() <= 5)
       }
     }
-    this.api.getLaunchedCategories().then(data => {
-      for(let i=0; i < data.length; i++){
-        if(data[i].isRoot==true){
-          this.categories.push(data[i])
-        }
-      }
-      initFlowbite();
-      this.cdr.detectChanges();
-    })
 
     this.showContact = true;
 

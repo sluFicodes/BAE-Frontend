@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges, HostListener, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, SimpleChanges, OnChanges, HostListener, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CategoriesFilterComponent} from "../../shared/categories-filter/categories-filter.component";
 import {components} from "../../models/product-catalog";
@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginInfo } from 'src/app/models/interfaces';
+import { LoginInfo, FeedbackInfo } from 'src/app/models/interfaces';
 import * as moment from 'moment';
 
 @Component({
@@ -21,7 +21,7 @@ import * as moment from 'moment';
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
 
   products: ProductOffering[]=[];
   nextProducts: ProductOffering[]=[];
@@ -61,6 +61,7 @@ export class SearchComponent implements OnInit {
   } 
 
   async ngOnInit() {
+    
     this.products=[];
     this.nextProducts=[];
     /*await this.api.slaCheck().then(data => {  
@@ -95,10 +96,57 @@ export class SearchComponent implements OnInit {
     }
     setTimeout(() => {
       const userInfo = this.localStorage.getObject('login_items') as LoginInfo;
+      //this.localStorage.setObject('feedback', {});
 
       // The user is logged in
       if ((JSON.stringify(userInfo) != '{}' && (((userInfo.expire - moment().unix())-4) > 0))) {
-        this.feedback = true;
+        if(environment.feedbackCampaign){
+          let feedbackInfo = this.localStorage.getObject('feedback') as FeedbackInfo;
+          console.log('---------------------- feedbackInfo')
+          console.log(feedbackInfo)
+    
+          if(JSON.stringify(feedbackInfo) === '{}'){
+            let wantsFeedback = {
+              "expire": environment?.feedbackCampaignExpiration ?? moment().add(1, 'week').unix(),
+            }
+            this.localStorage.setObject('feedback',wantsFeedback);
+            this.feedback=true;
+          } else {
+            if ("expire" in feedbackInfo) {
+              let expiration = feedbackInfo?.expire ?? 0
+              if(((expiration - moment().unix())-4) < 0 && ((environment.feedbackCampaignExpiration - moment().unix())-4) > 0){
+                let wantsFeedback : FeedbackInfo = {
+                  "expire": environment?.feedbackCampaignExpiration,
+                }
+                if("approval" in feedbackInfo){
+                  wantsFeedback.approval=feedbackInfo.approval
+                }
+                this.localStorage.setObject('feedback',wantsFeedback)
+              }
+            } else {
+              let wantsFeedback : FeedbackInfo = {
+                "expire": environment?.feedbackCampaignExpiration,
+              }
+              if("approval" in feedbackInfo){
+                wantsFeedback.approval=feedbackInfo.approval
+              }
+              this.localStorage.setObject('feedback',wantsFeedback)
+            }
+    
+            if ("approval" in feedbackInfo) {
+              /*if (feedbackInfo.approval === true) {
+                this.feedback = true;
+              } else {
+                this.feedback = false;
+              }*/
+              this.feedback = false;
+            } else {
+              this.feedback = true; 
+            }
+            
+          }
+          
+        }
       }
     });
   }
@@ -108,6 +156,14 @@ export class SearchComponent implements OnInit {
     if(this.showDrawer==true){
       this.showDrawer=false;
       this.cdr.detectChanges();
+    }
+  }
+
+  ngOnDestroy(){
+    let storedFilters = this.localStorage.getObject('selected_categories') as Category[] || [];
+    for(let i=0;i<storedFilters.length;i++){
+      this.localStorage.removeCategoryFilter(storedFilters[i]);
+      this.eventMessage.emitRemovedFilter(storedFilters[i]);
     }
   }
 

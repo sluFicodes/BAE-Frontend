@@ -73,10 +73,10 @@
       } @else {
         <div class="flex items-center mx-auto max-w-screen-xl w-full items-center bg-white dark:bg-secondary-100 rounded-lg shadow-lg ml-4 mb-4">
           <div class="relative w-full">
-            <!-- Background image layer -->
+            <!-- Background image layer
             <div class="absolute inset-0 bg-no-repeat bg-cover opacity-40 z-0 rounded-lg"
                  style="background-image: url('{{ logo }}');">
-            </div>
+            </div> -->
           
             <!-- Content layer -->
             <div class="relative flex flex-row justify-between items-start w-full p-8">
@@ -104,7 +104,7 @@
         </div>
         <div class="md:pl-5 grid grid-cols-1 place-items-center lg:grid-cols-2 xl:grid-cols-3">
           @for (prod of products; track prod.id; let index = $index) {
-            <bae-off-card [productOff]=prod [cardId]="index" class="w-full h-full p-2"></bae-off-card>
+            <bae-off-card data-cy="baeCard" [productOff]=prod [cardId]="index" class="w-full h-full p-2"></bae-off-card>
           } @empty {
             <div class="min-h-19 dark:text-gray-600 text-center">{{ 'DASHBOARD._not_found' | translate }}</div>
           }
@@ -135,10 +135,3 @@
   </section>
 
 </div>
-@if(feedback && providerThemeName=='DOME'){
-  <feedback-modal 
-  rateMessage="How relevant are the services to your context, needs and industry challenges?"
-  writeMessage="Please elaborate on your answer"
-  type="services"
-  class="fixed inset-0 flex items-center justify-center z-40"></feedback-modal>
-}

@@ -1,6 +1,7 @@
 export const environment = {
     BASE_URL: 'http://localhost:8004',
-    PAYMENT_URL: 'https://payment.dome-marketplace-sbx.org',
+    isProduction: false,
+    PAYMENT_URL: '/revenue',
     LEGACY_PREFIX: '',
     //API_PORT: 8632,
     //API_PORT: 8004,
@@ -66,7 +67,7 @@ export const environment = {
     BUNDLE_ENABLED: false,
     DFT_CATALOG_ID: '',
     MAX_FILE_SIZE:3145728,
-    providerThemeName: 'DOME',
+    providerThemeName: 'default',
     quoteApi: 'http://localhost:8080/quoteManagement',
     quoteEndpoints: {
         createQuote: '/createQuote',
@@ -79,5 +80,7 @@ export const environment = {
         addAttachmentToQuote: '/addAttachmentToQuote',
         deleteQuote: '/quote'
     },
-    analytics: ''
+    analytics: '',
+    feedbackCampaign: false,
+    feedbackCampaignExpiration: 0
 };

@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   title = 'DOME Marketplace';
   showPanel = false;
   providerThemeName=environment.providerThemeName;
+  isProduction:boolean = environment.isProduction;
 
   constructor(private translate: TranslateService,
               private localStorage: LocalStorageService,
@@ -63,6 +64,8 @@ export class AppComponent implements OnInit {
       this.localStorage.setObject('cart_items', []);
     if(!this.localStorage.getObject('login_items'))
       this.localStorage.setObject('login_items', {});
+    if(!this.localStorage.getObject('feedback'))
+      this.localStorage.setObject('feedback', {});
     //this.checkPanel();
     this.eventMessage.messages$.subscribe(ev => {
       if(ev.type === 'LoginProcess') {
@@ -74,7 +77,7 @@ export class AppComponent implements OnInit {
         console.log(((info.expire - moment().unix()) - 4))
 
         this.refreshApi.startInterval(((info.expire - moment().unix())-4)*1000, ev);
-
+        initFlowbite();
         //this.refreshApi.startInterval(3000, ev.value);
       }
     })
@@ -89,6 +92,7 @@ export class AppComponent implements OnInit {
       this.refreshApi.startInterval(((aux.expire - moment().unix())-4)*1000, aux);
       console.log('token')
       console.log(aux.token)
+      initFlowbite();
     }
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
