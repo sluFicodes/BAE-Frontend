@@ -22,7 +22,8 @@ export const init_config = {
     'domeRegister': 'https://dome-marketplace.github.io/onboarding/',
     'domePublish': 'https://knowledgebase.dome-marketplace.org/shelves/company-onboarding-process',
     'purchaseEnabled': false,
-    'defaultId': 'urn:ngsi-ld:catalog:32828e1d-4652-4f4c-b13e-327450ce83c6'
+    'defaultId': 'urn:ngsi-ld:catalog:32828e1d-4652-4f4c-b13e-327450ce83c6',
+    "theme": "DOME"
        
 }
 
@@ -107,6 +108,21 @@ export const login_token = () => {
         "idp": "local",
         "orgState": 1
     }
+}
+
+export const default_catalog = {
+    "id": "urn:ngsi-ld:catalog:32828e1d-4652-4f4c-b13e-327450ce83c6",
+    "href": "urn:ngsi-ld:catalog:32828e1d-4652-4f4c-b13e-327450ce83c6",
+    "lifecycleStatus": "Launched",
+    "name": "default",
+    "version": "1.0",
+    "category": [
+        {
+            "id": "urn:ngsi-ld:category:26435cca-2707-4c89-8f0c-79464573c9e2",
+            "href": "urn:ngsi-ld:category:26435cca-2707-4c89-8f0c-79464573c9e2",
+            "name": "dft cat"
+        }
+    ]
 }
 
 export const catalog_launched = [
@@ -194,7 +210,9 @@ export const local_items = {
     cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/stats'}, init_stat).as('stats')
     //cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/catalog/productOffering?*'}, product_offering).as('productOffering')
     cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/config'}, init_config).as('config')
-    cy.intercept( {method:'GET', url: 'http://proxy.docker:8004/catalog/category?*'}, category_launched).as('category')
+    //cy.intercept('GET', '**/catalog/category/urn:ngsi-ld:category:*', category_dft).as('category');
+    cy.intercept({method: 'GET', url: 'catalog/catalog/?*'}, default_catalog).as('catalog') 
+    cy.intercept( {method: 'GET', url: 'http://proxy.docker:8004/catalog/category/?*'}, category_dft).as('category')  
     // Verify mocks are called 1 time
     cy.visit('/', {onBeforeLoad(win) {
         win.localStorage.setItem('color-theme', 'dark');
@@ -205,6 +223,8 @@ export const local_items = {
     cy.get('@config.all').should('have.length', 1)
     //cy.wait('@productOffering')
     //cy.get('@productOffering.all').should('have.length', 1)
+    cy.wait('@catalog')
+    cy.get('@catalog.all').should('have.length', 1)
     cy.wait('@category')
     cy.get('@category.all').should('have.length', 1)
     // Verify header interactive elemements are displayed and work as expected
@@ -277,6 +297,8 @@ export const loginAcc = () => {
         cy.get('@config.all').should('have.length', 2)
         //cy.wait('@productOffering')
         //cy.get('@productOffering.all').should('have.length', 2)
+        cy.wait('@catalog')
+        cy.get('@catalog.all').should('have.length', 2)
         cy.wait('@category')
         cy.get('@category.all').should('have.length', 2)
         cy.wait('@login_token')

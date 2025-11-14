@@ -35,7 +35,8 @@ export class OrgInfoComponent implements OnInit {
     name: new FormControl('', [Validators.required]),
     website: new FormControl(''),
     description: new FormControl(''),
-    country: new FormControl('',[Validators.required]),
+    country: new FormControl('', [Validators.required]),
+    did: new FormControl(''),
   });
   mediumForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'), Validators.maxLength(320)]),
@@ -189,7 +190,13 @@ export class OrgInfoComponent implements OnInit {
       chars.push({
         name: 'country',
         value: this.profileForm.value.country
-      })       
+      })
+    }
+    if(this.profileForm.value.did != ''){
+      chars.push({
+        name: 'did',
+        value: this.profileForm.value.did
+      })
     }
     for(let i=0; i<this.contactmediums.length; i++){
       console.log(this.contactmediums)
@@ -240,8 +247,9 @@ export class OrgInfoComponent implements OnInit {
         this.getProfile();
         this.successVisibility = true;
         setTimeout(() => {
-          this.successVisibility = false
-        }, 2000);       
+          this.successVisibility = false;
+        }, 2000); 
+        this.mediumForm.reset();      
       },
       error: error => {
           console.error('There was an error while updating!', error);
@@ -309,9 +317,11 @@ export class OrgInfoComponent implements OnInit {
           this.profileForm.controls['description'].setValue(profile.partyCharacteristic[i].value);
           this.description=profile.partyCharacteristic[i].value;
         }else if(profile.partyCharacteristic[i].name=='website') {
-          this.profileForm.controls['website'].setValue(profile.partyCharacteristic[i].value);    
+          this.profileForm.controls['website'].setValue(profile.partyCharacteristic[i].value);
         } else if(profile.partyCharacteristic[i].name=='country') {
           this.profileForm.controls['country'].setValue(profile.partyCharacteristic[i].value);
+        } else if(profile.partyCharacteristic[i].name=='did') {
+          this.profileForm.controls['did'].setValue(profile.partyCharacteristic[i].value);
         }
       }
     }
