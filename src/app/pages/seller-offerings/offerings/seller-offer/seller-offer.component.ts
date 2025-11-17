@@ -95,7 +95,7 @@ export class SellerOfferComponent implements OnInit{
   }
 
   async getOffers(next:boolean){
-    if(next==false){
+    if(next == false){
       this.loading=true;
     }
     
