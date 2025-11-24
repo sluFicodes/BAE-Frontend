@@ -113,12 +113,10 @@ export class CartDrawerComponent implements OnInit{
   }
 
   getSellerId(providerItem: any) {
-    providerItem.relatedParty.forEach((party: any) => {
-      if (party.role === environment.SELLER_ROLE) {
-        return party.id;
-      }
+    let partyRef = providerItem.relatedParty.find((party: any) => {
+      return party.role === environment.SELLER_ROLE
     });
-    return null
+    return partyRef.id;
   }
 
   goToShoppingCart(id:any) {
