@@ -112,6 +112,14 @@ export class CartDrawerComponent implements OnInit{
     this.eventMessage.emitToggleDrawer(false);
   }
 
+  getSellerId(providerItem: any) {
+    providerItem.relatedParty.forEach((party: any) => {
+      if (party.role === environment.SELLER_ROLE) {
+        return party.id;
+      }
+    });
+    return null
+  }
 
   goToShoppingCart(id:any) {
     this.hideCart();
