@@ -46,6 +46,7 @@ export class ProductDetailsComponent implements OnInit {
   @ViewChild('detailsScrollAnchor') detailsScrollAnchor!: ElementRef; 
   
   providerThemeName = environment.providerThemeName;
+  quotesEnabled = environment.QUOTES_ENABLED; 
   id:any;
   productOff: Product | undefined;
   category: string = 'none';
@@ -836,6 +837,14 @@ async deleteProduct(product: Product | undefined){
 
   closeDrawer(): void {
     this.isDrawerOpen = false;
+  }
+
+  hasLongWord(str: string | undefined, threshold = 20) {
+    if(str){
+      return str.split(/\s+/).some(word => word.length > threshold);
+    } else {
+      return false
+    }   
   }
 
 }
