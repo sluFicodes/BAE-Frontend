@@ -313,5 +313,10 @@ export class InvoicesInfoComponent implements OnInit {
     this.editingIndex = null;
   }
 
+  downloadInvoice(invoice: any) {
+    console.log('Downloading invoice')
+    let url = `${environment.BASE_URL}/invoicing/invoices/${invoice.id}`
 
+    window.open(url, '_blank');
+  }
 }
