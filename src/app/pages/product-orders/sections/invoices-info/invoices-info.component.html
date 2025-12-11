@@ -46,6 +46,9 @@
           <th scope="col" class="px-6 py-3 text-center align-middle">
             {{ 'INVOICES._date' | translate }}
           </th>
+          <th scope="col" class="px-6 py-3 text-center align-middle">
+            {{ 'INVOICES._billno' | translate }}
+          </th>
           <th scope="col" class="hidden md:table-cell px-6 py-3 text-center align-middle">
             {{ 'INVOICES._tax_included_amount' | translate }}
           </th>
@@ -62,6 +65,21 @@
             <tr data-cy="invoiceRow" class="border-b bg-gray-100 hover:bg-gray-200 dark:bg-secondary-300 dark:border-gray-700 dark:hover:bg-secondary-200">
               <td class="px-6 py-4 text-center align-middle">
                 {{invoice?.billDate | date:'EEEE, dd/MM/yy, HH:mm'}}
+              </td>
+              <td class="px-6 py-4 text-center align-middle">
+                {{invoice?.billNo}}
+                @if(role==sellerRole){
+                  @if (editingIndex === idx) {
+                    <input [(ngModel)]="editableInvoiceName" type="text" id="invoicename"
+                      class="mb-2 border-gray-300 dark:border-secondary-200 bg-gray-50 dark:bg-secondary-300 border 
+                      dark:text-white text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 
+                      block w-full p-2.5" />
+                  } @else {
+                    {{invoice?.billNo}}
+                  }  
+                }@else{
+                  {{invoice?.billNo}}
+                }
               </td>
               <td class="md:table-cell px-6 py-4 text-center align-middle">
                 {{invoice?.taxIncludedAmount.value}}{{invoice?.taxIncludedAmount.unit}}
@@ -195,6 +213,15 @@
                         </p>
                         <p class="text-sm text-gray-600 dark:text-gray-200">
                           {{acbr.type}}
+                        </p>
+                      </div>
+
+                      <div class="flex flex-row gap-2">
+                        <p class="text-sm font-bold text-gray-700 dark:text-white">
+                          {{ 'INVOICES._tax_included_amount' | translate }}:
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-200">
+                          {{acbr.taxIncludedAmount?.value}}{{acbr.taxIncludedAmount?.unit}}
                         </p>
                       </div>
 
