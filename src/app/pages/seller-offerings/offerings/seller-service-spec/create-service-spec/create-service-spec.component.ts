@@ -12,6 +12,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import {components} from "src/app/models/service-catalog";
+import { environment } from 'src/environments/environment';
 type ServiceSpecification_Create = components["schemas"]["ServiceSpecification_Create"];
 type CharacteristicValueSpecification = components["schemas"]["CharacteristicValueSpecification"];
 type ProductSpecificationCharacteristic = components["schemas"]["CharacteristicSpecification"];
@@ -280,7 +281,7 @@ export class CreateServiceSpecComponent implements OnInit, OnDestroy {
           {
               id: this.partyId,
               //href: "http://proxy.docker:8004/party/individual/urn:ngsi-ld:individual:803ee97b-1671-4526-ba3f-74681b22ccf3",
-              role: "Owner",
+              role: environment.SELLER_ROLE,
               "@referredType": ''
           }
         ],

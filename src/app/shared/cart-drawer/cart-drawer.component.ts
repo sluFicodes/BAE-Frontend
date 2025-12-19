@@ -13,6 +13,7 @@ import { AccountServiceService } from 'src/app/services/account-service.service'
 import { cartProduct } from '../../models/interfaces';
 import { TYPES } from 'src/app/models/types.const';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -123,6 +124,12 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
     this.eventMessage.emitToggleDrawer(false);
   }
 
+  getSellerId(providerItem: any) {
+    let partyRef = providerItem.relatedParty.find((party: any) => {
+      return party.role === environment.SELLER_ROLE
+    });
+    return partyRef.id;
+  }
 
   goToShoppingCart(id:any) {
     this.hideCart();
@@ -154,7 +161,7 @@ export class CartDrawerComponent implements OnInit, OnDestroy {
     const groupedByOwner: any[][] = Object.values(
       this.items.reduce((groups: any, item: any) => {
         const owner = item.relatedParty
-          ?.find((rp: any) => rp.role === 'Owner')
+          ?.find((rp: any) => rp.role === environment.SELLER_ROLE)
           ?.id;
     
         if (owner) {

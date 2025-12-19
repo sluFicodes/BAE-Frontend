@@ -10,6 +10,7 @@ import {LocalStorageService} from "src/app/services/local-storage.service";
 import { LoginInfo } from 'src/app/models/interfaces';
 import {EventMessageService} from "src/app/services/event-message.service";
 import { initFlowbite } from 'flowbite';
+import { PriceServiceService } from 'src/app/services/price-service.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -38,6 +39,7 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
   partyId:any;
   sort:any=undefined;
   isBundle:any=undefined;
+  customMap: Record<string, boolean> = {};
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -46,7 +48,8 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
-    private paginationService: PaginationService
+    private paginationService: PaginationService,
+    private priceService: PriceServiceService
   ) {
     this.eventMessage.messages$
     .pipe(takeUntil(this.destroy$))
@@ -104,8 +107,12 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
     this.eventMessage.emitSellerUpdateOffer(offer);
   }
 
+  goToCreateCustom(offer:any){
+    this.eventMessage.emitSellerCreateCustomOffer(offer);
+  }
+
   async getOffers(next:boolean){
-    if(next==false){
+    if(next == false){
       this.loading=true;
     }
     
@@ -117,16 +124,20 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
     }
     
     this.paginationService.getItemsPaginated(this.page, this.PROD_SPEC_LIMIT, next, this.offers,this.nextOffers, options,
-      this.api.getProductOfferByOwner.bind(this.api)).then(data => {
+      this.api.getProductOfferByOwner.bind(this.api)).then(async data => {
       this.page_check=data.page_check;      
       this.offers=data.items;
       this.nextOffers=data.nextItems;
       this.page=data.page;
       this.loading=false;
       this.loading_more=false;
-      console.log('--- offerss ---')
-      console.log(data)
+
+      this.customMap={}
+      for (const offer of this.offers) {
+        this.customMap[offer.id] = await this.priceService.isCustomOffering(offer);
+      }
     })
+
   }
 
   async next(){

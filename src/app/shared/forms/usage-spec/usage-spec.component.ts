@@ -16,6 +16,7 @@ import { UsageSpecSummaryComponent } from './usage-spec-summary/usage-spec-summa
 import { AccountServiceService } from 'src/app/services/account-service.service'
 import { UsageServiceService } from 'src/app/services/usage-service.service'
 import { v4 as uuidv4 } from 'uuid';
+import { environment } from 'src/environments/environment';
 import {Subject} from "rxjs";
 import { takeUntil } from 'rxjs/operators';
 
@@ -198,7 +199,7 @@ export class UsageSpecComponent implements OnInit, OnDestroy {
         {
           id: this.partyId,
           href: this.partyId,
-          role: 'owner'
+          role: environment.SELLER_ROLE
         }
       ],
     }

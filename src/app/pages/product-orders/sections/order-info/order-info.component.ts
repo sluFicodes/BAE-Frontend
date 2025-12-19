@@ -54,8 +54,12 @@ export class OrderInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   ORDER_LIMIT: number = environment.ORDER_LIMIT;
   filters: any[]=[];
   check_custom:boolean=false;
-  isSeller:boolean=false;
-  role:any='Customer'
+
+  buyerRole: string = environment.BUYER_ROLE;
+  sellerRole: string = environment.SELLER_ROLE;
+
+  isSeller:boolean = false;
+  role:any = this.buyerRole
 
   // Confirm modal stuff
   @ViewChild('confirmModal') confirmModal!: ElementRef;
@@ -222,8 +226,8 @@ export class OrderInfoComponent implements OnInit, AfterViewInit, OnDestroy {
         let userRoles = aux.roles.map((elem: any) => {
           return elem.name
         })
-        if (userRoles.includes("seller")) {
-          this.isSeller=true;
+        if (userRoles.includes(this.sellerRole)) {
+          this.isSeller = true;
         }
       } else {
         let loggedOrg = aux.organizations.find((element: { id: any; }) => element.id == aux.logged_as);
@@ -231,8 +235,8 @@ export class OrderInfoComponent implements OnInit, AfterViewInit, OnDestroy {
         let orgRoles = loggedOrg.roles.map((elem: any) => {
           return elem.name
         })
-        if (orgRoles.includes("seller")) {
-          this.isSeller=true;
+        if (orgRoles.includes(this.sellerRole)) {
+          this.isSeller = true;
         }
       }
       //this.partyId = aux.partyId;
@@ -494,7 +498,7 @@ export class OrderInfoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   goToCustomerDeatils() {
     const customer = this.orderToShow.relatedParty.find(
-      (party: any) => party.role?.toLowerCase() === 'customer'
+      (party: any) => party.role?.toLowerCase() === this.buyerRole.toLowerCase()
     );
 
     window.open(this.router.serializeUrl(
@@ -505,7 +509,7 @@ export class OrderInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   private async getCustomerName(): Promise<string> {
     if (this.orderToShow?.relatedParty) {
       const customer = this.orderToShow.relatedParty.find(
-        (party: any) => party.role?.toLowerCase() === 'customer'
+        (party: any) => party.role?.toLowerCase() === this.buyerRole.toLowerCase()
       );
       if (customer?.id) {
         return this.getUsername(customer.id);

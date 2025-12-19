@@ -36,6 +36,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
   show_update_res_spec:boolean=false;
   show_update_offer:boolean=false;
   show_update_catalog:boolean=false;
+  show_create_custom_offer:boolean=false;
   prod_to_update:any;
   serv_to_update:any;
   res_to_update:any;
@@ -51,6 +52,8 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     servicespec: this.goToServiceSpec,
     resourcespec: this.goToResourceSpec
   };
+  //partyIdCustom:string='urn:ngsi-ld:organization:02922d6d-2e7e-4235-a1aa-4f393a75bc52'
+  //partyIdCustom:any=null
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -110,6 +113,10 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
         this.offer_to_update=ev.value;
         this.goToUpdateOffer();
       }
+      if(ev.type === 'SellerCreateCustomOffer') {
+        this.offer_to_update=ev.value;
+        this.goToCreateCustomOffer();
+      }
       if(ev.type === 'SellerCatalogUpdate') {
         this.catalog_to_update=ev.value;
         this.goToUpdateCatalog();
@@ -156,6 +163,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_serv_spec=false;
     this.show_update_offer=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -175,6 +183,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();  
   }
 
@@ -194,6 +203,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=true;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -213,6 +223,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_create_catalog=false;
     this.show_update_catalog=true;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -235,6 +246,26 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();  
   }
 
+  goToCreateCustomOffer(){
+    this.show_catalogs=false;
+    this.show_prod_specs=false;
+    this.show_service_specs=false;
+    this.show_resource_specs=false;
+    this.show_offers=false;
+    this.show_create_prod_spec=false;
+    this.show_create_serv_spec=false;
+    this.show_create_res_spec=false;
+    this.show_create_offer=false;
+    this.show_update_prod_spec=false;
+    this.show_update_res_spec=false;
+    this.show_update_serv_spec=false;
+    this.show_update_offer=false;
+    this.show_update_catalog=false;
+    this.show_create_catalog=false;
+    this.show_create_custom_offer=true;
+    this.cdr.detectChanges();  
+  }
+
   goToUpdateServiceSpec(){
     this.show_catalogs=false;
     this.show_prod_specs=false;
@@ -251,6 +282,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges(); 
   }
 
@@ -270,6 +302,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges(); 
   }
 
@@ -289,6 +322,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -308,6 +342,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -327,6 +362,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -348,6 +384,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -383,6 +420,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -418,6 +456,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -453,6 +492,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 
@@ -488,6 +528,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.show_update_offer=false;
     this.show_update_catalog=false;
     this.show_create_catalog=false;
+    this.show_create_custom_offer=false;
     this.cdr.detectChanges();
   }
 

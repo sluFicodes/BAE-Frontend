@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import {components} from "src/app/models/product-catalog";
+import { environment } from 'src/environments/environment';
 type Catalog_Create = components["schemas"]["Catalog_Create"];
 
 @Component({
@@ -131,7 +132,7 @@ export class CreateCatalogComponent implements OnInit, OnDestroy {
           {
               id: this.partyId,
               //href: "http://proxy.docker:8004/party/individual/urn:ngsi-ld:individual:803ee97b-1671-4526-ba3f-74681b22ccf3",
-              role: "Owner",
+              role: environment.SELLER_ROLE,
               "@referredType": ''
           }
         ],
