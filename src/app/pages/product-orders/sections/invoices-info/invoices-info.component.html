@@ -225,6 +225,15 @@
                         </p>
                       </div>
 
+                      <div class="flex flex-row gap-2">
+                        <p class="text-sm font-bold text-gray-700 dark:text-white">
+                          {{ 'INVOICES._product_acbr_ref' | translate }}:
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-200">
+                          {{acbr.product?.href}}
+                        </p>
+                      </div>
+
                       @if (acbr.periodCoverage) {
                         <div class="flex flex-row gap-2">
                           <p class="text-sm font-bold text-gray-700 dark:text-white">
