@@ -230,14 +230,26 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
         const defaultValue =
           characteristic.productSpecCharacteristicValue?.find(val => val.isDefault)?.value ??
           characteristic.productSpecCharacteristicValue?.find(val => val.isDefault)?.valueFrom;
-  
+
         characteristicsGroup.addControl(
           characteristic.id,
           this.fb.control(defaultValue ?? null, Validators.required)
         );
         if(!characteristic.name?.endsWith('- enabled') && this.filteredCharacteristics.some((char => char.name === characteristic.name+' - enabled'))){
           this.canBeDisabledChars.push(characteristic.id)
-          this.disabledCharacteristics.push(characteristic.id)
+
+          const enabledChar = this.filteredCharacteristics.find(char => char.name === characteristic.name+' - enabled');
+          const defaultEnabledValue = enabledChar?.productSpecCharacteristicValue?.find(val => val.isDefault);
+
+          if (!defaultEnabledValue) {
+            this.disabledCharacteristics.push(characteristic.id);
+          } else {
+            const valueStr = String(defaultEnabledValue.value).toLowerCase();
+            if (valueStr === 'false') {
+              this.disabledCharacteristics.push(characteristic.id);
+            }
+          }
+          // If the default value is true, start enabled
         }
       }
     });
