@@ -89,12 +89,12 @@ export class UpdateProductSpecComponent implements OnInit, OnDestroy {
   stringCharSelected:boolean=true;
   numberCharSelected:boolean=false;
   rangeCharSelected:boolean=false;
-  booleanCharSelected:boolean=false;
+  isOptional:boolean=false;
+  optionalDftTrue:boolean=false;
   prodChars:ProductSpecificationCharacteristic[]=[];
   finishChars:ProductSpecificationCharacteristic[]=[];
   creatingChars:CharacteristicValueSpecification[]=[];
   showCreateChar:boolean=false;
-  nonBooleanChars:string[]=[];
 
   //BUNDLE INFO:
   bundleChecked:boolean=false;
@@ -381,28 +381,12 @@ export class UpdateProductSpecComponent implements OnInit, OnDestroy {
       for(let i=0; i < this.prod.productSpecCharacteristic.length; i++){
         const index = this.selectedISOS.findIndex(item => item.name === this.prod.productSpecCharacteristic[i].name);
         if (index == -1) {
-          const currentChar = this.prod.productSpecCharacteristic[i];
-          const name = currentChar.name;
-
           this.prodChars.push({
             id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
             name: this.prod.productSpecCharacteristic[i].name,
             description: this.prod.productSpecCharacteristic[i].description ? this.prod.productSpecCharacteristic[i].description : '',
             productSpecCharacteristicValue: this.prod.productSpecCharacteristic[i].productSpecCharacteristicValue
           });
-
-          // Check if it's not a boolean-enabled characteristic
-          if (!name.endsWith('- enabled')) {
-            // Look for a corresponding "enabled" version
-            const hasEnabledVersion = this.prod.productSpecCharacteristic.some(
-              (item: { name: string; }) => item.name === `${name} - enabled`
-            );
-
-            // Only push if there's no "- enabled" variant
-            if (!hasEnabledVersion) {
-              this.nonBooleanChars.push(name);
-            }
-          }
         }
       }
     }
@@ -904,7 +888,6 @@ export class UpdateProductSpecComponent implements OnInit, OnDestroy {
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
-    this.booleanCharSelected=false;
     this.showPreview=false;
     this.refreshChars();
     initFlowbite();
@@ -1242,7 +1225,8 @@ export class UpdateProductSpecComponent implements OnInit, OnDestroy {
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
-    this.booleanCharSelected=false;
+    this.isOptional=false;
+    this.optionalDftTrue=false;
     this.creatingChars=[];
   }
 
@@ -1306,36 +1290,23 @@ export class UpdateProductSpecComponent implements OnInit, OnDestroy {
       this.stringCharSelected=true;
       this.numberCharSelected=false;
       this.rangeCharSelected=false;
-      this.booleanCharSelected=false;
       this.charsForm.reset();
     }else if (event.target.value=='number'){
       this.stringCharSelected=false;
       this.numberCharSelected=true;
       this.rangeCharSelected=false;
-      this.booleanCharSelected=false;
       this.charsForm.reset();
     }else if (event.target.value=='range'){
       this.stringCharSelected=false;
       this.numberCharSelected=false;
       this.rangeCharSelected=true;
-      this.booleanCharSelected=false;
       this.charsForm.reset();
-    } else {
-      this.stringCharSelected=false;
-      this.numberCharSelected=false;
-      this.rangeCharSelected=false;
-      this.booleanCharSelected=true;
-      // Set default only if not already selected
-      if (!this.charsForm.get('name')?.value && this.nonBooleanChars.length > 0) {
-        this.charsForm.get('name')?.setValue(this.nonBooleanChars[0]+' - enabled');
-      }
     }
+    this.isOptional=false;
+    this.optionalDftTrue=false;
     this.creatingChars=[];
   }
 
-  onSelectBooleanName(event: any){
-    this.charsForm.get('name')?.setValue(event.target.value+' - enabled');
-  }
 
   addCharValue(){
     if(this.stringCharSelected){
@@ -1419,21 +1390,8 @@ export class UpdateProductSpecComponent implements OnInit, OnDestroy {
   }
 
   saveChar(){
-    if(this.booleanCharSelected){
-      this.creatingChars=[
-        {
-          isDefault:false,
-          value: true as any
-        },
-        {
-          isDefault:true,
-          value:false as any
-        }
-      ]
-    }
-    
     if(this.charsForm.value.name!=null){
-      console.log('saving char')
+      // Create the main characteristic
       this.prodChars.push({
         id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
         name: this.charsForm.value.name,
@@ -1441,35 +1399,34 @@ export class UpdateProductSpecComponent implements OnInit, OnDestroy {
         productSpecCharacteristicValue: this.creatingChars
       })
 
-      // Check if it's not a boolean-enabled characteristic
-      if (!this.charsForm.value.name.endsWith('- enabled')) {
-        // Look for a corresponding "enabled" version
-        const hasEnabledVersion = this.prodChars.some(
-          (item) => item.name === `${name} - enabled`
-        );
-
-        // Only push if there's no "- enabled" variant
-        if (!hasEnabledVersion) {
-          this.nonBooleanChars.push(this.charsForm.value.name);
-        }
-      } else {
-        const cleanName = this.charsForm.value.name.replace(/- enabled$/, '').trim();
-        const nonBooleanIndex = this.nonBooleanChars.findIndex(item => item === cleanName);
-        if (nonBooleanIndex !== -1) {
-          console.log('eliminar boolean')
-          this.nonBooleanChars.splice(nonBooleanIndex, 1);
-        }
+      // create X - enabled characteristic
+      if(this.isOptional){
+        this.prodChars.push({
+          id: 'urn:ngsi-ld:characteristic:'+uuidv4(),
+          name: this.charsForm.value.name + ' - enabled',
+          description: 'Optional toggle for ' + this.charsForm.value.name,
+          productSpecCharacteristicValue: [
+            {
+              isDefault: this.optionalDftTrue,
+              value: true as any
+            },
+            {
+              isDefault: !this.optionalDftTrue,
+              value:false as any
+            }
+          ]
+        })
       }
     }
 
-    console.log('--- value of prodChars after saving')
-    console.log(this.prodChars)
     this.charsForm.reset();
     this.creatingChars=[];
     this.showCreateChar=false;
     this.stringCharSelected=true;
     this.numberCharSelected=false;
     this.rangeCharSelected=false;
+    this.isOptional=false;
+    this.optionalDftTrue=false;
     this.refreshChars();
     this.cdr.detectChanges();
   }
@@ -1479,40 +1436,19 @@ export class UpdateProductSpecComponent implements OnInit, OnDestroy {
     if (index !== -1) {
       console.log('eliminar')
       this.prodChars.splice(index, 1);
-    }  
-    
-    
-    if(!char.name.endsWith('- enabled')){      
-      const nonBooleanIndex = this.nonBooleanChars.findIndex(item => item === char.name);
-      if (nonBooleanIndex !== -1) {
-        console.log('eliminar boolean')
-        this.nonBooleanChars.splice(nonBooleanIndex, 1);
-      }
-      const relatedEnabledIndex = this.prodChars.findIndex(item => item.name === char.name+' - enabled');
-      if (relatedEnabledIndex !== -1) {
-        console.log('eliminar')
-        this.prodChars.splice(relatedEnabledIndex, 1);
-      }
-    } else {
-      const cleanName = char.name.replace(/- enabled$/, '').trim();
-      const nonBooleanIndex = this.nonBooleanChars.findIndex(item => item === cleanName);
-      if (nonBooleanIndex == -1) {
-        console.log('añadir boolean')
-        this.nonBooleanChars.push(cleanName)
-      }
     }
 
-    if(this.booleanCharSelected){
-      // Set default only if not already selected
-      if (this.nonBooleanChars.length > 0) {
-        this.charsForm.get('name')?.setValue(this.nonBooleanChars[0]+' - enabled');
-      } else {
-        this.charsForm.reset();
+    // If deleting a main characteristic, also delete its "- enabled" variant if it exists
+    if(!char.name.endsWith('- enabled')){
+      const relatedEnabledIndex = this.prodChars.findIndex(item => item.name === char.name+' - enabled');
+      if (relatedEnabledIndex !== -1) {
+        console.log('eliminar related enabled')
+        this.prodChars.splice(relatedEnabledIndex, 1);
       }
     }
 
     this.cdr.detectChanges();
-    console.log(this.prodChars)    
+    console.log(this.prodChars)
   }
 
   checkInput(value: string): boolean {
