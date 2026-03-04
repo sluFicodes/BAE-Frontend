@@ -216,26 +216,22 @@ export class InventoryProductsComponent implements OnInit, OnDestroy {
     this.getInventory(false);
   }
 
-  unsubscribeProduct(id:any){
-    this.inventoryService.updateProduct({status: "suspended"},id).subscribe({
-      next: data => {
-        this.unsubscribeModal=false;
-        this.getInventory(false);
+  async unsubscribeProduct(){
+    const inv = this.prodToUnsubscribe;
+    const orderItem: any = {
+      id: inv.productOffering.id,
+      action: 'delete',
+      productOffering: {
+        id: inv.productOffering.id,
+        href: inv.productOffering.id
       },
-      error: error => {
-          console.error('There was an error while updating!', error);
-          if(error.error.error){
-            console.log(error)
-            this.errorMessage='Error: '+error.error.error;
-          } else {
-            this.errorMessage='There was an error while unsubscribing!';
-          }
-          this.showError=true;
-          setTimeout(() => {
-            this.showError = false;
-          }, 3000);
+      product: {
+        id: inv.id,
+        productCharacteristic: []
       }
-    });
+    };
+    this.unsubscribeModal = false;
+    await this.onModifySubmit(orderItem);
   }
 
   showUnsubscribeModal(inv:any){
