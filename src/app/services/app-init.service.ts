@@ -14,6 +14,7 @@ export class AppInitService {
     return new Promise((resolve, reject) => {
         const obs: Observer<any> = {
             next: ((config) => {
+                const aiConfig = config.ai ?? {};
                 // Load dynamic environment data
                 environment.SIOP_INFO = config.siop;
                 environment.CHAT_API = config.chat;
@@ -45,6 +46,10 @@ export class AppInitService {
                 environment.TENDER_ENABLED = config.tenderingEnabled ?? false
                 environment.DATA_SPACE_ENABLED = config.dataSpaceEnabled ?? false
                 environment.LEAR_URL = config.learUrl ?? ''
+                environment.AI_SEARCH_ENABLED = aiConfig.aiEnabled ?? config.aiEnabled ?? false;
+                environment.AI_SEARCH_API_KEY = aiConfig.aiApiKey ?? config.aiApiKey ?? '';
+                environment.AI_SEARCH_API_URL = aiConfig.aiApiUrl ?? config.aiApiUrl ?? '';
+                environment.AI_SEARCH_PROFILE = aiConfig.aiSearchProfile ?? config.aiSearchProfile ?? '';
                 resolve(config);
             }),
             error: (error) => {
