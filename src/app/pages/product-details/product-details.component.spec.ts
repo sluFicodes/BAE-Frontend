@@ -12,6 +12,7 @@ import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { ShoppingCartServiceService } from 'src/app/services/shopping-cart-service.service';
 import { EventMessageService } from 'src/app/services/event-message.service';
 import { AccountServiceService } from 'src/app/services/account-service.service';
+import { UsageServiceService } from 'src/app/services/usage-service.service';
 import { environment } from 'src/environments/environment';
 
 describe('ProductDetailsComponent', () => {
@@ -23,6 +24,7 @@ describe('ProductDetailsComponent', () => {
   let cartSpy: jasmine.SpyObj<ShoppingCartServiceService>;
   let eventMessageSpy: jasmine.SpyObj<EventMessageService>;
   let accountSpy: jasmine.SpyObj<AccountServiceService>;
+  let usageSpy: jasmine.SpyObj<UsageServiceService>;
   let routerSpy: jasmine.SpyObj<Router>;
   let locationSpy: jasmine.SpyObj<Location>;
   let messages$: Subject<any>;
@@ -34,6 +36,7 @@ describe('ProductDetailsComponent', () => {
       'getProductById',
       'getProductSpecification',
       'getProductPrice',
+      'getOfferingPrice',
       'getServiceSpec',
       'getResourceSpec',
       'getComplianceLevel',
@@ -50,6 +53,7 @@ describe('ProductDetailsComponent', () => {
       'emitRemovedCartItem',
     ]);
     accountSpy = jasmine.createSpyObj<AccountServiceService>('AccountServiceService', ['getOrgInfo']);
+    usageSpy = jasmine.createSpyObj<UsageServiceService>('UsageServiceService', ['getUsageSpec']);
     routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
     locationSpy = jasmine.createSpyObj<Location>('Location', ['back']);
 
@@ -62,6 +66,7 @@ describe('ProductDetailsComponent', () => {
     cartSpy.removeItemShoppingCart.and.resolveTo();
     cartSpy.getShoppingCart.and.resolveTo([]);
     accountSpy.getOrgInfo.and.resolveTo({ id: 'org-1', tradingName: 'Org One' } as any);
+    usageSpy.getUsageSpec.and.resolveTo({ id: 'usage-1', description: 'Usage spec description' });
 
     await TestBed.configureTestingModule({
       schemas: [NO_ERRORS_SCHEMA],
@@ -74,6 +79,7 @@ describe('ProductDetailsComponent', () => {
         { provide: ShoppingCartServiceService, useValue: cartSpy },
         { provide: EventMessageService, useValue: eventMessageSpy },
         { provide: AccountServiceService, useValue: accountSpy },
+        { provide: UsageServiceService, useValue: usageSpy },
         { provide: Router, useValue: routerSpy },
         { provide: Location, useValue: locationSpy },
         {
@@ -380,11 +386,132 @@ describe('ProductDetailsComponent', () => {
     expect(component.goToRelationships).not.toHaveBeenCalled();
   });
 
+  it('loadUsageMetrics should collect linked metrics and deduplicate by usageSpecId + metric name', async () => {
+    apiSpy.getOfferingPrice.and.callFake(async (id: string) => {
+      if (id === 'price-comp-1') {
+        return {
+          usageSpecId: 'usage-1',
+          unitOfMeasure: { units: 'RAM_gb_hour' },
+          description: 'Fallback RAM description',
+        };
+      }
+      return {
+        usageSpecId: 'usage-2',
+        unitOfMeasure: { units: 'CPU_core_hour' },
+        description: 'Fallback CPU description',
+      };
+    });
+    usageSpy.getUsageSpec.and.callFake(async (id: string) => {
+      if (id === 'usage-1') {
+        return { id: 'usage-1', description: 'RAM metric description' };
+      }
+      return { id: 'usage-2', description: 'CPU metric description' };
+    });
+
+    await component.loadUsageMetrics([
+      {
+        bundledPopRelationship: [{ id: 'price-comp-1' }, { id: 'price-comp-2' }, { id: 'price-comp-1' }],
+      },
+    ]);
+
+    expect(component.usageMetrics.length).toBe(2);
+    expect(component.usageMetrics).toContain(jasmine.objectContaining({
+      usageSpecId: 'usage-1',
+      name: 'RAM_gb_hour',
+      description: 'RAM metric description',
+    }));
+    expect(component.usageMetrics).toContain(jasmine.objectContaining({
+      usageSpecId: 'usage-2',
+      name: 'CPU_core_hour',
+      description: 'CPU metric description',
+    }));
+    expect(usageSpy.getUsageSpec).toHaveBeenCalledTimes(2);
+  });
+
+  it('loadUsageMetrics should fallback to product offering price description when usage spec cannot be loaded', async () => {
+    usageSpy.getUsageSpec.and.rejectWith(new Error('cannot load usage spec'));
+
+    await component.loadUsageMetrics([
+      {
+        usageSpecId: 'usage-1',
+        unitOfMeasure: { units: 'Requests_hour' },
+        description: 'Requests per hour description',
+      },
+    ]);
+
+    expect(component.usageMetrics.length).toBe(1);
+    expect(component.usageMetrics[0].name).toBe('Requests_hour');
+    expect(component.usageMetrics[0].description).toBe('Requests per hour description');
+  });
+
+  it('loadUsageMetrics should ignore entries without usageSpecId or metric unit name', async () => {
+    await component.loadUsageMetrics([
+      { usageSpecId: 'usage-1' },
+      { unitOfMeasure: { units: 'GB_hour' } },
+      { usageSpecId: 'usage-2', unitOfMeasure: { amount: 1 } },
+    ] as any[]);
+
+    expect(component.usageMetrics).toEqual([]);
+  });
+
   it('hasLongWord and normalizeName should handle edge cases', () => {
     expect(component.hasLongWord('short words', 20)).toBeFalse();
     expect(component.hasLongWord('averyveryverylongword', 10)).toBeTrue();
     expect(component.hasLongWord(undefined, 10)).toBeFalse();
     expect(component.normalizeName('Compliance:ISO/IEC 27001')).toBe('ISO/IEC 27001');
     expect(component.normalizeName(undefined)).toBe('');
+  });
+
+  it('getCharacteristicValueLabel should stringify object values and append unit', () => {
+    const label = component.getCharacteristicValueLabel({
+      value: { issuer: 'vault', endpoint: 'https://example.test' },
+      unitOfMeasure: 'json',
+    });
+
+    expect(label).toBe('{"issuer":"vault","endpoint":"https://example.test"} (json)');
+  });
+
+  it('getCharacteristicValueLabel should keep boolean false and omit empty unit', () => {
+    const label = component.getCharacteristicValueLabel({
+      value: false,
+    });
+
+    expect(label).toBe('false');
+  });
+
+  it('getCharacteristicRangeLabel should support object unit and avoid empty parenthesis', () => {
+    const withUnit = component.getCharacteristicRangeLabel({
+      valueFrom: 1,
+      valueTo: 10,
+      unitOfMeasure: { units: 'GB' },
+    });
+    const withoutUnit = component.getCharacteristicRangeLabel({
+      valueFrom: 5,
+      valueTo: 15,
+      unitOfMeasure: {},
+    });
+
+    expect(withUnit).toBe('1 - 10 (GB)');
+    expect(withoutUnit).toBe('5 - 15');
+  });
+
+  it('getCharacteristicValuePreview should truncate long values with ellipsis', () => {
+    const longValue = 'x'.repeat(140);
+    const preview = component.getCharacteristicValuePreview({
+      value: longValue,
+    });
+
+    expect(preview.endsWith('...')).toBeTrue();
+    expect(preview.length).toBe(123);
+  });
+
+  it('getCharacteristicRangePreview should keep short values unchanged', () => {
+    const preview = component.getCharacteristicRangePreview({
+      valueFrom: 1,
+      valueTo: 3,
+      unitOfMeasure: 'GB',
+    });
+
+    expect(preview).toBe('1 - 3 (GB)');
   });
 });
