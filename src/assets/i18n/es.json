@@ -1256,6 +1256,7 @@
         "_as_provider": "As Provider",
         "_date": "Date",
         "_actions": "Actions",
+        "_items_action": "Items Action",
         "_order_details": "Order details:",
         "_customer_info": "Customer Info:",
         "_name": "Name",
