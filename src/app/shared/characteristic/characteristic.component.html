@@ -27,11 +27,12 @@
           type="range"
           [min]="getSliderRange()?.min"
           [max]="getSliderRange()?.max"
-          [formControl]="control"
-          (change)="onControlCommit()"
+          [value]="control.value"
+          (input)="onSliderInput($event)"
+          (change)="onSliderCommit($event)"
           class="w-full h-2 bg-gray-300 border border-gray-300 rounded-lg appearance-none cursor-pointer dark:bg-gray-600 dark:border-gray-500"
         />
-        <span class="min-w-24 flex justify-center text-sm text-gray-600 dark:text-gray-400">{{ control.value }} {{ getUnit() }}</span>
+        <span class="min-w-24 flex justify-center text-sm text-gray-600 dark:text-gray-400">{{ sliderDisplayValue ?? control.value }} {{ getUnit() }}</span>
       </div>
     } @else {   <!-- Select -->
       <div>

@@ -41,6 +41,7 @@ export class CharacteristicComponent implements OnInit {
   @Output() valueChange = new EventEmitter<any>();
 
   control = new FormControl();
+  sliderDisplayValue: number | null = null;
 
   ngOnInit(): void {
     const defaultCharacteristicValue = this.characteristic.productSpecCharacteristicValue?.find(
@@ -66,6 +67,18 @@ export class CharacteristicComponent implements OnInit {
       characteristicId: this.characteristic.id,
       selectedValue: this.control.value,
     });
+  }
+
+  onSliderInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.sliderDisplayValue = input.valueAsNumber;
+  }
+
+  onSliderCommit(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.control.setValue(input.valueAsNumber, { emitEvent: false });
+    this.sliderDisplayValue = null;
+    this.onControlCommit();
   }
 
   isSlider(): boolean {
