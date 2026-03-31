@@ -535,8 +535,6 @@ export class OfferComponent implements OnInit, OnDestroy{
         units: component.newValue.usageUnit     
       };
 
-      priceComp['@baseType'] = "ProductOfferingPrice";
-      priceComp['@schemaLocation'] = "https://raw.githubusercontent.com/laraminones/tmf-new-schemas/main/UsageSpecId.json";
       (priceComp as any).usageSpecId = component.newValue.usageSpecId;
 
       console.log('----- here')
