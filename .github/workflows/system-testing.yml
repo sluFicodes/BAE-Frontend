@@ -41,7 +41,7 @@ jobs:
           echo "Charging location: $CHARGING_LOCATION"
 
           # Parse TM_VERSION
-          TM_VERSION=$(echo "$PR_BODY" | grep '^TM_VERSION:' | sed 's/TM_VERSION: *//' | xargs)
+          TM_VERSION=$(echo "$PR_BODY" | grep '^TM_VERSION:' | sed 's/TM_VERSION: *//' | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | xargs)
           echo "TMForum API version: $TM_VERSION"
 
           # Parse E2E_BRANCH (optional - branch of E2E-DOME-BAE to use)
