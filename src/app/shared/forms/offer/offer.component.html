@@ -298,9 +298,8 @@
 
                 <div>
                   <label for="ppDescription" class="block text-sm font-semibold text-gray-900 mb-2">{{ 'CREATE_OFFER._pp_col_description' | translate }}</label>
-                  <textarea data-cy="ppDescription" id="ppDescription" formControlName="description" rows="6" maxlength="300"
-                    placeholder="{{ 'CREATE_OFFER._pp_form_description_placeholder' | translate }}"
-                    class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-100 focus:border-primary-100 block w-full p-3 resize-none"></textarea>
+                  <app-markdown-textarea data-cy="ppDescription" formControlName="description" [rows]="6" [maxLength]="300"
+                    [placeholder]="'CREATE_OFFER._pp_form_description_placeholder' | translate"></app-markdown-textarea>
                   <p class="mt-1 text-xs text-gray-500">{{ (tailoredPricePlanForm.get('description')?.value?.length || 0) }}/300</p>
                 </div>
               </form>
@@ -328,11 +327,8 @@
 
                 <div>
                   <label for="paidDescription" class="block text-sm font-semibold text-gray-900 mb-2">{{ 'CREATE_OFFER._pp_col_description' | translate }}<span class="text-red-600 ml-0.5">*</span></label>
-                  <textarea data-cy="paidDescription" id="paidDescription" formControlName="description" rows="6" maxlength="300"
-                    placeholder="{{ 'CREATE_OFFER._pp_form_description_placeholder' | translate }}"
-                    class="bg-white border text-gray-900 text-sm rounded-lg focus:ring-primary-100 focus:border-primary-100 block w-full p-3 resize-none"
-                    [class.border-gray-300]="!(paidPricePlanForm.get('description')?.touched && paidPricePlanForm.get('description')?.invalid)"
-                    [class.border-red-500]="paidPricePlanForm.get('description')?.touched && paidPricePlanForm.get('description')?.invalid"></textarea>
+                  <app-markdown-textarea data-cy="paidDescription" formControlName="description" [rows]="6" [maxLength]="300"
+                    [placeholder]="'CREATE_OFFER._pp_form_description_placeholder' | translate"></app-markdown-textarea>
                   @if(paidPricePlanForm.get('description')?.touched && paidPricePlanForm.get('description')?.invalid){
                     <p class="mt-1 text-xs text-red-600">{{ 'CREATE_OFFER._mandatory_field' | translate }}</p>
                   }
@@ -1127,7 +1123,7 @@
                   </div>
                   <div>
                     <label for="tierPriceType" class="block text-sm font-semibold text-gray-900 mb-2">{{ 'CREATE_OFFER._pc_price_type' | translate }}<span class="text-red-600 ml-0.5">*</span></label>
-                    <select data-cy="tierPriceType" id="tierPriceType" formControlName="priceType"
+                    <select data-cy="tierPriceType" id="tierPriceType" formControlName="priceType" (change)="onTierPriceTypeChange()"
                       class="block w-full p-3 bg-white border border-gray-300 rounded-lg text-sm text-gray-900 focus:ring-primary-100 focus:border-primary-100">
                       <option value="">{{ 'CREATE_OFFER._select' | translate }}</option>
                       @for(opt of priceTypeOptions; track opt.id){
@@ -1148,6 +1144,33 @@
                           <span class="text-base text-gray-700">{{ opt.labelKey | translate }}</span>
                         </label>
                       }
+                    </div>
+                  </div>
+                }
+
+                @if(tierForm.get('priceType')?.value === 'usage'){
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label for="tierUsageSpec" class="block text-sm font-semibold text-gray-900 mb-2">{{ 'CREATE_OFFER._pc_usage_spec' | translate }}</label>
+                      <select data-cy="tierUsageSpec" id="tierUsageSpec" (change)="onTierUsageSpecChange($event)"
+                        class="block w-full p-3 bg-white border rounded-lg text-sm text-gray-900 focus:ring-primary-100 focus:border-primary-100"
+                        [class.border-gray-300]="usageSpecs.length > 0"
+                        [class.border-red-500]="usageSpecs.length === 0">
+                        <option value="" [selected]="!tierForm.get('usageSpecId')?.value">{{ 'CREATE_OFFER._select' | translate }}</option>
+                        @for(spec of usageSpecs; track spec.id){
+                          <option [value]="spec.id" [selected]="spec.id === tierForm.get('usageSpecId')?.value">{{ spec.name }}</option>
+                        }
+                      </select>
+                    </div>
+                    <div>
+                      <label for="tierMetric" class="block text-sm font-semibold text-gray-900 mb-2">{{ 'CREATE_OFFER._pc_metric' | translate }}</label>
+                      <select data-cy="tierMetric" id="tierMetric" formControlName="usageUnit"
+                        class="block w-full p-3 bg-white border border-gray-300 rounded-lg text-sm text-gray-900 focus:ring-primary-100 focus:border-primary-100">
+                        <option value="">{{ 'CREATE_OFFER._select' | translate }}</option>
+                        @for(metric of selectedTierUsageSpec?.specCharacteristic; track metric.name){
+                          <option [value]="metric.name">{{ metric.name }}</option>
+                        }
+                      </select>
                     </div>
                   </div>
                 }

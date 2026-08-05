@@ -154,6 +154,7 @@ export class OfferComponent implements OnInit, OnDestroy {
   editingPriceComponentIndex: number | null = null;
   usageSpecs: any[] = [];
   selectedUsageSpec: any = null;
+  selectedTierUsageSpec: any = null;
 
   tierForm!: FormGroup;
   flexTiers: any[] = [];
@@ -265,6 +266,8 @@ export class OfferComponent implements OnInit, OnDestroy {
       price: new FormControl(null, [Validators.required, Validators.min(0)]),
       priceType: new FormControl('', [Validators.required]),
       recurringPeriod: new FormControl('month'),
+      usageSpecId: new FormControl(''),
+      usageUnit: new FormControl(''),
       name: new FormControl('', [Validators.maxLength(100)]),
       description: new FormControl('', [Validators.maxLength(200)]),
       includeDiscount: new FormControl(false),
@@ -1258,9 +1261,26 @@ export class OfferComponent implements OnInit, OnDestroy {
     });
   }
 
+  onTierPriceTypeChange(): void {
+    if (this.tierForm.get('priceType')?.value !== 'usage') {
+      this.selectedTierUsageSpec = null;
+      this.tierForm.patchValue({ usageSpecId: '', usageUnit: '' });
+    }
+  }
+
+  onTierUsageSpecChange(event: Event): void {
+    const id = (event.target as HTMLSelectElement).value;
+    this.selectedTierUsageSpec = this.usageSpecs.find(s => s.id === id) || null;
+    this.tierForm.patchValue({
+      usageSpecId: id,
+      usageUnit: this.selectedTierUsageSpec?.specCharacteristic?.[0]?.name || ''
+    });
+  }
+
   openAddPriceComponentModal(): void {
     this.editingPriceComponentIndex = null;
     this.selectedUsageSpec = null;
+    this.selectedTierUsageSpec = null;
     this.flexTiers = [];
     this.showTierForm = false;
     this.editingTierIndex = null;
@@ -1498,8 +1518,9 @@ export class OfferComponent implements OnInit, OnDestroy {
     this.editingTierIndex = null;
     const b = this.rangeBounds;
     const gap = this.tierCoverageGaps[0] ?? { from: b.min, to: b.max };
+    this.selectedTierUsageSpec = null;
     this.tierForm.reset({
-      min: gap.from, max: gap.to, price: null, priceType: '', recurringPeriod: 'month', name: '', description: '',
+      min: gap.from, max: gap.to, price: null, priceType: '', recurringPeriod: 'month', usageSpecId: '', usageUnit: '', name: '', description: '',
       includeDiscount: false, discountValue: null, discountUnit: 'percentage',
       discountDuration: null, discountDurationUnit: 'month'
     });
@@ -1510,8 +1531,10 @@ export class OfferComponent implements OnInit, OnDestroy {
     const t = this.flexTiers[index];
     if (!t) return;
     this.editingTierIndex = index;
+    this.selectedTierUsageSpec = this.usageSpecs.find(s => s.id === t?.usageSpecId) || null;
     this.tierForm.reset({
       min: t.min, max: t.max, price: t.price, priceType: t.priceType || '', recurringPeriod: t.recurringPeriod || 'month',
+      usageSpecId: t.usageSpecId || '', usageUnit: t.usageUnit || '',
       name: t.name || '', description: t.description || '',
       includeDiscount: !!t.discountValue, discountValue: t.discountValue ?? null,
       discountUnit: t.discountUnit || 'percentage', discountDuration: t.discountDuration ?? null,
@@ -1522,8 +1545,9 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   resetTierForm(): void {
     const b = this.rangeBounds;
+    this.selectedTierUsageSpec = null;
     this.tierForm.reset({
-      min: b.min, max: b.max, price: null, priceType: '', recurringPeriod: 'month', name: '', description: '',
+      min: b.min, max: b.max, price: null, priceType: '', recurringPeriod: 'month', usageSpecId: '', usageUnit: '', name: '', description: '',
       includeDiscount: false, discountValue: null, discountUnit: 'percentage',
       discountDuration: null, discountDurationUnit: 'days'
     });
@@ -1544,6 +1568,10 @@ export class OfferComponent implements OnInit, OnDestroy {
     if (this.isRecurringPriceType(v.priceType)) {
       tier.recurringPeriod = v.recurringPeriod;
     }
+    if (v.priceType === 'usage') {
+      tier.usageSpecId = v.usageSpecId;
+      tier.usageUnit = v.usageUnit;
+    }
     if (v.includeDiscount && v.discountValue != null) {
       tier.discountValue = v.discountValue;
       tier.discountUnit = v.discountUnit;
@@ -1557,6 +1585,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     }
     this.showTierForm = false;
     this.editingTierIndex = null;
+    this.selectedTierUsageSpec = null;
   }
 
   deleteTier(index: number): void {
@@ -1570,6 +1599,7 @@ export class OfferComponent implements OnInit, OnDestroy {
   cancelTierForm(): void {
     this.showTierForm = false;
     this.editingTierIndex = null;
+    this.selectedTierUsageSpec = null;
   }
 
   canSaveTier(): boolean {
@@ -2238,6 +2268,8 @@ export class OfferComponent implements OnInit, OnDestroy {
         price: tier.price,
         priceType: tier.priceType,
         recurringPeriod: tier.recurringPeriod,
+        usageSpecId: tier.usageSpecId,
+        usageUnit: tier.usageUnit,
         discountValue: tier.discountValue,
         discountUnit: tier.discountUnit,
         discountDuration: tier.discountDuration,
