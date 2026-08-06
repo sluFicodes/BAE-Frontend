@@ -8,6 +8,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import { OfferComponent } from './offer.component';
 import { availableFilters, searchCategoriesConfig } from 'src/app/data/availableFilters';
 import { ThemeService } from 'src/app/services/theme.service';
+import { AttachmentServiceService } from 'src/app/services/attachment-service.service';
 
 describe('OfferComponent', () => {
   let component: OfferComponent;
@@ -150,6 +151,35 @@ describe('OfferComponent', () => {
     expect(saveDraftSpy).not.toHaveBeenCalled();
     expect(goBackSpy).toHaveBeenCalled();
     expect(component.showLeaveModal).toBeFalse();
+  });
+
+  it('should upload selected terms files and include their URLs as offering terms when saving a draft', async () => {
+    const attachmentService = TestBed.inject(AttachmentServiceService);
+    const uploadSpy = spyOn(attachmentService, 'uploadFile').and.returnValue(of({ content: 'https://files.example/terms.pdf' }));
+    const api = (component as any).api;
+    const postSpy = spyOn(api, 'postProductOffering').and.returnValue(of({ id: 'offer-1' }));
+
+    component.autoCatalogue = { id: 'catalogue-1' };
+    component.productOfferForm.get('generalInfo')?.patchValue({ name: 'Offer name' });
+    component.productOfferForm.patchValue({ prodSpec: { id: 'prod-spec-1' } });
+    component.productOfferForm.get('license')?.patchValue({ description: 'License text' });
+    component.tcAttachments = [{
+      name: 'terms.pdf',
+      file: new File(['terms'], 'terms.pdf', { type: 'application/pdf' })
+    } as any];
+
+    await component.saveDraftOffer();
+
+    expect(uploadSpy).toHaveBeenCalled();
+    const offerPayload = postSpy.calls.mostRecent().args[0] as any;
+    expect(offerPayload.productOfferingTerm).toContain(jasmine.objectContaining({
+      name: 'License',
+      description: 'License text'
+    }));
+    expect(offerPayload.productOfferingTerm).toContain(jasmine.objectContaining({
+      name: 'terms-file',
+      description: 'https://files.example/terms.pdf'
+    }));
   });
 
   it('should require at least one tailored price plan when tailored tier is selected', () => {
@@ -956,6 +986,46 @@ describe('OfferComponent', () => {
 
     expect(api.getCategoriesByParentId).toHaveBeenCalledOnceWith('root-1');
     expect(component.availableRootCategories).toEqual([{ id: 'compute', name: 'Compute' }]);
+  });
+
+  it('should preserve existing terms files and upload new ones when updating an offer', async () => {
+    const attachmentService = TestBed.inject(AttachmentServiceService);
+    const uploadSpy = spyOn(attachmentService, 'uploadFile').and.returnValue(of({ content: 'https://files.example/new-terms.pdf' }));
+    const api = (component as any).api;
+    const updateSpy = spyOn(api, 'updateProductOffering').and.returnValue(of({ id: 'offer-1' }));
+    component.formType = 'update';
+    component.offer = {
+      id: 'offer-1',
+      validFor: { startDateTime: '2026-01-01T00:00:00.000Z' },
+      productOfferingPrice: [],
+      productOfferingTerm: [
+        { name: 'license', description: 'Old license' },
+        { name: 'terms-file', description: 'https://files.example/existing-terms.pdf' },
+        { name: 'procurement', description: 'manual' }
+      ]
+    };
+    component.productOfferForm.get('generalInfo')?.patchValue({
+      name: 'Updated offer',
+      version: '1.0',
+      status: 'Active'
+    });
+    component.productOfferForm.get('license')?.patchValue({ description: 'Updated license' });
+    component.tcAttachments = [
+      { name: 'existing-terms.pdf', url: 'https://files.example/existing-terms.pdf' } as any,
+      { name: 'new-terms.pdf', file: new File(['terms'], 'new-terms.pdf', { type: 'application/pdf' }) } as any
+    ];
+
+    await component.updateOffer();
+
+    expect(uploadSpy).toHaveBeenCalledTimes(1);
+    const offerPayload = updateSpy.calls.mostRecent().args[0] as any;
+    const termsFileTerms = offerPayload.productOfferingTerm.filter((term: any) => term.name === 'terms-file');
+    expect(termsFileTerms).toEqual([
+      { name: 'terms-file', description: 'https://files.example/existing-terms.pdf' },
+      { name: 'terms-file', description: 'https://files.example/new-terms.pdf' }
+    ]);
+    const licenseTerm = offerPayload.productOfferingTerm.find((term: any) => String(term?.name || '').toLowerCase() === 'license');
+    expect(licenseTerm).toEqual(jasmine.objectContaining({ description: 'Updated license' }));
   });
 
   it('should not submit an incomplete offer', () => {

@@ -351,7 +351,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.licenseTerm = this.productOff?.productOfferingTerm?.find(
-      element => element.name === 'License'
+      element => String(element?.name || '').toLowerCase() === 'license'
     );
 
     if (this.prodSpec.productSpecCharacteristic != undefined) {
@@ -577,7 +577,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
     if (this.productOff?.productOfferingTerm != undefined) {
       this.licenseTerm = this.productOff.productOfferingTerm.find(
-        element => element.name === 'License'
+        element => String(element?.name || '').toLowerCase() === 'license'
       );
       if (!this.licenseTerm) {
         this.check_terms = false;
@@ -1130,7 +1130,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     console.log('[preview] attachments:', attachments, 'images:', this.images);
 
     this.licenseTerm = offer?.productOfferingTerm?.find(
-      (t: any) => t?.name === 'License'
+      (t: any) => String(t?.name || '').toLowerCase() === 'license'
     );
 
     if ((this.prodSpec as any)?.productSpecCharacteristic) {

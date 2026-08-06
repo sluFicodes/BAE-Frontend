@@ -16,6 +16,7 @@ import { ApiServiceService } from "../../../services/product-service.service";
 import { ProductSpecServiceService } from "../../../services/product-spec-service.service";
 import { UsageServiceService } from "../../../services/usage-service.service";
 import { ThemeService } from "../../../services/theme.service";
+import { AttachmentServiceService } from "../../../services/attachment-service.service";
 import { CatalogueComponent } from "./catalogue/catalogue.component";
 import { EdcContractDefinitionComponent } from "./edc-contract-definition/edc-contract-definition.component";
 import { GeneralInfoComponent } from "./general-info/general-info.component";
@@ -32,6 +33,14 @@ import { WorkspaceInfoMessageConfig } from "src/app/themes";
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
 type OfferStepKey = 'general' | 'category' | 'terms' | 'contract' | 'price' | 'procurement';
+
+interface TermsFileAttachment {
+  name: string;
+  size?: number;
+  url?: string;
+  attachmentType?: string;
+  file?: File;
+}
 
 const NON_PRICE_CONFIG_VALUE_TYPES: string[] = [
   'credentialsConfiguration',
@@ -69,6 +78,7 @@ const NON_PRICE_CONFIG_VALUE_TYPES: string[] = [
   styleUrl: './offer.component.css'
 })
 export class OfferComponent implements OnInit, OnDestroy {
+  private static readonly TERMS_FILE_TERM_NAME = 'terms-file';
 
   @Input() formType: 'create' | 'update' = 'create';
   @Input() offer: any = {};
@@ -178,7 +188,7 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   autoCatalogue: any = null;
 
-  tcAttachments: File[] = [];
+  tcAttachments: TermsFileAttachment[] = [];
 
 
   offerToCreate: ProductOffering_Create | undefined;
@@ -200,7 +210,8 @@ export class OfferComponent implements OnInit, OnDestroy {
     private usageService: UsageServiceService,
     private accountService: AccountServiceService,
     private translate: TranslateService,
-    private themeService: ThemeService) {
+    private themeService: ThemeService,
+    private attachmentService: AttachmentServiceService) {
 
     this.productOfferForm = this.fb.group({
       generalInfo: this.fb.group({
@@ -580,6 +591,11 @@ export class OfferComponent implements OnInit, OnDestroy {
     const licenseTerm = formValue.license?.description
       ? [{ name: 'License', description: formValue.license.description }]
       : [];
+    const catalogue = this.autoCatalogue || await this.ensureCatalogue();
+    if (!catalogue?.id) {
+      throw new Error(this.translate.instant('CREATE_OFFER._draft_catalogue_unavailable'));
+    }
+    const termsFileTerms = await this.buildTermsFileTerms();
 
     const offer: any = {
       name: generalInfo.name.trim(),
@@ -591,17 +607,12 @@ export class OfferComponent implements OnInit, OnDestroy {
       validFor: { startDateTime: new Date().toISOString() },
       category: categories,
       productOfferingPrice: [],
-      productOfferingTerm: licenseTerm
+      productOfferingTerm: [...licenseTerm, ...termsFileTerms]
     };
     if (formValue.prodSpec?.id) {
       offer.productSpecification = { id: formValue.prodSpec.id, href: formValue.prodSpec.href || formValue.prodSpec.id };
     }
     this.applyDspOfferingFields(offer);
-
-    const catalogue = this.autoCatalogue || await this.ensureCatalogue();
-    if (!catalogue?.id) {
-      throw new Error(this.translate.instant('CREATE_OFFER._draft_catalogue_unavailable'));
-    }
     await lastValueFrom(this.api.postProductOffering(offer, catalogue.id));
   }
 
@@ -1797,13 +1808,106 @@ export class OfferComponent implements OnInit, OnDestroy {
   onTCFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      Array.from(input.files).forEach(f => this.tcAttachments.push(f));
+      Array.from(input.files).forEach(file => this.tcAttachments.push({
+        name: file.name,
+        size: file.size,
+        attachmentType: file.type,
+        file
+      }));
       input.value = '';
     }
   }
 
   removeTCFile(index: number): void {
     this.tcAttachments.splice(index, 1);
+  }
+
+  private buildPersistedTermsFileTerms(): any[] {
+    return this.tcAttachments
+      .filter(attachment => !!attachment.url)
+      .map(attachment => ({
+        name: OfferComponent.TERMS_FILE_TERM_NAME,
+        description: attachment.url
+      }));
+  }
+
+  private async buildTermsFileTerms(): Promise<any[]> {
+    const terms: any[] = [];
+    for (const attachment of this.tcAttachments) {
+      const url = attachment.url || await this.uploadTermsFileAttachment(attachment);
+      terms.push({
+        name: OfferComponent.TERMS_FILE_TERM_NAME,
+        description: url
+      });
+    }
+    return terms;
+  }
+
+  private replaceTermsFileTerms(productOfferingTerm: any[] = [], termsFileTerms: any[]): any[] {
+    return [
+      ...productOfferingTerm.filter(term => term?.name !== OfferComponent.TERMS_FILE_TERM_NAME),
+      ...termsFileTerms
+    ];
+  }
+
+  private isLicenseTerm(term: any): boolean {
+    return String(term?.name || '').toLowerCase() === 'license';
+  }
+
+  private async uploadTermsFileAttachment(attachment: TermsFileAttachment): Promise<string> {
+    if (!attachment.file) {
+      throw new Error('Terms file is missing.');
+    }
+
+    const base64 = await this.readFileAsBase64(attachment.file);
+    const fileBody = {
+      content: {
+        name: uuidv4() + '_' + attachment.file.name,
+        data: base64
+      },
+      contentType: attachment.file.type,
+      isPublic: true
+    };
+    const data = await lastValueFrom(this.attachmentService.uploadFile(fileBody));
+    const uploadedUrl = data?.content;
+    if (typeof uploadedUrl !== 'string' || uploadedUrl.trim() === '') {
+      throw new Error('The uploaded terms file did not return a URL.');
+    }
+
+    attachment.url = uploadedUrl;
+    attachment.attachmentType = attachment.file.type;
+    return uploadedUrl;
+  }
+
+  private readFileAsBase64(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const dataUrl: string = e?.target?.result || '';
+        resolve(dataUrl.split(',')[1] || '');
+      };
+      reader.onerror = () => reject(reader.error || new Error('Unable to read terms file.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  private handleTermsFileUploadError(error: any): void {
+    console.error('There was an error while uploading terms files!', error);
+    this.errorMessage = error?.error?.error
+      ? this.translate.instant('ERRORS._error_prefix', { message: error.error.error })
+      : error?.message || 'There was an error while uploading the terms file.';
+    this.loading = false;
+    this.showError = true;
+    setTimeout(() => (this.showError = false), 3000);
+  }
+
+  private filenameFromTermsFileUrl(value: string): string {
+    if (!value) return 'Terms file';
+    const last = value.split('/').pop() || value;
+    let decoded = last;
+    try { decoded = decodeURIComponent(last); } catch { }
+    const underscore = decoded.indexOf('_');
+    return underscore > -1 ? decoded.slice(underscore + 1) : decoded;
   }
 
   emitPreview(): void {
@@ -1819,6 +1923,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     if (formValue.license?.description) {
       offeringTerms.push({ name: 'License', description: formValue.license.description });
     }
+    offeringTerms.push(...this.buildPersistedTermsFileTerms());
     if (formValue.procurementMode?.mode) {
       offeringTerms.push({ name: 'procurement', description: formValue.procurementMode.mode });
     }
@@ -2051,13 +2156,13 @@ export class OfferComponent implements OnInit, OnDestroy {
       // Mantener el primer término (licencia) incluso si está vacío
       //const licenseTerm = this.offer.productOfferingTerm[0];
       const licenseTerm = this.offer.productOfferingTerm.find(
-        (element: { name: string; }) => element.name === 'License'
+        (element: { name: string; }) => this.isLicenseTerm(element)
       );
 
       // Filtrar el resto de términos
 
       /*const otherTerms = this.offer.productOfferingTerm.filter(
-        (term: any) => term.name !== 'License'
+        (term: any) => !this.isLicenseTerm(term)
       ) ?? [];
 
 
@@ -2079,6 +2184,13 @@ export class OfferComponent implements OnInit, OnDestroy {
           }
         });
       }
+
+      this.tcAttachments = this.offer.productOfferingTerm
+        .filter((term: any) => term?.name === OfferComponent.TERMS_FILE_TERM_NAME && term?.description)
+        .map((term: any) => ({
+          name: this.filenameFromTermsFileUrl(term.description),
+          url: term.description
+        }));
 
       //PROCUREMENT
       const procurementTerm = this.offer.productOfferingTerm.find(
@@ -2604,7 +2716,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     const plans = this.productOfferForm.value.pricePlans;
 
     if (plans.length === 0) {
-      this.saveOfferInfo();
+      await this.saveOfferInfo();
       return;
     }
 
@@ -2625,7 +2737,7 @@ export class OfferComponent implements OnInit, OnDestroy {
         this.productOfferForm.value.pricePlans[i].id = createdPriceId;
 
         if (i === plans.length - 1) {
-          this.saveOfferInfo();
+          await this.saveOfferInfo();
         }
       } catch (error: any) {
         this.handleApiError(error);
@@ -2633,7 +2745,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     }
   }
 
-  saveOfferInfo(): void {
+  async saveOfferInfo(): Promise<void> {
     const formValue = this.productOfferForm.value;
 
     const seenCategoryIds = new Set<string>();
@@ -2655,6 +2767,22 @@ export class OfferComponent implements OnInit, OnDestroy {
 
     const generalInfo = formValue.generalInfo;
     const lifecycleStatus = this.formType === 'update' ? generalInfo.status : 'Active';
+    const catalogueId = formValue.catalogue?.id || this.autoCatalogue?.id;
+    if (this.formType === 'create' && !catalogueId) {
+      this.errorMessage = this.translate.instant('CREATE_OFFER._no_catalogue_available');
+      this.loading = false;
+      this.showError = true;
+      setTimeout(() => (this.showError = false), 3000);
+      return;
+    }
+
+    let termsFileTerms: any[] = [];
+    try {
+      termsFileTerms = await this.buildTermsFileTerms();
+    } catch (error: any) {
+      this.handleTermsFileUploadError(error);
+      return;
+    }
 
     const offer: any = {
       name: generalInfo.name,
@@ -2678,6 +2806,7 @@ export class OfferComponent implements OnInit, OnDestroy {
           name: 'License',
           description: formValue.license.description || ''
         },
+        ...termsFileTerms,
         {
           name: 'procurement',
           description: formValue.procurementMode.mode
@@ -2694,15 +2823,6 @@ export class OfferComponent implements OnInit, OnDestroy {
     }
 
     this.offerToCreate = offer;
-
-    const catalogueId = formValue.catalogue?.id || this.autoCatalogue?.id;
-    if (this.formType === 'create' && !catalogueId) {
-      this.errorMessage = this.translate.instant('CREATE_OFFER._no_catalogue_available');
-      this.loading = false;
-      this.showError = true;
-      setTimeout(() => (this.showError = false), 3000);
-      return;
-    }
 
     const request$ = this.formType === 'create'
       ? this.api.postProductOffering(offer, catalogueId)
@@ -2793,7 +2913,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     }
 
     const licenseDesc = this.productOfferForm.get('license')?.value?.description ?? '';
-    const existingLicense = basePayload.productOfferingTerm.find((t: any) => t.name === 'License');
+    const existingLicense = basePayload.productOfferingTerm.find((t: any) => this.isLicenseTerm(t));
     if (existingLicense) {
       existingLicense.description = licenseDesc;
     } else {
@@ -2824,7 +2944,7 @@ export class OfferComponent implements OnInit, OnDestroy {
 
         case 'license':
           // Actualizar términos de licencia
-          const licenseTerm = basePayload.productOfferingTerm.find((term: any) => term.name === 'License');
+          const licenseTerm = basePayload.productOfferingTerm.find((term: any) => this.isLicenseTerm(term));
           if (licenseTerm) {
             licenseTerm.description = change.currentValue.description;
           } else {
@@ -2949,7 +3069,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     /*if (basePayload.productOfferingTerm) {
       // Mantener el primer término (licencia) incluso si está vacío
       //const licenseTerm = basePayload.productOfferingTerm[0];
-      let licenseTerm = basePayload.productOfferingTerm.find((element: { name: any; }) => element.name == 'License')
+      let licenseTerm = basePayload.productOfferingTerm.find((element: { name: any; }) => this.isLicenseTerm(element))
       if(!licenseTerm){
         licenseTerm={
           name: 'License',
@@ -2959,7 +3079,7 @@ export class OfferComponent implements OnInit, OnDestroy {
 
       // Filtrar el resto de términos
       const otherTerms = this.offer.productOfferingTerm.filter(
-        (term: any) => term.name !== 'License'
+        (term: any) => !this.isLicenseTerm(term)
       ) ?? [];
 
       // Reconstruir el array con el término de licencia en la posición 0
@@ -2979,6 +3099,14 @@ export class OfferComponent implements OnInit, OnDestroy {
       }
     } else {
       basePayload.productOfferingPrice = [];
+    }
+
+    try {
+      const termsFileTerms = await this.buildTermsFileTerms();
+      basePayload.productOfferingTerm = this.replaceTermsFileTerms(basePayload.productOfferingTerm, termsFileTerms);
+    } catch (error: any) {
+      this.handleTermsFileUploadError(error);
+      return;
     }
 
     console.log('📝 Final update payload:', basePayload);

@@ -107,14 +107,12 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     console.log('---- producto')
     console.log(this.productOff)
 
-    this.productOff?.productOfferingTerm?.forEach((term) => {
-      console.log(term.name)
-      console.log('----')
-      if (term.name != 'procurement') {
-        console.log('---- Setting the term')
-        this.tsAndCs = term;
-      }
-    });
+    const licenseTerm = this.productOff?.productOfferingTerm?.find(
+      element => String(element?.name || '').toLowerCase() === 'license'
+    );
+    if (licenseTerm) {
+      this.tsAndCs = { description: licenseTerm.description };
+    }
 
     this.isFree = this.productOff?.productOfferingPrice?.length === 0;
 
@@ -160,7 +158,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
         }
       });*/
       const licenseTerm = this.productOff?.productOfferingTerm?.find(
-        element => element.name === 'License'
+        element => String(element?.name || '').toLowerCase() === 'license'
       );
       if(licenseTerm){
         this.tsAndCs={ description: licenseTerm.description };

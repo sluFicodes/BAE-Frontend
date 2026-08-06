@@ -586,7 +586,7 @@ async deleteProduct(product: Product | undefined){
 
     if(this.productOff?.productOfferingTerm != undefined){
       const licenseTerm = this.productOff.productOfferingTerm.find(
-        element => element.name === 'License'
+        element => String(element?.name || '').toLowerCase() === 'license'
       );
 
       if (!licenseTerm) {
