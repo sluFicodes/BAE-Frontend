@@ -69,6 +69,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   price: string = '';
   images: AttachmentRefOrValue[] = [];
   attatchments: AttachmentRefOrValue[] = [];
+  termsFileAttachments: AttachmentRefOrValue[] = [];
   prodSpec: ProductSpecification = {};
   complianceProf: any[] = [];
   additionalCerts: any[] = [];
@@ -350,9 +351,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
       this.attatchments = this.productOff?.attachment?.filter(item => item.name != 'Profile Picture') ?? [];
     }
 
-    this.licenseTerm = this.productOff?.productOfferingTerm?.find(
-      element => String(element?.name || '').toLowerCase() === 'license'
-    );
+    this.setOfferingTerms(this.productOff?.productOfferingTerm);
 
     if (this.prodSpec.productSpecCharacteristic != undefined) {
 
@@ -576,9 +575,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
 
     if (this.productOff?.productOfferingTerm != undefined) {
-      this.licenseTerm = this.productOff.productOfferingTerm.find(
-        element => String(element?.name || '').toLowerCase() === 'license'
-      );
+      this.setOfferingTerms(this.productOff.productOfferingTerm);
       if (!this.licenseTerm) {
         this.check_terms = false;
       } else {
@@ -874,17 +871,38 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
 
   toggleTermsReadMore() {
     this.showTermsMore = !this.showTermsMore;
-
-    const el = this.termsTextRef.nativeElement;
-    if (this.showTermsMore) {
-      el.classList.remove('line-clamp-5');
-    } else {
-      el.classList.add('line-clamp-5');
-    }
   }
 
   goToLink(url: any) {
     window.open(url, "_blank");
+  }
+
+  private extractTermsFileAttachments(terms: any[] | undefined): AttachmentRefOrValue[] {
+    return (terms || [])
+      .filter(term => String(term?.name || '').toLowerCase() === 'terms-file' && term?.description)
+      .map((term, index) => ({
+        id: term.id || `terms-file-${index}`,
+        name: this.fileNameFromUrl(term.description),
+        url: term.description,
+        attachmentType: 'terms-file'
+      }));
+  }
+
+  private setOfferingTerms(terms: any[] | undefined): void {
+    this.licenseTerm = terms?.find(
+      term => String(term?.name || '').toLowerCase() === 'license'
+    );
+    this.termsFileAttachments = this.extractTermsFileAttachments(terms);
+    this.showTermsMore = false;
+    this.showReadMoreButton = false;
+  }
+
+  private fileNameFromUrl(value: string): string {
+    const last = value.split('/').pop() || value;
+    let decoded = last;
+    try { decoded = decodeURIComponent(last); } catch { }
+    const underscore = decoded.indexOf('_');
+    return underscore > -1 ? decoded.slice(underscore + 1) : decoded;
   }
 
   getOwner() {
@@ -1129,9 +1147,7 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
     }
     console.log('[preview] attachments:', attachments, 'images:', this.images);
 
-    this.licenseTerm = offer?.productOfferingTerm?.find(
-      (t: any) => String(t?.name || '').toLowerCase() === 'license'
-    );
+    this.setOfferingTerms(offer?.productOfferingTerm);
 
     if ((this.prodSpec as any)?.productSpecCharacteristic) {
       this.prodChars = (this.prodSpec as any).productSpecCharacteristic.filter((char: any) =>

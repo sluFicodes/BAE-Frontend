@@ -507,26 +507,41 @@
         </div>
         }
 
-        @if(licenseTerm || productOff?.serviceLevelAgreement){
-          @if(licenseTerm && licenseTerm?.description != ''){
-            <h2 class="text-[24px] font-bold text-secondary-100 mb-4">{{ 'PRODUCT_DETAILS._license' | translate }}</h2>
-            <div class="rounded-2xl bg-white border border-gray-200 p-8 mb-8">
-              <div class="flex justify-end mb-4">
-                <fa-icon [icon]="faScaleBalanced" class="text-2xl text-primary-100"></fa-icon>
+        @if(licenseTerm || termsFileAttachments.length > 0 || productOff?.serviceLevelAgreement){
+          @if((licenseTerm && licenseTerm?.description != '') || termsFileAttachments.length > 0){
+            <h2 class="text-[24px] font-bold text-secondary-100 mb-4">{{ 'CREATE_OFFER._terms_conditions' | translate }}</h2>
+            @if(licenseTerm && licenseTerm?.description != ''){
+              <div class="rounded-2xl bg-white border border-gray-200 p-8" [ngClass]="termsFileAttachments.length > 0 ? 'mb-4' : 'mb-8'">
+                <div class="flex justify-end mb-4">
+                  <fa-icon [icon]="faScaleBalanced" class="text-2xl text-primary-100"></fa-icon>
+                </div>
+                <div #termsText [class.line-clamp-5]="!showTermsMore" class="overflow-hidden">
+                  <markdown [ngClass]="{
+                      'break-all': hasLongWord(licenseTerm?.description, 20),
+                      'break-words': !hasLongWord(licenseTerm?.description, 20)
+                    }" [data]="licenseTerm?.description"
+                    class="text-[16px] text-gray-500 break-words"></markdown>
+                </div>
+                @if(showReadMoreButton || isLongText(licenseTerm?.description)){
+                  <button class="mt-4 text-primary-100 font-medium text-[14px] hover:underline" (click)="toggleTermsReadMore()">
+                    {{ (showTermsMore ? 'PRODUCT_DETAILS._read_less' : 'PRODUCT_DETAILS._read_more') | translate }}
+                  </button>
+                }
               </div>
-              <div #termsText [class.line-clamp-5]="!showTermsMore" class="overflow-hidden">
-                <markdown [ngClass]="{
-                    'break-all': hasLongWord(licenseTerm?.description, 20),
-                    'break-words': !hasLongWord(licenseTerm?.description, 20)
-                  }" [data]="licenseTerm?.description"
-                  class="text-[16px] text-gray-500 break-words"></markdown>
+            }
+            @if(termsFileAttachments.length > 0){
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                @for (att of termsFileAttachments; track att.id) {
+                  <div class="rounded-2xl bg-white border border-gray-200 p-6 flex items-center justify-between">
+                    <h3 [ngClass]="{'break-all': hasLongWord(att.name, 20), 'break-words': !hasLongWord(att.name, 20)}"
+                      class="text-[18px] font-bold text-secondary-100 break-words">{{att.name}}</h3>
+                    <button (click)="goToLink(att.url)" class="flex items-center justify-center h-10 w-10 rounded-full bg-secondary-50 hover:bg-secondary-50/80 transition-colors text-primary-100 shrink-0 ml-4">
+                      <fa-icon [icon]="faDownload" class="text-lg"></fa-icon>
+                    </button>
+                  </div>
+                }
               </div>
-              @if(showReadMoreButton){
-                <button class="mt-4 text-primary-100 font-medium text-[14px] hover:underline" (click)="toggleTermsReadMore()">
-                  {{ (showTermsMore ? 'PRODUCT_DETAILS._read_less' : 'PRODUCT_DETAILS._read_more') | translate }}
-                </button>
-              }
-            </div>
+            }
           }
           @if(productOff?.serviceLevelAgreement){
             <h2 class="text-[24px] font-bold text-secondary-100 mb-4">{{ 'PRODUCT_DETAILS._sla' | translate }}</h2>
