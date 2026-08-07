@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import {faIdCard, faSort, faSwatchbook} from "@fortawesome/pro-solid-svg-icons";
@@ -13,6 +13,7 @@ import { PaginationService } from 'src/app/services/pagination.service';
 import { initFlowbite } from 'flowbite';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'seller-catalogs',
@@ -44,6 +45,9 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
     Archived: ['Obsolete']
   };
   statusCounts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Archived: 0 };
+  openMenuIdx: number | null = null;
+  openMenuCatalog: Catalog | null = null;
+  menuPosition = { top: 0, left: 0 };
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -52,7 +56,8 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private localStorage: LocalStorageService,
     private eventMessage: EventMessageService,
-    private paginationService: PaginationService
+    private paginationService: PaginationService,
+    private translate: TranslateService
   ) {
     this.eventMessage.messages$
     .pipe(takeUntil(this.destroy$))
@@ -78,6 +83,37 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
 
   goToUpdate(cat:any){
     this.eventMessage.emitSellerUpdateCatalog(cat);
+  }
+
+  toggleMenu(idx: number, cat: Catalog, event: MouseEvent){
+    event.stopPropagation();
+    if (this.openMenuIdx === idx) {
+      this.closeMenu();
+      return;
+    }
+
+    const trigger = event.currentTarget as HTMLElement;
+    const rect = trigger.getBoundingClientRect();
+    const menuWidth = 176;
+    this.menuPosition = {
+      top: rect.bottom + 8,
+      left: Math.max(8, rect.right - menuWidth)
+    };
+    this.openMenuCatalog = cat;
+    this.openMenuIdx = idx;
+  }
+
+  @HostListener('document:click')
+  onDocClick(){
+    if(this.openMenuIdx !== null){
+      this.closeMenu();
+      this.cdr.detectChanges();
+    }
+  }
+
+  private closeMenu() {
+    this.openMenuIdx = null;
+    this.openMenuCatalog = null;
   }
 
   initCatalogs(){
@@ -213,6 +249,37 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
       default:
         return { text: cat?.lifecycleStatus || '-', bg: '#F3F4F6', color: '#374151' };
     }
+  }
+
+  publishCatalog(cat: any) {
+    this.updateCatalogLifecycle(cat, 'Launched', 'OFFERINGS._catalog_publish_success', 'OFFERINGS._catalog_publish_error');
+  }
+
+  unpublishCatalog(cat: any) {
+    this.updateCatalogLifecycle(cat, 'Retired', 'OFFERINGS._catalog_unpublish_success', 'OFFERINGS._catalog_unpublish_error');
+  }
+
+  archiveCatalog(cat: any) {
+    this.updateCatalogLifecycle(cat, 'Obsolete', 'OFFERINGS._catalog_archive_success', 'OFFERINGS._catalog_archive_error');
+  }
+
+  restoreCatalog(cat: any) {
+    this.updateCatalogLifecycle(cat, 'Active', 'OFFERINGS._catalog_restore_success', 'OFFERINGS._catalog_restore_error');
+  }
+
+  private updateCatalogLifecycle(cat: any, lifecycleStatus: string, successKey: string, errorKey: string) {
+    if(!cat?.id) return;
+    this.closeMenu();
+    this.api.updateCatalog({ lifecycleStatus }, cat.id).subscribe({
+      next: () => {
+        this.eventMessage.emitSpecCreated(this.translate.instant(successKey));
+        this.getCatalogs(false);
+        this.loadStatusCounts();
+      },
+      error: () => {
+        this.eventMessage.emitSpecCreated(this.translate.instant(errorKey), 'error');
+      }
+    });
   }
 
   getStatusBadgeClass(status: string | undefined): string {

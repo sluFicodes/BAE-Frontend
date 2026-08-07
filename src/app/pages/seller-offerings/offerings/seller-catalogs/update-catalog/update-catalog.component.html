@@ -48,24 +48,6 @@
               </div>
 
               <div>
-                <p class="block text-sm font-semibold text-gray-900 mb-2">{{ 'UPDATE_CATALOG._status' | translate }}</p>
-                <div class="flex flex-wrap gap-2">
-                  <button type="button" (click)="setCatStatus('Active')"
-                    [ngClass]="catStatus === 'Active' ? 'border-yellow-300 bg-yellow-50 text-yellow-800' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'"
-                    class="rounded-lg border px-4 py-2 text-sm font-semibold">{{ 'OFFERINGS._draft' | translate }}</button>
-                  <button data-cy="catalogStatusLaunched" type="button" (click)="setCatStatus('Launched')"
-                    [ngClass]="catStatus === 'Launched' ? 'border-green-300 bg-green-50 text-green-700' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'"
-                    class="rounded-lg border px-4 py-2 text-sm font-semibold">{{ 'OFFERINGS._published' | translate }}</button>
-                  <button type="button" (click)="setCatStatus('Retired')"
-                    [ngClass]="catStatus === 'Retired' ? 'border-yellow-300 bg-yellow-50 text-yellow-800' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'"
-                    class="rounded-lg border px-4 py-2 text-sm font-semibold">{{ 'OFFERINGS._unpublished' | translate }}</button>
-                  <button type="button" (click)="setCatStatus('Obsolete')"
-                    [ngClass]="catStatus === 'Obsolete' ? 'border-red-300 bg-red-50 text-red-700' : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'"
-                    class="rounded-lg border px-4 py-2 text-sm font-semibold">{{ 'OFFERINGS._archived' | translate }}</button>
-                </div>
-              </div>
-
-              <div>
                 <label class="block text-sm font-semibold text-gray-900 mb-2">{{ 'UPDATE_CATALOG._description' | translate }}</label>
                 <app-markdown-textarea formControlName="description"></app-markdown-textarea>
               </div>

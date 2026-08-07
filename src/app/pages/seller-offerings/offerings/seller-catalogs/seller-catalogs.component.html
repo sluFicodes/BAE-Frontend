@@ -65,7 +65,7 @@
               </tr>
             </thead>
             <tbody>
-              @for (cat of catalogs; track cat.id; let last = $last) {
+              @for (cat of catalogs; track cat.id; let idx = $index; let last = $last) {
                 <tr data-cy="catalogRow" class="h-[56px] group" [style.border-bottom]="!last ? '1px solid #EBECEE' : null">
                   <td data-cy="catalogName" [ngClass]="{
                       'break-all': hasLongWord(cat.name, 20),
@@ -83,10 +83,12 @@
                     {{ cat.lastUpdate | date:'dd/MM/yyyy - HH:mm' }}
                   </td>
                   <td class="px-6 text-right group-hover:bg-gray-50" [ngClass]="{'rounded-br-2xl': last}">
-                    <button data-cy="catalogEdit" type="button" (click)="goToUpdate(cat)" class="p-1 hover:bg-gray-100 rounded text-gray-500"
-                      [attr.aria-label]="'OFFERINGS._edit' | translate">
-                      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                    <button data-cy="catalogActions" type="button" (click)="toggleMenu(idx, cat, $event)" class="p-1 hover:bg-gray-100 rounded text-gray-500"
+                      [attr.aria-label]="'OFFERINGS._actions' | translate">
+                      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="5" r="2"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <circle cx="12" cy="19" r="2"/>
                       </svg>
                     </button>
                   </td>
@@ -118,3 +120,51 @@
     }
   </div>
 </div>
+
+@if(openMenuCatalog; as cat){
+  <div class="fixed z-50 bg-white rounded-xl shadow-lg border border-gray-100 py-2 w-44 text-left"
+    [style.top.px]="menuPosition.top"
+    [style.left.px]="menuPosition.left"
+    (click)="$event.stopPropagation()">
+    @if(cat.lifecycleStatus !== 'Obsolete'){
+      <button data-cy="catalogEdit" type="button" (click)="goToUpdate(cat); openMenuIdx=null; openMenuCatalog=null" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+        </svg>
+        {{ 'OFFERINGS._edit' | translate }}
+      </button>
+    }
+    @if(cat.lifecycleStatus === 'Active' || cat.lifecycleStatus === 'Retired'){
+      <button data-cy="catalogPublish" type="button" (click)="publishCatalog(cat)" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.315 7.584C12.195 3.883 16.695 1.5 21.75 1.5a.75.75 0 01.75.75c0 5.056-2.383 9.555-6.084 12.436A6.75 6.75 0 019.75 22.5a.75.75 0 01-.75-.75v-4.131A15.838 15.838 0 016.382 15H2.25a.75.75 0 01-.75-.75 6.75 6.75 0 017.815-6.666zM15 6.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" clip-rule="evenodd"/>
+          <path d="M5.26 17.242a.75.75 0 10-.897-1.203 5.243 5.243 0 00-2.05 5.022.75.75 0 00.625.627 5.243 5.243 0 005.022-2.051.75.75 0 10-1.202-.897 3.744 3.744 0 01-3.008 1.51c0-1.23.592-2.323 1.51-3.008z"/>
+        </svg>
+        {{ 'OFFERINGS._publish' | translate }}
+      </button>
+    }
+    @if(cat.lifecycleStatus === 'Launched'){
+      <button data-cy="catalogUnpublish" type="button" (click)="unpublishCatalog(cat)" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/>
+        </svg>
+        {{ 'OFFERINGS._unpublish' | translate }}
+      </button>
+    }
+    @if(cat.lifecycleStatus !== 'Obsolete'){
+      <button data-cy="catalogArchive" type="button" (click)="archiveCatalog(cat)" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+        </svg>
+        {{ 'OFFERINGS._delete' | translate }}
+      </button>
+    } @else {
+      <button data-cy="catalogRestore" type="button" (click)="restoreCatalog(cat)" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/>
+        </svg>
+        {{ 'OFFERINGS._restore' | translate }}
+      </button>
+    }
+  </div>
+}

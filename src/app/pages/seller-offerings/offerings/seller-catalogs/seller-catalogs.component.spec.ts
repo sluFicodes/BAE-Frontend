@@ -4,6 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { EventMessageService } from 'src/app/services/event-message.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
+import { of } from 'rxjs';
 
 import { SellerCatalogsComponent } from './seller-catalogs.component';
 
@@ -11,6 +13,7 @@ describe('SellerCatalogsComponent', () => {
   let component: SellerCatalogsComponent;
   let fixture: ComponentFixture<SellerCatalogsComponent>;
   let eventMessage: EventMessageService;
+  let api: ApiServiceService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -23,6 +26,7 @@ describe('SellerCatalogsComponent', () => {
     fixture = TestBed.createComponent(SellerCatalogsComponent);
     component = fixture.componentInstance;
     eventMessage = TestBed.inject(EventMessageService);
+    api = TestBed.inject(ApiServiceService);
   });
 
   it('should create', () => {
@@ -65,6 +69,20 @@ describe('SellerCatalogsComponent', () => {
     expect(component.rowStatusBadge({ lifecycleStatus: 'Launched' }).text).toBe('Published');
     expect(component.rowStatusBadge({ lifecycleStatus: 'Retired' }).text).toBe('Unpublished');
     expect(component.rowStatusBadge({ lifecycleStatus: 'Obsolete' }).text).toBe('Archived');
+  });
+
+  it('publishCatalog should update lifecycle from the row action menu', () => {
+    spyOn(api, 'updateCatalog').and.returnValue(of({}));
+    spyOn(eventMessage, 'emitSpecCreated');
+    spyOn(component, 'getCatalogs');
+    spyOn(component, 'loadStatusCounts');
+
+    component.publishCatalog({ id: 'cat-1' });
+
+    expect(api.updateCatalog).toHaveBeenCalledWith({ lifecycleStatus: 'Launched' }, 'cat-1');
+    expect(eventMessage.emitSpecCreated).toHaveBeenCalled();
+    expect(component.getCatalogs).toHaveBeenCalledWith(false);
+    expect(component.loadStatusCounts).toHaveBeenCalled();
   });
 
   it('hasLongWord should detect long words and handle undefined', () => {

@@ -124,11 +124,6 @@ export class UpdateCatalogComponent implements OnInit, OnDestroy {
     this.showPreview=false;
   }
 
-  setCatStatus(status:any){
-    this.catStatus=status;
-    this.cdr.detectChanges();
-  }
-
   showFinish(){
     this.setCatalogData();
     this.showGeneral=false;
@@ -141,7 +136,6 @@ export class UpdateCatalogComponent implements OnInit, OnDestroy {
     if(this.generalForm.value.name!=null){
       this.catalogToUpdate={
         description: this.generalForm.value.description != null ? this.generalForm.value.description : '',
-        lifecycleStatus: this.catStatus,
       }
       if(this.cat.name != this.generalForm.value.name){
         this.catalogToUpdate.name=this.generalForm.value.name;
