@@ -103,6 +103,34 @@
                   }
                 </div>
 
+                @if(catalogSelectionRequired()){
+                  <div>
+                    <label for="catalogSelect" class="block text-sm font-semibold text-gray-900 mb-2">{{ 'CREATE_OFFER._catalog' | translate }}<span class="text-red-600 ml-0.5">*</span></label>
+                    @if(loadingCatalogs){
+                      <div class="text-sm text-gray-500 p-3">{{ 'CREATE_OFFER._loading' | translate }}</div>
+                    } @else {
+                      <select id="catalogSelect"
+                        data-cy="offerCatalogSelect"
+                        [value]="selectedCatalogId"
+                        (change)="onCatalogChange($event)"
+                        class="block w-full p-3 bg-white border text-sm text-gray-900 rounded-lg focus:ring-primary-100 focus:border-primary-100"
+                        [class.border-gray-300]="!(shouldShowRequiredErrors() && !selectedCatalogId)"
+                        [class.border-red-500]="shouldShowRequiredErrors() && !selectedCatalogId">
+                        <option value="" [selected]="!selectedCatalogId">{{ 'CREATE_OFFER._select' | translate }}</option>
+                        @for(cat of availableCatalogs; track cat.id){
+                          <option [value]="cat.id" [selected]="cat.id === selectedCatalogId">{{ cat.name }}</option>
+                        }
+                      </select>
+                      @if(shouldShowRequiredErrors() && !selectedCatalogId){
+                        <p class="mt-1 text-xs text-red-600">{{ 'CREATE_OFFER._mandatory_field' | translate }}</p>
+                      }
+                      @if(availableCatalogs.length === 0){
+                        <p class="mt-1 text-xs text-gray-500">{{ 'CREATE_OFFER._no_catalogue_available' | translate }}</p>
+                      }
+                    }
+                  </div>
+                }
+
                 @if(generalInfoCategoryFilter){
                   <div>
                     <label for="generalInfoCategoryFilter" class="block text-sm font-semibold text-gray-900 mb-2">{{ generalInfoCategoryFilterLabel }}<span class="text-red-600 ml-0.5">*</span></label>

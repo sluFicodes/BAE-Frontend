@@ -119,6 +119,11 @@ export class OfferComponent implements OnInit, OnDestroy {
   loadingProdSpecs: boolean = false;
   selectedProdSpecId: string = '';
 
+  catalogManagementEnabled: boolean = environment.CATALOG_MANAGEMENT_ENABLED;
+  availableCatalogs: any[] = [];
+  loadingCatalogs: boolean = false;
+  selectedCatalogId: string = '';
+
   generalInfoCategoryFilter: Filter | null = null;
   generalInfoCategoryFilterOptions: any[] = [];
   loadingGeneralInfoCategoryFilter: boolean = false;
@@ -374,6 +379,7 @@ export class OfferComponent implements OnInit, OnDestroy {
       case 'general':
         return (this.productOfferForm.get('generalInfo')?.valid || false)
           && !!this.productOfferForm.get('prodSpec')?.value
+          && (!this.catalogSelectionRequired() || !!this.productOfferForm.get('catalogue')?.value?.id)
           && (!this.generalInfoCategoryFilter || !!this.selectedGeneralInfoCategoryFilterOptionId);
       case 'category':
         return !!this.selectedRootCategoryId;
@@ -491,6 +497,10 @@ export class OfferComponent implements OnInit, OnDestroy {
     return this.formType === 'update' || this.highestStep > this.currentStep;
   }
 
+  catalogSelectionRequired(): boolean {
+    return this.catalogManagementEnabled && this.formType === 'create';
+  }
+
   handleStepClick(index: number): void {
     if (this.canNavigate(index)) {
       this.goToStep(index);
@@ -554,7 +564,8 @@ export class OfferComponent implements OnInit, OnDestroy {
     return !!name
       && (generalInfo?.get('name')?.valid || false)
       && (generalInfo?.get('version')?.valid || false)
-      && !!prodSpec?.id;
+      && !!prodSpec?.id
+      && (!this.catalogSelectionRequired() || !!this.productOfferForm.get('catalogue')?.value?.id);
   }
 
   async confirmLeave(): Promise<void> {
@@ -591,7 +602,9 @@ export class OfferComponent implements OnInit, OnDestroy {
     const licenseTerm = formValue.license?.description
       ? [{ name: 'License', description: formValue.license.description }]
       : [];
-    const catalogue = this.autoCatalogue || await this.ensureCatalogue();
+    const catalogue = this.catalogManagementEnabled
+      ? formValue.catalogue
+      : this.autoCatalogue || await this.ensureCatalogue();
     if (!catalogue?.id) {
       throw new Error(this.translate.instant('CREATE_OFFER._draft_catalogue_unavailable'));
     }
@@ -637,6 +650,37 @@ export class OfferComponent implements OnInit, OnDestroy {
     } finally {
       this.loadingProdSpecs = false;
     }
+  }
+
+  async loadAvailableCatalogs(): Promise<void> {
+    if (!this.partyId) return;
+    this.loadingCatalogs = true;
+    try {
+      const limit = environment.CATALOG_LIMIT;
+      const all: any[] = [];
+      let offset = 0;
+      while (offset < 10000) {
+        const page = await this.api.getCatalogsByUser(offset, undefined, ['Active', 'Launched'], this.partyId);
+        const items = Array.isArray(page) ? page : [];
+        all.push(...items);
+        if (items.length < limit) break;
+        offset += limit;
+      }
+      this.availableCatalogs = all;
+    } catch (err) {
+      console.error('Failed to load catalogs for selector', err);
+      this.availableCatalogs = [];
+    } finally {
+      this.loadingCatalogs = false;
+    }
+  }
+
+  onCatalogChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    this.selectedCatalogId = value;
+    const summary = value ? this.availableCatalogs.find(c => c.id === value) || null : null;
+    this.autoCatalogue = summary;
+    this.productOfferForm.patchValue({ catalogue: summary });
   }
 
   async onProdSpecChange(event: Event): Promise<void> {
@@ -2115,7 +2159,11 @@ export class OfferComponent implements OnInit, OnDestroy {
       this.loadAvailableProdSpecs();
       this.loadGeneralInfoCategoryFilterOptions();
       this.loadCategories();
-      this.ensureCatalogue();
+      if (this.catalogManagementEnabled) {
+        this.loadAvailableCatalogs();
+      } else {
+        this.ensureCatalogue();
+      }
       this.refreshOfferSteps();
     }
   }
@@ -2767,7 +2815,9 @@ export class OfferComponent implements OnInit, OnDestroy {
 
     const generalInfo = formValue.generalInfo;
     const lifecycleStatus = this.formType === 'update' ? generalInfo.status : 'Active';
-    const catalogueId = formValue.catalogue?.id || this.autoCatalogue?.id;
+    const catalogueId = this.catalogManagementEnabled
+      ? formValue.catalogue?.id
+      : formValue.catalogue?.id || this.autoCatalogue?.id;
     if (this.formType === 'create' && !catalogueId) {
       this.errorMessage = this.translate.instant('CREATE_OFFER._no_catalogue_available');
       this.loading = false;

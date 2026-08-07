@@ -9,13 +9,17 @@ import { OfferComponent } from './offer.component';
 import { availableFilters, searchCategoriesConfig } from 'src/app/data/availableFilters';
 import { ThemeService } from 'src/app/services/theme.service';
 import { AttachmentServiceService } from 'src/app/services/attachment-service.service';
+import { environment } from 'src/environments/environment';
 
 describe('OfferComponent', () => {
   let component: OfferComponent;
   let fixture: ComponentFixture<OfferComponent>;
   let themeSubject: BehaviorSubject<any>;
+  let originalCatalogManagementEnabled: boolean;
 
   beforeEach(async () => {
+    originalCatalogManagementEnabled = environment.CATALOG_MANAGEMENT_ENABLED;
+    environment.CATALOG_MANAGEMENT_ENABLED = false;
     availableFilters.splice(0, availableFilters.length);
     searchCategoriesConfig.primaryCategoriesMode = 'catalogFirstLevel';
     searchCategoriesConfig.primaryRootName = '';
@@ -41,6 +45,7 @@ describe('OfferComponent', () => {
   });
 
   afterEach(() => {
+    environment.CATALOG_MANAGEMENT_ENABLED = originalCatalogManagementEnabled;
     availableFilters.splice(0, availableFilters.length);
     searchCategoriesConfig.primaryCategoriesMode = 'catalogFirstLevel';
     searchCategoriesConfig.primaryRootName = '';
@@ -127,6 +132,58 @@ describe('OfferComponent', () => {
     component.productOfferForm.patchValue({ prodSpec: { id: 'prod-spec-1' } });
 
     expect(component.canSaveDraftOffer()).toBeTrue();
+  });
+
+  it('should require a selected catalog in general info when catalog management is enabled', () => {
+    component.catalogManagementEnabled = true;
+    component.currentStep = 0;
+
+    component.productOfferForm.get('generalInfo')?.patchValue({ name: 'Offer name' });
+    component.productOfferForm.patchValue({ prodSpec: { id: 'prod-spec-1' } });
+
+    expect(component.canNavigate(1)).toBeFalse();
+    expect(component.canSaveDraftOffer()).toBeFalse();
+
+    component.productOfferForm.patchValue({ catalogue: { id: 'catalogue-1' } });
+    component.selectedCatalogId = 'catalogue-1';
+
+    expect(component.canNavigate(1)).toBeTrue();
+    expect(component.canSaveDraftOffer()).toBeTrue();
+  });
+
+  it('should patch the selected catalog from the general info catalog selector', () => {
+    component.availableCatalogs = [
+      { id: 'catalogue-1', name: 'Main catalogue' },
+      { id: 'catalogue-2', name: 'Secondary catalogue' }
+    ];
+
+    component.onCatalogChange({ target: { value: 'catalogue-2' } } as unknown as Event);
+
+    expect(component.selectedCatalogId).toBe('catalogue-2');
+    expect(component.autoCatalogue).toEqual({ id: 'catalogue-2', name: 'Secondary catalogue' });
+    expect(component.productOfferForm.get('catalogue')?.value).toEqual({ id: 'catalogue-2', name: 'Secondary catalogue' });
+  });
+
+  it('should create an offer in the catalog selected in general info when catalog management is enabled', async () => {
+    const api = (component as any).api;
+    const postSpy = spyOn(api, 'postProductOffering').and.returnValue(of({ id: 'offer-1' }));
+    component.catalogManagementEnabled = true;
+    component.autoCatalogue = { id: 'fallback-catalogue' };
+    component.productOfferForm.get('generalInfo')?.patchValue({
+      name: 'Offer name',
+      version: '1.0'
+    });
+    component.productOfferForm.patchValue({
+      prodSpec: { id: 'prod-spec-1' },
+      catalogue: { id: 'selected-catalogue', name: 'Selected catalogue' },
+      category: [],
+      pricePlans: []
+    });
+
+    await component.saveOfferInfo();
+
+    expect(postSpy).toHaveBeenCalled();
+    expect(postSpy.calls.mostRecent().args[1]).toBe('selected-catalogue');
   });
 
   it('should keep the leave modal open when save draft is requested without mandatory fields', async () => {
