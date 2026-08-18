@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AccountServiceService } from 'src/app/services/account-service.service';
-import { PaginationService } from 'src/app/services/pagination.service';
 import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { CatalogsPageConfig } from 'src/app/themes';
@@ -25,6 +24,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
   private catalogLogoCache = new Map<string, string>();
   private ownerLogoCache = new Map<string, string | null>();
   private providersRequestSeq = 0;
+  private filteredPaginationToken: string | null = null;
   providers: ProviderCard[] = [];
   totalCount = 0;
   page = 0;
@@ -55,8 +55,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     private accService: AccountServiceService,
     private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
-    private themeService: ThemeService,
-    private paginationService: PaginationService
+    private themeService: ThemeService
   ) { }
 
   ngOnInit() {
@@ -122,30 +121,61 @@ export class CatalogsComponent implements OnInit, OnDestroy {
       this.allProviders = [];
       this.providers = [];
       this.page_check = true;
+      this.clearFilteredPaginationToken();
     }
 
     try {
-      const data = await this.paginationService.getItemsPaginated(
-        this.page,
-        this.CATALOG_LIMIT,
-        next,
-        this.catalogs,
-        this.nextCatalogs,
-        { keywords: this.filter },
-        this.getCatalogsPage.bind(this)
-      );
+      let loadedCatalogs: any[] = [];
+      let page = this.page;
+      let filteredPaginationToken = this.filteredPaginationToken;
 
-      if (requestSeq !== this.providersRequestSeq) {
-        return;
+      if (next) {
+        loadedCatalogs = [...this.nextCatalogs];
+        const visibleCatalogs = [...this.catalogs, ...loadedCatalogs];
+        let bufferedCatalogs: any[] = [];
+
+        if (filteredPaginationToken) {
+          const prefetched = await this.loadCatalogsPage(page, filteredPaginationToken);
+          page += this.CATALOG_LIMIT;
+          filteredPaginationToken = prefetched.filteredPaginationToken ?? null;
+          if (requestSeq !== this.providersRequestSeq) {
+            return;
+          }
+          bufferedCatalogs = Array.isArray(prefetched.items) ? prefetched.items : [];
+        }
+
+        this.catalogs = visibleCatalogs;
+        this.nextCatalogs = bufferedCatalogs;
+      } else {
+        page = 0;
+        filteredPaginationToken = null;
+        const current = await this.loadCatalogsPage(page, filteredPaginationToken);
+        page += this.CATALOG_LIMIT;
+        filteredPaginationToken = current.filteredPaginationToken ?? null;
+        if (requestSeq !== this.providersRequestSeq) {
+          return;
+        }
+
+        loadedCatalogs = Array.isArray(current.items) ? current.items : [];
+        this.catalogs = loadedCatalogs;
+
+        if (filteredPaginationToken) {
+          const prefetched = await this.loadCatalogsPage(page, filteredPaginationToken);
+          page += this.CATALOG_LIMIT;
+          filteredPaginationToken = prefetched.filteredPaginationToken ?? null;
+          if (requestSeq !== this.providersRequestSeq) {
+            return;
+          }
+          this.nextCatalogs = Array.isArray(prefetched.items) ? prefetched.items : [];
+        }
       }
 
-      this.page_check = data.page_check;
-      this.catalogs = Array.isArray(data.items) ? data.items : [];
-      this.nextCatalogs = Array.isArray(data.nextItems) ? data.nextItems : [];
-      this.page = data.page;
+      this.page = page;
+      this.filteredPaginationToken = filteredPaginationToken;
+      this.page_check = this.nextCatalogs.some(item => item != null);
       this.allProviders = this.catalogs.map(c => this.mapCatalog(c));
       this.applyView();
-      this.fillOwnerLogos(next ? catalogsToLoadLogos : this.catalogs);
+      this.fillOwnerLogos(next ? catalogsToLoadLogos : loadedCatalogs);
     } catch (err) {
       console.error('Error loading catalogs:', err);
     } finally {
@@ -157,8 +187,17 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getCatalogsPage(page: any, filter: any): Promise<any> {
-    return this.api.getCatalogsWithLimit(page, filter, this.CATALOG_LIMIT);
+  private loadCatalogsPage(page: number, filteredPaginationToken: string | null) {
+    return this.api.getLaunchedCatalogsPage(
+      page,
+      this.filter,
+      this.CATALOG_LIMIT,
+      filteredPaginationToken
+    );
+  }
+
+  private clearFilteredPaginationToken(): void {
+    this.filteredPaginationToken = null;
   }
 
   private mapCatalog(c: any): ProviderCard {
@@ -232,11 +271,11 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     e.stopPropagation();
     this.sortOption = v;
     this.showSortDropdown = false;
-    this.applyView();
+    this.getProviders(false);
   }
 
-  next() {
-    this.getProviders(true);
+  next(): Promise<void> {
+    return this.getProviders(true);
   }
 
   goToProvider(id: string) {
