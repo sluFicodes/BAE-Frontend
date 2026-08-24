@@ -336,6 +336,66 @@ describe('OfferComponent', () => {
     expect(component.canSaveConfigProfile()).toBeTrue();
   });
 
+  it('should initialize price plan characteristics as allowed except existing forbidden characteristics', () => {
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [
+          { id: 'char-region', name: 'Region', productSpecCharacteristicValue: [{ value: 'EU' }] },
+          { id: 'char-size', name: 'Size', productSpecCharacteristicValue: [{ value: 'Small' }] }
+        ]
+      }
+    });
+    component.paidPricePlanForm.patchValue({
+      forbiddenCharacteristic: [{ id: 'char-size', name: 'Size' }]
+    });
+
+    component.openPricePlanCharacteristicsModal();
+
+    expect(component.pricePlanCharacteristicSelection).toEqual([
+      { id: 'char-region', name: 'Region', allowed: true },
+      { id: 'char-size', name: 'Size', allowed: false }
+    ]);
+  });
+
+  it('should save disabled characteristics and remove them from price component options', () => {
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [
+          { id: 'char-region', name: 'Region', productSpecCharacteristicValue: [{ value: 'EU' }] },
+          { id: 'char-size', name: 'Size', productSpecCharacteristicValue: [{ value: 'Small' }] }
+        ]
+      }
+    });
+    component.openPricePlanCharacteristicsModal();
+
+    component.togglePricePlanCharacteristic(1);
+    component.savePricePlanCharacteristics();
+
+    expect(component.paidPricePlanForm.get('forbiddenCharacteristic')?.value).toEqual([
+      { id: 'char-size', name: 'Size' }
+    ]);
+    expect(component.prodSpecCharacteristics.map((characteristic: any) => characteristic.name)).toEqual(['Region']);
+  });
+
+  it('should keep a characteristic allowed while it is used by a price component', () => {
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [
+          { id: 'char-region', name: 'Region', productSpecCharacteristicValue: [{ value: 'EU' }] }
+        ]
+      }
+    });
+    component.paidPriceComponents = [{
+      id: 'component-1',
+      selectedCharacteristic: [{ id: 'char-region', name: 'Region' }]
+    }];
+    component.openPricePlanCharacteristicsModal();
+
+    component.togglePricePlanCharacteristic(0);
+
+    expect(component.pricePlanCharacteristicSelection[0].allowed).toBeTrue();
+  });
+
   it('should treat boolean configuration profile values as switch values', () => {
     component.productOfferForm.patchValue({
       prodSpec: {
@@ -848,6 +908,75 @@ describe('OfferComponent', () => {
         { id: 'created-tier', href: 'created-tier', name: 'Large storage' }
       ]
     }));
+  });
+
+  it('should create a constraint price and reference it from the bundled price plan', async () => {
+    const api = (component as any).api;
+    const postSpy = spyOn(api, 'postOfferingPrice').and.returnValue(of({
+      id: 'constraint-1',
+      href: 'constraint-1',
+      name: 'Forbidden characteristics'
+    }));
+    const plan = {
+      name: 'Flex plan',
+      description: 'Flexible pricing',
+      lifecycleStatus: 'Active',
+      forbiddenCharacteristic: [{ id: 'char-size', name: 'Size' }]
+    };
+
+    const constraintRef = await (component as any).persistPricePlanConstraint(plan);
+    const payload = (component as any).createBundledPricePlan(plan, [], constraintRef);
+
+    expect(postSpy).toHaveBeenCalledWith(jasmine.objectContaining({
+      isBundle: false,
+      priceType: 'constraint',
+      prodSpecCharValueUse: [{ id: 'char-size', name: 'Size' }]
+    }));
+    expect(payload.popRelationship).toEqual([jasmine.objectContaining({
+      id: 'constraint-1',
+      relationshipType: 'constraint'
+    })]);
+    expect((payload as any).forbiddenCharacteristic).toBeUndefined();
+  });
+
+  it('should update the existing constraint price instead of creating another one', async () => {
+    const api = (component as any).api;
+    const updateSpy = spyOn(api, 'updateOfferingPrice').and.returnValue(of({
+      id: 'constraint-1',
+      href: 'constraint-1',
+      name: 'Forbidden characteristics'
+    }));
+
+    const constraintRef = await (component as any).persistPricePlanConstraint({
+      constraintPriceId: 'constraint-1',
+      forbiddenCharacteristic: [{ id: 'char-size', name: 'Size' }]
+    });
+
+    expect(updateSpy).toHaveBeenCalledWith(jasmine.objectContaining({
+      priceType: 'constraint',
+      prodSpecCharValueUse: [{ id: 'char-size', name: 'Size' }]
+    }), 'constraint-1');
+    expect(constraintRef.id).toBe('constraint-1');
+  });
+
+  it('should resolve only discount prices from a component popRelationship', async () => {
+    const api = (component as any).api;
+    const getSpy = spyOn(api, 'getOfferingPrice').and.resolveTo({
+      id: 'discount-1',
+      priceType: 'discount',
+      percentage: 20
+    });
+
+    const discount = await (component as any).getRelatedOfferingPriceByType({
+      popRelationship: [
+        { id: 'constraint-1', relationshipType: 'constraint' },
+        { id: 'discount-1' }
+      ]
+    }, 'discount');
+
+    expect(getSpy).toHaveBeenCalledTimes(1);
+    expect(getSpy).toHaveBeenCalledWith('discount-1');
+    expect(discount.percentage).toBe(20);
   });
 
   it('should patch existing normal POPs and create only newly added normal POPs', async () => {
