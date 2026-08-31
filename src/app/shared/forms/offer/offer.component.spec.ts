@@ -164,6 +164,21 @@ describe('OfferComponent', () => {
     expect(component.productOfferForm.get('catalogue')?.value).toEqual({ id: 'catalogue-2', name: 'Secondary catalogue' });
   });
 
+  it('should only auto-select launched catalogs when catalog management is disabled', async () => {
+    const api = (component as any).api;
+    const launchedCatalog = { id: 'catalogue-launched', name: 'Published catalogue', lifecycleStatus: 'Launched' };
+    const getCatalogsSpy = spyOn(api, 'getCatalogsByUser').and.returnValue(Promise.resolve([launchedCatalog]));
+
+    component.catalogManagementEnabled = false;
+    component.partyId = 'party-1';
+
+    const catalogue = await component.ensureCatalogue();
+
+    expect(getCatalogsSpy).toHaveBeenCalledOnceWith(0, undefined, ['Launched'], 'party-1');
+    expect(catalogue).toBe(launchedCatalog);
+    expect(component.productOfferForm.get('catalogue')?.value).toBe(launchedCatalog);
+  });
+
   it('should create an offer in the catalog selected in general info when catalog management is enabled', async () => {
     const api = (component as any).api;
     const postSpy = spyOn(api, 'postProductOffering').and.returnValue(of({ id: 'offer-1' }));
