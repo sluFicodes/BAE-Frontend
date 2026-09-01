@@ -16,7 +16,7 @@ const domeHeaderLinks: NavLink[] = [
   },
   {
     id: 'dropdown-marketplace',
-    label: 'HEADER._marketplace',
+    label: 'HEADER._marketplaceH',
     children: [{
       label: 'HEADER._browse_serv',
       url: '/browse',
@@ -144,6 +144,10 @@ export const DOME_THEME_CONFIG: ThemeConfig = {
   dashboard: {
     showFeaturedOfferings: true,
     showPlatformBenefits: true,
+  },
+  features: {
+    colorSchemeSelector: false,
+    darkMode: false,
   },
   catalogs: {
     sections: {
