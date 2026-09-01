@@ -72,6 +72,7 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
   rangeCharacteristics: ProductSpecificationCharacteristic[] = [];
   disabledCharacteristics: any[] = [];
   canBeDisabledChars: any[]=[];
+  forbiddenCharacteristicNames = new Set<string>();
   private readonly boundHandleEscape = (event: KeyboardEvent) => this.handleEscape(event);
 
   @HostListener('document:keydown.escape', ['$event'])
@@ -244,7 +245,11 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
         char.name === prefix || char.name === `${prefix} - enabled`
       );*/
   
-      return !isCertification && !isCompliance && !iscredentialConfig && !isAuthPolicy;
+      return !isCertification
+        && !isCompliance
+        && !iscredentialConfig
+        && !isAuthPolicy
+        && !this.forbiddenCharacteristicNames.has(char?.name || '');
     });
   
     const characteristicsGroup = this.fb.group({});
@@ -355,6 +360,8 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     console.log('precio')
     console.log(pricePlan)
     this.form.get('selectedPricePlan')?.setValue(pricePlan);
+    this.selectedPricePlan = pricePlan;
+    this.forbiddenCharacteristicNames = await this.loadForbiddenCharacteristicNames(pricePlan);
 
 
     // Set chars based on selected price plan
@@ -368,10 +375,42 @@ export class PricePlanDrawerComponent implements OnInit, OnDestroy {
     }
 
     this.filterCharacteristics();
-    this.selectedPricePlan = pricePlan;
     await this.refreshAppliedMetrics();
     console.log(this.selectedPricePlan);
     await this.calculatePrice();
+  }
+
+  private async loadForbiddenCharacteristicNames(pricePlan: any): Promise<Set<string>> {
+    const localForbiddenCharacteristics = Array.isArray(pricePlan?.forbiddenCharacteristic)
+      ? pricePlan.forbiddenCharacteristic
+      : [];
+    if (localForbiddenCharacteristics.length > 0) {
+      return new Set(
+        localForbiddenCharacteristics
+          .filter((characteristic: any) => characteristic?.name)
+          .map((characteristic: any) => characteristic.name)
+      );
+    }
+
+    const constraintRefs = (Array.isArray(pricePlan?.popRelationship) ? pricePlan.popRelationship : [])
+      .filter((relationship: any) =>
+        relationship?.id && String(relationship.relationshipType || '').toLowerCase() === 'constraint'
+      );
+
+    for (const constraintRef of constraintRefs) {
+      const constraintPrice = await this.priceService.getProductPrice(constraintRef.id);
+      if (String(constraintPrice?.priceType || '').toLowerCase() !== 'constraint') continue;
+      const characteristicUses = Array.isArray(constraintPrice?.prodSpecCharValueUse)
+        ? constraintPrice.prodSpecCharValueUse
+        : [];
+      return new Set(
+        characteristicUses
+          .filter((characteristic: any) => characteristic?.name)
+          .map((characteristic: any) => characteristic.name)
+      );
+    }
+
+    return new Set<string>();
   }
 
   onUsageSpecChange(event: Event): void {

@@ -363,6 +363,19 @@
                   <p class="mt-1 text-xs text-gray-500">{{ (paidPricePlanForm.get('description')?.value?.length || 0) }}/300</p>
                 </div>
 
+                <div class="flex items-center justify-between gap-4 rounded-2xl border border-gray-200 bg-gray-50 p-5">
+                  <div>
+                    <h3 class="dome-heading-6">{{ 'CREATE_OFFER._price_plan_characteristics' | translate }}</h3>
+                    <p class="dome-body-small mt-2">
+                      {{ 'CREATE_OFFER._price_plan_characteristics_hint' | translate:{ allowed: allowedPricePlanCharacteristicCount, total: pricePlanCharacteristics.length } }}
+                    </p>
+                  </div>
+                  <button data-cy="choosePricePlanCharacteristics" type="button" (click)="openPricePlanCharacteristicsModal()"
+                    class="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-100 rounded-lg border border-primary-100 hover:bg-primary-50/10">
+                    {{ 'CREATE_OFFER._choose_characteristics' | translate }}
+                  </button>
+                </div>
+
                 @if(pricePlanFormType !== 'flex'){
                 <div class="flex flex-col gap-3">
                   <div class="flex items-center justify-between">
@@ -585,7 +598,7 @@
                         </div>
                         <p class="dome-heading-6">{{ 'CREATE_OFFER._no_price_plans_yet' | translate }}</p>
                         <p class="dome-body-small mt-2">{{ 'CREATE_OFFER._no_price_plans_yet_subtitle' | translate }}</p>
-                        <button type="button"
+                        <button data-cy="addPricePlan" type="button"
                           (click)="selectedPriceTier === 'tailored' ? openAddTailoredPricePlan() : openSelectPlanTypeModal()"
                           class="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-primary-100 rounded-lg border border-primary-100 hover:bg-primary-50/10">
                           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -623,7 +636,7 @@
                                   </button>
                                   @if(openActionMenuIndex === i){
                                     <div class="absolute right-2 z-10 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-lg py-1 text-left">
-                                      <button type="button" (click)="editPricePlan(plan)"
+                                      <button data-cy="editPricePlan" type="button" (click)="editPricePlan(plan)"
                                         class="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
                                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
                                         {{ 'CREATE_OFFER._pp_edit' | translate }}
@@ -801,6 +814,70 @@
           [ngClass]="!selectedNewPlanType ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-50'"
           class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg bg-primary-100">
           {{ 'CREATE_OFFER._continue' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if(showPricePlanCharacteristicsModal){
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4" (click)="closePricePlanCharacteristicsModal()">
+    <div data-cy="pricePlanCharacteristicsModal" class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-3xl" (click)="$event.stopPropagation()">
+      <div class="flex items-start justify-between mb-2">
+        <h3 class="dome-heading-6">{{ 'CREATE_OFFER._choose_characteristics' | translate }}</h3>
+        <button type="button" (click)="closePricePlanCharacteristicsModal()" class="text-gray-500 hover:text-gray-700">
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <p class="dome-body-small mb-6 mt-2">{{ 'CREATE_OFFER._choose_characteristics_subtitle' | translate }}</p>
+
+      @if(pricePlanCharacteristicSelection.length === 0){
+        <p class="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
+          {{ 'CREATE_OFFER._no_price_plan_characteristics' | translate }}
+        </p>
+      } @else {
+        <div class="max-h-[420px] overflow-y-auto rounded-2xl border border-gray-200">
+          @for(characteristic of pricePlanCharacteristicSelection; track characteristic.id; let i = $index; let last = $last){
+            <div class="flex items-center justify-between gap-4 px-5 py-4" [class.border-b]="!last" [class.border-gray-200]="!last">
+              <div>
+                <p class="text-sm font-semibold text-gray-900">{{ characteristic.name }}</p>
+                @if(characteristic.allowed && isPricePlanCharacteristicUsed(characteristic)){
+                  <p class="mt-1 text-xs text-gray-500">{{ 'CREATE_OFFER._characteristic_in_use' | translate }}</p>
+                }
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-sm text-gray-600">
+                  {{ (characteristic.allowed ? 'CREATE_OFFER._characteristic_allowed' : 'CREATE_OFFER._characteristic_forbidden') | translate }}
+                </span>
+                <button
+                  [attr.data-cy]="'pricePlanCharacteristicToggle-' + i"
+                  type="button"
+                  role="switch"
+                  [attr.aria-checked]="characteristic.allowed"
+                  [disabled]="characteristic.allowed && isPricePlanCharacteristicUsed(characteristic)"
+                  (click)="togglePricePlanCharacteristic(i)"
+                  [ngClass]="characteristic.allowed ? 'bg-primary-100' : 'bg-gray-300'"
+                  class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-100 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                  <span
+                    [ngClass]="characteristic.allowed ? 'translate-x-6' : 'translate-x-1'"
+                    class="inline-block h-4 w-4 rounded-full bg-white transition-transform"></span>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <div class="flex justify-end gap-3 mt-6">
+        <button type="button" (click)="closePricePlanCharacteristicsModal()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 rounded-lg hover:bg-gray-50">
+          {{ 'CREATE_OFFER._cancel' | translate }}
+        </button>
+        <button data-cy="savePricePlanCharacteristics" type="button" (click)="savePricePlanCharacteristics()"
+          class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-lg bg-primary-100 hover:bg-primary-50">
+          {{ 'CREATE_OFFER._save_characteristics' | translate }}
         </button>
       </div>
     </div>
