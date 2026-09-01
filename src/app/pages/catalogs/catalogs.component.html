@@ -20,6 +20,7 @@
 
     <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
       <h2 class="text-[20px] leading-[24px] sm:text-[30px] font-bold sm:leading-[36px] text-secondary-100">{{ 'CATALOGS._all_providers' | translate }}</h2>
+      <!-- Search is hidden until the backend supports provider catalog search.
       <form (ngSubmit)="filterProviders()" class="w-full sm:w-auto">
         <div class="flex h-[56px] w-full sm:w-[443px] max-w-full items-center gap-[16px] rounded-[16px] border border-gray-200 bg-white px-[16px]">
           <input type="search" [formControl]="searchField" class="flex-1 border-0 bg-transparent text-[16px] leading-[24px] text-secondary-500 outline-none focus:border-0 focus:ring-0 focus:shadow-none placeholder:text-gray-400" placeholder="{{ 'CATALOGS._search_placeholder' | translate }}" />
@@ -28,11 +29,13 @@
           </button>
         </div>
       </form>
+      -->
     </div>
 
     <div class="flex flex-wrap items-center justify-between gap-4 pt-[24px] sm:pt-[40px] pb-[24px]">
       <div class="flex w-full items-center justify-between gap-[24px] sm:w-auto sm:justify-start">
         <span class="text-[16px] font-normal leading-[24px] text-gray-500">{{ totalCount }} {{ 'CATALOGS._results' | translate }}</span>
+        <!-- Sort is hidden until the backend supports provider catalog sorting.
         <div class="relative flex items-center gap-[8px]">
           <span class="text-[14px] font-normal leading-[24px] text-secondary-500">{{ 'CATALOGS._sort_by' | translate }}:</span>
           <button (click)="toggleSortDropdown($event)" class="flex items-center gap-[4px] text-[14px] font-semibold leading-[16px] tracking-[0.5px] text-primary-100">
@@ -47,6 +50,7 @@
             </div>
           }
         </div>
+        -->
       </div>
       <div class="hidden sm:flex items-center gap-[12px]">
         <button (click)="viewMode = 'grid'" [ngClass]="viewMode === 'grid' ? 'bg-secondary-50' : ''" class="flex h-8 w-8 items-center justify-center rounded-[4px]">
