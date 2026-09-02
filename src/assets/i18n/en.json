@@ -8,7 +8,8 @@
     "_error": "Error"
   },
   "ERRORS": {
-    "_error_prefix": "Error: {{message}}"
+    "_error_prefix": "Error: {{message}}",
+    "_reason": "Reason: {{reason}}"
   },
   "europeTrademark": "Distributed Open Marketplace for Europe (DOME) Project has received funding from European Union’s Digital Europe Programme under the Grant Agreement No 101084071.",
   "DASHBOARD": {
@@ -2334,6 +2335,7 @@
     "_create_success": "Product specification successfully created",
     "_update_success": "Product specification successfully updated",
     "_validate_success": "Product specification successfully validated",
+    "_validate_error": "There was an error while validating the product!",
     "_save_error": "There was an error while saving the product!",
     "_image_upload_error": "There was an error while uploading the image!",
     "_file_upload_error": "There was an error while uploading the file!",

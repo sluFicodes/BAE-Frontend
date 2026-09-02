@@ -14,6 +14,7 @@ import { initFlowbite } from 'flowbite';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 @Component({
   selector: 'seller-service-spec',
@@ -225,8 +226,12 @@ export class SellerServiceSpecComponent implements OnInit, OnDestroy {
         this.getServSpecs(false);
         this.loadStatusCounts();
       },
-      error: () => {
+      error: (error: any) => {
         this.openMenuIdx = null;
+        this.eventMessage.emitSpecCreated(
+          formatApiErrorMessage(this.translate, 'CREATE_SERV_SPEC._validate_error', error),
+          'error'
+        );
       }
     });
   }
@@ -268,7 +273,10 @@ export class SellerServiceSpecComponent implements OnInit, OnDestroy {
     const onError = (err: any) => {
       this.clearDeleteConfirmation();
       console.error('Service spec delete failed', err);
-      this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._service_spec_delete_error'), 'error');
+      this.eventMessage.emitSpecCreated(
+        formatApiErrorMessage(this.translate, 'OFFERINGS._service_spec_delete_error', err),
+        'error'
+      );
     };
     if(serv.lifecycleStatus === 'Active'){
       this.servSpecService.updateServSpec({ lifecycleStatus: 'Launched' }, serv.id).subscribe({
