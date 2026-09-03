@@ -384,11 +384,11 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     let resourceSpec_button = document.getElementById('res-spec-button')
     let offer_button = document.getElementById('offers-button')
 
-    this.selectMenu(catalog_button,'text-white bg-primary-100');
-    this.unselectMenu(prodSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(serviceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(resourceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(offer_button,'text-white bg-primary-100');
+    this.selectMenu(catalog_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(prodSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(serviceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(resourceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(offer_button,'text-offerings-on-dark bg-primary-100');
   }
 
   goToProdSpec(){
@@ -402,11 +402,11 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     let resourceSpec_button = document.getElementById('res-spec-button')
     let offer_button = document.getElementById('offers-button')
 
-    this.selectMenu(prodSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(catalog_button,'text-white bg-primary-100');
-    this.unselectMenu(serviceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(resourceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(offer_button,'text-white bg-primary-100');
+    this.selectMenu(prodSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(catalog_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(serviceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(resourceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(offer_button,'text-offerings-on-dark bg-primary-100');
   }
 
   goToServiceSpec(){
@@ -420,11 +420,11 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     let resourceSpec_button = document.getElementById('res-spec-button')
     let offer_button = document.getElementById('offers-button')
 
-    this.selectMenu(serviceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(catalog_button,'text-white bg-primary-100');
-    this.unselectMenu(prodSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(resourceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(offer_button,'text-white bg-primary-100');
+    this.selectMenu(serviceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(catalog_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(prodSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(resourceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(offer_button,'text-offerings-on-dark bg-primary-100');
   }
 
   goToResourceSpec(){
@@ -438,11 +438,11 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     let resourceSpec_button = document.getElementById('res-spec-button')
     let offer_button = document.getElementById('offers-button')
 
-    this.selectMenu(resourceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(catalog_button,'text-white bg-primary-100');
-    this.unselectMenu(prodSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(serviceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(offer_button,'text-white bg-primary-100');
+    this.selectMenu(resourceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(catalog_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(prodSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(serviceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(offer_button,'text-offerings-on-dark bg-primary-100');
   }
 
   goToUsageSpec(){
@@ -468,11 +468,11 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     let resourceSpec_button = document.getElementById('res-spec-button')
     let offer_button = document.getElementById('offers-button')
 
-    this.selectMenu(offer_button,'text-white bg-primary-100');
-    this.unselectMenu(catalog_button,'text-white bg-primary-100');
-    this.unselectMenu(prodSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(serviceSpec_button,'text-white bg-primary-100');
-    this.unselectMenu(resourceSpec_button,'text-white bg-primary-100');
+    this.selectMenu(offer_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(catalog_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(prodSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(serviceSpec_button,'text-offerings-on-dark bg-primary-100');
+    this.unselectMenu(resourceSpec_button,'text-offerings-on-dark bg-primary-100');
   }
 
   removeClass(elem: HTMLElement, cls:string) {

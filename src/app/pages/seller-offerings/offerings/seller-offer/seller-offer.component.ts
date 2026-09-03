@@ -240,18 +240,18 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
 
   rowStatusBadge(offer: any): { text: string, bg: string, color: string } {
     if(offer?.lifecycleStatus === 'Launched'){
-      return { text: 'Published', bg: '#BBF7D0', color: '#052E16' };
+      return { text: 'Published', bg: 'rgb(var(--theme-status-success-bg))', color: 'rgb(var(--theme-status-success-text))' };
     }
     if(offer?.lifecycleStatus === 'Retired'){
-      return { text: 'Unpublished', bg: '#FEF3C7', color: '#92400E' };
+      return { text: 'Unpublished', bg: 'rgb(var(--theme-status-warning-bg))', color: 'rgb(var(--theme-status-warning-text))' };
     }
     if(offer?.lifecycleStatus === 'Obsolete'){
-      return { text: 'Archived', bg: '#FEE2E2', color: '#991B1B' };
+      return { text: 'Archived', bg: 'rgb(var(--theme-status-danger-bg))', color: 'rgb(var(--theme-status-danger-text))' };
     }
     if(this.isOfferComplete(offer)){
-      return { text: 'Ready to be published', bg: '#DCFCE7', color: '#166534' };
+      return { text: 'Ready to be published', bg: 'rgb(var(--theme-status-ready-bg))', color: 'rgb(var(--theme-status-ready-text))' };
     }
-    return { text: 'Not completed', bg: '#FEF3C7', color: '#92400E' };
+    return { text: 'Not completed', bg: 'rgb(var(--theme-status-warning-bg))', color: 'rgb(var(--theme-status-warning-text))' };
   }
 
   isOfferComplete(offer: any): boolean {

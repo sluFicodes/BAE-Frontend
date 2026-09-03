@@ -94,22 +94,22 @@ export class RelatedPartyIdComponent implements OnInit {
       this.loading = false;
     }
   }
-  
-  
+
+
   isSelected(partyId: string): boolean {
     return this.selectedParty?.id === partyId;
-  }  
+  }
 
   toggleSelection(party: any): void {
     this.selectedParty = party;
     this.onChange(party);
     this.onTouched();
-  }  
+  }
 
   getRowClass(partyId: string): string {
     return partyId === this.selectedParty?.id
-      ? "bg-[#EBF0F7]"
-      : "bg-white";
+      ? "bg-offerings-table-header"
+      : "bg-offerings-surface";
   }
 
   // As ControlValueAccessor

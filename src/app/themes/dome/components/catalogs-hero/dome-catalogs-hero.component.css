@@ -69,6 +69,21 @@
   margin: 0;
 }
 
+:host-context(.dark) .dome-catalogs-hero__decoration {
+  color: rgb(var(--theme-secondary-300));
+  mix-blend-mode: normal;
+  opacity: 0.45;
+}
+
+:host-context(.dark) .dome-catalogs-hero__title,
+:host-context(.dark) .dome-catalogs-hero__subtitle {
+  color: rgb(var(--theme-secondary-50));
+}
+
+:host-context(.dark) .dome-catalogs-hero__title span {
+  color: rgb(var(--theme-primary-50));
+}
+
 @media (min-width: 640px) {
   .dome-catalogs-hero {
     margin-bottom: 80px;

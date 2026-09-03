@@ -518,17 +518,17 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   stepCircleClasses(i: number): string {
-    if (this.currentStep === i) return 'bg-primary-100 text-white';
-    if (this.stepShowsComplete(i)) return 'bg-emerald-600 text-white';
-    if (this.stepHasWarning(i)) return 'bg-amber-500 text-white';
-    return 'bg-gray-100 text-gray-500';
+    if (this.currentStep === i) return 'bg-primary-100 text-offerings-on-dark';
+    if (this.stepShowsComplete(i)) return 'bg-status-success-border text-offerings-on-dark';
+    if (this.stepHasWarning(i)) return 'bg-status-warning-border text-offerings-on-dark';
+    return 'bg-offerings-neutral dark:bg-secondary-300 text-offerings-muted-text dark:text-offerings-on-dark-body';
   }
 
   stepLabelClasses(i: number): string {
-    if (this.currentStep === i) return 'text-primary-100';
-    if (this.stepShowsComplete(i)) return 'text-emerald-700';
-    if (this.stepHasWarning(i)) return 'text-amber-700';
-    return 'text-gray-500';
+    if (this.currentStep === i) return 'text-primary-100 dark:text-primary-50';
+    if (this.stepShowsComplete(i)) return 'text-status-success-text dark:text-status-success-bg';
+    if (this.stepHasWarning(i)) return 'text-status-warning-text dark:text-status-warning-bg';
+    return 'text-offerings-muted-text dark:text-offerings-on-dark-body';
   }
 
   onBackClick(): void {

@@ -208,15 +208,15 @@ export class SellerProductSpecComponent implements OnInit, OnDestroy {
   rowStatusBadge(prod: any): { text: string, bg: string, color: string } {
     const hasChars = (prod?.productSpecCharacteristic && prod.productSpecCharacteristic.length > 0);
     if (prod?.lifecycleStatus === 'Launched') {
-      return { text: 'Validated', bg: '#BBF7D0', color: '#052E16' };
+      return { text: 'Validated', bg: 'rgb(var(--theme-status-success-bg))', color: 'rgb(var(--theme-status-success-text))' };
     }
     if (prod?.lifecycleStatus === 'Retired' || prod?.lifecycleStatus === 'Obsolete') {
-      return { text: 'Deleted', bg: '#FEE2E2', color: '#991B1B' };
+      return { text: 'Deleted', bg: 'rgb(var(--theme-status-danger-bg))', color: 'rgb(var(--theme-status-danger-text))' };
     }
     if (hasChars) {
-      return { text: 'Ready to be validated', bg: '#DCFCE7', color: '#166534' };
+      return { text: 'Ready to be validated', bg: 'rgb(var(--theme-status-ready-bg))', color: 'rgb(var(--theme-status-ready-text))' };
     }
-    return { text: 'Not completed', bg: '#FEF3C7', color: '#92400E' };
+    return { text: 'Not completed', bg: 'rgb(var(--theme-status-warning-bg))', color: 'rgb(var(--theme-status-warning-text))' };
   }
 
   validateProd(prod: any) {

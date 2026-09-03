@@ -1,15 +1,15 @@
-<div class="relative isolate min-h-screen w-full bg-white font-[Blinker]">
+<div class="relative isolate min-h-screen w-full bg-offerings-surface dark:bg-tertiary-50 font-[Blinker]">
   <div class="mx-auto w-full max-w-[1440px] px-8">
-    <nav class="flex items-center gap-2 pt-4 pb-4 text-[16px] text-gray-500">
-      <a [routerLink]="['/dashboard']" class="hover:text-primary-100 transition-colors">{{ 'CATALOGS._bc_home' | translate }}</a>
-      <svg class="h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+    <nav class="flex items-center gap-2 pt-4 pb-4 text-[16px] text-offerings-muted-text dark:text-secondary-50">
+      <a [routerLink]="['/dashboard']" class="hover:text-primary-100 dark:hover:text-primary-50 transition-colors">{{ 'CATALOGS._bc_home' | translate }}</a>
+      <svg class="h-4 w-4 text-offerings-muted-text dark:text-secondary-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
       </svg>
-      <a [routerLink]="marketplaceHomeUrl" class="hover:text-primary-100 transition-colors">{{ 'CATALOGS._bc_marketplace' | translate }}</a>
-      <svg class="h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+      <a [routerLink]="marketplaceHomeUrl" class="hover:text-primary-100 dark:hover:text-primary-50 transition-colors">{{ 'CATALOGS._bc_marketplace' | translate }}</a>
+      <svg class="h-4 w-4 text-offerings-muted-text dark:text-secondary-50" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
       </svg>
-      <span class="font-medium text-primary-100">{{ 'CATALOGS._bc_current' | translate }}</span>
+      <span class="font-medium text-primary-100 dark:text-primary-50">{{ 'CATALOGS._bc_current' | translate }}</span>
     </nav>
   </div>
 
@@ -19,11 +19,11 @@
     }
 
     <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
-      <h2 class="text-[20px] leading-[24px] sm:text-[30px] font-bold sm:leading-[36px] text-secondary-100">{{ 'CATALOGS._all_providers' | translate }}</h2>
+      <h2 class="text-[20px] leading-[24px] sm:text-[30px] font-bold sm:leading-[36px] text-secondary-100 dark:text-offerings-on-dark">{{ 'CATALOGS._all_providers' | translate }}</h2>
       <!-- Search is hidden until the backend supports provider catalog search.
       <form (ngSubmit)="filterProviders()" class="w-full sm:w-auto">
-        <div class="flex h-[56px] w-full sm:w-[443px] max-w-full items-center gap-[16px] rounded-[16px] border border-gray-200 bg-white px-[16px]">
-          <input type="search" [formControl]="searchField" class="flex-1 border-0 bg-transparent text-[16px] leading-[24px] text-secondary-500 outline-none focus:border-0 focus:ring-0 focus:shadow-none placeholder:text-gray-400" placeholder="{{ 'CATALOGS._search_placeholder' | translate }}" />
+        <div class="flex h-[56px] w-full sm:w-[443px] max-w-full items-center gap-[16px] rounded-[16px] border border-offerings-border bg-offerings-surface px-[16px]">
+          <input type="search" [formControl]="searchField" class="flex-1 border-0 bg-transparent text-[16px] leading-[24px] text-secondary-500 outline-none focus:border-0 focus:ring-0 focus:shadow-none placeholder:text-offerings-disabled" placeholder="{{ 'CATALOGS._search_placeholder' | translate }}" />
           <button type="submit" aria-label="Search">
             <svg class="h-6 w-6 text-secondary-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
           </button>
@@ -34,7 +34,7 @@
 
     <div class="flex flex-wrap items-center justify-between gap-4 pt-[24px] sm:pt-[40px] pb-[24px]">
       <div class="flex w-full items-center justify-between gap-[24px] sm:w-auto sm:justify-start">
-        <span class="text-[16px] font-normal leading-[24px] text-gray-500">{{ totalCount }} {{ 'CATALOGS._results' | translate }}</span>
+        <span class="text-[16px] font-normal leading-[24px] text-offerings-muted-text dark:text-secondary-50">{{ totalCount }} {{ 'CATALOGS._results' | translate }}</span>
         <!-- Sort is hidden until the backend supports provider catalog sorting.
         <div class="relative flex items-center gap-[8px]">
           <span class="text-[14px] font-normal leading-[24px] text-secondary-500">{{ 'CATALOGS._sort_by' | translate }}:</span>
@@ -43,7 +43,7 @@
             <svg class="h-5 w-5 transition-transform" [ngClass]="showSortDropdown ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /></svg>
           </button>
           @if (showSortDropdown) {
-            <div (click)="$event.stopPropagation()" class="absolute right-0 sm:left-0 sm:right-auto top-full z-50 mt-2 w-[200px] overflow-hidden rounded-xl bg-white shadow-lg">
+            <div (click)="$event.stopPropagation()" class="absolute right-0 sm:left-0 sm:right-auto top-full z-50 mt-2 w-[200px] overflow-hidden rounded-xl bg-offerings-surface shadow-lg">
               @for (opt of sortOptions; track opt.value) {
                 <button (click)="selectSort(opt.value, $event)" [ngClass]="sortOption === opt.value ? 'bg-secondary-50 text-primary-100' : 'text-secondary-500 hover:bg-secondary-50/70'" class="flex w-full items-center px-3 py-2.5 text-[14px]">{{ opt.label | translate }}</button>
               }
@@ -53,11 +53,11 @@
         -->
       </div>
       <div class="hidden sm:flex items-center gap-[12px]">
-        <button (click)="viewMode = 'grid'" [ngClass]="viewMode === 'grid' ? 'bg-secondary-50' : ''" class="flex h-8 w-8 items-center justify-center rounded-[4px]">
-          <svg class="h-6 w-6 text-primary-100" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
+        <button (click)="viewMode = 'grid'" [ngClass]="viewMode === 'grid' ? 'bg-secondary-50 dark:bg-secondary-200' : ''" class="flex h-8 w-8 items-center justify-center rounded-[4px]">
+          <svg class="h-6 w-6 text-primary-100 dark:text-primary-50" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" /></svg>
         </button>
-        <button (click)="viewMode = 'list'" [ngClass]="viewMode === 'list' ? 'bg-secondary-50' : ''" class="flex h-8 w-8 items-center justify-center rounded-[4px]">
-          <svg class="h-6 w-6 text-primary-100" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+        <button (click)="viewMode = 'list'" [ngClass]="viewMode === 'list' ? 'bg-secondary-50 dark:bg-secondary-200' : ''" class="flex h-8 w-8 items-center justify-center rounded-[4px]">
+          <svg class="h-6 w-6 text-primary-100 dark:text-primary-50" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
         </button>
       </div>
     </div>
@@ -65,7 +65,7 @@
 
     @if (loading) {
         <div role="status" class="w-full h-full flex justify-center align-middle">
-          <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-secondary-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg aria-hidden="true" class="w-12 h-12 text-secondary-50 animate-spin dark:text-secondary-300 fill-secondary-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
               <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
           </svg>
@@ -77,16 +77,16 @@
           <div class="grid grid-cols-1 gap-[24px] sm:grid-cols-2 xl:grid-cols-[repeat(3,326px)] xl:justify-between xl:gap-x-0">
             @for (prov of providers; track prov.id) {
               <div data-cy="cataloguesList" (click)="goToProvider(prov.id)"
-                   class="flex h-[415px] w-full cursor-pointer flex-col overflow-hidden rounded-[16px] border border-gray-200 bg-white shadow-lg transition-all hover:border-primary-50 hover:shadow-xl">
+                   class="flex h-[415px] w-full cursor-pointer flex-col overflow-hidden rounded-[16px] border border-offerings-border dark:border-secondary-200 bg-offerings-surface dark:bg-secondary-300 shadow-lg transition-all hover:border-primary-50 dark:hover:border-primary-50 hover:shadow-xl">
                 <div class="h-[178px] shrink-0 p-[8px] pb-0">
-                  <div class="h-[170px] w-full rounded-[12px] bg-secondary-50/70 bg-contain bg-center bg-no-repeat" [ngClass]="isDefaultLogo(prov.logo) ? 'p-[28px] bg-origin-content' : ''" [style.background-image]="prov.logo ? 'url(' + prov.logo + ')' : null"></div>
+                  <div class="h-[170px] w-full rounded-[12px] bg-secondary-50/70 dark:bg-secondary-200 bg-contain bg-center bg-no-repeat" [ngClass]="isDefaultLogo(prov.logo) ? 'p-[28px] bg-origin-content' : ''" [style.background-image]="prov.logo ? 'url(' + prov.logo + ')' : null"></div>
                 </div>
                 <div class="flex flex-1 flex-col px-[16px] py-[24px]">
                   <div class="flex flex-col gap-[8px]">
                     <h5 data-cy="cataloguesTitle"
                         [ngClass]="{ 'break-all': hasLongWord(prov.name, 20), 'break-words': !hasLongWord(prov.name, 20) }"
-                        class="line-clamp-1 text-[24px] font-bold leading-[29px] text-secondary-100">{{ prov.name }}</h5>
-                    <p class="line-clamp-2 min-h-[48px] text-[16px] font-normal leading-[24px] text-gray-500">{{ prov.description || ('CATALOGS._no_desc' | translate) }}</p>
+                        class="line-clamp-1 text-[24px] font-bold leading-[29px] text-secondary-100 dark:text-offerings-on-dark">{{ prov.name }}</h5>
+                    <p class="line-clamp-2 min-h-[48px] text-[16px] font-normal leading-[24px] text-offerings-muted-text dark:text-secondary-50">{{ prov.description || ('CATALOGS._no_desc' | translate) }}</p>
                   </div>
                 </div>
               </div>
@@ -98,16 +98,16 @@
           <div class="flex flex-col gap-[24px]">
             @for (prov of providers; track prov.id) {
               <div data-cy="cataloguesList" (click)="goToProvider(prov.id)"
-                   class="flex h-auto md:h-[256px] w-full cursor-pointer flex-col md:flex-row overflow-hidden rounded-[16px] border border-gray-200 bg-white shadow-lg transition-all hover:border-primary-50 hover:shadow-xl">
+                   class="flex h-auto md:h-[256px] w-full cursor-pointer flex-col md:flex-row overflow-hidden rounded-[16px] border border-offerings-border dark:border-secondary-200 bg-offerings-surface dark:bg-secondary-300 shadow-lg transition-all hover:border-primary-50 dark:hover:border-primary-50 hover:shadow-xl">
                 <div class="h-[178px] w-full md:h-full md:w-[326px] shrink-0 p-[8px]">
-                  <div class="h-full w-full rounded-[12px] bg-secondary-50/70 bg-contain bg-center bg-no-repeat" [ngClass]="isDefaultLogo(prov.logo) ? 'p-[40px] bg-origin-content' : ''" [style.background-image]="prov.logo ? 'url(' + prov.logo + ')' : null"></div>
+                  <div class="h-full w-full rounded-[12px] bg-secondary-50/70 dark:bg-secondary-200 bg-contain bg-center bg-no-repeat" [ngClass]="isDefaultLogo(prov.logo) ? 'p-[40px] bg-origin-content' : ''" [style.background-image]="prov.logo ? 'url(' + prov.logo + ')' : null"></div>
                 </div>
                 <div class="flex flex-1 flex-col py-[24px] pl-[16px] pr-[24px]">
                   <div class="flex flex-col gap-[8px]">
                     <h5 data-cy="cataloguesTitle"
                         [ngClass]="{ 'break-all': hasLongWord(prov.name, 20), 'break-words': !hasLongWord(prov.name, 20) }"
-                        class="line-clamp-1 text-[24px] font-bold leading-[29px] text-secondary-100">{{ prov.name }}</h5>
-                    <p class="line-clamp-2 text-[16px] font-normal leading-[24px] text-gray-500">{{ prov.description || ('CATALOGS._no_desc' | translate) }}</p>
+                        class="line-clamp-1 text-[24px] font-bold leading-[29px] text-secondary-100 dark:text-offerings-on-dark">{{ prov.name }}</h5>
+                    <p class="line-clamp-2 text-[16px] font-normal leading-[24px] text-offerings-muted-text dark:text-secondary-50">{{ prov.description || ('CATALOGS._no_desc' | translate) }}</p>
                   </div>
                 </div>
               </div>
@@ -119,7 +119,7 @@
     @if (!loading_more) {
       @if (page_check) {
         <div class="flex justify-center pt-[40px]">
-          <button data-cy="loadMore" (click)="next()" class="flex h-10 items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-500 hover:bg-secondary-50/70">
+          <button data-cy="loadMore" (click)="next()" class="flex h-10 items-center justify-center gap-2 rounded-lg border border-offerings-border dark:border-secondary-200 bg-offerings-surface dark:bg-secondary-300 px-4 text-sm font-medium text-offerings-muted-text dark:text-secondary-50 hover:bg-secondary-50/70 dark:hover:bg-secondary-200">
             {{ 'CATALOGS._load_more' | translate }}
             <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5" /></svg>
           </button>
@@ -127,7 +127,7 @@
       }
     } @else {
         <div role="status" data-cy="loadMoreLoading" class="w-full h-full pt-8 flex justify-center align-middle">
-          <svg aria-hidden="true" class="w-12 h-12 text-gray-200 animate-spin dark:text-gray-600 fill-secondary-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg aria-hidden="true" class="w-12 h-12 text-secondary-50 animate-spin dark:text-secondary-300 fill-secondary-400" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
               <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
           </svg>
