@@ -13,6 +13,7 @@ import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ProductSpecServiceService } from 'src/app/services/product-spec-service.service';
 import { environment } from 'src/environments/environment';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 @Component({
   selector: 'seller-product-spec',
@@ -228,8 +229,12 @@ export class SellerProductSpecComponent implements OnInit, OnDestroy {
         this.getProdSpecs(false);
         this.loadStatusCounts();
       },
-      error: () => {
+      error: (error: any) => {
         this.openMenuIdx = null;
+        this.eventMessage.emitSpecCreated(
+          formatApiErrorMessage(this.translate, 'CREATE_PROD_SPEC._validate_error', error),
+          'error'
+        );
       }
     });
   }
@@ -271,7 +276,10 @@ export class SellerProductSpecComponent implements OnInit, OnDestroy {
     const onError = (err: any) => {
       this.clearDeleteConfirmation();
       console.error('Product spec delete failed', err);
-      this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._product_spec_delete_error'), 'error');
+      this.eventMessage.emitSpecCreated(
+        formatApiErrorMessage(this.translate, 'OFFERINGS._product_spec_delete_error', err),
+        'error'
+      );
     };
     if (prod.lifecycleStatus === 'Active') {
       this.prodSpecService.updateProdSpec({ lifecycleStatus: 'Launched' }, prod.id).subscribe({

@@ -14,6 +14,7 @@ import { PriceServiceService } from 'src/app/services/price-service.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 @Component({
   selector: 'seller-offer',
@@ -264,6 +265,13 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
     return hasProcurement;
   }
 
+  private emitApiError(errorKey: string, error: any): void {
+    this.eventMessage.emitSpecCreated(
+      formatApiErrorMessage(this.translate, errorKey, error),
+      'error'
+    );
+  }
+
   publishOffer(offer: any){
     if(!offer?.id) return;
     this.openMenuIdx = null;
@@ -277,8 +285,8 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
         this.getOffers(false);
         this.loadStatusCounts();
       },
-      error: () => {
-        this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._offer_publish_error'), 'error');
+      error: (error: any) => {
+        this.emitApiError('OFFERINGS._offer_publish_error', error);
       }
     });
   }
@@ -292,8 +300,8 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
         this.getOffers(false);
         this.loadStatusCounts();
       },
-      error: () => {
-        this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._offer_unpublish_error'), 'error');
+      error: (error: any) => {
+        this.emitApiError('OFFERINGS._offer_unpublish_error', error);
       }
     });
   }
@@ -332,8 +340,8 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
         this.getOffers(false);
         this.loadStatusCounts();
       },
-      error: () => {
-        this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._offer_duplicate_error'), 'error');
+      error: (error: any) => {
+        this.emitApiError('OFFERINGS._offer_duplicate_error', error);
       }
     });
   }
@@ -348,7 +356,7 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
     };
     const onError = (err: any) => {
       console.error('Product offer restore failed', err);
-      this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._offer_restore_error'), 'error');
+      this.emitApiError('OFFERINGS._offer_restore_error', err);
     };
     this.api.updateProductOffering({ lifecycleStatus: 'Retired' }, offer.id).subscribe({
       next: () => {
@@ -421,7 +429,7 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
       error: (err: any) => {
         this.clearDeleteConfirmation();
         console.error('Permanent delete failed', err);
-        this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._offer_delete_permanent_error'), 'error');
+        this.emitApiError('OFFERINGS._offer_delete_permanent_error', err);
       }
     });
   }
@@ -442,7 +450,7 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
     const onError = (err: any) => {
       this.clearDeleteConfirmation();
       console.error('Product offer delete failed', err);
-      this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._offer_delete_error'), 'error');
+      this.emitApiError('OFFERINGS._offer_delete_error', err);
     };
     if(offer.lifecycleStatus === 'Active'){
       this.api.updateProductOffering({ lifecycleStatus: 'Launched' }, offer.id).subscribe({

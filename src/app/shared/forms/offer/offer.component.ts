@@ -34,6 +34,18 @@ type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
 type OfferStepKey = 'general' | 'category' | 'terms' | 'contract' | 'price' | 'procurement';
 
+interface ForbiddenCharacteristic {
+  id: string;
+  name: string;
+}
+
+interface PricePlanCharacteristicSelection extends ForbiddenCharacteristic {
+  allowed: boolean;
+}
+
+const CONSTRAINT_PRICE_TYPE = 'constraint';
+const DISCOUNT_PRICE_TYPE = 'discount';
+
 interface TermsFileAttachment {
   name: string;
   size?: number;
@@ -157,6 +169,8 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   showConfigProfileModal = false;
   configProfileForm!: FormGroup;
+  showPricePlanCharacteristicsModal = false;
+  pricePlanCharacteristicSelection: PricePlanCharacteristicSelection[] = [];
   readonly currencyOptions: { code: string, label: string }[] = [
     { code: 'EUR', label: 'EURO' },
     { code: 'USD', label: 'US DOLLAR' },
@@ -251,6 +265,7 @@ export class OfferComponent implements OnInit, OnDestroy {
       name: new FormControl('', [Validators.required, Validators.maxLength(100)]),
       description: new FormControl('', [Validators.required, Validators.maxLength(300)]),
       currency: new FormControl('EUR', [Validators.required]),
+      forbiddenCharacteristic: this.fb.control([] as ForbiddenCharacteristic[]),
       productProfile: this.fb.group({ selectedValues: this.fb.array([] as FormGroup[]) }),
       priceComponents: this.fb.control([] as any[])
     });
@@ -1004,6 +1019,7 @@ export class OfferComponent implements OnInit, OnDestroy {
       name: '',
       description: '',
       currency: 'EUR',
+      forbiddenCharacteristic: [],
       productProfile: { selectedValues: [] },
       priceComponents: []
     });
@@ -1025,17 +1041,24 @@ export class OfferComponent implements OnInit, OnDestroy {
       name: plan?.name || '',
       description: plan?.description || '',
       currency: plan?.currency || 'EUR',
+      forbiddenCharacteristic: Array.isArray(plan?.forbiddenCharacteristic) ? plan.forbiddenCharacteristic : [],
       productProfile: plan?.productProfile || { selectedValues: [] },
       priceComponents
     });
     this.paidProductProfile.clear();
-    ((plan?.productProfile?.selectedValues) || []).forEach((sv: any) => {
-      this.paidProductProfile.push(this.fb.group({
-        id: [sv?.id || null],
-        name: [sv?.name || ''],
-        selectedValue: [sv?.selectedValue ?? null]
-      }));
-    });
+    const allowedCharacteristicIds = new Set(this.prodSpecCharacteristics.map((characteristic: any) => characteristic?.id));
+    const allowedCharacteristicNames = new Set(this.prodSpecCharacteristics.map((characteristic: any) => characteristic?.name));
+    ((plan?.productProfile?.selectedValues) || [])
+      .filter((selectedValue: any) =>
+        allowedCharacteristicIds.has(selectedValue?.id) || allowedCharacteristicNames.has(selectedValue?.name)
+      )
+      .forEach((sv: any) => {
+        this.paidProductProfile.push(this.fb.group({
+          id: [sv?.id || null],
+          name: [sv?.name || ''],
+          selectedValue: [sv?.selectedValue ?? null]
+        }));
+      });
     this.paidPriceComponents = priceComponents.slice();
     this.openActionMenuIndex = null;
     this.pricePlanFormMode = 'form';
@@ -1047,6 +1070,7 @@ export class OfferComponent implements OnInit, OnDestroy {
       name: '',
       description: '',
       currency: 'EUR',
+      forbiddenCharacteristic: [],
       productProfile: { selectedValues: [] },
       priceComponents: []
     });
@@ -1062,7 +1086,7 @@ export class OfferComponent implements OnInit, OnDestroy {
       this.paidProductProfile.markAllAsTouched();
       return;
     }
-    const { name, description, currency } = this.paidPricePlanForm.value;
+    const { name, description, currency, forbiddenCharacteristic } = this.paidPricePlanForm.value;
     const productProfile = { selectedValues: this.paidProductProfile.getRawValue() };
     const plans = (this.productOfferForm.get('pricePlans')?.value || []).slice();
     if (this.editingPricePlanIndex !== null && plans[this.editingPricePlanIndex]) {
@@ -1071,6 +1095,7 @@ export class OfferComponent implements OnInit, OnDestroy {
         name,
         description,
         currency,
+        forbiddenCharacteristic: Array.isArray(forbiddenCharacteristic) ? forbiddenCharacteristic : [],
         planSubType: this.pricePlanFormType,
         productProfile,
         priceComponents: this.paidPriceComponents.slice()
@@ -1084,6 +1109,7 @@ export class OfferComponent implements OnInit, OnDestroy {
         priceType: 'one time',
         paymentOnline: true,
         lifecycleStatus: 'Active',
+        forbiddenCharacteristic: Array.isArray(forbiddenCharacteristic) ? forbiddenCharacteristic : [],
         planSubType: this.pricePlanFormType,
         productProfile,
         priceComponents: this.paidPriceComponents.slice()
@@ -1133,7 +1159,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     return this.configProfileForm.get('selectedValues') as FormArray;
   }
 
-  get prodSpecCharacteristics(): any[] {
+  get pricePlanCharacteristics(): any[] {
     const prodSpec = this.productOfferForm.get('prodSpec')?.value;
     const list = prodSpec?.productSpecCharacteristic;
     if (!Array.isArray(list)) return [];
@@ -1141,6 +1167,90 @@ export class OfferComponent implements OnInit, OnDestroy {
       !String(c?.name || '').startsWith('Compliance:')
       && !NON_PRICE_CONFIG_VALUE_TYPES.includes(c?.valueType)
     );
+  }
+
+  get prodSpecCharacteristics(): any[] {
+    const forbiddenNames = new Set(
+      this.getCurrentForbiddenCharacteristics().map((characteristic) => characteristic.name)
+    );
+    return this.pricePlanCharacteristics.filter((characteristic: any) =>
+      !forbiddenNames.has(characteristic?.name)
+    );
+  }
+
+  get allowedPricePlanCharacteristicCount(): number {
+    return this.prodSpecCharacteristics.length;
+  }
+
+  openPricePlanCharacteristicsModal(): void {
+    const forbiddenNames = new Set(
+      this.getCurrentForbiddenCharacteristics().map((characteristic) => characteristic.name)
+    );
+    this.pricePlanCharacteristicSelection = this.pricePlanCharacteristics
+      .filter((characteristic: any) => characteristic?.id && characteristic?.name)
+      .map((characteristic: any) => ({
+        id: characteristic.id,
+        name: characteristic.name,
+        allowed: !forbiddenNames.has(characteristic.name)
+      }));
+    this.showPricePlanCharacteristicsModal = true;
+  }
+
+  closePricePlanCharacteristicsModal(): void {
+    this.showPricePlanCharacteristicsModal = false;
+    this.pricePlanCharacteristicSelection = [];
+  }
+
+  togglePricePlanCharacteristic(index: number): void {
+    const characteristic = this.pricePlanCharacteristicSelection[index];
+    if (!characteristic) return;
+    if (characteristic.allowed && this.isPricePlanCharacteristicUsed(characteristic)) return;
+    characteristic.allowed = !characteristic.allowed;
+  }
+
+  savePricePlanCharacteristics(): void {
+    const forbiddenCharacteristics = this.pricePlanCharacteristicSelection
+      .filter((characteristic) => !characteristic.allowed)
+      .map(({ id, name }) => ({ id, name }));
+    this.paidPricePlanForm.get('forbiddenCharacteristic')?.setValue(forbiddenCharacteristics);
+    this.pruneForbiddenProductProfileValues(forbiddenCharacteristics);
+    this.closePricePlanCharacteristicsModal();
+  }
+
+  isPricePlanCharacteristicUsed(characteristic: ForbiddenCharacteristic): boolean {
+    return this.paidPriceComponents.some((component: any) => {
+      if (component?.configOption === characteristic.id || component?.configOptionName === characteristic.name) {
+        return true;
+      }
+      const characteristicUses = Array.isArray(component?.selectedCharacteristic)
+        ? component.selectedCharacteristic
+        : Array.isArray(component?.prodSpecCharValueUse)
+          ? component.prodSpecCharValueUse
+          : [];
+      return characteristicUses.some((characteristicUse: any) =>
+        characteristicUse?.name === characteristic.name
+      );
+    });
+  }
+
+  private getCurrentForbiddenCharacteristics(): ForbiddenCharacteristic[] {
+    const forbiddenCharacteristics = this.paidPricePlanForm?.get('forbiddenCharacteristic')?.value;
+    return Array.isArray(forbiddenCharacteristics) ? forbiddenCharacteristics : [];
+  }
+
+  private pruneForbiddenProductProfileValues(forbiddenCharacteristics: ForbiddenCharacteristic[]): void {
+    const forbiddenNames = new Set(forbiddenCharacteristics.map((characteristic) => characteristic.name));
+    const retainedValues = this.paidProductProfile.getRawValue().filter((selectedValue: any) =>
+      !forbiddenNames.has(selectedValue?.name)
+    );
+    this.paidProductProfile.clear();
+    retainedValues.forEach((selectedValue: any) => {
+      this.paidProductProfile.push(this.fb.group({
+        id: [selectedValue?.id || null],
+        name: [selectedValue?.name || ''],
+        selectedValue: [selectedValue?.selectedValue ?? null]
+      }));
+    });
   }
 
   openConfigProfileModal(): void {
@@ -1979,12 +2089,19 @@ export class OfferComponent implements OnInit, OnDestroy {
     const prices = (formValue.pricePlans || []).map((p: any) => {
       const priceValue = p?.priceComponents?.[0]?.price;
       const priceUnit = p?.currency || p?.priceComponents?.[0]?.currency || 'EUR';
+      const productProfile = Array.isArray(p?.productProfile?.selectedValues)
+        ? p.productProfile.selectedValues
+        : [];
       return {
         id: p?.id,
         href: p?.id,
         name: p?.name,
         description: p?.description,
         priceType: p?.priceType || p?.priceComponents?.[0]?.priceType || 'one time',
+        forbiddenCharacteristic: this.getPlanForbiddenCharacteristics(p),
+        prodSpecCharValueUse: productProfile.length > 0
+          ? productProfile.map((item: any) => this.buildProductProfileCharacteristicUse(item))
+          : undefined,
         price: priceValue != null ? { value: priceValue, unit: priceUnit } : undefined
       };
     });
@@ -2283,6 +2400,7 @@ export class OfferComponent implements OnInit, OnDestroy {
         } else {
           configProfileCheck = false
         }
+        const constraintPrice = await this.getRelatedOfferingPriceByType(pricePlan, CONSTRAINT_PRICE_TYPE);
 
         let priceInfo: any = {
           id: pricePlan.id,
@@ -2291,6 +2409,9 @@ export class OfferComponent implements OnInit, OnDestroy {
           lifecycleStatus: pricePlan.lifecycleStatus,
           priceType: pricePlan?.priceType,
           paymentOnline: pricePlan?.paymentOnline ?? !!pricePlan?.bundledPopRelationship,
+          popRelationship: Array.isArray(pricePlan?.popRelationship) ? pricePlan.popRelationship : [],
+          constraintPriceId: constraintPrice?.id,
+          forbiddenCharacteristic: this.getConstraintCharacteristics(constraintPrice),
           productProfile: configProfileCheck ? this.mapProductProfile(pricePlan?.prodSpecCharValueUse || []) : [],
         }
 
@@ -2322,18 +2443,20 @@ export class OfferComponent implements OnInit, OnDestroy {
             }
 
             if (data?.popRelationship) {
-              let alter = await this.api.getOfferingPrice(data?.popRelationship[0].id)
+              const alter = await this.getRelatedOfferingPriceByType(data, DISCOUNT_PRICE_TYPE);
               console.log('----- alter')
               console.log(alter)
-              if (alter.percentage) {
+              if (alter?.percentage !== undefined && alter?.percentage !== null) {
                 priceComp.discountValue = alter?.percentage
                 priceComp.discountUnit = 'percentage'
-              } else {
+              } else if (alter?.price) {
                 priceComp.discountValue = alter?.price?.value
                 priceComp.discountUnit = 'fixed'
               }
-              priceComp.discountDuration = alter?.unitOfMeasure?.amount
-              priceComp.discountDurationUnit = alter?.unitOfMeasure?.units
+              if (alter) {
+                priceComp.discountDuration = alter?.unitOfMeasure?.amount
+                priceComp.discountDurationUnit = alter?.unitOfMeasure?.units
+              }
               //priceComp.discountDurationUnit=alter?.
               //priceComp.discountDuration=this.calculateDiscountDuration(alter?.validFor,alter?.)
             }
@@ -2389,6 +2512,30 @@ export class OfferComponent implements OnInit, OnDestroy {
       : this.translate.instant('CREATE_OFFER._price_create_error');
     this.showError = true;
     setTimeout(() => (this.showError = false), 3000);
+  }
+
+  private async getRelatedOfferingPriceByType(price: any, priceType: string): Promise<any | null> {
+    const relationships = Array.isArray(price?.popRelationship) ? price.popRelationship : [];
+    for (const relationship of relationships) {
+      if (!relationship?.id) continue;
+      const relationshipType = String(relationship.relationshipType || '').toLowerCase();
+      if (relationshipType && relationshipType !== priceType) continue;
+
+      const relatedPrice = await this.api.getOfferingPrice(relationship.id);
+      if (String(relatedPrice?.priceType || '').toLowerCase() === priceType) {
+        return relatedPrice;
+      }
+    }
+    return null;
+  }
+
+  private getConstraintCharacteristics(constraintPrice: any): ForbiddenCharacteristic[] {
+    const characteristicUses = Array.isArray(constraintPrice?.prodSpecCharValueUse)
+      ? constraintPrice.prodSpecCharValueUse
+      : [];
+    return characteristicUses
+      .filter((characteristic: any) => characteristic?.id && characteristic?.name)
+      .map((characteristic: any) => ({ id: characteristic.id, name: characteristic.name }));
   }
 
   private async createPriceAlteration(component: any, currency: string): Promise<any> {
@@ -2600,7 +2747,59 @@ export class OfferComponent implements OnInit, OnDestroy {
     return { id: updated.id, href: updated.id, name: updated.name };
   }
 
-  private createBundledPricePlan(plan: any, compRel: any[]): ProductOfferingPrice {
+  private getConstraintPriceId(plan: any): string | null {
+    const directId = plan?.constraintPriceId ?? plan?.newValue?.constraintPriceId ?? plan?.oldValue?.constraintPriceId;
+    if (directId) return directId;
+
+    const relationships = plan?.popRelationship ?? plan?.newValue?.popRelationship ?? plan?.oldValue?.popRelationship;
+    const constraintRef = (Array.isArray(relationships) ? relationships : []).find((relationship: any) =>
+      String(relationship?.relationshipType || '').toLowerCase() === CONSTRAINT_PRICE_TYPE
+    );
+    return constraintRef?.id || null;
+  }
+
+  private async persistPricePlanConstraint(plan: any): Promise<any | null> {
+    const forbiddenCharacteristics = this.getPlanForbiddenCharacteristics(plan);
+    const constraintPriceId = this.getConstraintPriceId(plan);
+    if (forbiddenCharacteristics.length === 0 && !constraintPriceId) {
+      return null;
+    }
+
+    const constraintPrice: ProductOfferingPrice = {
+      name: 'Forbidden characteristics',
+      description: 'Product specification characteristics that cannot be used by this price plan',
+      isBundle: false,
+      lifecycleStatus: 'Active',
+      priceType: CONSTRAINT_PRICE_TYPE,
+      prodSpecCharValueUse: forbiddenCharacteristics
+    };
+
+    const persistedConstraint = constraintPriceId
+      ? await lastValueFrom(this.api.updateOfferingPrice(constraintPrice, constraintPriceId))
+      : await lastValueFrom(this.api.postOfferingPrice(constraintPrice));
+
+    return {
+      id: persistedConstraint.id,
+      href: persistedConstraint.href || persistedConstraint.id,
+      name: persistedConstraint.name || constraintPrice.name,
+      relationshipType: CONSTRAINT_PRICE_TYPE
+    };
+  }
+
+  private getPricePlanRelationships(plan: any, constraintRef: any | null): any[] {
+    const relationships = plan?.popRelationship ?? plan?.newValue?.popRelationship ?? plan?.oldValue?.popRelationship;
+    const constraintPriceId = this.getConstraintPriceId(plan);
+    const retainedRelationships = (Array.isArray(relationships) ? relationships : []).filter((relationship: any) =>
+      relationship?.id !== constraintPriceId &&
+      String(relationship?.relationshipType || '').toLowerCase() !== CONSTRAINT_PRICE_TYPE
+    );
+    if (constraintRef) {
+      retainedRelationships.push(constraintRef);
+    }
+    return retainedRelationships;
+  }
+
+  private createBundledPricePlan(plan: any, compRel: any[], constraintRef: any | null = null): ProductOfferingPrice {
     const isCustomNoComponents = (plan?.priceType === 'custom' || plan?.newValue?.priceType === 'custom') && compRel.length === 0;
     const price: ProductOfferingPrice = {
       name: plan.name ?? plan?.newValue?.name,
@@ -2618,6 +2817,11 @@ export class OfferComponent implements OnInit, OnDestroy {
       if (plan?.newValue?.priceType == 'custom') {
         price.priceType = 'custom'
       }
+    }
+
+    const relationships = this.getPricePlanRelationships(plan, constraintRef);
+    if (!isCustomNoComponents && relationships.length > 0) {
+      price.popRelationship = relationships;
     }
 
     if (plan.prodSpecCharValueUse) {
@@ -2657,10 +2861,12 @@ export class OfferComponent implements OnInit, OnDestroy {
     console.log(plan)
     console.log(plan.id)
     console.log(compRel)
+    const constraintRef = await this.persistPricePlanConstraint(plan);
     let price: ProductOfferingPrice = {
       name: plan.newValue.name,
       isBundle: true,
-      bundledPopRelationship: compRel
+      bundledPopRelationship: compRel,
+      popRelationship: this.getPricePlanRelationships(plan, constraintRef)
     }
     if (modifiedFields.includes('description')) {
       price.description = plan.newValue.description
@@ -2687,7 +2893,8 @@ export class OfferComponent implements OnInit, OnDestroy {
         priceRefs.push({ id: plan.id, href: plan.id });
       } else {
         const compRel = await this.persistPricePlanComponents(plan);
-        const bundledPlan = this.createBundledPricePlan(plan, compRel);
+        const constraintRef = await this.persistPricePlanConstraint(plan);
+        const bundledPlan = this.createBundledPricePlan(plan, compRel, constraintRef);
         const created = await lastValueFrom(this.api.postOfferingPrice(bundledPlan));
         priceRefs.push({ id: created.id, href: created.id });
       }
@@ -2717,12 +2924,14 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   private async updateCurrentFormPricePlan(plan: any, compRel: any[]): Promise<ProductOfferingPrice> {
+    const constraintRef = await this.persistPricePlanConstraint(plan);
     const price: ProductOfferingPrice = {
       name: plan?.name,
       isBundle: true,
       description: plan?.description,
       lifecycleStatus: plan?.lifecycleStatus || 'Active',
-      bundledPopRelationship: compRel
+      bundledPopRelationship: compRel,
+      popRelationship: this.getPricePlanRelationships(plan, constraintRef)
     };
 
     const productProfile = Array.isArray(plan?.productProfile?.selectedValues)
@@ -2738,7 +2947,7 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   private buildProductProfileCharacteristicUse(item: any): any {
-    const characteristic = this.prodSpecCharacteristics.find((char: any) => char?.id === item?.id);
+    const characteristic = this.pricePlanCharacteristics.find((char: any) => char?.id === item?.id);
     const selectedValue = characteristic?.productSpecCharacteristicValue?.find((value: any) =>
       String(value?.value) === String(item?.selectedValue)
     );
@@ -2750,6 +2959,14 @@ export class OfferComponent implements OnInit, OnDestroy {
       valueType: characteristic?.valueType,
       productSpecCharacteristicValue: selectedValue ? [{ ...selectedValue, isDefault: true }] : []
     };
+  }
+
+  private getPlanForbiddenCharacteristics(plan: any): ForbiddenCharacteristic[] {
+    const forbiddenCharacteristics = plan?.forbiddenCharacteristic ?? plan?.newValue?.forbiddenCharacteristic;
+    if (!Array.isArray(forbiddenCharacteristics)) return [];
+    return forbiddenCharacteristics
+      .filter((characteristic: any) => characteristic?.id && characteristic?.name)
+      .map((characteristic: any) => ({ id: characteristic.id, name: characteristic.name }));
   }
 
   private isPersistedId(id: any): boolean {
@@ -2778,7 +2995,8 @@ export class OfferComponent implements OnInit, OnDestroy {
         const compRel = await Promise.all(
           components.map((comp: any) => this.createPriceComponent(comp, plan.currency))
         );
-        const bundledPricePlan = this.createBundledPricePlan(plan, compRel);
+        const constraintRef = await this.persistPricePlanConstraint(plan);
+        const bundledPricePlan = this.createBundledPricePlan(plan, compRel, constraintRef);
         const created = await lastValueFrom(this.api.postOfferingPrice(bundledPricePlan));
         createdPriceId = created.id;
 
@@ -3061,7 +3279,8 @@ export class OfferComponent implements OnInit, OnDestroy {
               console.log('Modified price plan')
               console.log(updatedPricePlan)
             } else {
-              let createdPricePlan = await this.createBundledPricePlan(pricePlanChangeInfo[i], finalPriceComps);
+              const constraintRef = await this.persistPricePlanConstraint(pricePlanChangeInfo[i]);
+              let createdPricePlan = this.createBundledPricePlan(pricePlanChangeInfo[i], finalPriceComps, constraintRef);
               const created = await lastValueFrom(this.api.postOfferingPrice(createdPricePlan));
               let index = basePayload.productOfferingPrice.findIndex(
                 (plan: any) => plan.id === pricePlanChangeInfo[i].id

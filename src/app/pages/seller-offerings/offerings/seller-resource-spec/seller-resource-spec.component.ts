@@ -14,6 +14,7 @@ import { initFlowbite } from 'flowbite';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 @Component({
   selector: 'seller-resource-spec',
@@ -231,8 +232,12 @@ export class SellerResourceSpecComponent implements OnInit, OnDestroy {
         this.getResSpecs(false);
         this.loadStatusCounts();
       },
-      error: () => {
+      error: (error: any) => {
         this.openMenuIdx = null;
+        this.eventMessage.emitSpecCreated(
+          formatApiErrorMessage(this.translate, 'CREATE_RES_SPEC._validate_error', error),
+          'error'
+        );
       }
     });
   }
@@ -274,7 +279,10 @@ export class SellerResourceSpecComponent implements OnInit, OnDestroy {
     const onError = (err: any) => {
       this.clearDeleteConfirmation();
       console.error('Resource spec delete failed', err);
-      this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._resource_spec_delete_error'), 'error');
+      this.eventMessage.emitSpecCreated(
+        formatApiErrorMessage(this.translate, 'OFFERINGS._resource_spec_delete_error', err),
+        'error'
+      );
     };
     if(res.lifecycleStatus === 'Active'){
       this.resSpecService.updateResSpec({ lifecycleStatus: 'Launched' }, res.id).subscribe({

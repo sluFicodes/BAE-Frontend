@@ -11,6 +11,7 @@ import { ServiceSpecServiceService } from 'src/app/services/service-spec-service
 import { noWhitespaceValidator } from 'src/app/validators/validators';
 import { v4 as uuidv4 } from 'uuid';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 import { components } from "src/app/models/service-catalog";
 import { environment } from 'src/environments/environment';
@@ -180,9 +181,9 @@ export class CreateServiceSpecComponent implements OnInit, OnDestroy {
         this.showSuccessModal = false;
         this.eventMessage.emitSellerServiceSpec(true);
       },
-      error: () => {
+      error: (error: any) => {
         this.loading = false;
-        this.errorMessage = this.translate.instant('CREATE_SERV_SPEC._validate_error');
+        this.errorMessage = this.getErrorMessage(error, 'CREATE_SERV_SPEC._validate_error');
         this.showError = true;
         setTimeout(() => { this.showError = false; }, 3000);
       }
@@ -190,9 +191,7 @@ export class CreateServiceSpecComponent implements OnInit, OnDestroy {
   }
 
   private getErrorMessage(error: any, fallbackKey: string): string {
-    return error?.error?.error
-      ? this.translate.instant('ERRORS._error_prefix', { message: error.error.error })
-      : this.translate.instant(fallbackKey);
+    return formatApiErrorMessage(this.translate, fallbackKey, error);
   }
 
   toggleGeneral() {

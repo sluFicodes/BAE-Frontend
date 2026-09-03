@@ -14,6 +14,7 @@ import { initFlowbite } from 'flowbite';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 @Component({
   selector: 'seller-catalogs',
@@ -276,8 +277,11 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
         this.getCatalogs(false);
         this.loadStatusCounts();
       },
-      error: () => {
-        this.eventMessage.emitSpecCreated(this.translate.instant(errorKey), 'error');
+      error: (error: any) => {
+        this.eventMessage.emitSpecCreated(
+          formatApiErrorMessage(this.translate, errorKey, error),
+          'error'
+        );
       }
     });
   }

@@ -114,7 +114,7 @@
                 <td class="hidden md:table-cell px-6 text-offerings-muted-text dark:text-offerings-on-dark-body whitespace-nowrap group-hover:bg-offerings-page dark:group-hover:bg-secondary-200">
                   {{ offer.lastUpdate | date:'dd/MM/yyyy - HH:mm' }}
                 </td>
-                <td data-cy="offerEdit" class="px-6 text-right relative group-hover:bg-offerings-page dark:group-hover:bg-secondary-200" [ngClass]="{'rounded-br-2xl': last}">
+                <td data-cy="offerActions" class="px-6 text-right relative group-hover:bg-offerings-page dark:group-hover:bg-secondary-200" [ngClass]="{'rounded-br-2xl': last}">
                   <button type="button" (click)="toggleMenu(idx, $event)" class="p-1 hover:bg-offerings-neutral dark:hover:bg-secondary-100 rounded text-offerings-muted-text dark:text-offerings-on-dark-body">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                       <circle cx="12" cy="5" r="2"/>
@@ -138,7 +138,7 @@
                           {{ 'OFFERINGS._delete' | translate }}
                         </button>
                       } @else if (selectedTab === 'Published') {
-                        <button type="button" (click)="goToUpdate(offer); openMenuIdx=null" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-offerings-body dark:text-offerings-on-dark hover:bg-offerings-page dark:hover:bg-secondary-300">
+                        <button data-cy="offerEdit" type="button" (click)="goToUpdate(offer); openMenuIdx=null" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-offerings-body dark:text-offerings-on-dark hover:bg-offerings-page dark:hover:bg-secondary-300">
                           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
                           </svg>
@@ -157,7 +157,7 @@
                           {{ 'OFFERINGS._unpublish' | translate }}
                         </button>
                       } @else {
-                        <button type="button" (click)="goToUpdate(offer); openMenuIdx=null" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-offerings-body dark:text-offerings-on-dark hover:bg-offerings-page dark:hover:bg-secondary-300">
+                        <button data-cy="offerEdit" type="button" (click)="goToUpdate(offer); openMenuIdx=null" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-offerings-body dark:text-offerings-on-dark hover:bg-offerings-page dark:hover:bg-secondary-300">
                           <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
                           </svg>
