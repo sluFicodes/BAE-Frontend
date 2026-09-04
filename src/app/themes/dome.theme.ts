@@ -34,8 +34,13 @@ const domeHeaderLinks: NavLink[] = [
   //   url: 'https://knowledgebase.dome-marketplace-prd.org/'
   // },
   {
-    label: 'HEADER._blog',
-    url: '/blog',
+    label: 'FOOTER.news',
+    url: '/news',
+    isRouterLink: true
+  },
+  {
+    label: 'FOOTER.faqs',
+    url: '/faq',
     isRouterLink: true
   },
 ];
@@ -89,6 +94,11 @@ const domeFooterLinks: NavHeaderLink[] = [
       {
         label: 'FOOTER.faqs',
         url: '/faq',
+        isRouterLink: true
+      },
+      {
+        label: 'HEADER._blog',
+        url: '/blog',
         isRouterLink: true
       }
     ]
