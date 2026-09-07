@@ -1,5 +1,5 @@
 <div class="w-full flex-1 flex flex-col">
-  <h1 class="text-3xl font-extrabold text-gray-900 mb-6">{{ 'CREATE_CATALOG._new' | translate }}</h1>
+  <h1 class="text-3xl font-extrabold text-offerings-text dark:text-offerings-on-dark mb-6">{{ 'CREATE_CATALOG._new' | translate }}</h1>
 
   <div class="w-full flex flex-col lg:flex-row lg:gap-10 flex-1">
     <div class="hidden lg:flex lg:flex-col lg:w-[260px] lg:shrink-0 pt-2">
@@ -9,8 +9,8 @@
           [class.opacity-50]="!canNavigate(i) && currentStep !== i">
           <div class="flex flex-col items-center">
             <div class="flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold shrink-0"
-              [ngClass]="currentStep === i ? 'bg-primary-100 text-white' : (i < highestStep ? 'text-white' : 'bg-white border-2 border-gray-300 text-gray-500')"
-              [style.background-color]="(i < highestStep && currentStep !== i) ? '#339988' : null">
+              [ngClass]="currentStep === i ? 'bg-primary-100 text-offerings-on-dark' : (i < highestStep ? 'text-offerings-on-dark' : 'bg-offerings-surface dark:bg-secondary-300 border-2 border-offerings-border-strong dark:border-secondary-200 text-offerings-muted-text dark:text-offerings-on-dark-body')"
+              [style.background-color]="(i < highestStep && currentStep !== i) ? 'rgb(var(--theme-status-complete-bg))' : null">
               @if (i < highestStep && currentStep !== i) {
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
@@ -20,35 +20,35 @@
               }
             </div>
             @if (!last) {
-              <div class="w-px h-8 bg-gray-300 my-1"></div>
+              <div class="w-px h-8 bg-offerings-border-strong dark:bg-secondary-200 my-1"></div>
             }
           </div>
-          <span class="mt-1 text-base font-medium" [ngClass]="currentStep === i ? 'text-primary-100' : 'text-gray-600'">{{ step | translate }}</span>
+          <span class="mt-1 text-base font-medium" [ngClass]="currentStep === i ? 'text-primary-100 dark:text-primary-50' : 'text-offerings-body dark:text-offerings-on-dark-body'">{{ step | translate }}</span>
         </div>
       }
     </div>
 
     <div class="flex-1 min-w-0 flex flex-col">
-      <h3 class="block lg:hidden mb-4 text-xl font-bold text-gray-900">{{ steps[currentStep] | translate }}</h3>
+      <h3 class="block lg:hidden mb-4 text-xl font-bold text-offerings-text dark:text-offerings-on-dark">{{ steps[currentStep] | translate }}</h3>
 
-      <div class="bg-white rounded-2xl border border-[#EBECEE] shadow-sm p-6 w-full flex-1 flex flex-col">
+      <div class="bg-offerings-surface dark:bg-secondary-300 rounded-2xl border border-offerings-border dark:border-secondary-200 shadow-sm p-6 w-full flex-1 flex flex-col">
         @if (currentStep === 0) {
           <div class="flex flex-col gap-5">
             <div>
-              <h2 class="text-2xl font-bold text-gray-900 mb-1">{{ 'CREATE_CATALOG._general' | translate }}</h2>
-              <p class="text-sm text-gray-500 mb-6">{{ 'CREATE_CATALOG._general_desc' | translate }}</p>
+              <h2 class="text-2xl font-bold text-offerings-text dark:text-offerings-on-dark mb-1">{{ 'CREATE_CATALOG._general' | translate }}</h2>
+              <p class="text-sm text-offerings-muted-text dark:text-offerings-on-dark-body mb-6">{{ 'CREATE_CATALOG._general_desc' | translate }}</p>
             </div>
 
             <form [formGroup]="generalForm" class="flex flex-col gap-5">
               <div>
-                <label for="catalog-name" class="block text-sm font-semibold text-gray-900 mb-2">{{ 'CREATE_CATALOG._name' | translate }}</label>
+                <label for="catalog-name" class="block text-sm font-semibold text-offerings-text dark:text-offerings-on-dark mb-2">{{ 'CREATE_CATALOG._name' | translate }}</label>
                 <input data-cy="catalogName" formControlName="name" type="text" id="catalog-name" maxlength="100"
-                  [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-red-600' : 'border-gray-300'"
-                  class="bg-white border text-gray-900 text-sm rounded-lg focus:ring-primary-100 focus:border-primary-100 block w-full p-3" />
+                  [ngClass]="generalForm.get('name')?.invalid == true && generalForm.value.name!='' ? 'border-status-danger-border dark:border-status-danger-border' : 'border-offerings-border-strong dark:border-secondary-200'"
+                  class="bg-offerings-surface dark:bg-secondary-300 border text-offerings-text dark:text-offerings-on-dark text-sm rounded-lg focus:ring-primary-100 focus:border-primary-100 block w-full p-3" />
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-gray-900 mb-2">{{ 'CREATE_CATALOG._description' | translate }}</label>
+                <label class="block text-sm font-semibold text-offerings-text dark:text-offerings-on-dark mb-2">{{ 'CREATE_CATALOG._description' | translate }}</label>
                 <app-markdown-textarea data-cy="catalogDsc" formControlName="description"></app-markdown-textarea>
               </div>
             </form>
@@ -56,7 +56,7 @@
         } @else if (currentStep === 1) {
           @if(loading){
             <div role="status" class="flex min-h-56 w-full items-center justify-center">
-              <svg aria-hidden="true" class="h-10 w-10 animate-spin fill-primary-100 text-gray-200" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg aria-hidden="true" class="h-10 w-10 animate-spin fill-primary-100 text-offerings-on-dark-body" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908Z" fill="currentColor"/>
                 <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289Z" fill="currentFill"/>
               </svg>
@@ -65,31 +65,31 @@
           } @else {
             <div class="flex flex-col gap-6">
               <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-1">{{ 'CREATE_CATALOG._summary' | translate }}</h2>
-                <p class="text-sm text-gray-500 mb-6">{{ 'CREATE_CATALOG._summary_desc' | translate }}</p>
+                <h2 class="text-2xl font-bold text-offerings-text dark:text-offerings-on-dark mb-1">{{ 'CREATE_CATALOG._summary' | translate }}</h2>
+                <p class="text-sm text-offerings-muted-text dark:text-offerings-on-dark-body mb-6">{{ 'CREATE_CATALOG._summary_desc' | translate }}</p>
               </div>
 
               <div>
-                <p class="mb-2 text-sm font-bold text-gray-900">{{ 'CREATE_CATALOG._name' | translate }}</p>
+                <p class="mb-2 text-sm font-bold text-offerings-text dark:text-offerings-on-dark">{{ 'CREATE_CATALOG._name' | translate }}</p>
                 <div [ngClass]="{
                     'break-all': hasLongWord(catalogToCreate?.name, 20),
                     'break-words': !hasLongWord(catalogToCreate?.name, 20)
-                  }" class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-950">
+                  }" class="rounded-lg border border-offerings-border dark:border-secondary-200 bg-offerings-page dark:bg-secondary-200 px-4 py-3 text-sm font-semibold text-offerings-text dark:text-offerings-on-dark">
                   {{catalogToCreate?.name}}
                 </div>
               </div>
 
               <div>
-                <p class="mb-2 text-sm font-bold text-gray-900">{{ 'CREATE_CATALOG._status' | translate }}</p>
-                <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium" style="background-color:#FEF3C7;color:#92400E;">
+                <p class="mb-2 text-sm font-bold text-offerings-text dark:text-offerings-on-dark">{{ 'CREATE_CATALOG._status' | translate }}</p>
+                <span class="inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium" style="background-color:rgb(var(--theme-status-warning-bg));color:rgb(var(--theme-status-warning-text));">
                   {{ 'OFFERINGS._draft' | translate }}
                 </span>
               </div>
 
               @if(catalogToCreate?.description !=''){
                 <div>
-                  <p class="mb-2 text-sm font-bold text-gray-900">{{ 'CREATE_CATALOG._description' | translate }}</p>
-                  <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700">
+                  <p class="mb-2 text-sm font-bold text-offerings-text dark:text-offerings-on-dark">{{ 'CREATE_CATALOG._description' | translate }}</p>
+                  <div class="rounded-lg border border-offerings-border dark:border-secondary-200 bg-offerings-page dark:bg-secondary-200 px-4 py-3 text-sm text-offerings-body dark:text-offerings-on-dark-body">
                     <markdown [ngClass]="{
                         'break-all': hasLongWord(catalogToCreate?.description, 20),
                         'break-words': !hasLongWord(catalogToCreate?.description, 20)
@@ -117,13 +117,13 @@
           @if(currentStep < steps.length - 1) {
             <button data-cy="catalogNext" type="button" (click)="goToStep(currentStep + 1)" [disabled]="!generalForm.valid"
               [ngClass]="!generalForm.valid ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-50'"
-              class="h-10 px-5 bg-primary-100 text-white rounded-lg text-sm font-semibold">
+              class="h-10 px-5 bg-primary-100 text-offerings-on-dark rounded-lg text-sm font-semibold">
               {{ 'CREATE_OFFER._next_step' | translate }}
             </button>
           } @else {
             <button data-cy="catalogFinish" type="button" (click)="createCatalog()" [disabled]="!generalForm.valid || loading"
               [ngClass]="(!generalForm.valid || loading) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary-50'"
-              class="h-10 px-5 bg-primary-100 text-white rounded-lg text-sm font-semibold">
+              class="h-10 px-5 bg-primary-100 text-offerings-on-dark rounded-lg text-sm font-semibold">
               {{ 'CREATE_CATALOG._create' | translate }}
             </button>
           }

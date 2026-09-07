@@ -182,7 +182,11 @@ describe('CreateProductSpecComponent', () => {
       url: 'https://example.test/image.png',
       attachmentType: 'image/png'
     };
-    component.generalForm.patchValue({ name: 'Product' });
+    component.generalForm.patchValue({
+      name: 'Product',
+      description: 'Product overview'
+    });
+    component.howItWorks = 'How it works';
     component.prodChars = [];
 
     const configIndex = component.steps.indexOf((component as any).stepLabels.config);

@@ -3,7 +3,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { EventMessageService } from 'src/app/services/event-message.service';
 import { ProductSpecServiceService } from 'src/app/services/product-spec-service.service';
 
@@ -102,5 +102,63 @@ describe('SellerProductSpecComponent', () => {
 
     expect(component.deleteConfirmation).toBeNull();
     expect(updateSpy).not.toHaveBeenCalled();
+  });
+
+  it('should include the proxy reason when deleting a product spec fails', () => {
+    const proxyReason = 'The user making the request is not the owner of the accessed resource';
+    spyOn(productSpecService, 'updateProdSpec').and.returnValue(
+      throwError(() => ({ error: { error: proxyReason } })) as any
+    );
+    const emitSpy = spyOn(eventMessage, 'emitSpecCreated');
+    spyOn((component as any).translate, 'instant').and.callFake((key: string, params?: any) => {
+      if (key === 'OFFERINGS._product_spec_delete_error') {
+        return 'Could not delete this product specification.';
+      }
+      return `Reason: ${params.reason}`;
+    });
+
+    component.deleteProd({ id: 'prod-4', lifecycleStatus: 'Launched' });
+    component.confirmDeleteProd();
+
+    expect(emitSpy).toHaveBeenCalledWith(
+      `Could not delete this product specification.\nReason: ${proxyReason}`,
+      'error'
+    );
+  });
+
+  it('should use only the generic message when the proxy does not return a reason', () => {
+    spyOn(productSpecService, 'updateProdSpec').and.returnValue(
+      throwError(() => ({ error: {} })) as any
+    );
+    const emitSpy = spyOn(eventMessage, 'emitSpecCreated');
+    spyOn((component as any).translate, 'instant').and.returnValue(
+      'Could not delete this product specification.'
+    );
+
+    component.deleteProd({ id: 'prod-5', lifecycleStatus: 'Launched' });
+    component.confirmDeleteProd();
+
+    expect(emitSpy).toHaveBeenCalledWith('Could not delete this product specification.', 'error');
+  });
+
+  it('should show the proxy reason when product spec validation fails', () => {
+    const proxyReason = 'The user making the request is not the owner of the accessed resource';
+    spyOn(productSpecService, 'updateProdSpec').and.returnValue(
+      throwError(() => ({ error: { error: proxyReason } })) as any
+    );
+    const emitSpy = spyOn(eventMessage, 'emitSpecCreated');
+    spyOn((component as any).translate, 'instant').and.callFake((key: string, params?: any) => {
+      if (key === 'CREATE_PROD_SPEC._validate_error') {
+        return 'There was an error while validating the product!';
+      }
+      return `Reason: ${params.reason}`;
+    });
+
+    component.validateProd({ id: 'prod-6' });
+
+    expect(emitSpy).toHaveBeenCalledWith(
+      `There was an error while validating the product!\nReason: ${proxyReason}`,
+      'error'
+    );
   });
 });

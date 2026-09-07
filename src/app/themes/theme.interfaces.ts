@@ -97,6 +97,11 @@ export interface WorkspaceConfig {
   offerForm?: WorkspaceOfferFormConfig;
 }
 
+export interface ThemeFeaturesConfig {
+  colorSchemeSelector?: boolean;
+  darkMode?: boolean;
+}
+
 export interface ThemeMetaTagConfig {
   name?: string;
   property?: string;
@@ -116,6 +121,7 @@ export interface ThemeConfig {
   dashboard?: DashboardConfig;
   catalogs?: CatalogsPageConfig;
   workspace?: WorkspaceConfig;
+  features?: ThemeFeaturesConfig;
   metaTags?: ThemeMetaTagConfig[];
   // More theme specific propierties
 }

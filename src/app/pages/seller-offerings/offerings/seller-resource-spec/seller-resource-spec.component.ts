@@ -14,6 +14,7 @@ import { initFlowbite } from 'flowbite';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 @Component({
   selector: 'seller-resource-spec',
@@ -122,16 +123,16 @@ export class SellerResourceSpecComponent implements OnInit, OnDestroy {
     if(next==false){
       this.loading=true;
     }
-    
+
     let options = {
       "filters": this.status,
       "partyId": this.partyId,
       "sort": this.sort
     }
-    
+
     this.paginationService.getItemsPaginated(this.page, this.RES_SPEC_LIMIT, next, this.resSpecs,this.nextResSpecs, options,
       this.resSpecService.getResourceSpecByUser.bind(this.resSpecService)).then(data => {
-      this.page_check=data.page_check;      
+      this.page_check=data.page_check;
       this.resSpecs=data.items;
       this.nextResSpecs=data.nextItems;
       this.page=data.page;
@@ -211,15 +212,15 @@ export class SellerResourceSpecComponent implements OnInit, OnDestroy {
   rowStatusBadge(res: any): { text: string, bg: string, color: string } {
     const hasChars = (res?.resourceSpecCharacteristic && res.resourceSpecCharacteristic.length > 0);
     if(res?.lifecycleStatus === 'Launched'){
-      return { text: 'Validated', bg: '#BBF7D0', color: '#052E16' };
+      return { text: 'Validated', bg: 'rgb(var(--theme-status-success-bg))', color: 'rgb(var(--theme-status-success-text))' };
     }
     if(res?.lifecycleStatus === 'Retired' || res?.lifecycleStatus === 'Obsolete'){
-      return { text: 'Deleted', bg: '#FEE2E2', color: '#991B1B' };
+      return { text: 'Deleted', bg: 'rgb(var(--theme-status-danger-bg))', color: 'rgb(var(--theme-status-danger-text))' };
     }
     if(hasChars){
-      return { text: 'Ready to be validated', bg: '#DCFCE7', color: '#166534' };
+      return { text: 'Ready to be validated', bg: 'rgb(var(--theme-status-ready-bg))', color: 'rgb(var(--theme-status-ready-text))' };
     }
-    return { text: 'Not completed', bg: '#FEF3C7', color: '#92400E' };
+    return { text: 'Not completed', bg: 'rgb(var(--theme-status-warning-bg))', color: 'rgb(var(--theme-status-warning-text))' };
   }
 
   validateRes(res: any){
@@ -231,8 +232,12 @@ export class SellerResourceSpecComponent implements OnInit, OnDestroy {
         this.getResSpecs(false);
         this.loadStatusCounts();
       },
-      error: () => {
+      error: (error: any) => {
         this.openMenuIdx = null;
+        this.eventMessage.emitSpecCreated(
+          formatApiErrorMessage(this.translate, 'CREATE_RES_SPEC._validate_error', error),
+          'error'
+        );
       }
     });
   }
@@ -274,7 +279,10 @@ export class SellerResourceSpecComponent implements OnInit, OnDestroy {
     const onError = (err: any) => {
       this.clearDeleteConfirmation();
       console.error('Resource spec delete failed', err);
-      this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._resource_spec_delete_error'), 'error');
+      this.eventMessage.emitSpecCreated(
+        formatApiErrorMessage(this.translate, 'OFFERINGS._resource_spec_delete_error', err),
+        'error'
+      );
     };
     if(res.lifecycleStatus === 'Active'){
       this.resSpecService.updateResSpec({ lifecycleStatus: 'Launched' }, res.id).subscribe({
@@ -308,6 +316,6 @@ export class SellerResourceSpecComponent implements OnInit, OnDestroy {
       return str.split(/\s+/).some(word => word.length > threshold);
     } else {
       return false
-    }   
+    }
   }
 }

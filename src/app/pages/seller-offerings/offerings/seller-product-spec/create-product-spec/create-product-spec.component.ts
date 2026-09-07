@@ -1636,22 +1636,22 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   stepCircleClasses(index: number): string {
-    if (this.currentStep === index) return 'bg-primary-100 text-white';
-    if (this.stepHasWarning(index)) return 'bg-amber-500 text-white';
-    if (this.completedStep(index)) return 'text-white';
-    return 'bg-white border-2 border-gray-300 text-gray-500';
+    if (this.currentStep === index) return 'bg-primary-100 text-offerings-on-dark';
+    if (this.stepHasWarning(index)) return 'bg-status-warning-border text-offerings-on-dark';
+    if (this.completedStep(index)) return 'text-offerings-on-dark';
+    return 'bg-offerings-surface border-2 border-offerings-border-strong text-offerings-muted-text';
   }
 
   stepCircleColor(index: number): string | null {
-    if (this.stepShowCheck(index)) return '#339988';
+    if (this.stepShowCheck(index)) return 'rgb(var(--theme-status-complete-bg))';
     return null;
   }
 
   stepLabelClasses(index: number): string {
     if (this.currentStep === index) return 'text-primary-100';
-    if (this.stepHasWarning(index)) return 'text-amber-700';
-    if (this.completedStep(index)) return 'text-emerald-700';
-    return 'text-gray-600';
+    if (this.stepHasWarning(index)) return 'text-status-warning-text';
+    if (this.completedStep(index)) return 'text-status-success-text';
+    return 'text-offerings-body';
   }
 
   async loadValidatedSpecs(){

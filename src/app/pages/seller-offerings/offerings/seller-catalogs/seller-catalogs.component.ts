@@ -14,6 +14,7 @@ import { initFlowbite } from 'flowbite';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 @Component({
   selector: 'seller-catalogs',
@@ -162,7 +163,7 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
 
     this.paginationService.getItemsPaginated(this.page, this.CATALOG_LIMIT, next, this.catalogs, this.nextCatalogs, options,
       this.api.getCatalogsByUser.bind(this.api)).then(data => {
-      this.page_check=data.page_check;      
+      this.page_check=data.page_check;
       this.catalogs=data.items;
       this.nextCatalogs=data.nextItems;
       this.page=data.page;
@@ -239,15 +240,15 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
   rowStatusBadge(cat: any): { text: string, bg: string, color: string } {
     switch (cat?.lifecycleStatus) {
       case 'Active':
-        return { text: 'Draft', bg: '#FEF3C7', color: '#92400E' };
+        return { text: 'Draft', bg: 'rgb(var(--theme-status-warning-bg))', color: 'rgb(var(--theme-status-warning-text))' };
       case 'Launched':
-        return { text: 'Published', bg: '#BBF7D0', color: '#052E16' };
+        return { text: 'Published', bg: 'rgb(var(--theme-status-success-bg))', color: 'rgb(var(--theme-status-success-text))' };
       case 'Retired':
-        return { text: 'Unpublished', bg: '#FEF3C7', color: '#92400E' };
+        return { text: 'Unpublished', bg: 'rgb(var(--theme-status-warning-bg))', color: 'rgb(var(--theme-status-warning-text))' };
       case 'Obsolete':
-        return { text: 'Archived', bg: '#FEE2E2', color: '#991B1B' };
+        return { text: 'Archived', bg: 'rgb(var(--theme-status-danger-bg))', color: 'rgb(var(--theme-status-danger-text))' };
       default:
-        return { text: cat?.lifecycleStatus || '-', bg: '#F3F4F6', color: '#374151' };
+        return { text: cat?.lifecycleStatus || '-', bg: 'rgb(var(--theme-status-neutral-bg))', color: 'rgb(var(--theme-status-neutral-text))' };
     }
   }
 
@@ -276,8 +277,11 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
         this.getCatalogs(false);
         this.loadStatusCounts();
       },
-      error: () => {
-        this.eventMessage.emitSpecCreated(this.translate.instant(errorKey), 'error');
+      error: (error: any) => {
+        this.eventMessage.emitSpecCreated(
+          formatApiErrorMessage(this.translate, errorKey, error),
+          'error'
+        );
       }
     });
   }
@@ -285,15 +289,15 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
   getStatusBadgeClass(status: string | undefined): string {
     switch (status) {
       case 'Active':
-        return 'border-blue-200 bg-blue-50 text-blue-700';
+        return 'border-secondary-50 bg-secondary-50 text-primary-100';
       case 'Launched':
-        return 'border-green-200 bg-green-50 text-green-700';
+        return 'border-status-success-bg bg-offerings-metric-success text-status-success-text';
       case 'Retired':
-        return 'border-yellow-200 bg-yellow-50 text-yellow-700';
+        return 'border-status-warning-bg bg-status-warning-bg text-status-warning-text';
       case 'Obsolete':
-        return 'border-red-200 bg-red-50 text-red-700';
+        return 'border-status-danger-bg bg-status-danger-bg text-status-danger-text';
       default:
-        return 'border-gray-200 bg-gray-50 text-gray-700';
+        return 'border-offerings-border bg-offerings-page text-offerings-body';
     }
   }
 
@@ -302,6 +306,6 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
       return str.split(/\s+/).some(word => word.length > threshold);
     } else {
       return false
-    }   
+    }
   }
 }

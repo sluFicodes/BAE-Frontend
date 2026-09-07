@@ -11,6 +11,7 @@ import { ResourceSpecServiceService } from 'src/app/services/resource-spec-servi
 import { noWhitespaceValidator } from 'src/app/validators/validators';
 import { v4 as uuidv4 } from 'uuid';
 import { TranslateService } from '@ngx-translate/core';
+import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
 
 import { components } from "src/app/models/resource-catalog";
 import { environment } from 'src/environments/environment';
@@ -180,9 +181,9 @@ export class CreateResourceSpecComponent implements OnInit, OnDestroy {
         this.showSuccessModal = false;
         this.eventMessage.emitSellerResourceSpec(true);
       },
-      error: () => {
+      error: (error: any) => {
         this.loading = false;
-        this.errorMessage = this.translate.instant('CREATE_RES_SPEC._validate_error');
+        this.errorMessage = this.getErrorMessage(error, 'CREATE_RES_SPEC._validate_error');
         this.showError = true;
         setTimeout(() => { this.showError = false; }, 3000);
       }
@@ -190,9 +191,7 @@ export class CreateResourceSpecComponent implements OnInit, OnDestroy {
   }
 
   private getErrorMessage(error: any, fallbackKey: string): string {
-    return error?.error?.error
-      ? this.translate.instant('ERRORS._error_prefix', { message: error.error.error })
-      : this.translate.instant(fallbackKey);
+    return formatApiErrorMessage(this.translate, fallbackKey, error);
   }
 
   toggleGeneral() {
@@ -543,10 +542,10 @@ export class CreateResourceSpecComponent implements OnInit, OnDestroy {
     if (index !== -1) {
       this.stepsElements.splice(index, 1);
       this.selectMenu(document.getElementById(step), 'text-primary-100 dark:text-primary-50')
-      this.unselectMenu(document.getElementById(step), 'text-gray-500')
+      this.unselectMenu(document.getElementById(step), 'text-offerings-muted-text')
       for (let i = 0; i < this.stepsElements.length; i++) {
         this.unselectMenu(document.getElementById(this.stepsElements[i]), 'text-primary-100 dark:text-primary-50')
-        this.selectMenu(document.getElementById(this.stepsElements[i]), 'text-gray-500')
+        this.selectMenu(document.getElementById(this.stepsElements[i]), 'text-offerings-muted-text')
       }
       this.stepsElements.push(step);
     }
@@ -554,10 +553,10 @@ export class CreateResourceSpecComponent implements OnInit, OnDestroy {
     if (index !== -1) {
       this.stepsCircles.splice(circleIndex, 1);
       this.selectMenu(document.getElementById(stepCircle), 'border-primary-100 dark:border-primary-50')
-      this.unselectMenu(document.getElementById(stepCircle), 'border-gray-400');
+      this.unselectMenu(document.getElementById(stepCircle), 'border-offerings-border-strong');
       for (let i = 0; i < this.stepsCircles.length; i++) {
         this.unselectMenu(document.getElementById(this.stepsCircles[i]), 'border-primary-100 dark:border-primary-50')
-        this.selectMenu(document.getElementById(this.stepsCircles[i]), 'border-gray-400');
+        this.selectMenu(document.getElementById(this.stepsCircles[i]), 'border-offerings-border-strong');
       }
       this.stepsCircles.push(stepCircle);
     }

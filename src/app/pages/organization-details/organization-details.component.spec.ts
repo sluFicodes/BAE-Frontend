@@ -28,6 +28,7 @@ describe('OrganizationDetailsComponent', () => {
   });
 
   it('should render contact medium title from contactType', () => {
+    component.notFound = false;
     component.orgInfo = {
       contactMedium: [{
         mediumType: 'Email',
@@ -43,5 +44,53 @@ describe('OrganizationDetailsComponent', () => {
     const text = fixture.nativeElement.textContent;
     expect(text).toContain('Support');
     expect(text).toContain('support@example.com');
+  });
+
+  it('should group contact mediums by medium type instead of payload position', () => {
+    component.orgInfo = {
+      contactMedium: [
+        {
+          mediumType: 'PostalAddress',
+          characteristic: {
+            contactType: 'Billing address',
+            street1: 'Main street 1',
+            postCode: '28001',
+            city: 'Madrid',
+            country: 'Spain'
+          }
+        },
+        {
+          mediumType: 'TelephoneNumber',
+          characteristic: {
+            contactType: 'Sales phone',
+            phoneNumber: '+34 900 000 000'
+          }
+        },
+        {
+          mediumType: 'Email',
+          characteristic: {
+            contactType: 'Support email',
+            emailAddress: 'support@example.com'
+          }
+        },
+        {
+          mediumType: 'Email',
+          characteristic: {
+            contactType: 'Sales email',
+            emailAddress: 'sales@example.com'
+          }
+        }
+      ]
+    };
+
+    const contacts = component.supportContacts;
+
+    expect(contacts.map(contact => contact.kind)).toEqual(['email', 'email', 'phone', 'address']);
+    expect(contacts.map(contact => contact.value)).toEqual([
+      'support@example.com',
+      'sales@example.com',
+      '+34 900 000 000',
+      'Main street 1, 28001 Madrid, Spain'
+    ]);
   });
 });
