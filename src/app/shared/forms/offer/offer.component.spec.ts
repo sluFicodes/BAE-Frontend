@@ -351,6 +351,171 @@ describe('OfferComponent', () => {
     expect(component.canSaveConfigProfile()).toBeTrue();
   });
 
+  describe('configuration profile and constraint exclusivity', () => {
+    const profileValues = [
+      { id: 'char-region', name: 'Region', selectedValue: 'EU' },
+      { id: 'char-users', name: 'Users', selectedValue: 1 }
+    ];
+    const button = (selector: string): HTMLButtonElement => fixture.nativeElement.querySelector(`[data-cy="${selector}"]`);
+
+    beforeEach(() => {
+      spyOn(component, 'ngOnInit').and.resolveTo();
+      component.currentStep = component.steps.indexOf('CREATE_OFFER._step_price_plans');
+      component.pricePlanFormMode = 'form';
+      component.pricePlanFormType = 'standard';
+      component.paidPricePlanForm.patchValue({ name: 'Plan', description: 'Plan description' });
+      component.paidPriceComponents = [{ id: 'component-1', name: 'Base fee', price: 5, priceType: 'one time' }];
+      component.productOfferForm.patchValue({ prodSpec: { productSpecCharacteristic: [
+        { id: 'char-region', name: 'Region', productSpecCharacteristicValue: [{ value: 'EU', isDefault: true }, { value: 'US' }] },
+        { id: 'char-users', name: 'Users', productSpecCharacteristicValue: [{ valueFrom: 1, valueTo: 10 }] }
+      ] } });
+    });
+
+    it('should disable constraints only after saving the configuration profile', () => {
+      fixture.detectChanges();
+      button('setConfigProfile').click();
+      component.closeConfigProfileModal();
+      fixture.detectChanges();
+      expect(button('choosePricePlanCharacteristics').disabled).toBeFalse();
+
+      button('setConfigProfile').click();
+      fixture.detectChanges();
+      button('configProfileSave').click();
+      fixture.detectChanges();
+
+      expect(component.paidProductProfile.getRawValue()).toEqual(profileValues);
+      expect(button('choosePricePlanCharacteristics').disabled).toBeTrue();
+      expect(button('editConfigProfile').disabled).toBeFalse();
+      button('choosePricePlanCharacteristics').click();
+      component.openPricePlanCharacteristicsModal();
+      expect(component.showPricePlanCharacteristicsModal).toBeFalse();
+      expect(component.canSavePaidPricePlan()).toBeTrue();
+    });
+
+    it('should also block constraints when an existing profile is incomplete', () => {
+      component.paidProductProfile.push((component as any).fb.group({
+        id: 'char-region', name: 'Region', selectedValue: null
+      }));
+      fixture.detectChanges();
+
+      expect(component.hasConfiguredProfile()).toBeFalse();
+      expect(button('choosePricePlanCharacteristics').disabled).toBeTrue();
+      component.openPricePlanCharacteristicsModal();
+      expect(component.showPricePlanCharacteristicsModal).toBeFalse();
+    });
+
+    it('should reject a stale constraint dialog without pruning the saved profile', () => {
+      component.openPricePlanCharacteristicsModal();
+      component.togglePricePlanCharacteristic(0);
+      component.openConfigProfileModal();
+      component.saveConfigProfile();
+      component.savePricePlanCharacteristics();
+
+      expect(component.paidPricePlanForm.get('forbiddenCharacteristic')?.value).toEqual([]);
+      expect(component.paidProductProfile.getRawValue()).toEqual(profileValues);
+    });
+
+    [
+      { label: 'whole-characteristic', constraint: { id: 'char-region', name: 'Region' } },
+      { label: 'partial-value', constraint: { id: 'char-region', name: 'Region', productSpecCharacteristicValue: [{ value: 'EU' }] } },
+      { label: 'range', constraint: { id: 'char-users', name: 'Users', productSpecCharacteristicValue: [{ valueFrom: 1, valueTo: 2 }] } }
+    ].forEach(({ label, constraint }) => {
+      it(`should block the profile for a ${label} constraint and unlock it after explicit removal`, () => {
+        component.paidPricePlanForm.patchValue({ forbiddenCharacteristic: [constraint] });
+        fixture.detectChanges();
+
+        expect(button('setConfigProfile').disabled).toBeTrue();
+        expect(button('choosePricePlanCharacteristics').disabled).toBeFalse();
+        button('setConfigProfile').click();
+        component.openConfigProfileModal();
+        expect(component.showConfigProfileModal).toBeFalse();
+        expect(component.paidProductProfile.length).toBe(0);
+
+        button('removePricePlanConstraints').click();
+        fixture.detectChanges();
+        expect(button('setConfigProfile').disabled).toBeFalse();
+        button('setConfigProfile').click();
+        expect(component.showConfigProfileModal).toBeTrue();
+      });
+    });
+
+    it('should reject a stale profile dialog after constraints have been configured', () => {
+      component.openConfigProfileModal();
+      component.paidPricePlanForm.patchValue({ forbiddenCharacteristic: [{ id: 'char-region', name: 'Region' }] });
+      fixture.detectChanges();
+
+      expect(button('configProfileSave').disabled).toBeTrue();
+      component.saveConfigProfile();
+      expect(component.paidProductProfile.length).toBe(0);
+      expect(component.hasPricePlanConstraints()).toBeTrue();
+    });
+
+    it('should preserve an API-loaded profile and components when resolving an existing conflict', () => {
+      const plan = {
+        id: 'plan-1', name: 'Plan', description: 'Plan description', currency: 'EUR',
+        forbiddenCharacteristic: [{ id: 'char-region', name: 'Region' }],
+        productProfile: (component as any).fb.group({
+          selectedValues: (component as any).fb.array(profileValues.map(value => (component as any).fb.group(value)))
+        }),
+        priceComponents: component.paidPriceComponents.slice()
+      };
+      component.productOfferForm.patchValue({ pricePlans: [plan] });
+      component.startEditPaidPricePlan(plan);
+      const componentsBeforeRemoval = component.paidPriceComponents.map(price => ({ ...price }));
+      fixture.detectChanges();
+
+      expect(component.paidProductProfile.getRawValue()).toEqual(profileValues);
+      expect(component.canSavePaidPricePlan()).toBeFalse();
+      expect(button('choosePricePlanCharacteristics').disabled).toBeTrue();
+      expect(button('setConfigProfile').disabled).toBeTrue();
+      button('removePricePlanConstraints').click();
+      fixture.detectChanges();
+
+      expect(component.paidProductProfile.getRawValue()).toEqual(profileValues);
+      expect(component.paidPriceComponents).toEqual(componentsBeforeRemoval);
+      expect(button('editConfigProfile').disabled).toBeFalse();
+      expect(component.canSavePaidPricePlan()).toBeTrue();
+    });
+
+    it('should block editing and saving a complete profile combined with a partial constraint', () => {
+      component.openConfigProfileModal();
+      component.saveConfigProfile();
+      component.paidPricePlanForm.patchValue({ forbiddenCharacteristic: [{
+        id: 'char-region', name: 'Region', productSpecCharacteristicValue: [{ value: 'US' }]
+      }] });
+      fixture.detectChanges();
+
+      expect(component.hasCompleteConfiguredProfile()).toBeTrue();
+      expect(button('editConfigProfile').disabled).toBeTrue();
+      expect(component.canSavePaidPricePlan()).toBeFalse();
+      component.savePaidPricePlan();
+      expect(component.productOfferForm.get('pricePlans')?.value).toEqual([]);
+    });
+
+    it('should unlink a removed constraint in the plan PATCH while retaining its profile and discounts', async () => {
+      const api = (component as any).api;
+      const updateSpy = spyOn(api, 'updateOfferingPrice').and.returnValue(of({ id: 'plan-1' }));
+      const postSpy = spyOn(api, 'postOfferingPrice');
+      const discountRef = { id: 'discount-1', relationshipType: 'discount' };
+
+      await (component as any).updateCurrentFormPricePlan({
+        id: 'plan-1', name: 'Plan', constraintPriceId: 'constraint-1',
+        forbiddenCharacteristic: [],
+        popRelationship: [{ id: 'constraint-1', relationshipType: 'constraint' }, discountRef],
+        productProfile: { selectedValues: [profileValues[0]] }
+      }, []);
+
+      expect(postSpy).not.toHaveBeenCalled();
+      expect(updateSpy).toHaveBeenCalledTimes(1);
+      expect(updateSpy).toHaveBeenCalledWith(jasmine.objectContaining({
+        popRelationship: [discountRef],
+        prodSpecCharValueUse: [jasmine.objectContaining({
+          id: 'char-region', name: 'Region', productSpecCharacteristicValue: [{ value: 'EU', isDefault: true }]
+        })]
+      }), 'plan-1');
+    });
+  });
+
   it('should initialize price plan characteristics as allowed except existing forbidden characteristics', () => {
     component.productOfferForm.patchValue({
       prodSpec: {
@@ -367,8 +532,20 @@ describe('OfferComponent', () => {
     component.openPricePlanCharacteristicsModal();
 
     expect(component.pricePlanCharacteristicSelection).toEqual([
-      { id: 'char-region', name: 'Region', allowed: true },
-      { id: 'char-size', name: 'Size', allowed: false }
+      {
+        id: 'char-region',
+        name: 'Region',
+        allowed: true,
+        sourceValues: [{ value: 'EU' }],
+        allowedValues: [{ value: 'EU' }]
+      },
+      {
+        id: 'char-size',
+        name: 'Size',
+        allowed: false,
+        sourceValues: [{ value: 'Small' }],
+        allowedValues: [{ value: 'Small' }]
+      }
     ]);
   });
 
@@ -390,6 +567,63 @@ describe('OfferComponent', () => {
       { id: 'char-size', name: 'Size' }
     ]);
     expect(component.prodSpecCharacteristics.map((characteristic: any) => characteristic.name)).toEqual(['Region']);
+  });
+
+  it('should save unchecked values as a partial constraint and remove only those values from price components', () => {
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [{
+          id: 'char-region',
+          name: 'Region',
+          productSpecCharacteristicValue: [
+            { value: 'EU', isDefault: true },
+            { value: 'US', isDefault: false }
+          ]
+        }]
+      }
+    });
+    component.openPricePlanCharacteristicsModal();
+
+    component.togglePricePlanCharacteristicValue(0, 0);
+    component.savePricePlanCharacteristics();
+
+    expect(component.paidPricePlanForm.get('forbiddenCharacteristic')?.value).toEqual([{
+      id: 'char-region',
+      name: 'Region',
+      productSpecCharacteristicValue: [{ value: 'EU' }]
+    }]);
+    expect(component.prodSpecCharacteristics[0].productSpecCharacteristicValue).toEqual([
+      { value: 'US', isDefault: true }
+    ]);
+  });
+
+  it('should persist the excluded part of an effective price plan range', () => {
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [{
+          id: 'char-vcores',
+          name: 'vCores',
+          productSpecCharacteristicValue: [{ valueFrom: 1, valueTo: 386, isDefault: true }]
+        }]
+      }
+    });
+    component.openPricePlanCharacteristicsModal();
+
+    component.setPricePlanCharacteristicRange(
+      component.pricePlanCharacteristicSelection[0],
+      'valueFrom',
+      { target: { value: '4' } } as any
+    );
+    component.savePricePlanCharacteristics();
+
+    expect(component.paidPricePlanForm.get('forbiddenCharacteristic')?.value).toEqual([{
+      id: 'char-vcores',
+      name: 'vCores',
+      productSpecCharacteristicValue: [{ valueFrom: 1, valueTo: 3 }]
+    }]);
+    expect(component.rangeBounds).toEqual({ min: 0, max: 1000 });
+    component.priceComponentForm.patchValue({ configOption: 'char-vcores' });
+    expect(component.rangeBounds).toEqual({ min: 4, max: 386 });
   });
 
   it('should keep a characteristic allowed while it is used by a price component', () => {
@@ -964,12 +1198,20 @@ describe('OfferComponent', () => {
 
     const constraintRef = await (component as any).persistPricePlanConstraint({
       constraintPriceId: 'constraint-1',
-      forbiddenCharacteristic: [{ id: 'char-size', name: 'Size' }]
+      forbiddenCharacteristic: [{
+        id: 'char-size',
+        name: 'Size',
+        productSpecCharacteristicValue: [{ value: 'XL' }]
+      }]
     });
 
     expect(updateSpy).toHaveBeenCalledWith(jasmine.objectContaining({
       priceType: 'constraint',
-      prodSpecCharValueUse: [{ id: 'char-size', name: 'Size' }]
+      prodSpecCharValueUse: [{
+        id: 'char-size',
+        name: 'Size',
+        productSpecCharacteristicValue: [{ value: 'XL' }]
+      }]
     }), 'constraint-1');
     expect(constraintRef.id).toBe('constraint-1');
   });
