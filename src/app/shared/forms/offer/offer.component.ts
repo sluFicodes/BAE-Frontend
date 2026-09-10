@@ -29,18 +29,27 @@ import { ProdSpecComponent } from "./prod-spec/prod-spec.component";
 import { ReplicationVisibilityComponent } from "./replication-visibility/replication-visibility.component";
 import { availableFilters, searchCategoriesConfig, type Filter } from "src/app/data/availableFilters";
 import { WorkspaceInfoMessageConfig } from "src/app/themes";
+import {
+  applyCharacteristicConstraints,
+  characteristicValuesOverlap,
+  CharacteristicConstraintValueUse,
+  hasConstraintValues,
+  isRangeCharacteristicValue
+} from "../../price-plan-constraint.utils";
 
 type ProductOffering_Create = components["schemas"]["ProductOffering_Create"];
 type ProductOfferingPrice = components["schemas"]["ProductOfferingPrice"]
 type OfferStepKey = 'general' | 'category' | 'terms' | 'contract' | 'price' | 'procurement';
 
-interface ForbiddenCharacteristic {
+interface ForbiddenCharacteristic extends CharacteristicConstraintValueUse {
   id: string;
   name: string;
 }
 
 interface PricePlanCharacteristicSelection extends ForbiddenCharacteristic {
   allowed: boolean;
+  sourceValues: any[];
+  allowedValues: any[];
 }
 
 const CONSTRAINT_PRICE_TYPE = 'constraint';
@@ -1037,21 +1046,19 @@ export class OfferComponent implements OnInit, OnDestroy {
     this.editingPricePlanIndex = index;
     this.pricePlanFormType = this.getPaidPlanSubType(plan);
     const priceComponents = this.normalizeLoadedPriceComponents(plan?.priceComponents || []);
+    const productProfile = plan?.productProfile instanceof FormGroup
+      ? plan.productProfile.getRawValue()
+      : plan?.productProfile;
     this.paidPricePlanForm.reset({
       name: plan?.name || '',
       description: plan?.description || '',
       currency: plan?.currency || 'EUR',
       forbiddenCharacteristic: Array.isArray(plan?.forbiddenCharacteristic) ? plan.forbiddenCharacteristic : [],
-      productProfile: plan?.productProfile || { selectedValues: [] },
+      productProfile: productProfile || { selectedValues: [] },
       priceComponents
     });
     this.paidProductProfile.clear();
-    const allowedCharacteristicIds = new Set(this.prodSpecCharacteristics.map((characteristic: any) => characteristic?.id));
-    const allowedCharacteristicNames = new Set(this.prodSpecCharacteristics.map((characteristic: any) => characteristic?.name));
-    ((plan?.productProfile?.selectedValues) || [])
-      .filter((selectedValue: any) =>
-        allowedCharacteristicIds.has(selectedValue?.id) || allowedCharacteristicNames.has(selectedValue?.name)
-      )
+    (productProfile?.selectedValues || [])
       .forEach((sv: any) => {
         this.paidProductProfile.push(this.fb.group({
           id: [sv?.id || null],
@@ -1170,11 +1177,9 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   get prodSpecCharacteristics(): any[] {
-    const forbiddenNames = new Set(
-      this.getCurrentForbiddenCharacteristics().map((characteristic) => characteristic.name)
-    );
-    return this.pricePlanCharacteristics.filter((characteristic: any) =>
-      !forbiddenNames.has(characteristic?.name)
+    return applyCharacteristicConstraints(
+      this.pricePlanCharacteristics,
+      this.getCurrentForbiddenCharacteristics()
     );
   }
 
@@ -1183,16 +1188,33 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   openPricePlanCharacteristicsModal(): void {
-    const forbiddenNames = new Set(
-      this.getCurrentForbiddenCharacteristics().map((characteristic) => characteristic.name)
-    );
+    if (this.paidProductProfile.length > 0) return;
+    const currentConstraints = this.getCurrentForbiddenCharacteristics();
     this.pricePlanCharacteristicSelection = this.pricePlanCharacteristics
       .filter((characteristic: any) => characteristic?.id && characteristic?.name)
-      .map((characteristic: any) => ({
-        id: characteristic.id,
-        name: characteristic.name,
-        allowed: !forbiddenNames.has(characteristic.name)
-      }));
+      .map((characteristic: any) => {
+        const matchingConstraints = currentConstraints.filter((constraint) =>
+          constraint.name === characteristic.name
+        );
+        const fullyForbidden = matchingConstraints.some((constraint) => !hasConstraintValues(constraint));
+        const effectiveCharacteristic = applyCharacteristicConstraints(
+          [characteristic],
+          matchingConstraints
+        )[0];
+        const sourceValues = (characteristic.productSpecCharacteristicValue || [])
+          .map((value: any) => ({ ...value }));
+
+        return {
+          id: characteristic.id,
+          name: characteristic.name,
+          allowed: !fullyForbidden,
+          sourceValues,
+          allowedValues: fullyForbidden
+            ? sourceValues.map((value: any) => ({ ...value }))
+            : (effectiveCharacteristic?.productSpecCharacteristicValue || [])
+              .map((value: any) => ({ ...value }))
+        };
+      });
     this.showPricePlanCharacteristicsModal = true;
   }
 
@@ -1208,12 +1230,80 @@ export class OfferComponent implements OnInit, OnDestroy {
     characteristic.allowed = !characteristic.allowed;
   }
 
+  isPricePlanCharacteristicRange(characteristic: PricePlanCharacteristicSelection): boolean {
+    return characteristic.sourceValues.some(isRangeCharacteristicValue);
+  }
+
+  isPricePlanCharacteristicValueAllowed(characteristic: PricePlanCharacteristicSelection, value: any): boolean {
+    return characteristic.allowedValues.some((allowedValue) =>
+      characteristicValuesOverlap(allowedValue, value)
+    );
+  }
+
+  togglePricePlanCharacteristicValue(characteristicIndex: number, valueIndex: number): void {
+    const characteristic = this.pricePlanCharacteristicSelection[characteristicIndex];
+    const value = characteristic?.sourceValues[valueIndex];
+    if (!characteristic || !value) return;
+
+    const isAllowed = this.isPricePlanCharacteristicValueAllowed(characteristic, value);
+    if (isAllowed && this.isPricePlanCharacteristicValueUsed(characteristic, value)) return;
+
+    characteristic.allowedValues = isAllowed
+      ? characteristic.allowedValues.filter((allowedValue) => !characteristicValuesOverlap(allowedValue, value))
+      : [...characteristic.allowedValues, { ...value }];
+  }
+
+  getPricePlanCharacteristicSourceRange(characteristic: PricePlanCharacteristicSelection): any {
+    return characteristic.sourceValues.find(isRangeCharacteristicValue) || {};
+  }
+
+  getPricePlanCharacteristicAllowedRange(characteristic: PricePlanCharacteristicSelection): any {
+    return characteristic.allowedValues.find(isRangeCharacteristicValue) ||
+      this.getPricePlanCharacteristicSourceRange(characteristic);
+  }
+
+  setPricePlanCharacteristicRange(
+    characteristic: PricePlanCharacteristicSelection,
+    bound: 'valueFrom' | 'valueTo',
+    event: Event
+  ): void {
+    const sourceRange = this.getPricePlanCharacteristicSourceRange(characteristic);
+    const allowedRange = this.getPricePlanCharacteristicAllowedRange(characteristic);
+    characteristic.allowedValues = [{
+      ...sourceRange,
+      ...allowedRange,
+      [bound]: Number((event.target as HTMLInputElement).value)
+    }];
+  }
+
+  hasPricePlanCharacteristicSelectionError(): boolean {
+    return this.pricePlanCharacteristicSelection.some((characteristic) => {
+      if (!characteristic.allowed || characteristic.sourceValues.length === 0) return false;
+      if (characteristic.allowedValues.length === 0) return true;
+
+      if (this.isPricePlanCharacteristicRange(characteristic)) {
+        const sourceRange = this.getPricePlanCharacteristicSourceRange(characteristic);
+        const allowedRange = this.getPricePlanCharacteristicAllowedRange(characteristic);
+        const sourceFrom = Number(sourceRange.valueFrom);
+        const sourceTo = Number(sourceRange.valueTo);
+        const allowedFrom = Number(allowedRange.valueFrom);
+        const allowedTo = Number(allowedRange.valueTo);
+        if (allowedFrom < sourceFrom || allowedTo > sourceTo || allowedFrom > allowedTo) return true;
+      }
+
+      const forbiddenCharacteristic = this.buildForbiddenCharacteristic(characteristic);
+      return (forbiddenCharacteristic?.productSpecCharacteristicValue || []).some((forbiddenValue) =>
+        this.isPricePlanCharacteristicValueUsed(characteristic, forbiddenValue)
+      );
+    });
+  }
+
   savePricePlanCharacteristics(): void {
+    if (this.paidProductProfile.length > 0 || this.hasPricePlanCharacteristicSelectionError()) return;
     const forbiddenCharacteristics = this.pricePlanCharacteristicSelection
-      .filter((characteristic) => !characteristic.allowed)
-      .map(({ id, name }) => ({ id, name }));
+      .map((characteristic) => this.buildForbiddenCharacteristic(characteristic))
+      .filter((characteristic): characteristic is ForbiddenCharacteristic => characteristic !== null);
     this.paidPricePlanForm.get('forbiddenCharacteristic')?.setValue(forbiddenCharacteristics);
-    this.pruneForbiddenProductProfileValues(forbiddenCharacteristics);
     this.closePricePlanCharacteristicsModal();
   }
 
@@ -1233,27 +1323,48 @@ export class OfferComponent implements OnInit, OnDestroy {
     });
   }
 
+  isPricePlanCharacteristicValueUsed(characteristic: ForbiddenCharacteristic, value: any): boolean {
+    return this.paidPriceComponents.some((component: any) => {
+      if (component?.configOption === characteristic.id || component?.configOptionName === characteristic.name) {
+        if (Array.isArray(component?.tiers)) {
+          return component.tiers.some((tier: any) => characteristicValuesOverlap(
+            { valueFrom: tier?.min, valueTo: tier?.max },
+            value
+          ));
+        }
+        if (component?.configValue !== undefined && component?.configValue !== '') {
+          return characteristicValuesOverlap({ value: component.configValue }, value);
+        }
+      }
+
+      const characteristicUses = Array.isArray(component?.selectedCharacteristic)
+        ? component.selectedCharacteristic
+        : Array.isArray(component?.prodSpecCharValueUse)
+          ? component.prodSpecCharValueUse
+          : [];
+      return characteristicUses
+        .filter((characteristicUse: any) => characteristicUse?.name === characteristic.name)
+        .flatMap((characteristicUse: any) => characteristicUse.productSpecCharacteristicValue || [])
+        .some((usedValue: any) => characteristicValuesOverlap(usedValue, value));
+    });
+  }
+
   private getCurrentForbiddenCharacteristics(): ForbiddenCharacteristic[] {
     const forbiddenCharacteristics = this.paidPricePlanForm?.get('forbiddenCharacteristic')?.value;
     return Array.isArray(forbiddenCharacteristics) ? forbiddenCharacteristics : [];
   }
 
-  private pruneForbiddenProductProfileValues(forbiddenCharacteristics: ForbiddenCharacteristic[]): void {
-    const forbiddenNames = new Set(forbiddenCharacteristics.map((characteristic) => characteristic.name));
-    const retainedValues = this.paidProductProfile.getRawValue().filter((selectedValue: any) =>
-      !forbiddenNames.has(selectedValue?.name)
-    );
-    this.paidProductProfile.clear();
-    retainedValues.forEach((selectedValue: any) => {
-      this.paidProductProfile.push(this.fb.group({
-        id: [selectedValue?.id || null],
-        name: [selectedValue?.name || ''],
-        selectedValue: [selectedValue?.selectedValue ?? null]
-      }));
-    });
+  hasPricePlanConstraints(): boolean {
+    return this.getCurrentForbiddenCharacteristics().length > 0;
+  }
+
+  removePricePlanConstraints(): void {
+    this.paidPricePlanForm.get('forbiddenCharacteristic')?.setValue([]);
+    this.closePricePlanCharacteristicsModal();
   }
 
   openConfigProfileModal(): void {
+    if (this.hasPricePlanConstraints()) return;
     this.configProfileSelectedValues.clear();
     const existing = this.paidProductProfile.getRawValue();
     const existingById = new Map<string, any>(existing.map((s: any) => [s?.id, s]));
@@ -1294,11 +1405,12 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   canSaveConfigProfile(): boolean {
-    return this.configProfileSelectedValues.length > 0 && this.configProfileForm.valid;
+    return !this.hasPricePlanConstraints() && this.configProfileSelectedValues.length > 0 && this.configProfileForm.valid;
   }
 
   canSavePaidPricePlan(): boolean {
     if (this.paidPricePlanForm.invalid) return false;
+    if (this.paidProductProfile.length > 0 && this.hasPricePlanConstraints()) return false;
     if (this.pricePlanFormType === 'standard' && !this.hasCompleteConfiguredProfile()) return false;
     return this.paidPriceComponents.length > 0;
   }
@@ -2533,9 +2645,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     const characteristicUses = Array.isArray(constraintPrice?.prodSpecCharValueUse)
       ? constraintPrice.prodSpecCharValueUse
       : [];
-    return characteristicUses
-      .filter((characteristic: any) => characteristic?.id && characteristic?.name)
-      .map((characteristic: any) => ({ id: characteristic.id, name: characteristic.name }));
+    return this.normalizeForbiddenCharacteristics(characteristicUses);
   }
 
   private async createPriceAlteration(component: any, currency: string): Promise<any> {
@@ -2761,7 +2871,7 @@ export class OfferComponent implements OnInit, OnDestroy {
   private async persistPricePlanConstraint(plan: any): Promise<any | null> {
     const forbiddenCharacteristics = this.getPlanForbiddenCharacteristics(plan);
     const constraintPriceId = this.getConstraintPriceId(plan);
-    if (forbiddenCharacteristics.length === 0 && !constraintPriceId) {
+    if (forbiddenCharacteristics.length === 0) {
       return null;
     }
 
@@ -2963,10 +3073,65 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   private getPlanForbiddenCharacteristics(plan: any): ForbiddenCharacteristic[] {
     const forbiddenCharacteristics = plan?.forbiddenCharacteristic ?? plan?.newValue?.forbiddenCharacteristic;
+    return this.normalizeForbiddenCharacteristics(forbiddenCharacteristics);
+  }
+
+  private normalizeForbiddenCharacteristics(forbiddenCharacteristics: any): ForbiddenCharacteristic[] {
     if (!Array.isArray(forbiddenCharacteristics)) return [];
     return forbiddenCharacteristics
       .filter((characteristic: any) => characteristic?.id && characteristic?.name)
-      .map((characteristic: any) => ({ id: characteristic.id, name: characteristic.name }));
+      .map((characteristic: any) => ({
+        id: characteristic.id,
+        name: characteristic.name,
+        ...(Array.isArray(characteristic.productSpecCharacteristicValue) &&
+          characteristic.productSpecCharacteristicValue.length > 0
+          ? {
+            productSpecCharacteristicValue: characteristic.productSpecCharacteristicValue
+              .map((value: any) => ({ ...value }))
+          }
+          : {})
+      }));
+  }
+
+  private buildForbiddenCharacteristic(
+    characteristic: PricePlanCharacteristicSelection
+  ): ForbiddenCharacteristic | null {
+    const base = { id: characteristic.id, name: characteristic.name };
+    if (!characteristic.allowed) return base;
+
+    let forbiddenValues: any[];
+    if (this.isPricePlanCharacteristicRange(characteristic)) {
+      const sourceRange = this.getPricePlanCharacteristicSourceRange(characteristic);
+      const allowedRange = this.getPricePlanCharacteristicAllowedRange(characteristic);
+      forbiddenValues = [];
+      if (Number(allowedRange.valueFrom) > Number(sourceRange.valueFrom)) {
+        forbiddenValues.push({
+          ...sourceRange,
+          valueFrom: sourceRange.valueFrom,
+          valueTo: Number(allowedRange.valueFrom) - 1
+        });
+      }
+      if (Number(allowedRange.valueTo) < Number(sourceRange.valueTo)) {
+        forbiddenValues.push({
+          ...sourceRange,
+          valueFrom: Number(allowedRange.valueTo) + 1,
+          valueTo: sourceRange.valueTo
+        });
+      }
+    } else {
+      forbiddenValues = characteristic.sourceValues.filter((sourceValue) =>
+        !this.isPricePlanCharacteristicValueAllowed(characteristic, sourceValue)
+      );
+    }
+
+    if (forbiddenValues.length === 0) return null;
+    return {
+      ...base,
+      productSpecCharacteristicValue: forbiddenValues.map((value) => {
+        const { isDefault, ...constraintValue } = value;
+        return constraintValue;
+      })
+    };
   }
 
   private isPersistedId(id: any): boolean {
