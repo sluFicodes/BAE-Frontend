@@ -71,4 +71,33 @@ describe('ApiServiceService', () => {
       filteredPaginationToken: null
     });
   });
+
+  it('should include keyword when requesting catalog product offerings', async () => {
+    const resultPromise = service.getProductsByCatalog('catalog-1', 0, 'edge');
+
+    const req = httpMock.expectOne(request =>
+      request.method === 'GET'
+      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/catalog-1/productOffering?lifecycleStatus=Launched&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=0&keyword=edge`
+    );
+    req.flush([{ id: 'offer-1' }]);
+
+    await expectAsync(resultPromise).toBeResolvedTo([{ id: 'offer-1' }]);
+  });
+
+  it('should include keyword when requesting filtered catalog product offerings', async () => {
+    const resultPromise = service.getProductsByCategoryAndCatalog(
+      [{ id: 'category-1', name: 'IaaS' }],
+      'catalog-1',
+      0,
+      'edge'
+    );
+
+    const req = httpMock.expectOne(request =>
+      request.method === 'GET'
+      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/catalog-1/productOffering?lifecycleStatus=Launched&category.id=category-1&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=0&keyword=edge`
+    );
+    req.flush([{ id: 'offer-1' }]);
+
+    await expectAsync(resultPromise).toBeResolvedTo([{ id: 'offer-1' }]);
+  });
 });

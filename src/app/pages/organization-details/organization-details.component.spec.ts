@@ -3,6 +3,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { OrganizationDetailsComponent } from './organization-details.component';
 
@@ -14,7 +15,7 @@ describe('OrganizationDetailsComponent', () => {
     await TestBed.configureTestingModule({
       schemas: [NO_ERRORS_SCHEMA],
       declarations: [OrganizationDetailsComponent],
-      imports: [HttpClientTestingModule, RouterTestingModule, TranslateModule.forRoot()]
+      imports: [HttpClientTestingModule, RouterTestingModule, ReactiveFormsModule, TranslateModule.forRoot()]
     })
     .compileComponents();
     

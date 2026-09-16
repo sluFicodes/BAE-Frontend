@@ -73,6 +73,7 @@ export class OrganizationDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   serviceSearch = new FormControl();
   serviceKeywords: string | undefined;
+  searchEnabled = environment.SEARCH_ENABLED;
   toolbarFilters: ToolbarFilter[] = [];
 
   private allServices: any[] = [];
@@ -620,10 +621,6 @@ export class OrganizationDetailsComponent implements OnInit, AfterViewInit, OnDe
 
   private applyServiceView(): void {
     let list = [...this.allServices];
-    const q = (this.serviceKeywords ?? '').toLowerCase();
-    if (q) {
-      list = list.filter(o => (o?.name ?? '').toLowerCase().includes(q) || (o?.description ?? '').toLowerCase().includes(q));
-    }
     if (this.serviceSort === 'name') {
       list.sort((a, b) => (a?.name ?? '').localeCompare(b?.name ?? ''));
     } else if (this.serviceSort === 'date') {

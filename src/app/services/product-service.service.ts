@@ -132,8 +132,11 @@ export class ApiServiceService {
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
-  getProductsByCatalog(catalogId: any, page: any) {
+  getProductsByCatalog(catalogId: any, page: any, keywords?: any) {
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/${catalogId}/productOffering?lifecycleStatus=Launched&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`
+    if (keywords != undefined) {
+      url = url + '&keyword=' + keywords;
+    }
 
     return lastValueFrom(this.http.get<any[]>(url));
   }
@@ -146,7 +149,7 @@ export class ApiServiceService {
       .catch(() => false);
   }
 
-  getProductsByCategoryAndCatalog(ids: Category[], catalogId: any, page: any) {
+  getProductsByCategoryAndCatalog(ids: Category[], catalogId: any, page: any, keywords?: any) {
     let id_str = '';
     for (let i = 0; i < ids.length; i++) {
       if (i == 0) {
@@ -156,6 +159,9 @@ export class ApiServiceService {
       }
     }
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog/${catalogId}/productOffering?lifecycleStatus=Launched&${id_str}&limit=${ApiServiceService.PRODUCT_LIMIT}&offset=${page}`;
+    if (keywords != undefined) {
+      url = url + '&keyword=' + keywords;
+    }
 
     return lastValueFrom(this.http.get<any[]>(url));
   }
