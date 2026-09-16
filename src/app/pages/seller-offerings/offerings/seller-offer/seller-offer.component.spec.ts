@@ -248,6 +248,25 @@ describe('SellerOfferComponent', () => {
     expect(eventMessageSpy.emitSellerCreateCustomOffer).toHaveBeenCalledWith(offer);
   });
 
+  it('publishOffer should republish a complete retired offer', () => {
+    spyOn(component, 'getOffers');
+    spyOn(component, 'loadStatusCounts');
+    const offer = {
+      id: 'off-retired',
+      name: 'Retired offer',
+      lifecycleStatus: 'Retired',
+      productSpecification: { id: 'spec-1' },
+      category: [{ id: 'category-1' }],
+      productOfferingTerm: [{ name: 'procurement', description: 'automatic' }]
+    };
+
+    component.publishOffer(offer);
+
+    expect(apiSpy.updateProductOffering).toHaveBeenCalledWith({ lifecycleStatus: 'Launched' }, 'off-retired');
+    expect(component.getOffers).toHaveBeenCalledWith(false);
+    expect(component.loadStatusCounts).toHaveBeenCalled();
+  });
+
   it('deleteOffer should require confirmation before archiving an offer', () => {
     spyOn(component, 'getOffers');
     spyOn(component, 'loadStatusCounts');

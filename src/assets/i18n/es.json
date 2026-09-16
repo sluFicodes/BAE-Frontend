@@ -3146,6 +3146,7 @@
     "_edit": "Edit",
     "_validate": "Validate",
     "_publish": "Publish",
+    "_republish": "Republish",
     "_unpublish": "Unpublish",
     "_duplicate": "Duplicate",
     "_delete": "Delete",
