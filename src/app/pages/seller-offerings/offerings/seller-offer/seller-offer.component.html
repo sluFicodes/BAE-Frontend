@@ -51,7 +51,7 @@
   </div>
 
   <div class="border-b border-offerings-border dark:border-secondary-200 flex items-stretch">
-    @for (tab of ['Draft','Published','Unpublished','Archived']; track tab) {
+    @for (tab of ['Draft','Published','Unpublished','Deleted']; track tab) {
       <button type="button" (click)="selectTab(tab)"
         class="w-56 flex items-center justify-center gap-2 px-4 py-3 text-lg font-semibold tracking-[0.5px] leading-6 border-b-[3px] -mb-px transition-colors"
         [ngClass]="selectedTab === tab ? 'text-offerings-text dark:text-offerings-on-dark border-primary-100 dark:border-primary-50' : 'text-offerings-muted-text dark:text-offerings-on-dark-body border-transparent hover:text-offerings-body dark:hover:text-offerings-on-dark'">
@@ -115,7 +115,7 @@
                   {{ offer.lastUpdate | date:'dd/MM/yyyy - HH:mm' }}
                 </td>
                 <td data-cy="offerActions" class="px-6 text-right relative group-hover:bg-offerings-page dark:group-hover:bg-secondary-200" [ngClass]="{'rounded-br-2xl': last}">
-                  @if(selectedTab !== 'Archived'){
+                  @if(selectedTab !== 'Deleted'){
                     <button type="button" (click)="toggleMenu(idx, $event)" class="p-1 hover:bg-offerings-neutral dark:hover:bg-secondary-100 rounded text-offerings-muted-text dark:text-offerings-on-dark-body">
                       <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                         <circle cx="12" cy="5" r="2"/>
@@ -179,7 +179,7 @@
                               <path fill-rule="evenodd" d="M9.315 7.584C12.195 3.883 16.695 1.5 21.75 1.5a.75.75 0 01.75.75c0 5.056-2.383 9.555-6.084 12.436A6.75 6.75 0 019.75 22.5a.75.75 0 01-.75-.75v-4.131A15.838 15.838 0 016.382 15H2.25a.75.75 0 01-.75-.75 6.75 6.75 0 017.815-6.666zM15 6.75a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" clip-rule="evenodd"/>
                               <path d="M5.26 17.242a.75.75 0 10-.897-1.203 5.243 5.243 0 00-2.05 5.022.75.75 0 00.625.627 5.243 5.243 0 005.022-2.051.75.75 0 10-1.202-.897 3.744 3.744 0 01-3.008 1.51c0-1.23.592-2.323 1.51-3.008z"/>
                             </svg>
-                            {{ 'OFFERINGS._republish' | translate }}
+                            {{ 'OFFERINGS._publish' | translate }}
                           </button>
                         }
                         <button type="button" (click)="deleteOffer(offer)" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-offerings-body dark:text-offerings-on-dark hover:bg-offerings-page dark:hover:bg-secondary-300">
@@ -191,6 +191,14 @@
                       }
                       </div>
                     }
+                  } @else {
+                    <span data-cy="offerNoActions" class="inline-flex items-center justify-center text-offerings-muted-text dark:text-offerings-on-dark-body" [attr.title]="'OFFERINGS._no_actions_available' | translate">
+                      <svg aria-hidden="true" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path stroke-linecap="round" d="M8.5 12h7"/>
+                      </svg>
+                      <span class="sr-only">{{ 'OFFERINGS._no_actions_available' | translate }}</span>
+                    </span>
                   }
                 </td>
               </tr>

@@ -89,9 +89,36 @@ describe('SellerProductSpecComponent', () => {
 
     component.confirmDeleteProd();
 
-    expect(updateSpy).toHaveBeenCalledWith({ lifecycleStatus: 'Retired' }, 'prod-2');
+    expect(updateSpy).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Retired' }, 'prod-2');
     expect(component.deleteConfirmation).toBeNull();
     expect(component.deleteLoading).toBeFalse();
+  });
+
+  it('deleteProd should archive an active product spec as obsolete with one request', () => {
+    const updateSpy = spyOn(productSpecService, 'updateProdSpec').and.returnValue(of({}) as any);
+    spyOn(eventMessage, 'emitSpecCreated');
+    spyOn(component, 'getProdSpecs');
+    spyOn(component, 'loadStatusCounts');
+
+    component.deleteProd({ id: 'prod-active', lifecycleStatus: 'Active' });
+    component.confirmDeleteProd();
+
+    expect(updateSpy).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Obsolete' }, 'prod-active');
+  });
+
+  it('should only show actions for draft and validated product specs', () => {
+    spyOn(component, 'initProdSpecs');
+    component.prodSpecs = [
+      { id: 'prod-active', name: 'Active', lifecycleStatus: 'Active' },
+      { id: 'prod-launched', name: 'Launched', lifecycleStatus: 'Launched' },
+      { id: 'prod-retired', name: 'Retired', lifecycleStatus: 'Retired' },
+      { id: 'prod-obsolete', name: 'Obsolete', lifecycleStatus: 'Obsolete' }
+    ];
+
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('[data-cy="prodSpecActions"]').length).toBe(2);
+    expect(fixture.nativeElement.querySelectorAll('[data-cy="prodSpecNoActions"]').length).toBe(2);
   });
 
   it('cancelDeleteProd should clear pending delete without calling API', () => {

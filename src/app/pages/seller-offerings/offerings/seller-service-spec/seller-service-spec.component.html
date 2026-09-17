@@ -78,14 +78,24 @@
                   {{ serv.lastUpdate | date:'dd/MM/yyyy - HH:mm' }}
                 </td>
                 <td class="px-6 text-right relative group-hover:bg-offerings-page dark:group-hover:bg-secondary-200" [ngClass]="{'rounded-br-2xl': last}">
-                  <button type="button" (click)="toggleMenu(idx, $event)" class="p-1 hover:bg-offerings-neutral dark:hover:bg-secondary-100 rounded text-offerings-muted-text dark:text-offerings-on-dark-body">
-                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <circle cx="12" cy="5" r="2"/>
-                      <circle cx="12" cy="12" r="2"/>
-                      <circle cx="12" cy="19" r="2"/>
-                    </svg>
-                  </button>
-                  @if(openMenuIdx === idx){
+                  @if(serv.lifecycleStatus === 'Active' || serv.lifecycleStatus === 'Launched'){
+                    <button data-cy="servSpecActions" type="button" (click)="toggleMenu(idx, $event)" class="p-1 hover:bg-offerings-neutral dark:hover:bg-secondary-100 rounded text-offerings-muted-text dark:text-offerings-on-dark-body">
+                      <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <circle cx="12" cy="5" r="2"/>
+                        <circle cx="12" cy="12" r="2"/>
+                        <circle cx="12" cy="19" r="2"/>
+                      </svg>
+                    </button>
+                  } @else {
+                    <span data-cy="servSpecNoActions" class="inline-flex items-center justify-center text-offerings-muted-text dark:text-offerings-on-dark-body" [attr.title]="'OFFERINGS._no_actions_available' | translate">
+                      <svg aria-hidden="true" class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path stroke-linecap="round" d="M8.5 12h7"/>
+                      </svg>
+                      <span class="sr-only">{{ 'OFFERINGS._no_actions_available' | translate }}</span>
+                    </span>
+                  }
+                  @if((serv.lifecycleStatus === 'Active' || serv.lifecycleStatus === 'Launched') && openMenuIdx === idx){
                     <div class="absolute right-4 top-12 z-20 bg-offerings-surface dark:bg-secondary-200 rounded-xl shadow-lg border border-offerings-border dark:border-secondary-100 py-2 w-40 text-left" (click)="$event.stopPropagation()">
                       <button data-cy="serviceSpecEdit" type="button" (click)="goToUpdate(serv); openMenuIdx=null" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-offerings-body dark:text-offerings-on-dark hover:bg-offerings-page dark:hover:bg-secondary-300">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">

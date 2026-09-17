@@ -231,6 +231,16 @@ describe('SellerOfferComponent', () => {
     expect(component.isBundle).toBeUndefined();
   });
 
+  it('selectTab should map the deleted tab to obsolete offerings', () => {
+    const getOffersSpy = spyOn(component, 'getOffers');
+
+    component.selectTab('Deleted');
+
+    expect(component.selectedTab).toBe('Deleted');
+    expect(component.status).toEqual(['Obsolete']);
+    expect(getOffersSpy).toHaveBeenCalledWith(false);
+  });
+
   it('goToCreate should emit seller create offer event', () => {
     component.goToCreate();
     expect(eventMessageSpy.emitSellerCreateOffer).toHaveBeenCalledWith(true);
@@ -267,10 +277,10 @@ describe('SellerOfferComponent', () => {
     expect(component.loadStatusCounts).toHaveBeenCalled();
   });
 
-  it('deleteOffer should require confirmation before archiving an offer', () => {
+  it('deleteOffer should archive an active offer with one request after confirmation', () => {
     spyOn(component, 'getOffers');
     spyOn(component, 'loadStatusCounts');
-    const offer = { id: 'off-3', name: 'Offer Three', lifecycleStatus: 'Retired' };
+    const offer = { id: 'off-3', name: 'Offer Three', lifecycleStatus: 'Active' };
 
     component.deleteOffer(offer);
 
@@ -280,6 +290,7 @@ describe('SellerOfferComponent', () => {
     component.confirmDeleteOffer();
 
     expect(apiSpy.updateProductOffering).toHaveBeenCalledWith({ lifecycleStatus: 'Obsolete' }, 'off-3');
+    expect(apiSpy.updateProductOffering).toHaveBeenCalledTimes(1);
     expect(component.deleteConfirmation).toBeNull();
     expect(component.deleteLoading).toBeFalse();
   });

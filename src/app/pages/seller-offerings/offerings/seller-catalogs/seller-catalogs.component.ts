@@ -43,9 +43,9 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
     Draft: ['Active'],
     Published: ['Launched'],
     Unpublished: ['Retired'],
-    Archived: ['Obsolete']
+    Deleted: ['Obsolete']
   };
-  statusCounts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Archived: 0 };
+  statusCounts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Deleted: 0 };
   openMenuIdx: number | null = null;
   openMenuCatalog: Catalog | null = null;
   menuPosition = { top: 0, left: 0 };
@@ -262,10 +262,6 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
 
   archiveCatalog(cat: any) {
     this.updateCatalogLifecycle(cat, 'Obsolete', 'OFFERINGS._catalog_archive_success', 'OFFERINGS._catalog_archive_error');
-  }
-
-  restoreCatalog(cat: any) {
-    this.updateCatalogLifecycle(cat, 'Active', 'OFFERINGS._catalog_restore_success', 'OFFERINGS._catalog_restore_error');
   }
 
   private updateCatalogLifecycle(cat: any, lifecycleStatus: string, successKey: string, errorKey: string) {

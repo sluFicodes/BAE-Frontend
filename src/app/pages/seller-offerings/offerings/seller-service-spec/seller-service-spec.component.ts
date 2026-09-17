@@ -278,22 +278,11 @@ export class SellerServiceSpecComponent implements OnInit, OnDestroy {
         'error'
       );
     };
-    if(serv.lifecycleStatus === 'Active'){
-      this.servSpecService.updateServSpec({ lifecycleStatus: 'Launched' }, serv.id).subscribe({
-        next: () => {
-          this.servSpecService.updateServSpec({ lifecycleStatus: 'Retired' }, serv.id).subscribe({
-            next: onSuccess,
-            error: onError
-          });
-        },
-        error: onError
-      });
-    } else {
-      this.servSpecService.updateServSpec({ lifecycleStatus: 'Retired' }, serv.id).subscribe({
-        next: onSuccess,
-        error: onError
-      });
-    }
+    const lifecycleStatus = serv.lifecycleStatus === 'Active' ? 'Obsolete' : 'Retired';
+    this.servSpecService.updateServSpec({ lifecycleStatus }, serv.id).subscribe({
+      next: onSuccess,
+      error: onError
+    });
   }
 
   onSortChange(event: any) {
