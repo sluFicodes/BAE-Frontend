@@ -43,9 +43,9 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
     Draft: ['Active'],
     Published: ['Launched'],
     Unpublished: ['Retired'],
-    Deleted: ['Obsolete']
+    Archived: ['Obsolete']
   };
-  statusCounts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Deleted: 0 };
+  statusCounts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Archived: 0 };
   totalViewsCount: number = 0;
   offersDelta: number = 0;
   publishedDelta: number = 2;
@@ -182,7 +182,7 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
   async loadStatusCounts() {
     try {
       const all = await this.fetchAllOffers([]);
-      const counts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Deleted: 0 };
+      const counts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Archived: 0 };
       for (const offer of all) {
         const status = offer?.lifecycleStatus;
         for (const tab of Object.keys(this.tabStatusMap)) {

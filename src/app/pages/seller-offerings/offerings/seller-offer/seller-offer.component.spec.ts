@@ -231,12 +231,12 @@ describe('SellerOfferComponent', () => {
     expect(component.isBundle).toBeUndefined();
   });
 
-  it('selectTab should map the deleted tab to obsolete offerings', () => {
+  it('selectTab should map the archived tab to obsolete offerings', () => {
     const getOffersSpy = spyOn(component, 'getOffers');
 
-    component.selectTab('Deleted');
+    component.selectTab('Archived');
 
-    expect(component.selectedTab).toBe('Deleted');
+    expect(component.selectedTab).toBe('Archived');
     expect(component.status).toEqual(['Obsolete']);
     expect(getOffersSpy).toHaveBeenCalledWith(false);
   });

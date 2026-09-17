@@ -43,9 +43,9 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
     Draft: ['Active'],
     Published: ['Launched'],
     Unpublished: ['Retired'],
-    Deleted: ['Obsolete']
+    Archived: ['Obsolete']
   };
-  statusCounts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Deleted: 0 };
+  statusCounts: { [k: string]: number } = { Draft: 0, Published: 0, Unpublished: 0, Archived: 0 };
   openMenuIdx: number | null = null;
   openMenuCatalog: Catalog | null = null;
   menuPosition = { top: 0, left: 0 };
