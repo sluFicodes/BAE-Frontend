@@ -75,9 +75,36 @@ describe('SellerServiceSpecComponent', () => {
 
     component.confirmDeleteServ();
 
-    expect(updateSpy).toHaveBeenCalledWith({ lifecycleStatus: 'Retired' }, 'serv-2');
+    expect(updateSpy).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Retired' }, 'serv-2');
     expect(component.deleteConfirmation).toBeNull();
     expect(component.deleteLoading).toBeFalse();
+  });
+
+  it('deleteServ should archive an active service spec as obsolete with one request', () => {
+    const updateSpy = spyOn(serviceSpecService, 'updateServSpec').and.returnValue(of({}) as any);
+    spyOn(eventMessage, 'emitSpecCreated');
+    spyOn(component, 'getServSpecs');
+    spyOn(component, 'loadStatusCounts');
+
+    component.deleteServ({ id: 'serv-active', lifecycleStatus: 'Active' });
+    component.confirmDeleteServ();
+
+    expect(updateSpy).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Obsolete' }, 'serv-active');
+  });
+
+  it('should only show actions for draft and validated service specs', () => {
+    spyOn(component, 'initServices');
+    component.servSpecs = [
+      { id: 'serv-active', name: 'Active', lifecycleStatus: 'Active' },
+      { id: 'serv-launched', name: 'Launched', lifecycleStatus: 'Launched' },
+      { id: 'serv-retired', name: 'Retired', lifecycleStatus: 'Retired' },
+      { id: 'serv-obsolete', name: 'Obsolete', lifecycleStatus: 'Obsolete' }
+    ];
+
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('[data-cy="servSpecActions"]').length).toBe(2);
+    expect(fixture.nativeElement.querySelectorAll('[data-cy="servSpecNoActions"]').length).toBe(2);
   });
 
   it('cancelDeleteServ should clear pending delete without calling API', () => {

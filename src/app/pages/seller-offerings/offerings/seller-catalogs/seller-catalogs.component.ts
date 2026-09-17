@@ -264,10 +264,6 @@ export class SellerCatalogsComponent implements OnInit, OnDestroy {
     this.updateCatalogLifecycle(cat, 'Obsolete', 'OFFERINGS._catalog_archive_success', 'OFFERINGS._catalog_archive_error');
   }
 
-  restoreCatalog(cat: any) {
-    this.updateCatalogLifecycle(cat, 'Active', 'OFFERINGS._catalog_restore_success', 'OFFERINGS._catalog_restore_error');
-  }
-
   private updateCatalogLifecycle(cat: any, lifecycleStatus: string, successKey: string, errorKey: string) {
     if(!cat?.id) return;
     this.closeMenu();
