@@ -284,22 +284,11 @@ export class SellerResourceSpecComponent implements OnInit, OnDestroy {
         'error'
       );
     };
-    if(res.lifecycleStatus === 'Active'){
-      this.resSpecService.updateResSpec({ lifecycleStatus: 'Launched' }, res.id).subscribe({
-        next: () => {
-          this.resSpecService.updateResSpec({ lifecycleStatus: 'Retired' }, res.id).subscribe({
-            next: onSuccess,
-            error: onError
-          });
-        },
-        error: onError
-      });
-    } else {
-      this.resSpecService.updateResSpec({ lifecycleStatus: 'Retired' }, res.id).subscribe({
-        next: onSuccess,
-        error: onError
-      });
-    }
+    const lifecycleStatus = res.lifecycleStatus === 'Active' ? 'Obsolete' : 'Retired';
+    this.resSpecService.updateResSpec({ lifecycleStatus }, res.id).subscribe({
+      next: onSuccess,
+      error: onError
+    });
   }
 
   onSortChange(event: any) {

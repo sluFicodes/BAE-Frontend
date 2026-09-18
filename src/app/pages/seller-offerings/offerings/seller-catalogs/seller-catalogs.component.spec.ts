@@ -64,6 +64,16 @@ describe('SellerCatalogsComponent', () => {
     expect(getCatalogsSpy).toHaveBeenCalledWith(false);
   });
 
+  it('selectTab should map the archived tab to obsolete catalogs', () => {
+    const getCatalogsSpy = spyOn(component, 'getCatalogs');
+
+    component.selectTab('Archived');
+
+    expect(component.selectedTab).toBe('Archived');
+    expect(component.status).toEqual(['Obsolete']);
+    expect(getCatalogsSpy).toHaveBeenCalledWith(false);
+  });
+
   it('rowStatusBadge should map catalog lifecycle status to tab label', () => {
     expect(component.rowStatusBadge({ lifecycleStatus: 'Active' }).text).toBe('Draft');
     expect(component.rowStatusBadge({ lifecycleStatus: 'Launched' }).text).toBe('Published');
@@ -83,6 +93,27 @@ describe('SellerCatalogsComponent', () => {
     expect(eventMessage.emitSpecCreated).toHaveBeenCalled();
     expect(component.getCatalogs).toHaveBeenCalledWith(false);
     expect(component.loadStatusCounts).toHaveBeenCalled();
+  });
+
+  it('should not show the delete action for a published catalog', () => {
+    spyOn(component, 'initCatalogs');
+    component.openMenuCatalog = { id: 'cat-1', lifecycleStatus: 'Launched' } as any;
+
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-cy="catalogUnpublish"]')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-cy="catalogArchive"]')).toBeNull();
+  });
+
+  it('should show the no-actions icon for an obsolete catalog', () => {
+    spyOn(component, 'initCatalogs');
+    component.catalogs = [{ id: 'cat-obsolete', name: 'Obsolete', lifecycleStatus: 'Obsolete' }] as any;
+
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[data-cy="catalogActions"]')).toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-cy="catalogNoActions"]')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-cy="catalogRestore"]')).toBeNull();
   });
 
   it('hasLongWord should detect long words and handle undefined', () => {

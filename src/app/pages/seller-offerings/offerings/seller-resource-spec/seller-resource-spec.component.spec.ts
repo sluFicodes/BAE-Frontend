@@ -75,9 +75,36 @@ describe('SellerResourceSpecComponent', () => {
 
     component.confirmDeleteRes();
 
-    expect(updateSpy).toHaveBeenCalledWith({ lifecycleStatus: 'Retired' }, 'res-2');
+    expect(updateSpy).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Retired' }, 'res-2');
     expect(component.deleteConfirmation).toBeNull();
     expect(component.deleteLoading).toBeFalse();
+  });
+
+  it('deleteRes should archive an active resource spec as obsolete with one request', () => {
+    const updateSpy = spyOn(resourceSpecService, 'updateResSpec').and.returnValue(of({}) as any);
+    spyOn(eventMessage, 'emitSpecCreated');
+    spyOn(component, 'getResSpecs');
+    spyOn(component, 'loadStatusCounts');
+
+    component.deleteRes({ id: 'res-active', lifecycleStatus: 'Active' });
+    component.confirmDeleteRes();
+
+    expect(updateSpy).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Obsolete' }, 'res-active');
+  });
+
+  it('should only show actions for draft and validated resource specs', () => {
+    spyOn(component, 'initResources');
+    component.resSpecs = [
+      { id: 'res-active', name: 'Active', lifecycleStatus: 'Active' },
+      { id: 'res-launched', name: 'Launched', lifecycleStatus: 'Launched' },
+      { id: 'res-retired', name: 'Retired', lifecycleStatus: 'Retired' },
+      { id: 'res-obsolete', name: 'Obsolete', lifecycleStatus: 'Obsolete' }
+    ];
+
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('[data-cy="resSpecActions"]').length).toBe(2);
+    expect(fixture.nativeElement.querySelectorAll('[data-cy="resSpecNoActions"]').length).toBe(2);
   });
 
   it('cancelDeleteRes should clear pending delete without calling API', () => {

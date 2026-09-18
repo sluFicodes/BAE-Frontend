@@ -281,22 +281,11 @@ export class SellerProductSpecComponent implements OnInit, OnDestroy {
         'error'
       );
     };
-    if (prod.lifecycleStatus === 'Active') {
-      this.prodSpecService.updateProdSpec({ lifecycleStatus: 'Launched' }, prod.id).subscribe({
-        next: () => {
-          this.prodSpecService.updateProdSpec({ lifecycleStatus: 'Retired' }, prod.id).subscribe({
-            next: onSuccess,
-            error: onError
-          });
-        },
-        error: onError
-      });
-    } else {
-      this.prodSpecService.updateProdSpec({ lifecycleStatus: 'Retired' }, prod.id).subscribe({
-        next: onSuccess,
-        error: onError
-      });
-    }
+    const lifecycleStatus = prod.lifecycleStatus === 'Active' ? 'Obsolete' : 'Retired';
+    this.prodSpecService.updateProdSpec({ lifecycleStatus }, prod.id).subscribe({
+      next: onSuccess,
+      error: onError
+    });
   }
 
   onSortChange(event: any) {

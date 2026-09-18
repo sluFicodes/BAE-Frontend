@@ -452,22 +452,7 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
       console.error('Product offer delete failed', err);
       this.emitApiError('OFFERINGS._offer_delete_error', err);
     };
-    if(offer.lifecycleStatus === 'Active'){
-      this.api.updateProductOffering({ lifecycleStatus: 'Launched' }, offer.id).subscribe({
-        next: () => {
-          this.api.updateProductOffering({ lifecycleStatus: 'Retired' }, offer.id).subscribe({
-            next: () => {
-              this.api.updateProductOffering({ lifecycleStatus: 'Obsolete' }, offer.id).subscribe({
-                next: onSuccess,
-                error: onError
-              });
-            },
-            error: onError
-          });
-        },
-        error: onError
-      });
-    } else if(offer.lifecycleStatus === 'Launched'){
+    if(offer.lifecycleStatus === 'Launched'){
       this.api.updateProductOffering({ lifecycleStatus: 'Retired' }, offer.id).subscribe({
         next: () => {
           this.api.updateProductOffering({ lifecycleStatus: 'Obsolete' }, offer.id).subscribe({
