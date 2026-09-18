@@ -100,4 +100,22 @@ describe('ApiServiceService', () => {
 
     await expectAsync(resultPromise).toBeResolvedTo([{ id: 'offer-1' }]);
   });
+
+  it('should create the default catalog through the admin default catalog endpoint', () => {
+    const payload = {
+      name: 'Default Catalog',
+      description: 'Main marketplace catalog'
+    };
+
+    service.createDefaultCatalog(payload).subscribe(response => {
+      expect(response).toEqual({ id: 'catalog-1' });
+    });
+
+    const req = httpMock.expectOne(request =>
+      request.method === 'POST'
+      && request.url === `${ApiServiceService.BASE_URL}/admin/defaultcatalog/create`
+    );
+    expect(req.request.body).toEqual(payload);
+    req.flush({ id: 'catalog-1' });
+  });
 });
