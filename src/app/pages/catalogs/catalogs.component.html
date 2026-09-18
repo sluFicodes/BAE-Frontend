@@ -20,16 +20,16 @@
 
     <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
       <h2 class="text-[20px] leading-[24px] sm:text-[30px] font-bold sm:leading-[36px] text-secondary-100 dark:text-offerings-on-dark">{{ 'CATALOGS._all_providers' | translate }}</h2>
-      <!-- Search is hidden until the backend supports provider catalog search.
-      <form (ngSubmit)="filterProviders()" class="w-full sm:w-auto">
-        <div class="flex h-[56px] w-full sm:w-[443px] max-w-full items-center gap-[16px] rounded-[16px] border border-offerings-border bg-offerings-surface px-[16px]">
-          <input type="search" [formControl]="searchField" class="flex-1 border-0 bg-transparent text-[16px] leading-[24px] text-secondary-500 outline-none focus:border-0 focus:ring-0 focus:shadow-none placeholder:text-offerings-disabled" placeholder="{{ 'CATALOGS._search_placeholder' | translate }}" />
-          <button type="submit" aria-label="Search">
-            <svg class="h-6 w-6 text-secondary-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
-          </button>
-        </div>
-      </form>
-      -->
+      @if (searchEnabled) {
+        <form (ngSubmit)="filterProviders()" class="w-full sm:w-auto">
+          <div class="flex h-[56px] w-full sm:w-[443px] max-w-full items-center gap-[16px] rounded-[16px] border border-offerings-border bg-offerings-surface px-[16px]">
+            <input type="search" [formControl]="searchField" class="flex-1 border-0 bg-transparent text-[16px] leading-[24px] text-secondary-500 outline-none focus:border-0 focus:ring-0 focus:shadow-none placeholder:text-offerings-disabled" placeholder="{{ 'CATALOGS._search_placeholder' | translate }}" />
+            <button type="submit" aria-label="Search">
+              <svg class="h-6 w-6 text-secondary-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg>
+            </button>
+          </div>
+        </form>
+      }
     </div>
 
     <div class="flex flex-wrap items-center justify-between gap-4 pt-[24px] sm:pt-[40px] pb-[24px]">
@@ -76,7 +76,7 @@
         <div class="mx-auto w-[1120px] max-w-full">
           <div class="grid grid-cols-1 gap-[24px] sm:grid-cols-2 xl:grid-cols-[repeat(3,326px)] xl:justify-between xl:gap-x-0">
             @for (prov of providers; track prov.id) {
-              <div data-cy="cataloguesList" (click)="goToProvider(prov.id)"
+              <div data-cy="cataloguesList" (click)="goToProvider(prov)"
                    class="flex h-[415px] w-full cursor-pointer flex-col overflow-hidden rounded-[16px] border border-offerings-border dark:border-secondary-200 bg-offerings-surface dark:bg-secondary-300 shadow-lg transition-all hover:border-primary-50 dark:hover:border-primary-50 hover:shadow-xl">
                 <div class="h-[178px] shrink-0 p-[8px] pb-0">
                   <div class="h-[170px] w-full rounded-[12px] bg-secondary-50/70 dark:bg-secondary-200 bg-contain bg-center bg-no-repeat" [ngClass]="isDefaultLogo(prov.logo) ? 'p-[28px] bg-origin-content' : ''" [style.background-image]="prov.logo ? 'url(' + prov.logo + ')' : null"></div>
@@ -97,7 +97,7 @@
         <div class="mx-auto w-[1120px] max-w-full">
           <div class="flex flex-col gap-[24px]">
             @for (prov of providers; track prov.id) {
-              <div data-cy="cataloguesList" (click)="goToProvider(prov.id)"
+              <div data-cy="cataloguesList" (click)="goToProvider(prov)"
                    class="flex h-auto md:h-[256px] w-full cursor-pointer flex-col md:flex-row overflow-hidden rounded-[16px] border border-offerings-border dark:border-secondary-200 bg-offerings-surface dark:bg-secondary-300 shadow-lg transition-all hover:border-primary-50 dark:hover:border-primary-50 hover:shadow-xl">
                 <div class="h-[178px] w-full md:h-full md:w-[326px] shrink-0 p-[8px]">
                   <div class="h-full w-full rounded-[12px] bg-secondary-50/70 dark:bg-secondary-200 bg-contain bg-center bg-no-repeat" [ngClass]="isDefaultLogo(prov.logo) ? 'p-[40px] bg-origin-content' : ''" [style.background-image]="prov.logo ? 'url(' + prov.logo + ')' : null"></div>
@@ -117,7 +117,7 @@
         }
     }
     @if (!loading_more) {
-      @if (page_check) {
+      @if (hasPrefetchedPage) {
         <div class="flex justify-center pt-[40px]">
           <button data-cy="loadMore" (click)="next()" class="flex h-10 items-center justify-center gap-2 rounded-lg border border-offerings-border dark:border-secondary-200 bg-offerings-surface dark:bg-secondary-300 px-4 text-sm font-medium text-offerings-muted-text dark:text-secondary-50 hover:bg-secondary-50/70 dark:hover:bg-secondary-200">
             {{ 'CATALOGS._load_more' | translate }}
