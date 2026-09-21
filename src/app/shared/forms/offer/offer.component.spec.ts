@@ -282,6 +282,35 @@ describe('OfferComponent', () => {
     expect(component.validateCurrentStep()).toBeTrue();
   });
 
+  it('should disable standard plans when the product specification has no configuration options', () => {
+    spyOn(component, 'ngOnInit').and.resolveTo();
+    component.showSelectPlanTypeModal = true;
+    fixture.detectChanges();
+
+    const standardPlanButton: HTMLButtonElement = fixture.nativeElement.querySelector('[data-cy="standardPlanType"]');
+    expect(standardPlanButton.disabled).toBeTrue();
+    expect(fixture.nativeElement.querySelector('[data-cy="standardPlanConfigurationHint"]')).not.toBeNull();
+
+    component.selectedNewPlanType = 'standard';
+    component.confirmSelectPlanType();
+    expect(component.pricePlanFormType).toBeNull();
+    expect(component.pricePlanFormMode).toBe('list');
+
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [{
+          id: 'char-1',
+          name: 'Region',
+          productSpecCharacteristicValue: [{ value: 'EU' }]
+        }]
+      }
+    });
+    fixture.detectChanges();
+
+    expect(standardPlanButton.disabled).toBeFalse();
+    expect(fixture.nativeElement.querySelector('[data-cy="standardPlanConfigurationHint"]')).toBeNull();
+  });
+
   it('should block saving a standard paid plan without description, complete profile, and price component', () => {
     component.pricePlanFormType = 'standard';
     component.paidPricePlanForm.patchValue({
