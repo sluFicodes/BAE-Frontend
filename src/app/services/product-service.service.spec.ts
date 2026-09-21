@@ -45,7 +45,7 @@ describe('ApiServiceService', () => {
 
     const req = httpMock.expectOne(request =>
       request.method === 'GET'
-      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=12&offset=12&lifecycleStatus=Launched&body=cloud`
+      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=12&offset=12&lifecycleStatus=Launched&keyword=cloud`
     );
     expect(req.request.headers.get('X-Filtered-Pagination-Token')).toBe('current-token');
     req.flush([], {});
