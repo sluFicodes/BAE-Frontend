@@ -3,13 +3,11 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AccountServiceService } from 'src/app/services/account-service.service';
-import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { CatalogsPageConfig } from 'src/app/themes';
 import { environment } from 'src/environments/environment';
-
-interface ProviderCard { id: string; name: string; description: string; logo: string; }
+import { CataloguesDirectorySourceFactory } from './catalogues-directory-source.factory';
+import { CataloguesDirectoryCard, CataloguesDirectorySource } from './catalogues-directory.model';
 
 @Component({
   selector: 'app-catalogs',
@@ -18,22 +16,22 @@ interface ProviderCard { id: string; name: string; description: string; logo: st
 })
 export class CatalogsComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  private catalogs: any[] = [];
-  private nextCatalogs: any[] = [];
-  private allProviders: ProviderCard[] = [];
-  private catalogLogoCache = new Map<string, string>();
-  private ownerLogoCache = new Map<string, string | null>();
+  private allProviders: CataloguesDirectoryCard[] = [];
+  private nextProviders: CataloguesDirectoryCard[] = [];
   private providersRequestSeq = 0;
-  private filteredPaginationToken: string | null = null;
-  providers: ProviderCard[] = [];
+  private paginationToken: string | null = null;
+  private hasMoreAfterNextPage = false;
+  private directorySource: CataloguesDirectorySource;
+  providers: CataloguesDirectoryCard[] = [];
   totalCount = 0;
   page = 0;
   readonly CATALOG_LIMIT = 12;
   loading = false;
   loading_more = false;
-  page_check = true;
+  hasPrefetchedPage = true;
   filter: string | undefined;
   searchField = new FormControl();
+  searchEnabled = environment.SEARCH_ENABLED;
 
   viewMode: 'grid' | 'list' = 'grid';
   defaultCatalogLogoUrl = '';
@@ -52,11 +50,12 @@ export class CatalogsComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private accService: AccountServiceService,
-    private api: ApiServiceService,
     private cdr: ChangeDetectorRef,
-    private themeService: ThemeService
-  ) { }
+    private themeService: ThemeService,
+    private directorySourceFactory: CataloguesDirectorySourceFactory
+  ) {
+    this.directorySource = this.directorySourceFactory.getSource();
+  }
 
   ngOnInit() {
     this.themeService.currentTheme$
@@ -93,7 +92,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
   }
 
   private updateDefaultLogos(previousDefaultLogoUrl: string, nextDefaultLogoUrl: string) {
-    const replaceDefaultLogo = (card: ProviderCard) => {
+    const replaceDefaultLogo = (card: CataloguesDirectoryCard) => {
       if (!card.logo || card.logo === previousDefaultLogoUrl) {
         card.logo = nextDefaultLogoUrl;
       }
@@ -104,80 +103,85 @@ export class CatalogsComponent implements OnInit, OnDestroy {
   }
 
   async getProviders(next = false) {
-    if (next && (!this.page_check || this.loading_more)) {
+    if (next && (!this.hasPrefetchedPage || this.loading_more)) {
       return;
     }
 
     const requestSeq = ++this.providersRequestSeq;
-    const catalogsToLoadLogos = next ? [...this.nextCatalogs] : [];
 
     if (next) {
       this.loading_more = true;
     } else {
       this.loading = true;
       this.page = 0;
-      this.catalogs = [];
-      this.nextCatalogs = [];
+      this.nextProviders = [];
       this.allProviders = [];
       this.providers = [];
-      this.page_check = true;
-      this.clearFilteredPaginationToken();
+      this.hasPrefetchedPage = true;
+      this.hasMoreAfterNextPage = false;
+      this.clearPaginationToken();
     }
 
     try {
-      let loadedCatalogs: any[] = [];
+      let loadedProviders: CataloguesDirectoryCard[] = [];
       let page = this.page;
-      let filteredPaginationToken = this.filteredPaginationToken;
+      let paginationToken = this.paginationToken;
 
       if (next) {
-        loadedCatalogs = [...this.nextCatalogs];
-        const visibleCatalogs = [...this.catalogs, ...loadedCatalogs];
-        let bufferedCatalogs: any[] = [];
+        loadedProviders = [...this.nextProviders];
+        const visibleProviders = [...this.allProviders, ...loadedProviders];
+        let bufferedProviders: CataloguesDirectoryCard[] = [];
 
-        if (filteredPaginationToken) {
-          const prefetched = await this.loadCatalogsPage(page, filteredPaginationToken);
+        if (this.hasMoreAfterNextPage) {
+          const prefetched = await this.loadDirectoryPage(page, paginationToken);
           page += this.CATALOG_LIMIT;
-          filteredPaginationToken = prefetched.filteredPaginationToken ?? null;
+          paginationToken = prefetched.continuationToken ?? null;
           if (requestSeq !== this.providersRequestSeq) {
             return;
           }
-          bufferedCatalogs = Array.isArray(prefetched.items) ? prefetched.items : [];
+          bufferedProviders = prefetched.items;
+          this.hasMoreAfterNextPage = prefetched.hasMore;
+        } else {
+          this.hasMoreAfterNextPage = false;
         }
 
-        this.catalogs = visibleCatalogs;
-        this.nextCatalogs = bufferedCatalogs;
+        this.allProviders = visibleProviders;
+        this.nextProviders = bufferedProviders;
+        this.hasPrefetchedPage = this.nextProviders.length > 0;
       } else {
         page = 0;
-        filteredPaginationToken = null;
-        const current = await this.loadCatalogsPage(page, filteredPaginationToken);
+        paginationToken = null;
+        const current = await this.loadDirectoryPage(page, paginationToken);
         page += this.CATALOG_LIMIT;
-        filteredPaginationToken = current.filteredPaginationToken ?? null;
+        paginationToken = current.continuationToken ?? null;
         if (requestSeq !== this.providersRequestSeq) {
           return;
         }
 
-        loadedCatalogs = Array.isArray(current.items) ? current.items : [];
-        this.catalogs = loadedCatalogs;
+        loadedProviders = current.items;
+        this.allProviders = loadedProviders;
+        this.hasPrefetchedPage = current.hasMore;
 
-        if (filteredPaginationToken) {
-          const prefetched = await this.loadCatalogsPage(page, filteredPaginationToken);
+        if (this.hasPrefetchedPage) {
+          const prefetched = await this.loadDirectoryPage(page, paginationToken);
           page += this.CATALOG_LIMIT;
-          filteredPaginationToken = prefetched.filteredPaginationToken ?? null;
+          paginationToken = prefetched.continuationToken ?? null;
           if (requestSeq !== this.providersRequestSeq) {
             return;
           }
-          this.nextCatalogs = Array.isArray(prefetched.items) ? prefetched.items : [];
+          this.nextProviders = prefetched.items;
+          this.hasMoreAfterNextPage = prefetched.hasMore;
+          this.hasPrefetchedPage = this.nextProviders.length > 0;
+        } else {
+          this.hasMoreAfterNextPage = false;
         }
       }
 
       this.page = page;
-      this.filteredPaginationToken = filteredPaginationToken;
-      this.page_check = this.nextCatalogs.some(item => item != null);
-      this.allProviders = this.catalogs.map(c => this.mapCatalog(c));
+      this.paginationToken = paginationToken;
       this.applyView();
-      this.fillOwnerLogos(next ? catalogsToLoadLogos : loadedCatalogs);
     } catch (err) {
-      console.error('Error loading catalogs:', err);
+      console.error('Error loading catalogues directory:', err);
     } finally {
       if (requestSeq === this.providersRequestSeq) {
         this.loading = false;
@@ -187,65 +191,18 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadCatalogsPage(page: number, filteredPaginationToken: string | null) {
-    return this.api.getLaunchedCatalogsPage(
-      page,
-      this.filter,
-      this.CATALOG_LIMIT,
-      filteredPaginationToken
-    );
+  private loadDirectoryPage(page: number, continuationToken: string | null) {
+    return this.directorySource.loadPage({
+      offset: page,
+      limit: this.CATALOG_LIMIT,
+      keyword: this.searchEnabled ? this.filter : undefined,
+      continuationToken,
+      fallbackLogoUrl: this.defaultCatalogLogoUrl
+    });
   }
 
-  private clearFilteredPaginationToken(): void {
-    this.filteredPaginationToken = null;
-  }
-
-  private mapCatalog(c: any): ProviderCard {
-    const id = c?.id ?? '';
-    return {
-      id,
-      name: c?.name ?? '',
-      description: c?.description ?? '',
-      logo: this.catalogLogoCache.get(id) ?? this.defaultCatalogLogoUrl
-    };
-  }
-
-  private fillOwnerLogos(catalogs: any[]) {
-    const cardsByOwner = new Map<string, ProviderCard[]>();
-    for (const c of catalogs) {
-      const parties: any[] = c?.relatedParty ?? [];
-      const owner = parties.find((p: any) => p?.role === environment.SELLER_ROLE)
-        ?? parties.find((p: any) => p?.id && String(p.id).includes('organization'));
-      const card = this.allProviders.find(p => p.id === c?.id);
-      if (!owner?.id || !card || !String(owner.id).includes('organization')) continue;
-
-      const cachedLogo = this.ownerLogoCache.get(owner.id);
-      if (cachedLogo !== undefined) {
-        if (cachedLogo) {
-          card.logo = cachedLogo;
-          this.catalogLogoCache.set(card.id, cachedLogo);
-        }
-        continue;
-      }
-
-      cardsByOwner.set(owner.id, [...(cardsByOwner.get(owner.id) ?? []), card]);
-    }
-    for (const [ownerId, cards] of cardsByOwner) {
-      this.accService.getOrgInfo(ownerId).then(org => {
-        const logo = (org?.partyCharacteristic ?? []).find((ch: any) => ch?.name === 'logo')?.value;
-        this.ownerLogoCache.set(ownerId, logo ?? null);
-        if (!logo) {
-          return;
-        }
-        for (const card of cards) {
-          card.logo = logo;
-          this.catalogLogoCache.set(card.id, logo);
-        }
-        this.cdr.detectChanges();
-      }).catch(() => {
-        this.ownerLogoCache.set(ownerId, null);
-      });
-    }
+  private clearPaginationToken(): void {
+    this.paginationToken = null;
   }
 
   private applyView() {
@@ -258,7 +215,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
 
   filterProviders() {
     const value = this.searchField.value?.trim();
-    this.filter = value || undefined;
+    this.filter = this.searchEnabled ? value || undefined : undefined;
     this.getProviders(false);
   }
 
@@ -278,8 +235,8 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     return this.getProviders(true);
   }
 
-  goToProvider(id: string) {
-    this.router.navigate(['/search/catalogue', id]);
+  goToProvider(card: CataloguesDirectoryCard) {
+    this.router.navigate(this.directorySource.routeFor(card));
   }
 
   @HostListener('document:click') onClick() {

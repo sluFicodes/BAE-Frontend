@@ -45,7 +45,7 @@ describe('ApiServiceService', () => {
 
     const req = httpMock.expectOne(request =>
       request.method === 'GET'
-      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=12&offset=12&lifecycleStatus=Launched&body=cloud`
+      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=12&offset=12&lifecycleStatus=Launched&keyword=cloud`
     );
     expect(req.request.headers.get('X-Filtered-Pagination-Token')).toBe('current-token');
     req.flush([], {});
@@ -99,5 +99,23 @@ describe('ApiServiceService', () => {
     req.flush([{ id: 'offer-1' }]);
 
     await expectAsync(resultPromise).toBeResolvedTo([{ id: 'offer-1' }]);
+  });
+
+  it('should create the default catalog through the admin default catalog endpoint', () => {
+    const payload = {
+      name: 'Default Catalog',
+      description: 'Main marketplace catalog'
+    };
+
+    service.createDefaultCatalog(payload).subscribe(response => {
+      expect(response).toEqual({ id: 'catalog-1' });
+    });
+
+    const req = httpMock.expectOne(request =>
+      request.method === 'POST'
+      && request.url === `${ApiServiceService.BASE_URL}/admin/defaultcatalog/create`
+    );
+    expect(req.request.body).toEqual(payload);
+    req.flush({ id: 'catalog-1' });
   });
 });

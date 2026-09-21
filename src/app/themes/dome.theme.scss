@@ -25,6 +25,7 @@ body.theme-dome {
   /* My offerings semantic tokens */
   --theme-offerings-page-bg: 247 249 253;
   --theme-offerings-surface-bg: 255 255 255;
+  --theme-offerings-subtle-surface-bg: 249 250 251;
   --theme-offerings-muted-bg: 235 236 238;
   --theme-offerings-neutral-bg: 242 244 247;
   --theme-offerings-selected-bg: 236 254 255;
@@ -34,12 +35,21 @@ body.theme-dome {
   --theme-offerings-border: 235 236 238;
   --theme-offerings-border-strong: 216 218 222;
   --theme-offerings-border-muted: 228 228 228;
+  --theme-offerings-separator: 229 231 235;
   --theme-offerings-dashed-border: 142 172 225;
+  --theme-offerings-price-border: 188 191 199;
   --theme-offerings-text: 19 27 37;
+  --theme-offerings-strong-text: 17 24 39;
   --theme-offerings-heading-text: 50 65 83;
   --theme-offerings-body-text: 76 90 107;
+  --theme-offerings-description-text: 107 114 128;
+  --theme-offerings-feature-text: 75 85 99;
+  --theme-offerings-label-text: 156 163 175;
   --theme-offerings-muted-text: 82 97 121;
   --theme-offerings-title-text: 11 21 40;
+  --theme-offerings-link: 31 79 191;
+  --theme-offerings-link-hover: 22 59 153;
+  --theme-offerings-confirm-hover: 36 70 138;
   --theme-offerings-active-chip-bg: 182 202 236;
   --theme-offerings-disabled-text: 161 165 176;
   --theme-offerings-disabled-strong-text: 133 139 153;
@@ -47,8 +57,11 @@ body.theme-dome {
   --theme-offerings-metric-accent-bg: 250 245 255;
   --theme-offerings-on-dark-text: 255 255 255;
   --theme-offerings-on-dark-body-text: 209 213 219;
+  --theme-offerings-dark-surface-bg: 31 41 55;
+  --theme-offerings-dark-hover-bg: 55 65 81;
   --theme-offerings-backdrop: 11 21 40;
   --theme-offerings-shadow-rgb: 0 84 98;
+  --theme-offerings-elevated-shadow-rgb: 11 18 32;
   --theme-offerings-neutral-shadow-rgb: 0 0 0;
   --theme-offerings-thumb-border: 255 255 255;
 
@@ -56,6 +69,7 @@ body.theme-dome {
   --theme-status-success-bg: 187 247 208;
   --theme-status-success-text: 5 46 22;
   --theme-status-success-border: 22 163 74;
+  --theme-status-success-bright: 34 197 94;
   --theme-status-ready-bg: 220 252 231;
   --theme-status-ready-text: 22 101 52;
   --theme-status-ready-border: 22 163 74;

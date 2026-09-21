@@ -320,14 +320,14 @@ export class ApiServiceService {
     return this.http.patch<any>(url, category);
   }
 
-  getCatalogs(page: any, filter: any): Promise<any> {
-    return this.getCatalogsWithLimit(page, filter, ApiServiceService.CATALOG_LIMIT);
+  getCatalogs(page: any, keyword: any): Promise<any> {
+    return this.getCatalogsWithLimit(page, keyword, ApiServiceService.CATALOG_LIMIT);
   }
 
-  getCatalogsWithLimit(page: any, filter: any, limit: number): Promise<any> {
+  getCatalogsWithLimit(page: any, keyword: any, limit: number): Promise<any> {
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=${limit}&offset=${page}&lifecycleStatus=Launched`;
-    if (filter != undefined) {
-      url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=${limit}&offset=${page}&lifecycleStatus=Launched&body=${filter}`;
+    if (keyword != undefined) {
+      url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=${limit}&offset=${page}&lifecycleStatus=Launched&keyword=${keyword}`;
     }
     console.log('getcatalogs')
     console.log(this)
@@ -337,7 +337,7 @@ export class ApiServiceService {
 
   getLaunchedCatalogsPage(
     page: any,
-    filter: any,
+    keyword: any,
     limit: number,
     filteredPaginationToken?: string | null,
     relatedPartyId?: string | null
@@ -345,8 +345,8 @@ export class ApiServiceService {
     const tokenRequestHeader = 'X-Filtered-Pagination-Token';
     const tokenResponseHeader = 'x-filtered-pagination-token';
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=${limit}&offset=${page}&lifecycleStatus=Launched`;
-    if (filter != undefined) {
-      url = url + `&body=${filter}`;
+    if (keyword != undefined) {
+      url = url + `&keyword=${keyword}`;
     }
     if (relatedPartyId) {
       url = url + `&relatedParty.id=${relatedPartyId}`;
@@ -364,7 +364,7 @@ export class ApiServiceService {
     }));
   }
 
-  getCatalogsByUser(page: any, filter: any, status: any[], partyId: any) {
+  getCatalogsByUser(page: any, keyword: any, status: any[], partyId: any) {
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/catalog?limit=${ApiServiceService.CATALOG_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;
     let lifeStatus = ''
     if (status)
@@ -379,8 +379,8 @@ export class ApiServiceService {
         url = url + '&lifecycleStatus=' + lifeStatus;
       }
 
-    if (filter != undefined) {
-      url = url + `&body=${filter}`;
+    if (keyword != undefined) {
+      url = url + `&keyword=${keyword}`;
     }
 
     return lastValueFrom(this.http.get<any>(url));
@@ -400,6 +400,12 @@ export class ApiServiceService {
 
   postAdminCatalog(catalog: any) {
     let url = `${ApiServiceService.BASE_URL}/admin/catalog/catalog`;
+
+    return this.http.post<any>(url, catalog);
+  }
+
+  createDefaultCatalog(catalog: any) {
+    let url = `${ApiServiceService.BASE_URL}/admin/defaultcatalog/create`;
 
     return this.http.post<any>(url, catalog);
   }

@@ -7,36 +7,41 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { CatalogsComponent } from './catalogs.component';
-import { AccountServiceService } from 'src/app/services/account-service.service';
-import { ApiServiceService } from 'src/app/services/product-service.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { CataloguesDirectorySourceFactory } from './catalogues-directory-source.factory';
+import { CataloguesDirectoryCard, CataloguesDirectorySource } from './catalogues-directory.model';
 
 describe('CatalogsComponent', () => {
   let component: CatalogsComponent;
   let fixture: ComponentFixture<CatalogsComponent>;
-  let apiServiceSpy: jasmine.SpyObj<ApiServiceService>;
-  let accountServiceSpy: jasmine.SpyObj<AccountServiceService>;
   let routerSpy: jasmine.SpyObj<Router>;
   let themeSubject: BehaviorSubject<any>;
+  let directorySource: jasmine.SpyObj<CataloguesDirectorySource>;
   const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0));
 
   beforeEach(async () => {
-    apiServiceSpy = jasmine.createSpyObj<ApiServiceService>('ApiServiceService', ['getLaunchedCatalogsPage']);
-    apiServiceSpy.getLaunchedCatalogsPage.and.returnValue(Promise.resolve({
+    directorySource = jasmine.createSpyObj<CataloguesDirectorySource>('CataloguesDirectorySource', ['loadPage', 'routeFor'], {
+      mode: 'catalog'
+    });
+    directorySource.loadPage.and.returnValue(Promise.resolve({
       items: [],
-      filteredPaginationToken: null
+      continuationToken: null,
+      hasMore: false
     }));
+    directorySource.routeFor.and.callFake((card: CataloguesDirectoryCard) => ['/search/catalogue', card.id]);
 
-    accountServiceSpy = jasmine.createSpyObj<AccountServiceService>('AccountServiceService', ['getOrgInfo']);
-    accountServiceSpy.getOrgInfo.and.returnValue(Promise.resolve({}));
     themeSubject = new BehaviorSubject<any>(null);
 
     await TestBed.configureTestingModule({
       declarations: [CatalogsComponent],
       imports: [ReactiveFormsModule, RouterTestingModule, TranslateModule.forRoot()],
       providers: [
-        { provide: ApiServiceService, useValue: apiServiceSpy },
-        { provide: AccountServiceService, useValue: accountServiceSpy },
+        {
+          provide: CataloguesDirectorySourceFactory,
+          useValue: {
+            getSource: () => directorySource
+          }
+        },
         {
           provide: ThemeService,
           useValue: {
@@ -58,113 +63,130 @@ describe('CatalogsComponent', () => {
   });
 
   it('should request the initial launched catalog page without a continuation token', async () => {
-    apiServiceSpy.getLaunchedCatalogsPage.and.returnValue(
-      Promise.resolve({ items: [{ id: 'catalog-1', name: 'Catalog 1' }], filteredPaginationToken: null })
+    directorySource.loadPage.and.returnValue(
+      Promise.resolve({
+        items: [card('catalog-1', 'Catalog 1')],
+        continuationToken: null,
+        hasMore: false
+      })
     );
 
     await component.getProviders(false);
 
-    expect(apiServiceSpy.getLaunchedCatalogsPage).toHaveBeenCalledTimes(1);
-    expect(apiServiceSpy.getLaunchedCatalogsPage.calls.argsFor(0)).toEqual([0, undefined, component.CATALOG_LIMIT, null]);
+    expect(directorySource.loadPage).toHaveBeenCalledTimes(1);
+    expect(directorySource.loadPage.calls.argsFor(0)[0]).toEqual(jasmine.objectContaining({
+      offset: 0,
+      limit: component.CATALOG_LIMIT,
+      keyword: undefined,
+      continuationToken: null
+    }));
     expect(component.providers.map(provider => provider.id)).toEqual(['catalog-1']);
-    expect(component.page_check).toBeFalse();
+    expect(component.hasPrefetchedPage).toBeFalse();
   });
 
   it('should store the returned continuation token and show load more', async () => {
-    apiServiceSpy.getLaunchedCatalogsPage.and.returnValues(
-      Promise.resolve({ items: [{ id: 'catalog-1', name: 'Catalog 1' }], filteredPaginationToken: 'token-page-1' }),
-      Promise.resolve({ items: [{ id: 'catalog-2', name: 'Catalog 2' }], filteredPaginationToken: 'token-page-2' })
+    directorySource.loadPage.and.returnValues(
+      Promise.resolve({ items: [card('catalog-1', 'Catalog 1')], continuationToken: 'token-page-1', hasMore: true }),
+      Promise.resolve({ items: [card('catalog-2', 'Catalog 2')], continuationToken: 'token-page-2', hasMore: true })
     );
 
     await component.getProviders(false);
 
-    expect(apiServiceSpy.getLaunchedCatalogsPage).toHaveBeenCalledTimes(2);
-    expect(apiServiceSpy.getLaunchedCatalogsPage.calls.argsFor(1)).toEqual([
-      component.CATALOG_LIMIT,
-      undefined,
-      component.CATALOG_LIMIT,
-      'token-page-1'
-    ]);
+    expect(directorySource.loadPage).toHaveBeenCalledTimes(2);
+    expect(directorySource.loadPage.calls.argsFor(1)[0]).toEqual(jasmine.objectContaining({
+      offset: component.CATALOG_LIMIT,
+      limit: component.CATALOG_LIMIT,
+      continuationToken: 'token-page-1'
+    }));
     expect(component.providers.map(provider => provider.id)).toEqual(['catalog-1']);
-    expect(component.page_check).toBeTrue();
-    expect((component as any).filteredPaginationToken).toBe('token-page-2');
+    expect(component.hasPrefetchedPage).toBeTrue();
+    expect((component as any).paginationToken).toBe('token-page-2');
   });
 
   it('should send the stored continuation token when loading more catalogs', async () => {
-    apiServiceSpy.getLaunchedCatalogsPage.and.returnValues(
-      Promise.resolve({ items: [{ id: 'catalog-1', name: 'Catalog 1' }], filteredPaginationToken: 'token-page-1' }),
-      Promise.resolve({ items: [{ id: 'catalog-2', name: 'Catalog 2' }], filteredPaginationToken: 'token-page-2' }),
-      Promise.resolve({ items: [{ id: 'catalog-3', name: 'Catalog 3' }], filteredPaginationToken: 'token-page-3' })
+    directorySource.loadPage.and.returnValues(
+      Promise.resolve({ items: [card('catalog-1', 'Catalog 1')], continuationToken: 'token-page-1', hasMore: true }),
+      Promise.resolve({ items: [card('catalog-2', 'Catalog 2')], continuationToken: 'token-page-2', hasMore: true }),
+      Promise.resolve({ items: [card('catalog-3', 'Catalog 3')], continuationToken: 'token-page-3', hasMore: true })
     );
 
     await component.getProviders(false);
     await component.next();
 
-    expect(apiServiceSpy.getLaunchedCatalogsPage.calls.argsFor(2)).toEqual([
-      component.CATALOG_LIMIT * 2,
-      undefined,
-      component.CATALOG_LIMIT,
-      'token-page-2'
-    ]);
+    expect(directorySource.loadPage.calls.argsFor(2)[0]).toEqual(jasmine.objectContaining({
+      offset: component.CATALOG_LIMIT * 2,
+      limit: component.CATALOG_LIMIT,
+      continuationToken: 'token-page-2'
+    }));
     expect(component.providers.map(provider => provider.id)).toEqual(['catalog-1', 'catalog-2']);
-    expect(component.page_check).toBeTrue();
-    expect((component as any).filteredPaginationToken).toBe('token-page-3');
+    expect(component.hasPrefetchedPage).toBeTrue();
+    expect((component as any).paginationToken).toBe('token-page-3');
   });
 
   it('should reveal the prefetched page and disable load more when there is no further continuation token', async () => {
-    apiServiceSpy.getLaunchedCatalogsPage.and.returnValues(
-      Promise.resolve({ items: [{ id: 'catalog-1', name: 'Catalog 1' }], filteredPaginationToken: 'token-page-1' }),
-      Promise.resolve({ items: [{ id: 'catalog-2', name: 'Catalog 2' }], filteredPaginationToken: null })
+    directorySource.loadPage.and.returnValues(
+      Promise.resolve({ items: [card('catalog-1', 'Catalog 1')], continuationToken: 'token-page-1', hasMore: true }),
+      Promise.resolve({ items: [card('catalog-2', 'Catalog 2')], continuationToken: null, hasMore: false })
     );
 
     await component.getProviders(false);
     await component.next();
 
-    expect(apiServiceSpy.getLaunchedCatalogsPage.calls.argsFor(1)).toEqual([
-      component.CATALOG_LIMIT,
-      undefined,
-      component.CATALOG_LIMIT,
-      'token-page-1'
-    ]);
-    expect(apiServiceSpy.getLaunchedCatalogsPage).toHaveBeenCalledTimes(2);
+    expect(directorySource.loadPage.calls.argsFor(1)[0]).toEqual(jasmine.objectContaining({
+      offset: component.CATALOG_LIMIT,
+      limit: component.CATALOG_LIMIT,
+      continuationToken: 'token-page-1'
+    }));
+    expect(directorySource.loadPage).toHaveBeenCalledTimes(2);
     expect(component.providers.map(provider => provider.id)).toEqual(['catalog-1', 'catalog-2']);
-    expect(component.page_check).toBeFalse();
-    expect((component as any).filteredPaginationToken).toBeNull();
+    expect(component.hasPrefetchedPage).toBeFalse();
+    expect((component as any).paginationToken).toBeNull();
   });
 
   it('should clear the continuation token when the search filter changes', async () => {
-    (component as any).filteredPaginationToken = 'stale-token';
+    (component as any).paginationToken = 'stale-token';
     component.searchField.setValue('cloud');
-    apiServiceSpy.getLaunchedCatalogsPage.and.returnValues(
-      Promise.resolve({ items: [{ id: 'catalog-1', name: 'Cloud catalog' }], filteredPaginationToken: null }),
-      Promise.resolve({ items: [], filteredPaginationToken: null })
+    directorySource.loadPage.and.returnValues(
+      Promise.resolve({ items: [card('catalog-1', 'Cloud catalog')], continuationToken: null, hasMore: false }),
+      Promise.resolve({ items: [], continuationToken: null, hasMore: false })
     );
 
     component.filterProviders();
     await flushPromises();
 
-    expect(apiServiceSpy.getLaunchedCatalogsPage.calls.argsFor(0)).toEqual([0, 'cloud', component.CATALOG_LIMIT, null]);
-    expect((component as any).filteredPaginationToken).toBeNull();
+    expect(directorySource.loadPage.calls.argsFor(0)[0]).toEqual(jasmine.objectContaining({
+      offset: 0,
+      keyword: 'cloud',
+      continuationToken: null
+    }));
+    expect((component as any).paginationToken).toBeNull();
   });
 
   it('should reset the token and reload catalogs when sort changes', async () => {
-    (component as any).filteredPaginationToken = 'stale-token';
-    apiServiceSpy.getLaunchedCatalogsPage.and.returnValues(
-      Promise.resolve({ items: [{ id: 'catalog-1', name: 'Cloud catalog' }], filteredPaginationToken: null }),
-      Promise.resolve({ items: [], filteredPaginationToken: null })
+    (component as any).paginationToken = 'stale-token';
+    directorySource.loadPage.and.returnValues(
+      Promise.resolve({ items: [card('catalog-1', 'Cloud catalog')], continuationToken: null, hasMore: false }),
+      Promise.resolve({ items: [], continuationToken: null, hasMore: false })
     );
 
     component.selectSort('name_asc', new Event('click'));
     await flushPromises();
 
-    expect(apiServiceSpy.getLaunchedCatalogsPage.calls.argsFor(0)).toEqual([0, undefined, component.CATALOG_LIMIT, null]);
+    expect(directorySource.loadPage.calls.argsFor(0)[0]).toEqual(jasmine.objectContaining({
+      offset: 0,
+      keyword: undefined,
+      continuationToken: null
+    }));
     expect(component.sortOption).toBe('name_asc');
-    expect((component as any).filteredPaginationToken).toBeNull();
+    expect((component as any).paginationToken).toBeNull();
   });
 
-  it('should navigate to the selected catalog route', () => {
-    component.goToProvider('cat-123');
+  it('should navigate using the selected directory source route', () => {
+    const selected = card('cat-123', 'Catalog');
 
+    component.goToProvider(selected);
+
+    expect(directorySource.routeFor).toHaveBeenCalledWith(selected);
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/search/catalogue', 'cat-123']);
   });
 
@@ -183,4 +205,14 @@ describe('CatalogsComponent', () => {
     expect(component.hasLongWord('this_contains_a_reallyreallyreallylongtoken', 10)).toBeTrue();
     expect(component.hasLongWord(undefined, 10)).toBeFalse();
   });
+
+  function card(id: string, name: string): CataloguesDirectoryCard {
+    return {
+      id,
+      name,
+      description: '',
+      logo: '',
+      mode: 'catalog'
+    };
+  }
 });
