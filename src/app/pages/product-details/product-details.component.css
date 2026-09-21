@@ -7,6 +7,11 @@
  }
 
 .kf-card { min-height: 128px; }
+
+.product-tabs-container {
+  box-shadow: 0 4px 8px -4px rgb(var(--theme-offerings-elevated-shadow-rgb) / 0.08);
+}
+
 .kf-watermark {
     position: absolute;
     top: -120px;
@@ -20,7 +25,7 @@
 }
 
 .faq-card {
-  background: rgb(249 250 251 / 1);
+  background: rgb(var(--theme-offerings-subtle-surface-bg) / 1);
   border-radius: 16px;
   padding: 24px;
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
@@ -28,8 +33,8 @@
 }
 
 .faq-card--open {
-  border: 1px solid rgb(229 231 235 / 1);
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgb(var(--theme-offerings-separator) / 1);
+  box-shadow: 0 0 16px rgb(var(--theme-offerings-neutral-shadow-rgb) / 0.08);
 }
 
 .faq-question {
@@ -73,7 +78,7 @@
 
 .faq-icon--open {
   background: rgb(var(--theme-primary-100) / 1);
-  color: white;
+  color: rgb(var(--theme-offerings-on-dark-text) / 1);
 }
 
 .faq-answer {
@@ -96,7 +101,7 @@
 
 .faq-divider {
   height: 1px;
-  background: rgb(229 231 235 / 1);
+  background: rgb(var(--theme-offerings-separator) / 1);
   margin-bottom: 16px;
   transform: scaleX(0.96);
   transform-origin: left center;
@@ -110,7 +115,7 @@
 }
 
 .faq-answer__content {
-  color: rgb(75 85 99 / 1);
+  color: rgb(var(--theme-offerings-body-text) / 1);
   font-size: 18px;
   line-height: 30px;
   white-space: pre-line;

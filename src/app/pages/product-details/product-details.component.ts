@@ -947,8 +947,8 @@ export class ProductDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
   tabClass(name: string): string {
     return this.activeTab === name
-      ? 'bg-[#8EACE1] text-[#131B25] font-semibold'
-      : 'text-[#131B25] font-semibold hover:bg-[#DDE6F6]';
+      ? 'bg-offerings-dashed-border text-secondary-500 font-semibold'
+      : 'text-secondary-500 font-semibold hover:bg-secondary-50';
   }
 
   toggleTermsReadMore() {
