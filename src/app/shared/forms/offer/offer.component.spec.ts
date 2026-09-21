@@ -1188,6 +1188,43 @@ describe('OfferComponent', () => {
     expect((payload as any).forbiddenCharacteristic).toBeUndefined();
   });
 
+  it('should persist a range configuration profile when creating a price plan', async () => {
+    const api = (component as any).api;
+    const postSpy = spyOn(api, 'postOfferingPrice').and.returnValue(of({ id: 'plan-1' }));
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [{
+          id: 'char-range',
+          name: 'Storage',
+          productSpecCharacteristicValue: [{ valueFrom: 0, valueTo: 100, unitOfMeasure: 'GB' }]
+        }]
+      }
+    });
+
+    await (component as any).persistCurrentFormPricePlans([{
+      name: 'Standard plan',
+      lifecycleStatus: 'Active',
+      productProfile: {
+        selectedValues: [{ id: 'char-range', name: 'Storage', selectedValue: 30 }]
+      },
+      priceComponents: []
+    }], false);
+
+    expect(postSpy).toHaveBeenCalledWith(jasmine.objectContaining({
+      prodSpecCharValueUse: [jasmine.objectContaining({
+        id: 'char-range',
+        name: 'Storage',
+        productSpecCharacteristicValue: [{
+          valueFrom: 0,
+          valueTo: 100,
+          unitOfMeasure: 'GB',
+          value: 30,
+          isDefault: true
+        }]
+      })]
+    }));
+  });
+
   it('should update the existing constraint price instead of creating another one', async () => {
     const api = (component as any).api;
     const updateSpy = spyOn(api, 'updateOfferingPrice').and.returnValue(of({

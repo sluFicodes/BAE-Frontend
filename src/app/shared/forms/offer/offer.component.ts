@@ -2947,6 +2947,15 @@ export class OfferComponent implements OnInit, OnDestroy {
       price.popRelationship = relationships;
     }
 
+    const productProfile = Array.isArray(plan?.productProfile?.selectedValues)
+      ? plan.productProfile.selectedValues
+      : [];
+    if (productProfile.length > 0) {
+      price.prodSpecCharValueUse = productProfile.map((item: any) =>
+        this.buildProductProfileCharacteristicUse(item)
+      );
+    }
+
     if (plan.prodSpecCharValueUse) {
       price.prodSpecCharValueUse = plan.prodSpecCharValueUse.map((item: any) => ({
         ...item,
@@ -3071,16 +3080,24 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   private buildProductProfileCharacteristicUse(item: any): any {
     const characteristic = this.pricePlanCharacteristics.find((char: any) => char?.id === item?.id);
-    const selectedValue = characteristic?.productSpecCharacteristicValue?.find((value: any) =>
+    const characteristicValues = Array.isArray(characteristic?.productSpecCharacteristicValue)
+      ? characteristic.productSpecCharacteristicValue
+      : [];
+    const selectedValue = characteristicValues.find((value: any) =>
       String(value?.value) === String(item?.selectedValue)
+    ) || characteristicValues.find((value: any) =>
+      Object.prototype.hasOwnProperty.call(value || {}, 'valueFrom')
     );
+    const isRange = Object.prototype.hasOwnProperty.call(selectedValue || {}, 'valueFrom');
 
     return {
       id: item?.id,
       name: item?.name || characteristic?.name || '',
       description: characteristic?.description || '',
       valueType: characteristic?.valueType,
-      productSpecCharacteristicValue: selectedValue ? [{ ...selectedValue, isDefault: true }] : []
+      productSpecCharacteristicValue: selectedValue
+        ? [{ ...selectedValue, ...(isRange ? { value: item?.selectedValue } : {}), isDefault: true }]
+        : []
     };
   }
 
