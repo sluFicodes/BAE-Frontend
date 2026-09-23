@@ -36,6 +36,13 @@ const DSP_CHARS: string[] = [
   'transferType'
 ];
 
+const ALLOWED_PRODUCT_IMAGE_TYPES = new Set([
+  'image/svg+xml',
+  'image/png',
+  'image/jpeg',
+  'image/gif'
+]);
+
 @Component({
   selector: 'create-product-spec',
   templateUrl: './create-product-spec.component.html',
@@ -1111,6 +1118,13 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
     if(input.files && input.files.length > 0){
       const file = input.files[0];
       this.productImageTouched = true;
+      if(!ALLOWED_PRODUCT_IMAGE_TYPES.has(file.type)){
+        input.value = '';
+        this.errorMessage = 'File must have a valid image format!';
+        this.showError = true;
+        setTimeout(() => { this.showError = false; }, 3000);
+        return;
+      }
       this.productImage = { name: file.name, size: file.size };
       this.uploadingImage = true;
       const reader = new FileReader();
