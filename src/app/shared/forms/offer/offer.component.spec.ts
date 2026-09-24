@@ -282,6 +282,35 @@ describe('OfferComponent', () => {
     expect(component.validateCurrentStep()).toBeTrue();
   });
 
+  it('should disable standard plans when the product specification has no configuration options', () => {
+    spyOn(component, 'ngOnInit').and.resolveTo();
+    component.showSelectPlanTypeModal = true;
+    fixture.detectChanges();
+
+    const standardPlanButton: HTMLButtonElement = fixture.nativeElement.querySelector('[data-cy="standardPlanType"]');
+    expect(standardPlanButton.disabled).toBeTrue();
+    expect(fixture.nativeElement.querySelector('[data-cy="standardPlanConfigurationHint"]')).not.toBeNull();
+
+    component.selectedNewPlanType = 'standard';
+    component.confirmSelectPlanType();
+    expect(component.pricePlanFormType).toBeNull();
+    expect(component.pricePlanFormMode).toBe('list');
+
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [{
+          id: 'char-1',
+          name: 'Region',
+          productSpecCharacteristicValue: [{ value: 'EU' }]
+        }]
+      }
+    });
+    fixture.detectChanges();
+
+    expect(standardPlanButton.disabled).toBeFalse();
+    expect(fixture.nativeElement.querySelector('[data-cy="standardPlanConfigurationHint"]')).toBeNull();
+  });
+
   it('should block saving a standard paid plan without description, complete profile, and price component', () => {
     component.pricePlanFormType = 'standard';
     component.paidPricePlanForm.patchValue({
@@ -1186,6 +1215,43 @@ describe('OfferComponent', () => {
       relationshipType: 'constraint'
     })]);
     expect((payload as any).forbiddenCharacteristic).toBeUndefined();
+  });
+
+  it('should persist a range configuration profile when creating a price plan', async () => {
+    const api = (component as any).api;
+    const postSpy = spyOn(api, 'postOfferingPrice').and.returnValue(of({ id: 'plan-1' }));
+    component.productOfferForm.patchValue({
+      prodSpec: {
+        productSpecCharacteristic: [{
+          id: 'char-range',
+          name: 'Storage',
+          productSpecCharacteristicValue: [{ valueFrom: 0, valueTo: 100, unitOfMeasure: 'GB' }]
+        }]
+      }
+    });
+
+    await (component as any).persistCurrentFormPricePlans([{
+      name: 'Standard plan',
+      lifecycleStatus: 'Active',
+      productProfile: {
+        selectedValues: [{ id: 'char-range', name: 'Storage', selectedValue: 30 }]
+      },
+      priceComponents: []
+    }], false);
+
+    expect(postSpy).toHaveBeenCalledWith(jasmine.objectContaining({
+      prodSpecCharValueUse: [jasmine.objectContaining({
+        id: 'char-range',
+        name: 'Storage',
+        productSpecCharacteristicValue: [{
+          valueFrom: 0,
+          valueTo: 100,
+          unitOfMeasure: 'GB',
+          value: 30,
+          isDefault: true
+        }]
+      })]
+    }));
   });
 
   it('should update the existing constraint price instead of creating another one', async () => {
