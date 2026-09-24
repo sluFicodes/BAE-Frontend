@@ -1022,7 +1022,8 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   confirmSelectPlanType(): void {
-    if (!this.selectedNewPlanType) return;
+    if (!this.selectedNewPlanType ||
+      (this.selectedNewPlanType === 'standard' && !this.hasPricePlanConfigurationOptions)) return;
     this.editingPricePlanIndex = null;
     this.pricePlanFormType = this.selectedNewPlanType;
     this.paidPricePlanForm.reset({
@@ -1175,6 +1176,10 @@ export class OfferComponent implements OnInit, OnDestroy {
       !String(c?.name || '').startsWith('Compliance:')
       && !NON_PRICE_CONFIG_VALUE_TYPES.includes(c?.valueType)
     );
+  }
+
+  get hasPricePlanConfigurationOptions(): boolean {
+    return this.pricePlanCharacteristics.length > 0;
   }
 
   get prodSpecCharacteristics(): any[] {
