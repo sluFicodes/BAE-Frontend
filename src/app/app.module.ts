@@ -32,6 +32,7 @@ import { UpdateCategoryComponent } from './pages/admin/categories/update-categor
 import { EmailComponent } from './pages/admin/email/email.component';
 import { FeaturesConfigComponent } from './pages/admin/features-config/features-config.component';
 import { DefaultCatalogComponent } from './pages/admin/default-catalog/default-catalog.component';
+import { SearchConfigComponent } from './pages/admin/search-config/search-config.component';
 import { SearchFiltersConfigComponent } from './pages/admin/search-filters-config/search-filters-config.component';
 import { VerificationComponent } from './pages/admin/verification/verification.component';
 import { CatalogsComponent } from "./pages/catalogs/catalogs.component";
@@ -163,6 +164,7 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.c
     VerificationComponent,
     EmailComponent,
     FeaturesConfigComponent,
+    SearchConfigComponent,
     SearchFiltersConfigComponent,
     DefaultCatalogComponent,
     InventoryResourcesComponent,
