@@ -429,6 +429,72 @@
           }
         }
 
+        @if(prodChars.length > 0){
+          <div class="mb-8">
+            <h2 class="text-[24px] font-bold text-secondary-100 mb-4">{{ 'PRODUCT_DETAILS._configuration_options' | translate }}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              @for (char of prodChars; track char.id || $index) {
+                <article class="relative rounded-2xl bg-offerings-page border border-secondary-50 p-6">
+                  <div class="flex items-start justify-between gap-4">
+                    <h3 [ngClass]="{'break-all': hasLongWord(char.name, 20), 'break-words': !hasLongWord(char.name, 20)}"
+                      class="text-[18px] font-bold text-secondary-100 break-words">{{char.name}}</h3>
+                    @if (isOptionalCharacteristic(char)) {
+                      <span class="shrink-0 inline-flex items-center rounded-md bg-secondary-50 px-2 py-1 text-xs font-medium text-primary-100 border border-offerings-dashed-border">
+                        {{ 'PRODUCT_DETAILS._optional' | translate }}
+                      </span>
+                    }
+                  </div>
+                  @if (char.description) {
+                    <markdown [ngClass]="{'break-all': hasLongWord(char.description, 20), 'break-words': !hasLongWord(char.description, 20)}"
+                      class="mt-2 block text-[13px] leading-[20px] text-offerings-description-text" [data]="char.description"></markdown>
+                  }
+                  @if (char.productSpecCharacteristicValue?.length > 0) {
+                    <div class="mt-4 flex flex-col gap-2">
+                      @if (isBooleanCharacteristic(char)) {
+                        <div class="flex items-center gap-2">
+                          <span class="text-sm font-medium text-offerings-description-text">{{ 'PRODUCT_DETAILS._default' | translate }}</span>
+                          <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium"
+                            [ngClass]="getBooleanDefaultValue(char) ? 'bg-status-success-bg text-status-success-text' : 'bg-status-neutral-bg text-status-neutral-text'">
+                            {{ (getBooleanDefaultValue(char) ? 'PRODUCT_DETAILS._enabled' : 'PRODUCT_DETAILS._disabled') | translate }}
+                          </span>
+                        </div>
+                      } @else {
+                        @for (val of char.productSpecCharacteristicValue; track $index) {
+                          <div class="flex items-start gap-2">
+                            <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border" [ngClass]="val?.isDefault ? 'bg-primary-100 border-primary-100 text-offerings-on-dark' : 'border-offerings-border-strong bg-offerings-surface'">
+                              @if(val?.isDefault) {
+                                <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                </svg>
+                              }
+                            </div>
+                            <div class="min-w-0 flex-1">
+                              @if(val.value !== undefined && val.value !== null){
+                                <span [title]="getCharacteristicValueLabel(val)" class="block text-sm text-offerings-description-text break-all">{{ getCharacteristicValuePreview(val) }}</span>
+                              } @else {
+                                <span [title]="getCharacteristicRangeLabel(val)" class="block text-sm text-offerings-description-text break-all">{{ getCharacteristicRangePreview(val) }}</span>
+                              }
+                              @if(val?.isDefault && val.value !== undefined && val.value !== null && char.productSpecCharacteristicValue.length > 1) {
+                                <span class="mt-1 inline-flex items-center text-[11px] font-medium text-primary-100">
+                                  {{ 'PRODUCT_DETAILS._default' | translate }}
+                                </span>
+                              }
+                            </div>
+                          </div>
+                        }
+                      }
+                    </div>
+                  }
+                </article>
+              } @empty {
+                <div class="col-span-3 text-center py-8 text-offerings-description-text">
+                  {{ 'PRODUCT_DETAILS._no_chars' | translate }}
+                </div>
+              }
+            </div>
+          </div>
+        }
+
         @if(usageMetrics.length > 0){
           <h2 class="text-[24px] font-bold text-secondary-100 mb-4">{{ 'PRODUCT_DETAILS._usage_metrics' | translate }}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
@@ -469,42 +535,6 @@
             </div>
           </div>
         </div>
-
-        @if(prodChars.length > 0 || complianceProf.length > 0 || additionalCerts.length > 0){
-        <div class="mb-8">
-          <h2 class="text-[24px] font-bold text-secondary-100 mb-4">{{ 'PRODUCT_DETAILS._compliance_profile' | translate }}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @if(prodChars.length > 0){
-              <div class="rounded-2xl bg-offerings-page border border-secondary-50 p-6">
-                <h3 class="text-[18px] font-bold text-secondary-100 mb-4">{{ 'PRODUCT_DETAILS._product_characteristics' | translate }}</h3>
-                <div class="flex flex-col gap-3">
-                  @for (char of prodChars; track $index) {
-                    <div class="flex items-start justify-between gap-4">
-                      <span [ngClass]="{'break-all': hasLongWord(char.name, 20), 'break-words': !hasLongWord(char.name, 20)}" class="text-[14px] text-offerings-body">{{ char.name }}</span>
-                      @if(char.productSpecCharacteristicValue?.at(0)?.value; as val){
-                        <span class="shrink-0 text-[14px] font-semibold text-secondary-500 text-right">{{ val }}</span>
-                      }
-                    </div>
-                  }
-                </div>
-              </div>
-            }
-            @if(complianceProf.length > 0 || additionalCerts.length > 0){
-              <div class="rounded-2xl bg-offerings-page border border-secondary-50 p-6">
-                <h3 class="text-[18px] font-bold text-secondary-100 mb-4">{{ 'PRODUCT_DETAILS._certifications' | translate }}</h3>
-                <div class="flex flex-wrap gap-2">
-                  @for (cert of complianceProf; track $index) {
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-[13px] font-semibold border border-offerings-dashed-border text-secondary-500 bg-secondary-50">{{ cert.name }}</span>
-                  }
-                  @for (char of additionalCerts; track $index) {
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-[13px] font-semibold border border-offerings-dashed-border text-secondary-500 bg-secondary-50">{{ normalizeName(char.name) }}</span>
-                  }
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-        }
 
         @if(complianceDocuments.length > 0){
         <div class="mb-8">
