@@ -7,11 +7,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { ProductSpecServiceService } from 'src/app/services/product-spec-service.service';
+import { AttachmentServiceService } from 'src/app/services/attachment-service.service';
 
 describe('CreateProductSpecComponent', () => {
   let component: CreateProductSpecComponent;
   let fixture: ComponentFixture<CreateProductSpecComponent>;
   let prodSpecService: ProductSpecServiceService;
+  let attachmentService: AttachmentServiceService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -23,6 +25,7 @@ describe('CreateProductSpecComponent', () => {
     fixture = TestBed.createComponent(CreateProductSpecComponent);
     component = fixture.componentInstance;
     prodSpecService = TestBed.inject(ProductSpecServiceService);
+    attachmentService = TestBed.inject(AttachmentServiceService);
     fixture.detectChanges();
   });
 
@@ -155,6 +158,22 @@ describe('CreateProductSpecComponent', () => {
 
     expect(component.isGeneralInfoStepValid()).toBeTrue();
     expect(component.validateCurrentStep()).toBeTrue();
+  });
+
+  it('should reject files whose MIME type is not an allowed image format', () => {
+    const uploadSpy = spyOn(attachmentService, 'uploadFile');
+    const pdfFile = new File(['pdf'], 'document.pdf', { type: 'application/pdf' });
+    const input = { files: [pdfFile], value: 'document.pdf' } as unknown as HTMLInputElement;
+
+    component.onProductImageSelected({ target: input } as unknown as Event);
+
+    expect(uploadSpy).not.toHaveBeenCalled();
+    expect(component.productImage).toBeNull();
+    expect(component.productImageRef).toBeNull();
+    expect(component.productImageTouched).toBeTrue();
+    expect(component.errorMessage).toBe('File must have a valid image format!');
+    expect(component.showError).toBeTrue();
+    expect(input.value).toBe('');
   });
 
   it('should keep an empty visited dataspace step navigable', () => {

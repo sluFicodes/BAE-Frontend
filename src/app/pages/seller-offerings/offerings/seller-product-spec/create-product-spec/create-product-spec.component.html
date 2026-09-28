@@ -66,7 +66,7 @@
                   </div>
                   <p class="text-sm text-offerings-body"><span class="text-primary-100 font-semibold">{{ 'CREATE_PROD_SPEC._choose_files' | translate }}</span> {{ 'CREATE_PROD_SPEC._or_drop_here' | translate }}</p>
                   <p class="text-xs text-offerings-muted-text mt-1">{{ 'CREATE_PROD_SPEC._image_formats' | translate }}</p>
-                  <input id="prod-image-upload" type="file" class="hidden" accept="image/svg+xml,image/png,image/jpeg,image/gif" (change)="onProductImageSelected($event)"/>
+                  <input id="prod-image-upload" data-cy="uploadImage" type="file" class="hidden" accept="image/svg+xml,image/png,image/jpeg,image/gif" (change)="onProductImageSelected($event)"/>
                 </label>
                 @if(showProductImageRequiredError()){
                   <p class="mt-1 text-xs text-status-danger-border">{{ 'CREATE_PROD_SPEC._mandatory' | translate }}</p>
@@ -92,7 +92,7 @@
                   </div>
                   <div class="flex items-center gap-3 shrink-0">
                     <label for="prod-image-replace" class="text-sm font-semibold text-primary-100 cursor-pointer hover:underline">{{ 'CREATE_PROD_SPEC._replace' | translate }}</label>
-                    <input id="prod-image-replace" type="file" class="hidden" accept="image/svg+xml,image/png,image/jpeg,image/gif" (change)="onProductImageSelected($event)"/>
+                    <input id="prod-image-replace" data-cy="uploadImage" type="file" class="hidden" accept="image/svg+xml,image/png,image/jpeg,image/gif" (change)="onProductImageSelected($event)"/>
                     <button type="button" (click)="removeProductImage()" class="text-offerings-disabled hover:text-offerings-muted-text">
                       <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>

@@ -802,8 +802,10 @@
       <p class="dome-body-small mb-6 mt-2">{{ 'CREATE_OFFER._select_plan_type' | translate }}</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <button type="button" (click)="selectedNewPlanType = 'standard'"
-          class="plan-card text-left rounded-2xl border p-6"
+        <button data-cy="standardPlanType" type="button" (click)="selectedNewPlanType = 'standard'"
+          [disabled]="!hasPricePlanConfigurationOptions"
+          [attr.aria-describedby]="!hasPricePlanConfigurationOptions ? 'standardPlanConfigurationHint' : null"
+          class="plan-card text-left rounded-2xl border p-6 disabled:cursor-not-allowed disabled:opacity-60"
           [class.bg-offerings-surface]="selectedNewPlanType !== 'standard'"
           [class.border-offerings-border]="selectedNewPlanType !== 'standard'"
           [style.background-color]="selectedNewPlanType === 'standard' ? 'rgb(var(--theme-offerings-selected-bg))' : null"
@@ -811,6 +813,11 @@
           [style.box-shadow]="selectedNewPlanType === 'standard' ? '0px 4px 24px rgb(var(--theme-offerings-shadow-rgb) / 0.2)' : null">
           <h4 class="dome-heading-6 mb-3">{{ 'CREATE_OFFER._standard_plan' | translate }}</h4>
           <p class="dome-body-small">{{ 'CREATE_OFFER._standard_plan_desc' | translate }}</p>
+          @if(!hasPricePlanConfigurationOptions){
+            <p id="standardPlanConfigurationHint" data-cy="standardPlanConfigurationHint" class="mt-3 text-xs text-status-danger-border">
+              {{ 'CREATE_OFFER._standard_plan_requires_configuration_options' | translate }}
+            </p>
+          }
         </button>
         <button type="button" (click)="selectedNewPlanType = 'flex'"
           class="plan-card text-left rounded-2xl border p-6"
