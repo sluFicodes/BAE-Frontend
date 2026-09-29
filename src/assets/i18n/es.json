@@ -3223,12 +3223,16 @@
     "_delete_service_spec_desc": "This will mark \"{{ name }}\" as deleted and remove it from active service specifications.",
     "_delete_resource_spec_title": "Delete resource specification?",
     "_delete_resource_spec_desc": "This will mark \"{{ name }}\" as deleted and remove it from active resource specifications.",
+    "_delete_usage_spec_title": "Delete pay per use metric?",
+    "_delete_usage_spec_desc": "This will mark \"{{ name }}\" as deleted and remove it from active pay per use metrics.",
     "_product_spec_delete_success": "Product specification deleted",
     "_product_spec_delete_error": "Could not delete this product specification.",
     "_service_spec_delete_success": "Service specification deleted",
     "_service_spec_delete_error": "Could not delete this service specification.",
     "_resource_spec_delete_success": "Resource specification deleted",
-    "_resource_spec_delete_error": "Could not delete this resource specification."
+    "_resource_spec_delete_error": "Could not delete this resource specification.",
+    "_usage_spec_delete_success": "Pay per use metric deleted",
+    "_usage_spec_delete_error": "Could not delete this pay per use metric."
   },
   "ADMIN": {
     "_admin": "Administration",
@@ -3537,6 +3541,8 @@
     "_summary": "Summary",
     "_summary_desc": "Review the details before saving.",
     "_unique": "Name must be unique for this provider.",
+    "_validate_success": "Pay per use metric successfully validated",
+    "_validate_error": "There was an error while validating the pay per use metric!",
     "_cancel": "Cancel"
   },
   "ABOUT_DOME": {
