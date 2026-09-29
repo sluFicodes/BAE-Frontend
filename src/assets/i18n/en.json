@@ -3528,11 +3528,13 @@
     "_name_placeholder": "Enter a name",
     "_metrics": "Metrics",
     "_metrics_desc": "Define the metrics collected for this pay per use metric.",
+    "_metrics_required": "At least one metric is required.",
     "_add_metric_desc": "Add a new metric to start collecting data",
     "_metric_name_placeholder": "Enter a metric name",
     "_metric_description_placeholder": "Describe this metric",
     "_summary": "Summary",
     "_summary_desc": "Review the details before saving.",
+    "_unique": "Name must be unique for this provider.",
     "_cancel": "Cancel"
   },
   "ABOUT_DOME": {
