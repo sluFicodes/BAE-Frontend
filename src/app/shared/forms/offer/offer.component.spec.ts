@@ -164,6 +164,93 @@ describe('OfferComponent', () => {
     expect(component.productOfferForm.get('catalogue')?.value).toEqual({ id: 'catalogue-2', name: 'Secondary catalogue' });
   });
 
+  it('should ask for confirmation before unlinking price plans when the product specification changes', async () => {
+    const api = (component as any).api;
+    const existingPlan = { id: 'plan-1', href: 'plan-1', name: 'Standard plan', paymentOnline: true };
+    const getProductSpecSpy = spyOn(api, 'getProductSpecification').and.resolveTo({
+      id: 'prod-spec-2',
+      href: 'prod-spec-2',
+      name: 'Specification without characteristics',
+      productSpecCharacteristic: []
+    });
+    const updateOfferSpy = spyOn(api, 'updateProductOffering').and.returnValue(of({ id: 'offer-1' }));
+    const updatePricePlanSpy = spyOn(api, 'updateOfferingPrice');
+
+    component.formType = 'update';
+    component.offer = {
+      id: 'offer-1',
+      validFor: { startDateTime: '2026-01-01T00:00:00.000Z' },
+      productOfferingPrice: [{ id: 'plan-1', href: 'plan-1' }],
+      productOfferingTerm: []
+    };
+    component.availableProdSpecs = [
+      { id: 'prod-spec-1', name: 'Specification with characteristics' },
+      { id: 'prod-spec-2', name: 'Specification without characteristics' }
+    ];
+    component.selectedProdSpecId = 'prod-spec-1';
+    component.pricePlans = [existingPlan];
+    component.productOfferForm.get('generalInfo')?.patchValue({
+      name: 'Offer name',
+      version: '1.0',
+      status: 'Active'
+    });
+    component.productOfferForm.patchValue({
+      prodSpec: { id: 'prod-spec-1' },
+      pricePlans: [existingPlan]
+    });
+
+    const select = { value: 'prod-spec-2' };
+    await component.onProdSpecChange({ target: select } as unknown as Event);
+
+    expect(component.showProdSpecChangeModal).toBeTrue();
+    expect(select.value).toBe('prod-spec-1');
+    expect(component.selectedProdSpecId).toBe('prod-spec-1');
+    expect(component.productOfferForm.get('pricePlans')?.value).toEqual([existingPlan]);
+    expect(getProductSpecSpy).not.toHaveBeenCalled();
+
+    await component.confirmProdSpecChange();
+
+    expect(component.showProdSpecChangeModal).toBeFalse();
+    expect(component.selectedProdSpecId).toBe('prod-spec-2');
+    expect(component.productOfferForm.get('pricePlans')?.value).toEqual([]);
+    expect(component.pricePlans).toEqual([]);
+
+    await component.updateOffer();
+
+    expect(updatePricePlanSpy).not.toHaveBeenCalled();
+    expect(updateOfferSpy.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
+      productSpecification: { id: 'prod-spec-2', href: 'prod-spec-2' },
+      productOfferingPrice: []
+    }));
+  });
+
+  it('should keep the current product specification and price plans when the change is cancelled', async () => {
+    const api = (component as any).api;
+    const existingPlan = { id: 'plan-1', href: 'plan-1', name: 'Standard plan', paymentOnline: true };
+    const getProductSpecSpy = spyOn(api, 'getProductSpecification');
+    component.availableProdSpecs = [
+      { id: 'prod-spec-1', name: 'Specification with characteristics' },
+      { id: 'prod-spec-2', name: 'Specification without characteristics' }
+    ];
+    component.selectedProdSpecId = 'prod-spec-1';
+    component.pricePlans = [existingPlan];
+    component.productOfferForm.patchValue({
+      prodSpec: { id: 'prod-spec-1' },
+      pricePlans: [existingPlan]
+    });
+
+    await component.onProdSpecChange({ target: { value: 'prod-spec-2' } } as unknown as Event);
+    component.cancelProdSpecChange();
+
+    expect(component.showProdSpecChangeModal).toBeFalse();
+    expect(component.pendingProdSpecId).toBeNull();
+    expect(component.selectedProdSpecId).toBe('prod-spec-1');
+    expect(component.productOfferForm.get('prodSpec')?.value).toEqual({ id: 'prod-spec-1' });
+    expect(component.productOfferForm.get('pricePlans')?.value).toEqual([existingPlan]);
+    expect(component.pricePlans).toEqual([existingPlan]);
+    expect(getProductSpecSpy).not.toHaveBeenCalled();
+  });
+
   it('should only auto-select launched catalogs when catalog management is disabled', async () => {
     const api = (component as any).api;
     const launchedCatalog = { id: 'catalogue-launched', name: 'Published catalogue', lifecycleStatus: 'Launched' };
