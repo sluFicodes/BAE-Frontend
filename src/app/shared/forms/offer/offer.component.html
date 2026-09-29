@@ -787,6 +787,42 @@
   </div>
 }
 
+@if(showProdSpecChangeModal){
+  <div data-cy="productSpecChangeConfirmation" role="dialog" aria-modal="true"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-offerings-overlay bg-opacity-40 p-4"
+    (click)="cancelProdSpecChange()">
+    <div class="bg-offerings-surface rounded-2xl shadow-xl p-8 w-full max-w-lg" (click)="$event.stopPropagation()">
+      <div class="flex justify-end">
+        <button data-cy="cancelProductSpecChangeIcon" type="button" (click)="cancelProdSpecChange()"
+          class="text-offerings-muted-text hover:text-offerings-body">
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="flex flex-col items-center text-center -mt-4">
+        <div class="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-status-warning-bg">
+          <svg class="w-8 h-8 text-status-warning-text" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-extrabold text-offerings-text mb-3">{{ 'CREATE_OFFER._product_spec_change_title' | translate }}</h3>
+        <p class="text-sm text-offerings-body mb-6">{{ 'CREATE_OFFER._product_spec_change_warning' | translate }}</p>
+        <div class="flex flex-col sm:flex-row gap-3 w-full">
+          <button data-cy="cancelProductSpecChange" type="button" (click)="cancelProdSpecChange()"
+            class="flex-1 px-4 py-2.5 text-sm font-semibold text-primary-100 rounded-lg border border-primary-100 hover:bg-primary-50/10">
+            {{ 'CREATE_OFFER._cancel' | translate }}
+          </button>
+          <button data-cy="confirmProductSpecChange" type="button" (click)="confirmProdSpecChange()"
+            class="flex-1 px-4 py-2.5 text-sm font-semibold text-offerings-on-dark rounded-lg bg-primary-100 hover:bg-primary-50">
+            {{ 'CREATE_OFFER._product_spec_change_accept' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
 
 @if(showSelectPlanTypeModal){
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-offerings-overlay bg-opacity-40 p-4" (click)="closeSelectPlanTypeModal()">
