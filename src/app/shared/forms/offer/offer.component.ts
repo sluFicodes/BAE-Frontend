@@ -714,6 +714,11 @@ export class OfferComponent implements OnInit, OnDestroy {
     const select = event.target as HTMLSelectElement;
     const value = select.value;
     const previousProdSpecId = this.productOfferForm.get('prodSpec')?.value?.id || this.selectedProdSpecId;
+    if (this.formType === 'update') {
+      select.value = previousProdSpecId;
+      return;
+    }
+
     const pricePlans = this.productOfferForm.get('pricePlans')?.value;
     if (previousProdSpecId && previousProdSpecId !== value && Array.isArray(pricePlans) && pricePlans.length > 0) {
       this.pendingProdSpecId = value;

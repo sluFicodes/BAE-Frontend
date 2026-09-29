@@ -2839,6 +2839,7 @@
     "_product_spec_change_title": "Change product specification?",
     "_product_spec_change_warning": "Changing the product specification will remove all price plans from this offer. This change will only be applied when you save the offer.",
     "_product_spec_change_accept": "Accept",
+    "_product_spec_update_locked": "The product specification cannot be changed after the offer has been created.",
     "_draft_saved": "Draft saved",
     "_draft_save_error": "Failed to save draft",
     "_draft_catalogue_unavailable": "Could not save draft: provider catalogue is unavailable.",
