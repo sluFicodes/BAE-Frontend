@@ -136,6 +136,8 @@ export class OfferComponent implements OnInit, OnDestroy {
   loadingData: boolean = false;
 
   showLeaveModal: boolean = false;
+  showProdSpecChangeModal: boolean = false;
+  pendingProdSpecId: string | null = null;
 
   availableProdSpecs: any[] = [];
   loadingProdSpecs: boolean = false;
@@ -709,7 +711,41 @@ export class OfferComponent implements OnInit, OnDestroy {
   }
 
   async onProdSpecChange(event: Event): Promise<void> {
-    const value = (event.target as HTMLSelectElement).value;
+    const select = event.target as HTMLSelectElement;
+    const value = select.value;
+    const previousProdSpecId = this.productOfferForm.get('prodSpec')?.value?.id || this.selectedProdSpecId;
+    if (this.formType === 'update') {
+      select.value = previousProdSpecId;
+      return;
+    }
+
+    const pricePlans = this.productOfferForm.get('pricePlans')?.value;
+    if (previousProdSpecId && previousProdSpecId !== value && Array.isArray(pricePlans) && pricePlans.length > 0) {
+      this.pendingProdSpecId = value;
+      this.showProdSpecChangeModal = true;
+      select.value = previousProdSpecId;
+      return;
+    }
+
+    await this.applyProdSpecChange(value);
+  }
+
+  async confirmProdSpecChange(): Promise<void> {
+    const value = this.pendingProdSpecId;
+    this.showProdSpecChangeModal = false;
+    this.pendingProdSpecId = null;
+    if (value === null) return;
+
+    this.unlinkPricePlansFromOffer();
+    await this.applyProdSpecChange(value);
+  }
+
+  cancelProdSpecChange(): void {
+    this.showProdSpecChangeModal = false;
+    this.pendingProdSpecId = null;
+  }
+
+  private async applyProdSpecChange(value: string): Promise<void> {
     this.selectedProdSpecId = value;
     if (!value) {
       this.productOfferForm.patchValue({ prodSpec: null });
@@ -728,6 +764,13 @@ export class OfferComponent implements OnInit, OnDestroy {
     } catch (err) {
       console.error('Failed to load full product specification', err);
     }
+  }
+
+  private unlinkPricePlansFromOffer(): void {
+    this.productOfferForm.patchValue({ pricePlans: [] });
+    this.pricePlans = [];
+    this.openActionMenuIndex = null;
+    this.cancelCurrentPricePlanForm();
   }
 
   async loadGeneralInfoCategoryFilterOptions(): Promise<void> {
