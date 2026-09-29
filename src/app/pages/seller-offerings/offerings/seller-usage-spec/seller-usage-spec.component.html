@@ -13,6 +13,18 @@
     </button>
   </div>
 
+  <div class="border-b border-offerings-border dark:border-secondary-200 flex items-stretch">
+    @for (tab of ['Draft','Validated','Deleted']; track tab) {
+      <button type="button" (click)="selectTab(tab)" [disabled]="loading"
+        class="w-56 flex items-center justify-center gap-2 px-4 py-3 text-lg font-semibold tracking-[0.5px] leading-6 border-b-[3px] -mb-px transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+        [ngClass]="selectedTab === tab ? 'text-offerings-text dark:text-offerings-on-dark border-primary-100 dark:border-primary-50' : 'text-offerings-muted-text dark:text-offerings-on-dark-body border-transparent hover:text-offerings-body dark:hover:text-offerings-on-dark'">
+        {{ ('OFFERINGS._' + tab.toLowerCase()) | translate }}
+        <span class="inline-flex items-center justify-center min-w-[28px] h-6 px-2 rounded-full text-sm font-semibold"
+          [ngClass]="selectedTab === tab ? 'bg-secondary-50 text-secondary-100 dark:bg-secondary-200 dark:text-offerings-on-dark' : 'bg-offerings-muted text-offerings-body dark:bg-secondary-300 dark:text-offerings-on-dark-body'">{{ statusCounts[tab] }}</span>
+      </button>
+    }
+  </div>
+
   <div class="rounded-2xl flex-1" [class.dashed-pane]="loading || usageSpecs.length === 0">
     @if (loading) {
       <div role="status" class="w-full flex justify-center items-center py-24">
@@ -46,7 +58,9 @@
           <thead class="text-xs text-offerings-muted-text dark:text-offerings-on-dark-body uppercase bg-offerings-surface dark:bg-secondary-200 border-b border-offerings-border dark:border-secondary-200">
             <tr class="h-[56px]">
               <th scope="col" class="px-6 font-semibold rounded-tl-2xl">{{ 'OFFERINGS._name' | translate }}</th>
+              <th scope="col" class="px-6 font-semibold">{{ 'OFFERINGS._status' | translate }}</th>
               <th scope="col" class="hidden md:table-cell px-6 font-semibold">{{ 'USAGE_SPECS._description' | translate }}</th>
+              <th scope="col" class="hidden md:table-cell px-6 font-semibold">{{ 'OFFERINGS._last_update' | translate }}</th>
               <th scope="col" class="px-6 font-semibold text-right rounded-tr-2xl">{{ 'OFFERINGS._actions' | translate }}</th>
             </tr>
           </thead>
@@ -56,8 +70,16 @@
                 <td [ngClass]="{'break-all': hasLongWord(usage.name, 20),'break-words': !hasLongWord(usage.name, 20), 'rounded-bl-2xl': last}" class="px-6 text-offerings-text dark:text-offerings-on-dark group-hover:bg-offerings-page dark:group-hover:bg-secondary-200">
                   {{ usage.name }}
                 </td>
+                <td class="px-6 group-hover:bg-offerings-page dark:group-hover:bg-secondary-200">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [style.background-color]="rowStatusBadge(usage).bg"
+                    [style.color]="rowStatusBadge(usage).color">{{ rowStatusBadge(usage).text }}</span>
+                </td>
                 <td class="hidden md:table-cell px-6 text-offerings-muted-text dark:text-offerings-on-dark-body group-hover:bg-offerings-page dark:group-hover:bg-secondary-200">
                   {{ usage.description }}
+                </td>
+                <td class="hidden md:table-cell px-6 text-offerings-muted-text dark:text-offerings-on-dark-body whitespace-nowrap group-hover:bg-offerings-page dark:group-hover:bg-secondary-200">
+                  {{ usage.lastUpdate | date:'dd/MM/yyyy - HH:mm' }}
                 </td>
                 <td class="px-6 text-right relative group-hover:bg-offerings-page dark:group-hover:bg-secondary-200" [ngClass]="{'rounded-br-2xl': last}">
                   <button type="button" (click)="toggleMenu(idx, $event)" class="p-1 hover:bg-offerings-neutral dark:hover:bg-secondary-100 rounded text-offerings-muted-text dark:text-offerings-on-dark-body">

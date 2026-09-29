@@ -256,6 +256,7 @@ export class UsageSpecComponent implements OnInit, OnDestroy, OnChanges {
     const usageSpec: any = {
       name: generalInfo.name,
       description: generalInfo.description || '',
+      lifecycleStatus: 'Active',
       specCharacteristic: metrics,
       relatedParty: [
         {
@@ -298,6 +299,7 @@ export class UsageSpecComponent implements OnInit, OnDestroy, OnChanges {
     const basePayload: any = {
       name: this.usageSpec.name,
       description: this.usageSpec.description,
+      lifecycleStatus: this.usageSpec.lifecycleStatus || 'Active',
       specCharacteristic: this.usageSpec.specCharacteristic
     };
 

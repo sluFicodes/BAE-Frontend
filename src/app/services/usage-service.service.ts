@@ -25,9 +25,20 @@ export class UsageServiceService {
     return lastValueFrom(this.http.get<any>(url));
   }
 
-  getUsageSpecs(page:any,partyId:any) {
-
+  getUsageSpecs(page:any, status:any[], partyId:any) {
     let url = `${UsageServiceService.BASE_URL}/usage/usageSpecification?limit=${UsageServiceService.USAGE_SPEC_LIMIT}&offset=${page}&relatedParty.id=${partyId}`;
+
+    let lifeStatus = '';
+    if(status.length > 0){
+      for(let i=0; i < status.length; i++){
+        if(i == status.length - 1){
+          lifeStatus = lifeStatus + status[i]
+        } else {
+          lifeStatus = lifeStatus + status[i] + ','
+        }
+      }
+      url = url + '&lifecycleStatus=' + lifeStatus;
+    }
 
     return lastValueFrom(this.http.get<any[]>(url));
   }
