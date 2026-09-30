@@ -180,6 +180,7 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
   loading:boolean=false;
   editingCharIdx: number | null = null;
   openCharMenuIdx: number | null = null;
+  showLeaveModal: boolean = false;
   showSuccessModal: boolean = false;
   createdProdId: string | null = null;
 
@@ -218,6 +219,8 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
     .subscribe(ev => {
       if(ev.type === 'ChangedSession') {
         this.initPartyInfo();
+      } else if (ev.type === 'LeaveProductSpecEditorRequest') {
+        this.onBackClick();
       }
     })
   }
@@ -311,7 +314,7 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   ngDoCheck(){
-    const open = !!(this.itemModal.type || this.usageModal.isOpen || this.showSuccessModal);
+    const open = !!(this.itemModal.type || this.usageModal.isOpen || this.showSuccessModal || this.showLeaveModal);
     document.body.style.overflow = open ? 'hidden' : '';
   }
 
@@ -335,6 +338,62 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
 
   goBack() {
     this.eventMessage.emitSellerProductSpec(true);
+  }
+
+  onBackClick(): void {
+    if (!this.isEditMode && this.hasAnyDraftData()) {
+      this.showLeaveModal = true;
+    } else {
+      this.goBack();
+    }
+  }
+
+  hasAnyDraftData(): boolean {
+    return !!(
+      this.generalForm.value.name ||
+      this.generalForm.value.description ||
+      this.generalForm.value.dspCompatible ||
+      this.productImage ||
+      this.productImageRef?.url ||
+      this.attachments.length > 0 ||
+      this.howItWorks?.trim() ||
+      this.keyFeatures.length > 0 ||
+      this.businessBenefits.length > 0 ||
+      this.useCases.length > 0 ||
+      this.prodChars.length > 0 ||
+      this.dataspaceChars.length > 0 ||
+      this.endpointUrls.length > 0 ||
+      this.linkedServiceSpecIds.length > 0 ||
+      this.linkedResourceSpecIds.length > 0 ||
+      this.faqs.length > 0 ||
+      this.selfAttestationFile ||
+      this.complianceFiles.length > 0
+    );
+  }
+
+  cancelLeave(): void {
+    this.showLeaveModal = false;
+  }
+
+  discardLeave(): void {
+    this.showLeaveModal = false;
+    this.goBack();
+  }
+
+  canSaveDraftProductSpec(): boolean {
+    return !this.loading && !this.uploadingImage && !this.uploadingAttachment && this.allRequiredStepsComplete();
+  }
+
+  confirmLeave(): void {
+    if (!this.canSaveDraftProductSpec()) {
+      this.productImageTouched = true;
+      this.generalForm.markAllAsTouched();
+      return;
+    }
+
+    this.showLeaveModal = false;
+    this.buildProductToCreate();
+    this.finishAsDraft();
   }
 
   finishAsDraft(){
@@ -1008,9 +1067,10 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
 
   createProduct(){
     this.productImageTouched = true;
-    if (!this.isGeneralInfoStepValid()) {
-      this.currentStep = 0;
-      this.highestStep = Math.max(this.highestStep, 0);
+    if (!this.allRequiredStepsComplete()) {
+      const firstInvalidRequiredStep = this.steps.findIndex((_: any, i: number) => !this.isOptionalStep(i) && !this.completedStep(i));
+      this.currentStep = firstInvalidRequiredStep === -1 ? 0 : firstInvalidRequiredStep;
+      this.highestStep = Math.max(this.highestStep, this.currentStep);
       return;
     }
 
@@ -1536,6 +1596,9 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
     if (this.isCurrentStep('general')) {
       return this.isGeneralInfoStepValid();
     }
+    if (this.isCurrentStep('details')) {
+      return this.isProductDetailsStepValid();
+    }
     if (this.isCurrentStep('dataspace') && this.isDspCompatibleSelected()) {
       return this.endpointUrls.length > 0 && this.dspConfigForm.valid;
     }
@@ -1604,6 +1667,8 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
     switch (this.stepKeyAt(index)) {
       case 'general':
         return this.isGeneralInfoStepValid();
+      case 'details':
+        return this.isProductDetailsStepValid();
       case 'dataspace':
         return this.isDspCompatibleSelected() ? this.endpointUrls.length > 0 && this.dspConfigForm.valid : this.stepHasContent(index);
       default: return this.stepHasContent(index);
@@ -1612,6 +1677,13 @@ export class CreateProductSpecComponent implements OnInit, OnDestroy, DoCheck {
 
   isGeneralInfoStepValid(): boolean {
     return !!this.generalForm?.valid && this.isProductImageValid();
+  }
+
+  isProductDetailsStepValid(): boolean {
+    const description = (this.generalForm.get('description')?.value || '').trim();
+    return !!description
+      && (this.generalForm.get('description')?.valid || false)
+      && !!this.howItWorks?.trim();
   }
 
   isProductImageValid(): boolean {

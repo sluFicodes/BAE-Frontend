@@ -384,7 +384,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
         this.eventMessage.emitLeaveOfferEditorRequest();
         break;
       case 'productSpec':
-        this.eventMessage.emitSellerProductSpec(true);
+        this.eventMessage.emitLeaveProductSpecEditorRequest();
         break;
       case 'serviceSpec':
         this.eventMessage.emitSellerServiceSpec(true);
