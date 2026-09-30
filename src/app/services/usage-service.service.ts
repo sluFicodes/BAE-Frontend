@@ -43,6 +43,27 @@ export class UsageServiceService {
     return lastValueFrom(this.http.get<any[]>(url));
   }
 
+  async getUsageSpecsByStatus(status:any[], partyId:any) {
+    const usageSpecs:any[] = [];
+    let offset = 0;
+    const limit = Number(UsageServiceService.USAGE_SPEC_LIMIT);
+
+    while (true) {
+      const page = await this.getUsageSpecs(offset, status, partyId);
+      const items = Array.isArray(page) ? page : [];
+
+      usageSpecs.push(...items);
+
+      if (items.length < limit) {
+        break;
+      }
+
+      offset += limit;
+    }
+
+    return usageSpecs;
+  }
+
   getAllUsageSpecs(partyId:any) {
 
     let url = `${UsageServiceService.BASE_URL}/usage/usageSpecification?relatedParty.id=${partyId}`;

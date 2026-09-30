@@ -1571,7 +1571,7 @@ export class OfferComponent implements OnInit, OnDestroy {
   private async loadUsageSpecs(): Promise<void> {
     if (!this.partyId) return;
     try {
-      const data = await this.usageService.getAllUsageSpecs(this.partyId);
+      const data = await this.usageService.getUsageSpecsByStatus(['Launched'], this.partyId);
       this.usageSpecs = Array.isArray(data) ? data : [];
     } catch {
       this.usageSpecs = [];
