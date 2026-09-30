@@ -968,7 +968,7 @@
           </div>
           <div>
             <label class="block text-sm font-semibold text-offerings-text mb-2">{{ 'CREATE_PROD_SPEC._type' | translate }}</label>
-            <select data-cy="prodSpecCharType" id="type" [value]="charTypeSelected" (change)="onTypeChange($event)"
+            <select data-cy="prodSpecCharType" id="type" [ngModel]="charTypeSelected" [ngModelOptions]="{ standalone: true }" (change)="onTypeChange($event)"
               class="bg-offerings-surface border border-offerings-border-strong text-offerings-text text-sm rounded-lg focus:ring-primary-100 focus:border-primary-100 block w-full p-2.5">
               @if(isDataspaceConfigurationStep()){
                 <option value="credentialsConfiguration">{{ 'CREATE_PROD_SPEC._type_credentials_configuration' | translate }}</option>

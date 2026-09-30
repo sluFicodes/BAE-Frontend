@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { CreateProductSpecComponent } from './create-product-spec.component';
 import { TranslateModule } from '@ngx-translate/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
@@ -20,7 +20,7 @@ describe('CreateProductSpecComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [CreateProductSpecComponent],
-      imports: [TranslateModule.forRoot(), ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [TranslateModule.forRoot(), FormsModule, ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
@@ -39,6 +39,44 @@ describe('CreateProductSpecComponent', () => {
   it('getValuePreview should render object values as JSON text', () => {
     expect(component.getValuePreview({ issuer: 'did:example:issuer' })).toBe('{"issuer":"did:example:issuer"}');
   });
+
+  for (const editMode of [false, true]) {
+    for (const { type, values } of [
+      { type: 'number', values: [{ value: 0, unitOfMeasure: 'GB', isDefault: false }, { value: 10, unitOfMeasure: 'GB', isDefault: true }] },
+      { type: 'range', values: [{ valueFrom: 0, valueTo: 10, unitOfMeasure: 'GB', isDefault: true }] },
+      { type: 'boolean', values: [{ value: true, isDefault: false }, { value: false, isDefault: true }] }
+    ]) {
+      it(`should show the saved ${type} in the type dropdown in ${editMode ? 'edit' : 'create'} mode`, async () => {
+        component.onTypeChange({ target: { value: type } });
+        component.charsForm.patchValue({ name: 'Config option' });
+        component.creatingChars = values as any;
+        component.saveChar();
+
+        if (editMode) {
+          component.generalForm.patchValue({ name: 'Product' });
+          component.buildProductToCreate();
+          component.prod = { ...component.productSpecToCreate, id: 'prod-1' };
+          component.ngOnInit();
+        }
+
+        component.editChar(0);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const select: HTMLSelectElement = fixture.nativeElement.querySelector('[data-cy="prodSpecCharType"]');
+        expect(component.charTypeSelected).toBe(type);
+        expect(select.value).toBe(type);
+        expect(component.creatingChars).toEqual(values as any);
+        if (type === 'boolean') {
+          expect(component.booleanDefaultTrue).toBeFalse();
+        }
+
+        component.saveChar();
+        expect(component.prodChars[0].productSpecCharacteristicValue).toEqual(values as any);
+      });
+    }
+  }
 
   it('should build update patches without create-only scalar defaults', () => {
     component.prod = {
