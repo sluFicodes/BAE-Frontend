@@ -8,12 +8,14 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { ProductSpecServiceService } from 'src/app/services/product-spec-service.service';
 import { AttachmentServiceService } from 'src/app/services/attachment-service.service';
+import { EventMessageService } from 'src/app/services/event-message.service';
 
 describe('CreateProductSpecComponent', () => {
   let component: CreateProductSpecComponent;
   let fixture: ComponentFixture<CreateProductSpecComponent>;
   let prodSpecService: ProductSpecServiceService;
   let attachmentService: AttachmentServiceService;
+  let eventMessage: EventMessageService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -26,6 +28,7 @@ describe('CreateProductSpecComponent', () => {
     component = fixture.componentInstance;
     prodSpecService = TestBed.inject(ProductSpecServiceService);
     attachmentService = TestBed.inject(AttachmentServiceService);
+    eventMessage = TestBed.inject(EventMessageService);
     fixture.detectChanges();
   });
 
@@ -160,6 +163,26 @@ describe('CreateProductSpecComponent', () => {
     expect(component.validateCurrentStep()).toBeTrue();
   });
 
+  it('should require product description and how it works to complete the details step', () => {
+    component.generalForm.patchValue({ name: 'Product' });
+    component.productImageRef = {
+      name: 'Profile Picture',
+      url: 'https://example.test/image.png',
+      attachmentType: 'image/png'
+    };
+    component.currentStep = 1;
+
+    expect(component.isProductDetailsStepValid()).toBeFalse();
+    expect(component.validateCurrentStep()).toBeFalse();
+
+    component.generalForm.patchValue({ description: 'Product overview' });
+    expect(component.isProductDetailsStepValid()).toBeFalse();
+
+    component.howItWorks = 'How it works';
+    expect(component.isProductDetailsStepValid()).toBeTrue();
+    expect(component.validateCurrentStep()).toBeTrue();
+  });
+
   it('should reject files whose MIME type is not an allowed image format', () => {
     const uploadSpy = spyOn(attachmentService, 'uploadFile');
     const pdfFile = new File(['pdf'], 'document.pdf', { type: 'application/pdf' });
@@ -285,5 +308,92 @@ describe('CreateProductSpecComponent', () => {
     expect(body.version).toBeUndefined();
     expect(body.brand).toBeUndefined();
     expect(body.productNumber).toBeUndefined();
+  });
+
+  it('should leave directly when leaving product spec creation without draft data', () => {
+    const backSpy = spyOn(eventMessage, 'emitSellerProductSpec');
+
+    component.onBackClick();
+
+    expect(component.showLeaveModal).toBeFalse();
+    expect(backSpy).toHaveBeenCalledWith(true);
+  });
+
+  it('should show the leave modal when leaving product spec creation with draft data', () => {
+    const backSpy = spyOn(eventMessage, 'emitSellerProductSpec');
+    component.generalForm.patchValue({ name: 'Draft product' });
+
+    component.onBackClick();
+
+    expect(component.showLeaveModal).toBeTrue();
+    expect(backSpy).not.toHaveBeenCalled();
+  });
+
+  it('should keep the leave modal open when saving draft without mandatory data', () => {
+    const saveSpy = spyOn(prodSpecService, 'postProdSpec');
+    component.showLeaveModal = true;
+    component.generalForm.patchValue({ name: 'Draft product' });
+
+    component.confirmLeave();
+
+    expect(saveSpy).not.toHaveBeenCalled();
+    expect(component.showLeaveModal).toBeTrue();
+    expect(component.productImageTouched).toBeTrue();
+  });
+
+  it('should keep the leave modal open when product details mandatory data is missing', () => {
+    const saveSpy = spyOn(prodSpecService, 'postProdSpec');
+    component.showLeaveModal = true;
+    component.generalForm.patchValue({ name: 'Draft product' });
+    component.productImageRef = {
+      name: 'Profile Picture',
+      url: 'https://example.test/image.png',
+      attachmentType: 'image/png'
+    };
+
+    component.confirmLeave();
+
+    expect(saveSpy).not.toHaveBeenCalled();
+    expect(component.showLeaveModal).toBeTrue();
+  });
+
+  it('should discard product spec draft changes without saving them', () => {
+    const saveSpy = spyOn(prodSpecService, 'postProdSpec');
+    const backSpy = spyOn(eventMessage, 'emitSellerProductSpec');
+    component.showLeaveModal = true;
+
+    component.discardLeave();
+
+    expect(saveSpy).not.toHaveBeenCalled();
+    expect(component.showLeaveModal).toBeFalse();
+    expect(backSpy).toHaveBeenCalledWith(true);
+  });
+
+  it('should save a valid product spec draft when confirming leave', () => {
+    const saveSpy = spyOn(prodSpecService, 'postProdSpec').and.returnValue(of({ id: 'prod-1' }) as any);
+    component.showLeaveModal = true;
+    component.generalForm.patchValue({ name: 'Draft product', description: 'Product overview' });
+    component.howItWorks = 'How it works';
+    component.productImageRef = {
+      name: 'Profile Picture',
+      url: 'https://example.test/image.png',
+      attachmentType: 'image/png'
+    };
+
+    component.confirmLeave();
+
+    expect(saveSpy).toHaveBeenCalledWith(jasmine.objectContaining({
+      name: 'Draft product',
+      lifecycleStatus: 'Active'
+    }) as any);
+    expect(component.showLeaveModal).toBeFalse();
+  });
+
+  it('should open product spec leave modal when the header leave event is emitted', () => {
+    component.generalForm.patchValue({ name: 'Draft product' });
+
+    eventMessage.emitLeaveProductSpecEditorRequest();
+
+    expect(component.showLeaveModal).toBeTrue();
   });
 });

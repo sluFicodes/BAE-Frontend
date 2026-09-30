@@ -7,7 +7,12 @@
       <label for="prod-name" class="block text-sm font-semibold text-gray-900 mb-2">{{ 'USAGE_SPECS._name' | translate }} <span class="text-red-500">*</span></label>
       <input data-cy="usageSpecName" id="prod-name" type="text" [formControl]="nameControl" maxLength="100"
         placeholder="{{ 'USAGE_SPECS._name_placeholder' | translate }}"
-        class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-100 focus:border-primary-100 block w-full p-3"/>
+        [class.border-status-danger-border]="showNameError"
+        [class.border-gray-300]="!showNameError"
+        class="bg-white border text-gray-900 text-sm rounded-lg focus:ring-primary-100 focus:border-primary-100 block w-full p-3"/>
+      @if(showUniqueNameError){
+        <p class="mt-1 text-xs text-status-danger-border"><span class="font-medium">{{ 'USAGE_SPECS._unique' | translate }}</span></p>
+      }
     </div>
   }
   @if (descControl) {

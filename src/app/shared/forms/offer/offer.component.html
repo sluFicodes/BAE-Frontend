@@ -89,7 +89,11 @@
                     <select id="prodSpecSelect"
                       [value]="selectedProdSpecId"
                       (change)="onProdSpecChange($event)"
+                      [disabled]="formType === 'update'"
+                      [attr.title]="formType === 'update' ? ('CREATE_OFFER._product_spec_update_locked' | translate) : null"
                       class="block w-full p-3 bg-offerings-surface dark:bg-secondary-300 border text-sm text-offerings-text dark:text-offerings-on-dark rounded-lg focus:ring-primary-100 focus:border-primary-100"
+                      [class.cursor-not-allowed]="formType === 'update'"
+                      [class.opacity-60]="formType === 'update'"
                       [class.border-offerings-border-strong]="!(shouldShowRequiredErrors() && !selectedProdSpecId)"
                       [class.border-status-danger-border]="shouldShowRequiredErrors() && !selectedProdSpecId">
                       <option value="" [selected]="!selectedProdSpecId">{{ 'CREATE_OFFER._select' | translate }}</option>
@@ -97,7 +101,11 @@
                         <option [value]="ps.id" [selected]="ps.id === selectedProdSpecId">{{ ps.name }}</option>
                       }
                     </select>
-                    @if(shouldShowRequiredErrors() && !selectedProdSpecId){
+                    @if(formType === 'update'){
+                      <p data-cy="productSpecUpdateLocked" class="mt-1 text-xs text-offerings-muted-text dark:text-offerings-on-dark-body">
+                        {{ 'CREATE_OFFER._product_spec_update_locked' | translate }}
+                      </p>
+                    } @else if(shouldShowRequiredErrors() && !selectedProdSpecId){
                       <p class="mt-1 text-xs text-status-danger-border">{{ 'CREATE_OFFER._mandatory_field' | translate }}</p>
                     }
                   }

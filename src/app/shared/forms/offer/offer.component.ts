@@ -714,6 +714,11 @@ export class OfferComponent implements OnInit, OnDestroy {
     const select = event.target as HTMLSelectElement;
     const value = select.value;
     const previousProdSpecId = this.productOfferForm.get('prodSpec')?.value?.id || this.selectedProdSpecId;
+    if (this.formType === 'update') {
+      select.value = previousProdSpecId;
+      return;
+    }
+
     const pricePlans = this.productOfferForm.get('pricePlans')?.value;
     if (previousProdSpecId && previousProdSpecId !== value && Array.isArray(pricePlans) && pricePlans.length > 0) {
       this.pendingProdSpecId = value;
@@ -1566,7 +1571,7 @@ export class OfferComponent implements OnInit, OnDestroy {
   private async loadUsageSpecs(): Promise<void> {
     if (!this.partyId) return;
     try {
-      const data = await this.usageService.getAllUsageSpecs(this.partyId);
+      const data = await this.usageService.getUsageSpecsByStatus(['Launched'], this.partyId);
       this.usageSpecs = Array.isArray(data) ? data : [];
     } catch {
       this.usageSpecs = [];

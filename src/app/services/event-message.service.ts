@@ -11,7 +11,7 @@ export interface EventMessage {
   'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails' | 'OpenProductInvDetails' |
   'SavePricePlan' | 'UpdatePricePlan' | 'ToggleEditPrice' | 'ToggleNewPrice' |
   'SubformChange' | 'CloseFeedback' | 'UpdateOffer' | 'CloseQuoteRequest' | 'UpdateUsageSpec' | 'UsageSpecList' | 'CreateUsageSpec' | 'AiSearchFacets' | 'AiSearchCleared' |
-  'FiltersCommitted' | 'SpecCreated' | 'LeaveOfferEditorRequest';
+  'FiltersCommitted' | 'SpecCreated' | 'LeaveOfferEditorRequest' | 'LeaveProductSpecEditorRequest';
   text?: string,
   toastType?: 'success' | 'error',
   value?: object | boolean | FormChangeState | PricePlanChangeState
@@ -121,6 +121,10 @@ export class EventMessageService {
 
   emitLeaveOfferEditorRequest(){
     this.eventMessageSubject.next({ type: 'LeaveOfferEditorRequest' });
+  }
+
+  emitLeaveProductSpecEditorRequest(){
+    this.eventMessageSubject.next({ type: 'LeaveProductSpecEditorRequest' });
   }
 
   emitSellerCatalog(show:boolean){
