@@ -56,7 +56,9 @@ export class SellerOfferComponent implements OnInit, OnDestroy {
   deleteLoading: boolean = false;
 
   get totalOffersCount(): number {
-    return Object.values(this.statusCounts).reduce((sum, n) => sum + (n || 0), 0);
+    return Object.entries(this.statusCounts)
+      .filter(([tab]) => tab !== 'Deleted')
+      .reduce((sum, [, n]) => sum + (n || 0), 0);
   }
   partyId:any;
   sort:any='name';
