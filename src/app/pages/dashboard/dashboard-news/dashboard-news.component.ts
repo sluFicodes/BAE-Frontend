@@ -6,8 +6,8 @@ import { faArrowRight, faChevronLeft, faChevronRight } from '@fortawesome/pro-re
 import { TranslateModule } from '@ngx-translate/core';
 import { DomeBlogContentType, DomeBlogServiceService } from 'src/app/services/dome-blog-service.service';
 
-export const NEWS_WIDGET_CONTENT_TYPE: DomeBlogContentType = 'blog';
-export const NEWS_WIDGET_ROUTE_BASE = '/blog';
+export const NEWS_WIDGET_CONTENT_TYPE: DomeBlogContentType = 'news';
+export const NEWS_WIDGET_ROUTE_BASE = '/news';
 export const NEWS_WIDGET_CARD_COUNT = 3;
 
 @Component({
