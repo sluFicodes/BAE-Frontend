@@ -276,21 +276,23 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     const resSpecUrl = `${base}${environment.RESOURCE}${environment.RESOURCE_SPEC}?limit=${limit}&${partyParam}`;
     const usageSpecUrl = `${base}/usage/usageSpecification?limit=${limit}&${partyParam}`;
 
-    const safeCount = async (url: string) => {
+    const safeCount = async (url: string, excludedStatuses: string[] = []) => {
       try {
         const items = await firstValueFrom(this.http.get<any[]>(url));
-        return Array.isArray(items) ? items.length : 0;
+        return Array.isArray(items)
+          ? items.filter(item => !excludedStatuses.includes(item?.lifecycleStatus)).length
+          : 0;
       } catch {
         return 0;
       }
     };
 
     const [offers, catalogs, prods, servs, ress, usages] = await Promise.all([
-      safeCount(offersUrl),
-      this.catalogManagementEnabled ? safeCount(catalogsUrl) : Promise.resolve(0),
-      safeCount(prodSpecUrl),
-      safeCount(servSpecUrl),
-      safeCount(resSpecUrl),
+      safeCount(offersUrl, ['Obsolete']),
+      this.catalogManagementEnabled ? safeCount(catalogsUrl, ['Obsolete']) : Promise.resolve(0),
+      safeCount(prodSpecUrl, ['Retired', 'Obsolete']),
+      safeCount(servSpecUrl, ['Retired', 'Obsolete']),
+      safeCount(resSpecUrl, ['Retired', 'Obsolete']),
       safeCount(usageSpecUrl),
     ]);
 
