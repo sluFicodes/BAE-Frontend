@@ -2577,6 +2577,7 @@ export class OfferComponent implements OnInit, OnDestroy {
 
         let priceInfo: any = {
           id: pricePlan.id,
+          isBundle: pricePlan.isBundle,
           name: pricePlan.name,
           description: pricePlan.description,
           lifecycleStatus: pricePlan.lifecycleStatus,
@@ -3042,10 +3043,11 @@ export class OfferComponent implements OnInit, OnDestroy {
     console.log(plan.id)
     console.log(compRel)
     const constraintRef = await this.persistPricePlanConstraint(plan);
+    const isBundle = plan?.oldValue?.isBundle ?? plan.newValue?.isBundle;
     let price: ProductOfferingPrice = {
       name: plan.newValue.name,
-      isBundle: true,
-      bundledPopRelationship: compRel,
+      isBundle,
+      ...(isBundle ? { bundledPopRelationship: compRel } : {}),
       popRelationship: this.getPricePlanRelationships(plan, constraintRef)
     }
     if (modifiedFields.includes('description')) {
@@ -3107,10 +3109,10 @@ export class OfferComponent implements OnInit, OnDestroy {
     const constraintRef = await this.persistPricePlanConstraint(plan);
     const price: ProductOfferingPrice = {
       name: plan?.name,
-      isBundle: true,
+      isBundle: plan?.isBundle,
       description: plan?.description,
       lifecycleStatus: plan?.lifecycleStatus || 'Active',
-      bundledPopRelationship: compRel,
+      ...(plan?.isBundle ? { bundledPopRelationship: compRel } : {}),
       popRelationship: this.getPricePlanRelationships(plan, constraintRef)
     };
 
