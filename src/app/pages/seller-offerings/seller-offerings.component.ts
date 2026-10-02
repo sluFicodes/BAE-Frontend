@@ -293,7 +293,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
       safeCount(prodSpecUrl, ['Retired', 'Obsolete']),
       safeCount(servSpecUrl, ['Retired', 'Obsolete']),
       safeCount(resSpecUrl, ['Retired', 'Obsolete']),
-      safeCount(usageSpecUrl),
+      safeCount(usageSpecUrl, ['Retired', 'Obsolete']),
     ]);
 
     this.productOffersCount = offers;

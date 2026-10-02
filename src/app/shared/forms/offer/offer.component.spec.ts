@@ -1204,6 +1204,84 @@ describe('OfferComponent', () => {
     expect(component.priceComponentForm.get('configValue')?.value).toBe('US');
   });
 
+  describe('preserving the loaded price plan structure', () => {
+    for (const isBundle of [false, true]) {
+      for (const section of ['generalInfo', 'procurementMode', 'pricePlans']) {
+        it(`should retain isBundle=${isBundle} when saving ${section}`, async () => {
+          const api = (component as any).api;
+          spyOn(api, 'getOfferingPrice').and.resolveTo({
+            id: 'plan-1',
+            name: 'Existing plan',
+            description: 'Existing description',
+            lifecycleStatus: 'Active',
+            isBundle,
+            priceType: 'custom'
+          });
+          const priceUpdateSpy = spyOn(api, 'updateOfferingPrice').and.returnValue(of({ id: 'plan-1' }));
+          const offerUpdateSpy = spyOn(api, 'updateProductOffering').and.returnValue(of({ id: 'offer-1' }));
+          spyOn(component, 'goBack');
+          component.formType = 'update';
+          component.offer = {
+            id: 'offer-1',
+            name: 'Existing offer',
+            productOfferingPrice: [{ id: 'plan-1', href: 'plan-1' }],
+            productOfferingTerm: [{ name: 'procurement', description: 'manual' }]
+          };
+
+          await component.loadOfferData();
+
+          if (section === 'generalInfo') {
+            component.generalInfoFormGroup.patchValue({ name: 'Updated offer' });
+          } else if (section === 'procurementMode') {
+            component.productOfferForm.get('procurementMode')?.patchValue({ mode: 'automatic' });
+          } else {
+            const plan = component.productOfferForm.get('pricePlans')?.value[0];
+            component.startEditTailoredPricePlan(plan);
+            component.tailoredPricePlanForm.patchValue({ name: 'Updated plan', description: 'Updated description' });
+            component.saveTailoredPricePlan();
+          }
+
+          await component.updateOffer();
+
+          expect(priceUpdateSpy).toHaveBeenCalledTimes(1);
+          const pricePayload = priceUpdateSpy.calls.mostRecent().args[0] as any;
+          expect(pricePayload.isBundle).toBe(isBundle);
+          expect(pricePayload.bundledPopRelationship).toEqual(isBundle ? [] : undefined);
+          expect(offerUpdateSpy).toHaveBeenCalledTimes(1);
+          const offerPayload = offerUpdateSpy.calls.mostRecent().args[0] as any;
+          if (section === 'generalInfo') {
+            expect(offerPayload.name).toBe('Updated offer');
+          } else if (section === 'procurementMode') {
+            expect(offerPayload.productOfferingTerm).toContain(jasmine.objectContaining({
+              name: 'procurement', description: 'automatic'
+            }));
+          } else {
+            expect(pricePayload.name).toBe('Updated plan');
+            expect(pricePayload.description).toBe('Updated description');
+          }
+        });
+      }
+
+      it(`should retain the original isBundle=${isBundle} in price plan change events`, async () => {
+        const api = (component as any).api;
+        const updateSpy = spyOn(api, 'updateOfferingPrice').and.returnValue(of({ id: 'plan-1' }));
+        const components = [{ id: 'component-1', href: 'component-1' }];
+
+        await component.updatePricePlan({
+          id: 'plan-1',
+          oldValue: { isBundle },
+          newValue: { name: 'Updated plan', description: 'Updated description', isBundle: !isBundle }
+        }, components, ['description']);
+
+        expect(updateSpy).toHaveBeenCalledTimes(1);
+        const payload = updateSpy.calls.mostRecent().args[0] as any;
+        expect(payload.isBundle).toBe(isBundle);
+        expect(payload.bundledPopRelationship).toEqual(isBundle ? components : undefined);
+        expect(payload.description).toBe('Updated description');
+      });
+    }
+  });
+
   it('should persist inline-edited existing plans by updating and creating expanded tier components', async () => {
     component.productOfferForm.patchValue({
       prodSpec: {
@@ -1229,6 +1307,7 @@ describe('OfferComponent', () => {
         id: 'plan-1',
         name: 'Flex plan',
         description: 'Updated plan',
+        isBundle: true,
         currency: 'EUR',
         lifecycleStatus: 'Active',
         productProfile: { selectedValues: [] },
@@ -1413,6 +1492,7 @@ describe('OfferComponent', () => {
         id: 'plan-1',
         name: 'Flex plan',
         description: 'Updated plan',
+        isBundle: true,
         currency: 'EUR',
         lifecycleStatus: 'Active',
         productProfile: { selectedValues: [] },
