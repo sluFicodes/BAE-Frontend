@@ -81,6 +81,7 @@ describe('SellerUsageSpecComponent', () => {
     const usageSpec = { id: 'usage-1', lifecycleStatus: 'Active' };
     usageService.updateUsageSpec.and.returnValue(of({}) as any);
     spyOn(eventMessage, 'emitSpecCreated');
+    const changeSpy = spyOn(eventMessage, 'emitUsageSpecChanged').and.callThrough();
     const loadCountsSpy = spyOn(component, 'loadStatusCounts');
     const getUsageSpecsSpy = spyOn(component, 'getUsageSpecs').and.resolveTo(undefined);
     component.statusCounts = { Draft: 2, Validated: 1, Deleted: 0 };
@@ -89,6 +90,12 @@ describe('SellerUsageSpecComponent', () => {
 
     expect(usageService.updateUsageSpec).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Launched' }, 'usage-1');
     expect(component.statusCounts).toEqual({ Draft: 1, Validated: 2, Deleted: 0 });
+    expect(changeSpy).toHaveBeenCalledOnceWith({
+      action: 'updated',
+      usageSpec: { id: 'usage-1', lifecycleStatus: 'Launched' },
+      previousLifecycleStatus: 'Active',
+      nextLifecycleStatus: 'Launched'
+    });
     expect(getUsageSpecsSpy).toHaveBeenCalledOnceWith(false);
     expect(loadCountsSpy).not.toHaveBeenCalled();
   });
@@ -97,6 +104,7 @@ describe('SellerUsageSpecComponent', () => {
     const usageSpec = { id: 'usage-2', lifecycleStatus: 'Launched' };
     usageService.updateUsageSpec.and.returnValue(of({}) as any);
     spyOn(eventMessage, 'emitSpecCreated');
+    const changeSpy = spyOn(eventMessage, 'emitUsageSpecChanged').and.callThrough();
     const loadCountsSpy = spyOn(component, 'loadStatusCounts');
     const getUsageSpecsSpy = spyOn(component, 'getUsageSpecs').and.resolveTo(undefined);
     component.statusCounts = { Draft: 1, Validated: 3, Deleted: 1 };
@@ -107,6 +115,12 @@ describe('SellerUsageSpecComponent', () => {
 
     expect(usageService.updateUsageSpec).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Retired' }, 'usage-2');
     expect(component.statusCounts).toEqual({ Draft: 1, Validated: 2, Deleted: 2 });
+    expect(changeSpy).toHaveBeenCalledOnceWith({
+      action: 'updated',
+      usageSpec: { id: 'usage-2', lifecycleStatus: 'Retired' },
+      previousLifecycleStatus: 'Launched',
+      nextLifecycleStatus: 'Retired'
+    });
     expect(component.deleteConfirmation).toBeNull();
     expect(component.deleteLoading).toBeFalse();
     expect(getUsageSpecsSpy).toHaveBeenCalledOnceWith(false);
@@ -117,6 +131,7 @@ describe('SellerUsageSpecComponent', () => {
     const usageSpec = { id: 'usage-3', lifecycleStatus: 'Launched' };
     usageService.updateUsageSpec.and.returnValue(throwError(() => ({ error: { error: 'In use' } })) as any);
     spyOn(eventMessage, 'emitSpecCreated');
+    const changeSpy = spyOn(eventMessage, 'emitUsageSpecChanged').and.callThrough();
     const getUsageSpecsSpy = spyOn(component, 'getUsageSpecs').and.resolveTo(undefined);
     component.statusCounts = { Draft: 1, Validated: 3, Deleted: 1 };
 
@@ -125,6 +140,7 @@ describe('SellerUsageSpecComponent', () => {
     component.confirmDeleteUsageSpec();
 
     expect(component.statusCounts).toEqual({ Draft: 1, Validated: 3, Deleted: 1 });
+    expect(changeSpy).not.toHaveBeenCalled();
     expect(component.deleteConfirmation).toBeNull();
     expect(component.deleteLoading).toBeFalse();
     expect(getUsageSpecsSpy).not.toHaveBeenCalled();
