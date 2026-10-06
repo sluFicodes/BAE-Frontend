@@ -156,12 +156,21 @@
           <div class="min-w-0">
             <h2 class="text-lg font-bold text-offerings-text dark:text-offerings-on-dark">{{ 'OFFERINGS._delete_usage_spec_title' | translate }}</h2>
             <p class="mt-2 text-sm leading-6 text-offerings-body dark:text-offerings-on-dark-body">{{ 'OFFERINGS._delete_usage_spec_desc' | translate:{ name: deleteUsageSpecName } }}</p>
+            @if(deleteEligibilityLoading){
+              <p class="mt-3 text-sm leading-6 text-offerings-muted-text dark:text-offerings-on-dark-body">{{ 'OFFERINGS._delete_usage_spec_checking' | translate }}</p>
+            }
+            @if(deleteEligibilityError){
+              <p class="mt-3 text-sm leading-6 text-status-danger-text">{{ 'OFFERINGS._delete_usage_spec_check_error' | translate }}</p>
+            }
+            @if(!deleteEligibilityLoading && !deleteEligibilityError && deleteBlockingOffers.length > 0){
+              <p class="mt-3 text-sm leading-6 text-status-danger-text">{{ 'OFFERINGS._delete_usage_spec_blocked' | translate:{ offers: deleteBlockingOfferNames } }}</p>
+            }
           </div>
         </div>
         <div class="mt-6 flex justify-end gap-3">
           <button type="button" (click)="cancelDeleteUsageSpec()" [disabled]="deleteLoading" class="h-10 px-4 rounded-lg border border-offerings-border-strong dark:border-secondary-200 text-sm font-semibold text-offerings-body dark:text-offerings-on-dark-body hover:bg-offerings-page dark:hover:bg-secondary-200 disabled:opacity-50">{{ 'OFFERINGS._cancel' | translate }}</button>
-          <button data-cy="confirmDeleteUsageSpec" type="button" (click)="confirmDeleteUsageSpec()" [disabled]="deleteLoading" class="h-10 px-4 rounded-lg bg-status-danger-border text-sm font-semibold text-offerings-on-dark hover:bg-status-danger-text disabled:opacity-50">
-            {{ (deleteLoading ? 'OFFERINGS._deleting' : 'OFFERINGS._delete') | translate }}
+          <button data-cy="confirmDeleteUsageSpec" type="button" (click)="confirmDeleteUsageSpec()" [disabled]="!canConfirmDeleteUsageSpec" class="h-10 px-4 rounded-lg bg-status-danger-border text-sm font-semibold text-offerings-on-dark hover:bg-status-danger-text disabled:opacity-50">
+            {{ (deleteLoading ? 'OFFERINGS._deleting' : (deleteEligibilityLoading ? 'OFFERINGS._checking' : 'OFFERINGS._delete')) | translate }}
           </button>
         </div>
       </div>
