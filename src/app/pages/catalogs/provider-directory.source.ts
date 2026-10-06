@@ -20,6 +20,7 @@ export class ProviderDirectorySource implements CataloguesDirectorySource {
       offset: query.offset,
       limit: query.limit,
       keyword: query.keyword,
+      lifecycleStatus: 'Launched',
       filteredPaginationToken: query.continuationToken
     });
 

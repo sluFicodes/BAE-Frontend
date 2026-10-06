@@ -70,6 +70,7 @@ export class ProviderService {
     offset: number;
     limit: number;
     keyword?: string;
+    lifecycleStatus?: string;
     filteredPaginationToken?: string | null;
   }): Promise<ProviderPageResponse> {
     const tokenRequestHeader = 'X-Filtered-Pagination-Token';
@@ -80,6 +81,9 @@ export class ProviderService {
 
     if (params.keyword) {
       httpParams = httpParams.set('keyword', params.keyword);
+    }
+    if (params.lifecycleStatus) {
+      httpParams = httpParams.set('lifecycleStatus', params.lifecycleStatus);
     }
 
     let options: { observe: 'response', params: HttpParams, headers?: { [header: string]: string } } = {

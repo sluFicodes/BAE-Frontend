@@ -107,11 +107,12 @@ describe('ProviderService', () => {
     const resultPromise = service.getProviderDirectoryPage({
       offset: 12,
       limit: 6,
-      keyword: 'cloud'
+      keyword: 'cloud',
+      lifecycleStatus: 'Launched'
     });
 
     const req = httpMock.expectOne(
-      `${environment.BASE_URL}/party/organization?offset=12&limit=6&keyword=cloud`
+      `${environment.BASE_URL}/party/organization?offset=12&limit=6&keyword=cloud&lifecycleStatus=Launched`
     );
     expect(req.request.method).toBe('GET');
     req.flush([{ id: 'provider-1', tradingName: 'Provider One' }], {
