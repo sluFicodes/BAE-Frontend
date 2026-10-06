@@ -180,9 +180,12 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
   }
 
   private applyStatusChangeToCurrentTab(usageSpec: any, nextStatus: string): void {
-    this.moveTabCount(usageSpec?.lifecycleStatus, nextStatus);
-    this.getUsageSpecs(false);
-    this.cdr.detectChanges();
+    this.eventMessage.emitUsageSpecChanged({
+      action: 'updated',
+      usageSpec: { ...usageSpec, lifecycleStatus: nextStatus },
+      previousLifecycleStatus: usageSpec?.lifecycleStatus,
+      nextLifecycleStatus: nextStatus
+    });
   }
 
   private applyUsageSpecChange(change: UsageSpecChange): void {
@@ -200,6 +203,10 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
     }
 
     if (change.action === 'updated') {
+      const nextStatus = change.nextLifecycleStatus || usageSpec.lifecycleStatus;
+      if (nextStatus) {
+        this.moveTabCount(change.previousLifecycleStatus || nextStatus, nextStatus);
+      }
       this.getUsageSpecs(false);
     }
 
@@ -246,14 +253,15 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
     this.usageService.updateUsageSpec({ lifecycleStatus: 'Launched' }, usageSpec.id).subscribe({
       next: () => {
         this.openMenuIdx = null;
-        this.eventMessage.emitSpecCreated(this.translate.instant('USAGE_SPECS._validate_success'));
+        this.eventMessage.emitSpecCreated(this.translate.instant('USAGE_SPECS._validate_success'), 'success', false);
         this.applyStatusChangeToCurrentTab(usageSpec, 'Launched');
       },
       error: (error: any) => {
         this.openMenuIdx = null;
         this.eventMessage.emitSpecCreated(
           formatApiErrorMessage(this.translate, 'USAGE_SPECS._validate_error', error),
-          'error'
+          'error',
+          false
         );
       }
     });
@@ -372,7 +380,7 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
   private performDeleteUsageSpec(usageSpec: any){
     const onSuccess = (lifecycleStatus: string) => {
       this.clearDeleteConfirmation();
-      this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._usage_spec_delete_success'));
+      this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._usage_spec_delete_success'), 'success', false);
       this.applyStatusChangeToCurrentTab(usageSpec, lifecycleStatus);
     };
     const onError = (err: any) => {
@@ -380,7 +388,8 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
       console.error('Usage spec delete failed', err);
       this.eventMessage.emitSpecCreated(
         formatApiErrorMessage(this.translate, 'OFFERINGS._usage_spec_delete_error', err),
-        'error'
+        'error',
+        false
       );
     };
     const lifecycleStatus = usageSpec.lifecycleStatus === 'Active' ? 'Obsolete' : 'Retired';

@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { EventMessageService } from '../../services/event-message.service';
 import { QuoteService } from 'src/app/features/quotes/services/quote.service';
 import { ApiServiceService } from 'src/app/services/product-service.service';
@@ -41,6 +41,121 @@ describe('SellerOfferingsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  function renderUsageSpecsCount(count: number): jasmine.Spy {
+    const loadCountsSpy = spyOn(component, 'loadCounts').and.resolveTo(undefined);
+    component.usageSpecsCount = count;
+    component.goToUsageSpec();
+    fixture.detectChanges();
+    loadCountsSpy.calls.reset();
+    return loadCountsSpy;
+  }
+
+  function sidebarUsageSpecsCount(): string {
+    return fixture.nativeElement.querySelector('[data-cy="usageSpecSection"] span:last-child').textContent.trim();
+  }
+
+  it('should increment the sidebar count after creating a usage spec without reloading counts', () => {
+    const loadCountsSpy = renderUsageSpecsCount(3);
+    component.goToCreateUsage();
+
+    eventMessage.emitUsageSpecChanged({
+      action: 'created',
+      usageSpec: { id: 'usage-new', lifecycleStatus: 'Active' },
+      nextLifecycleStatus: 'Active'
+    });
+    eventMessage.emitUsageSpecList(true);
+
+    expect(sidebarUsageSpecsCount()).toBe('4');
+    expect(loadCountsSpy).not.toHaveBeenCalled();
+  });
+
+  for (const [previousStatus, nextStatus] of [['Active', 'Obsolete'], ['Launched', 'Retired']]) {
+    it(`should decrement the sidebar count after deleting a ${previousStatus} usage spec`, fakeAsync(() => {
+      const loadCountsSpy = renderUsageSpecsCount(3);
+
+      eventMessage.emitSpecCreated('Metric deleted', 'success', false);
+      eventMessage.emitUsageSpecChanged({
+        action: 'updated',
+        usageSpec: { id: 'usage-deleted', lifecycleStatus: nextStatus },
+        previousLifecycleStatus: previousStatus,
+        nextLifecycleStatus: nextStatus
+      });
+
+      expect(sidebarUsageSpecsCount()).toBe('2');
+      expect(loadCountsSpy).not.toHaveBeenCalled();
+      tick(4000);
+    }));
+  }
+
+  it('should preserve the sidebar count when validating or editing a usage spec', () => {
+    const loadCountsSpy = renderUsageSpecsCount(3);
+
+    for (const previousStatus of ['Active', 'Launched']) {
+      eventMessage.emitUsageSpecChanged({
+        action: 'updated',
+        usageSpec: { id: 'usage-existing', lifecycleStatus: 'Launched' },
+        previousLifecycleStatus: previousStatus,
+        nextLifecycleStatus: 'Launched'
+      });
+      expect(sidebarUsageSpecsCount()).toBe('3');
+    }
+    expect(loadCountsSpy).not.toHaveBeenCalled();
+  });
+
+  it('should preserve the sidebar count when a usage spec delete fails', fakeAsync(() => {
+    const loadCountsSpy = renderUsageSpecsCount(3);
+
+    eventMessage.emitSpecCreated('Metric is in use', 'error', false);
+    fixture.detectChanges();
+
+    expect(sidebarUsageSpecsCount()).toBe('3');
+    expect(component.toastType).toBe('error');
+    expect(loadCountsSpy).not.toHaveBeenCalled();
+    tick(4000);
+  }));
+
+  it('should refresh other workspace counts even while viewing usage specs', fakeAsync(() => {
+    const loadCountsSpy = renderUsageSpecsCount(3);
+
+    eventMessage.emitSpecCreated('Product specification created');
+
+    expect(loadCountsSpy).toHaveBeenCalledTimes(1);
+    tick(4000);
+  }));
+
+  it('should refresh only usage specs when an initial count response predates a creation', fakeAsync(() => {
+    component.userInfo = { id: 'user-1', logged_as: 'user-1', partyId: 'party-1' };
+    component.goToUsageSpec();
+    const http = TestBed.inject(HttpTestingController);
+
+    component.loadCounts();
+    const initialRequests = http.match(() => true);
+    eventMessage.emitUsageSpecChanged({
+      action: 'created',
+      usageSpec: { id: 'usage-new', lifecycleStatus: 'Active' },
+      nextLifecycleStatus: 'Active'
+    });
+
+    for (const request of initialRequests) {
+      request.flush(request.request.url.includes('/usage/usageSpecification')
+        ? [{ lifecycleStatus: 'Active' }, { lifecycleStatus: 'Launched' }, { lifecycleStatus: 'Active' }]
+        : []);
+    }
+    flushMicrotasks();
+
+    const refresh = http.expectOne(request => request.url.includes('/usage/usageSpecification'));
+    refresh.flush([
+      { lifecycleStatus: 'Active' },
+      { lifecycleStatus: 'Launched' },
+      { lifecycleStatus: 'Active' },
+      { id: 'usage-new', lifecycleStatus: 'Active' }
+    ]);
+    flushMicrotasks();
+
+    expect(sidebarUsageSpecsCount()).toBe('4');
+    http.verify();
+  }));
 
   it('setActiveSection should update section and persist it', () => {
     const setItemSpy = spyOn(localStorage, 'setItem');

@@ -14,6 +14,7 @@ export interface EventMessage {
   'FiltersCommitted' | 'SpecCreated' | 'LeaveOfferEditorRequest' | 'LeaveProductSpecEditorRequest' | 'UsageSpecChanged';
   text?: string,
   toastType?: 'success' | 'error',
+  refreshCounts?: boolean,
   value?: object | boolean | FormChangeState | PricePlanChangeState | UsageSpecChange
 }
 
@@ -98,8 +99,8 @@ export class EventMessageService {
     this.eventMessageSubject.next({ type: 'SellerResourceSpec', value: show });
   }
 
-  emitSpecCreated(text: string, toastType: 'success' | 'error' = 'success'){
-    this.eventMessageSubject.next({ type: 'SpecCreated', text: text, toastType: toastType });
+  emitSpecCreated(text: string, toastType: 'success' | 'error' = 'success', refreshCounts: boolean = true){
+    this.eventMessageSubject.next({ type: 'SpecCreated', text: text, toastType: toastType, refreshCounts });
   }
 
   emitSellerCreateResourceSpec(show:boolean){
