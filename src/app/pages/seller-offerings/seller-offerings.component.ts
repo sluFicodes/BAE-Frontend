@@ -10,7 +10,7 @@ import { ApiServiceService } from 'src/app/services/product-service.service';
 import {LocalStorageService} from "src/app/services/local-storage.service";
 import { LoginInfo } from 'src/app/models/interfaces';
 import { initFlowbite } from 'flowbite';
-import {EventMessageService} from "../../services/event-message.service";
+import {EventMessageService, UsageSpecChange} from "../../services/event-message.service";
 import { firstValueFrom, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { QuoteService } from 'src/app/features/quotes/services/quote.service';
@@ -75,6 +75,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
   //partyIdCustom:string='urn:ngsi-ld:organization:02922d6d-2e7e-4235-a1aa-4f393a75bc52'
   //partyIdCustom:any=null
   private destroy$ = new Subject<void>();
+  private usageSpecsCountRevision = 0;
 
   get show_catalogs(): boolean { return this.activeView === 'catalogs'; }
   get show_prod_specs(): boolean { return this.activeView === 'productspec'; }
@@ -141,6 +142,9 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
         this.usage_to_update = ev.value;
         this.goToUpdateUsage();
       }
+      if(ev.type === 'UsageSpecChanged') {
+        this.applyUsageSpecCountChange(ev.value as UsageSpecChange);
+      }
       if(ev.type === 'SellerOffer' && ev.value == true) {
         this.goToOffers();
       }
@@ -182,7 +186,9 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
       if(ev.type === 'SpecCreated' && ev.text) {
         this.toastMessage = ev.text;
         this.toastType = ev.toastType ?? 'success';
-        this.loadCounts();
+        if (ev.refreshCounts !== false) {
+          this.loadCounts();
+        }
         setTimeout(() => { this.toastMessage = null; this.cdr.detectChanges(); }, 4000);
       }
     })
@@ -254,6 +260,23 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard']);
   }
 
+  private applyUsageSpecCountChange(change: UsageSpecChange): void {
+    if (!change?.usageSpec) return;
+
+    const excludedStatuses = ['Retired', 'Obsolete'];
+    const nextStatus = change.nextLifecycleStatus || change.usageSpec.lifecycleStatus;
+    const previousStatus = change.previousLifecycleStatus || nextStatus;
+    const previouslyCounted = change.action !== 'created' && !excludedStatuses.includes(previousStatus);
+    const nextCounted = !excludedStatuses.includes(nextStatus);
+    const delta = Number(nextCounted) - Number(previouslyCounted);
+
+    if (delta !== 0) {
+      this.usageSpecsCountRevision++;
+    }
+    this.usageSpecsCount = Math.max(this.usageSpecsCount + delta, 0);
+    this.cdr.detectChanges();
+  }
+
   async loadCounts() {
     const aux = this.userInfo as LoginInfo;
     if (!aux) return;
@@ -266,6 +289,7 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
       partyId = loggedOrg.partyId;
     }
 
+    let usageSpecsCountRevision = this.usageSpecsCountRevision;
     const limit = 1000;
     const base = environment.BASE_URL;
     const partyParam = `relatedParty.id=${partyId}`;
@@ -301,7 +325,12 @@ export class SellerOfferingsComponent implements OnInit, OnDestroy {
     this.productSpecsCount = prods;
     this.serviceSpecsCount = servs;
     this.resourceSpecsCount = ress;
-    this.usageSpecsCount = usages;
+    let usageCount = usages;
+    while (usageSpecsCountRevision !== this.usageSpecsCountRevision) {
+      usageSpecsCountRevision = this.usageSpecsCountRevision;
+      usageCount = await safeCount(usageSpecUrl, ['Retired', 'Obsolete']);
+    }
+    this.usageSpecsCount = usageCount;
     this.cdr.detectChanges();
   }
 
