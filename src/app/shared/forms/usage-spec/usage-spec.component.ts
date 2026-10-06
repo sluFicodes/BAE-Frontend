@@ -272,6 +272,11 @@ export class UsageSpecComponent implements OnInit, OnDestroy, OnChanges {
       next: data => {
         console.log('usageSpec created:')
         console.log(data)
+        this.eventMessage.emitUsageSpecChanged({
+          action: 'created',
+          usageSpec: data || usageSpec,
+          nextLifecycleStatus: (data || usageSpec).lifecycleStatus
+        });
         this.goBack();
       },
       error: error => {
@@ -330,8 +335,19 @@ export class UsageSpecComponent implements OnInit, OnDestroy, OnChanges {
 
     try {
       // Llamar a la API para actualizar la oferta
-      await lastValueFrom(this.usageSpecService.updateUsageSpec(basePayload, this.usageSpec.id));
+      const data = await lastValueFrom(this.usageSpecService.updateUsageSpec(basePayload, this.usageSpec.id));
       console.log('✅ Usage Spec updated successfully');
+      const updatedUsageSpec = data || {
+        ...this.usageSpec,
+        ...basePayload,
+        id: this.usageSpec.id
+      };
+      this.eventMessage.emitUsageSpecChanged({
+        action: 'updated',
+        usageSpec: updatedUsageSpec,
+        previousLifecycleStatus: this.usageSpec.lifecycleStatus,
+        nextLifecycleStatus: updatedUsageSpec.lifecycleStatus
+      });
       this.goBack();
     } catch (error: any) {
       console.error('❌ Error updating Usage Spec:', error);

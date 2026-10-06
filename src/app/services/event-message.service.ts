@@ -11,10 +11,17 @@ export interface EventMessage {
   'AdminCategories' | 'CreateCategory' | 'UpdateCategory' | 'ShowCartToast' | 'HideCartToast' | 'CloseContact' | 'OpenServiceDetails' | 'OpenResourceDetails' | 'OpenProductInvDetails' |
   'SavePricePlan' | 'UpdatePricePlan' | 'ToggleEditPrice' | 'ToggleNewPrice' |
   'SubformChange' | 'CloseFeedback' | 'UpdateOffer' | 'CloseQuoteRequest' | 'UpdateUsageSpec' | 'UsageSpecList' | 'CreateUsageSpec' | 'AiSearchFacets' | 'AiSearchCleared' |
-  'FiltersCommitted' | 'SpecCreated' | 'LeaveOfferEditorRequest' | 'LeaveProductSpecEditorRequest';
+  'FiltersCommitted' | 'SpecCreated' | 'LeaveOfferEditorRequest' | 'LeaveProductSpecEditorRequest' | 'UsageSpecChanged';
   text?: string,
   toastType?: 'success' | 'error',
-  value?: object | boolean | FormChangeState | PricePlanChangeState
+  value?: object | boolean | FormChangeState | PricePlanChangeState | UsageSpecChange
+}
+
+export interface UsageSpecChange {
+  action: 'created' | 'updated';
+  usageSpec: any;
+  previousLifecycleStatus?: string;
+  nextLifecycleStatus?: string;
 }
 
 
@@ -231,6 +238,10 @@ export class EventMessageService {
 
   emitCreateUsageSpec(show:boolean){
     this.eventMessageSubject.next({type: 'CreateUsageSpec', value: show})
+  }
+
+  emitUsageSpecChanged(change: UsageSpecChange){
+    this.eventMessageSubject.next({type: 'UsageSpecChanged', value: change})
   }
 
   emitAiSearchFacets(facets: Record<string, Record<string | number, number>>){

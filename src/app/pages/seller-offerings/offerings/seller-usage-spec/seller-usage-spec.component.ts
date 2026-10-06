@@ -4,7 +4,7 @@ import { UsageServiceService } from 'src/app/services/usage-service.service';
 import { PaginationService } from 'src/app/services/pagination.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { LoginInfo } from 'src/app/models/interfaces';
-import { EventMessageService } from 'src/app/services/event-message.service';
+import { EventMessageService, UsageSpecChange } from 'src/app/services/event-message.service';
 import { initFlowbite } from 'flowbite';
 import moment from 'moment';
 import { Subject } from 'rxjs';
@@ -54,6 +54,9 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
       if(ev.type === 'ChangedSession') {
         this.initUsageSpecs();
       }
+      if(ev.type === 'UsageSpecChanged') {
+        this.applyUsageSpecChange(ev.value as UsageSpecChange);
+      }
     })
   }
 
@@ -95,7 +98,7 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
       "partyId": this.partyId
     }
 
-    this.paginationService.getItemsPaginated(this.page, this.USAGE_SPEC_LIMIT, next, this.usageSpecs,this.nextUsageSpecs, options,
+    return this.paginationService.getItemsPaginated(this.page, this.USAGE_SPEC_LIMIT, next, this.usageSpecs,this.nextUsageSpecs, options,
       this.usageService.getUsageSpecs.bind(this.usageService)).then(data => {
       this.page_check=data.page_check;
       this.usageSpecs=data.items;
@@ -144,6 +147,59 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
+  private tabForStatus(status: string | undefined): string | null {
+    if (!status) return null;
+    if (this.tabStatusMap['Draft'].includes(status)) return 'Draft';
+    if (this.tabStatusMap['Validated'].includes(status)) return 'Validated';
+    if (this.tabStatusMap['Deleted'].includes(status)) return 'Deleted';
+    return null;
+  }
+
+  private incrementTabCount(tab: string, amount: number): void {
+    this.statusCounts = {
+      ...this.statusCounts,
+      [tab]: Math.max((this.statusCounts[tab] || 0) + amount, 0)
+    };
+  }
+
+  private moveTabCount(fromStatus: string | undefined, toStatus: string): void {
+    const fromTab = this.tabForStatus(fromStatus);
+    const toTab = this.tabForStatus(toStatus);
+
+    if (!toTab || fromTab === toTab) return;
+    if (fromTab) {
+      this.incrementTabCount(fromTab, -1);
+    }
+    this.incrementTabCount(toTab, 1);
+  }
+
+  private applyStatusChangeToCurrentTab(usageSpec: any, nextStatus: string): void {
+    this.moveTabCount(usageSpec?.lifecycleStatus, nextStatus);
+    this.getUsageSpecs(false);
+    this.cdr.detectChanges();
+  }
+
+  private applyUsageSpecChange(change: UsageSpecChange): void {
+    const usageSpec = change?.usageSpec;
+    if (!usageSpec) return;
+
+    if (change.action === 'created') {
+      const status = change.nextLifecycleStatus || usageSpec.lifecycleStatus;
+      if (this.tabStatusMap['Draft'].includes(status)) {
+        this.incrementTabCount('Draft', 1);
+      }
+      if (this.selectedTab === 'Draft' && this.tabStatusMap['Draft'].includes(status)) {
+        this.getUsageSpecs(false);
+      }
+    }
+
+    if (change.action === 'updated') {
+      this.getUsageSpecs(false);
+    }
+
+    this.cdr.detectChanges();
+  }
+
   goToCreate(){
     this.eventMessage.emitCreateUsageSpec(true);
   }
@@ -185,8 +241,7 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
       next: () => {
         this.openMenuIdx = null;
         this.eventMessage.emitSpecCreated(this.translate.instant('USAGE_SPECS._validate_success'));
-        this.getUsageSpecs(false);
-        this.loadStatusCounts();
+        this.applyStatusChangeToCurrentTab(usageSpec, 'Launched');
       },
       error: (error: any) => {
         this.openMenuIdx = null;
@@ -226,11 +281,10 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
   }
 
   private performDeleteUsageSpec(usageSpec: any){
-    const onSuccess = () => {
+    const onSuccess = (lifecycleStatus: string) => {
       this.clearDeleteConfirmation();
       this.eventMessage.emitSpecCreated(this.translate.instant('OFFERINGS._usage_spec_delete_success'));
-      this.getUsageSpecs(false);
-      this.loadStatusCounts();
+      this.applyStatusChangeToCurrentTab(usageSpec, lifecycleStatus);
     };
     const onError = (err: any) => {
       this.clearDeleteConfirmation();
@@ -242,7 +296,7 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
     };
     const lifecycleStatus = usageSpec.lifecycleStatus === 'Active' ? 'Obsolete' : 'Retired';
     this.usageService.updateUsageSpec({ lifecycleStatus }, usageSpec.id).subscribe({
-      next: onSuccess,
+      next: () => onSuccess(lifecycleStatus),
       error: onError
     });
   }

@@ -155,8 +155,8 @@
         @if(show_resource_specs){
           <seller-resource-spec></seller-resource-spec>
         }
-        @if(show_usage_specs){
-          <seller-usage-spec></seller-usage-spec>
+        @if(activeSection === 'usagespec'){
+          <seller-usage-spec [class.hidden]="!show_usage_specs"></seller-usage-spec>
         }
         @if(show_create_usage){
           <create-usage-spec></create-usage-spec>
