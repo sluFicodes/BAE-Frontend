@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { formatApiErrorMessage } from 'src/app/shared/error-message/api-error-message';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 
 @Component({
   selector: 'seller-usage-spec',
@@ -38,7 +39,11 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
   openMenuIdx: number | null = null;
   deleteConfirmation: any | null = null;
   deleteLoading: boolean = false;
+  deleteEligibilityLoading: boolean = false;
+  deleteEligibilityError: boolean = false;
+  deleteBlockingOffers: any[] = [];
   private destroy$ = new Subject<void>();
+  private deleteEligibilityRequestId = 0;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -46,7 +51,8 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
     private usageService: UsageServiceService,
     private localStorage: LocalStorageService,
     private paginationService: PaginationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private api: ApiServiceService
   ) {
     this.eventMessage.messages$
     .pipe(takeUntil(this.destroy$))
@@ -257,15 +263,17 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
     if(!usageSpec?.id) return;
     this.openMenuIdx = null;
     this.deleteConfirmation = usageSpec;
+    this.loadDeleteEligibility(usageSpec);
   }
 
   cancelDeleteUsageSpec(): void {
     if (this.deleteLoading) return;
+    this.deleteEligibilityRequestId++;
     this.deleteConfirmation = null;
   }
 
   confirmDeleteUsageSpec(): void {
-    if (!this.deleteConfirmation || this.deleteLoading) return;
+    if (!this.canConfirmDeleteUsageSpec) return;
     const usageSpec = this.deleteConfirmation;
     this.deleteLoading = true;
     this.performDeleteUsageSpec(usageSpec);
@@ -276,8 +284,89 @@ export class SellerUsageSpecComponent implements OnInit, OnDestroy {
   }
 
   private clearDeleteConfirmation(): void {
+    this.deleteEligibilityRequestId++;
     this.deleteLoading = false;
     this.deleteConfirmation = null;
+    this.deleteEligibilityLoading = false;
+    this.deleteEligibilityError = false;
+    this.deleteBlockingOffers = [];
+  }
+
+  get canConfirmDeleteUsageSpec(): boolean {
+    return !!this.deleteConfirmation
+      && !this.deleteLoading
+      && !this.deleteEligibilityLoading
+      && !this.deleteEligibilityError
+      && this.deleteBlockingOffers.length === 0;
+  }
+
+  get deleteBlockingOfferNames(): string {
+    return this.deleteBlockingOffers
+      .map(offer => offer?.name || offer?.id)
+      .filter(value => !!value)
+      .join(', ');
+  }
+
+  private async loadDeleteEligibility(usageSpec: any): Promise<void> {
+    const requestId = ++this.deleteEligibilityRequestId;
+    this.deleteEligibilityLoading = true;
+    this.deleteEligibilityError = false;
+    this.deleteBlockingOffers = [];
+    this.cdr.detectChanges();
+
+    try {
+      const offers = await this.getProductOfferingsUsingUsageSpec(usageSpec.id);
+      if (requestId !== this.deleteEligibilityRequestId || this.deleteConfirmation?.id !== usageSpec.id) {
+        return;
+      }
+
+      this.deleteBlockingOffers = offers.filter(offer => !this.isDeletableOfferStatus(offer?.lifecycleStatus));
+    } catch (error) {
+      if (requestId !== this.deleteEligibilityRequestId || this.deleteConfirmation?.id !== usageSpec.id) {
+        return;
+      }
+
+      console.error('Usage spec delete eligibility check failed', error);
+      this.deleteEligibilityError = true;
+      this.deleteBlockingOffers = [];
+    } finally {
+      if (requestId === this.deleteEligibilityRequestId && this.deleteConfirmation?.id === usageSpec.id) {
+        this.deleteEligibilityLoading = false;
+        this.cdr.detectChanges();
+      }
+    }
+  }
+
+  private async getProductOfferingsUsingUsageSpec(usageSpecId: string): Promise<any[]> {
+    const priceComponents = await this.api.getOfferingPricesByUsageSpecId(usageSpecId);
+    const pricePlanMap = new Map<string, any>();
+
+    for (const component of priceComponents) {
+      if (!component?.id) continue;
+      const pricePlans = await this.api.getOfferingPricesByBundledPopRelationshipId(component.id);
+      for (const pricePlan of pricePlans) {
+        if (pricePlan?.id) {
+          pricePlanMap.set(pricePlan.id, pricePlan);
+        }
+      }
+    }
+
+    const offerMap = new Map<string, any>();
+    for (const pricePlan of pricePlanMap.values()) {
+      const offers = await this.api.getProductOfferingsByPricePlanId(pricePlan.id);
+      for (const offer of offers) {
+        if (offer?.id) {
+          offerMap.set(offer.id, offer);
+        }
+      }
+    }
+
+    return [...offerMap.values()];
+  }
+
+  private isDeletableOfferStatus(status: string | undefined): boolean {
+    const normalized = String(status || '').toLowerCase();
+    return normalized === 'retired' || normalized === 'obsolete';
   }
 
   private performDeleteUsageSpec(usageSpec: any){

@@ -241,6 +241,51 @@ export class ApiServiceService {
     });
   }
 
+  async getOfferingPricesByUsageSpecId(usageSpecId: string): Promise<any[]> {
+    return this.getPaginatedCatalogItems('productOfferingPrice', {
+      usageSpecId
+    });
+  }
+
+  async getOfferingPricesByBundledPopRelationshipId(priceComponentId: string): Promise<any[]> {
+    return this.getPaginatedCatalogItems('productOfferingPrice', {
+      'bundledPopRelationship.id': priceComponentId
+    });
+  }
+
+  async getProductOfferingsByPricePlanId(pricePlanId: string): Promise<any[]> {
+    return this.getPaginatedCatalogItems('productOffering', {
+      'productOfferingPrice.id': pricePlanId
+    });
+  }
+
+  private async getPaginatedCatalogItems(resource: string, filters: Record<string, string | number>): Promise<any[]> {
+    const limit = 100;
+    let offset = 0;
+    const items: any[] = [];
+
+    while (true) {
+      const query = [
+        `limit=${limit}`,
+        `offset=${offset}`,
+        ...Object.entries(filters).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+      ].join('&');
+      const url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/${resource}?${query}`;
+      const page = await lastValueFrom(this.http.get<any[]>(url));
+      const pageItems = Array.isArray(page) ? page : [];
+
+      items.push(...pageItems);
+
+      if (pageItems.length < limit) {
+        break;
+      }
+
+      offset += limit;
+    }
+
+    return items;
+  }
+
   getLaunchedCategories() {
     let url = `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/category?limit=${ApiServiceService.CATEGORY_LIMIT}&lifecycleStatus=Launched`;
 

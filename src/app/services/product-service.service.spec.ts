@@ -118,4 +118,37 @@ describe('ApiServiceService', () => {
     expect(req.request.body).toEqual(payload);
     req.flush({ id: 'catalog-1' });
   });
+
+  it('should request all product offering price pages by usage spec id', async () => {
+    const firstPage = Array.from({ length: 100 }, (_, index) => ({ id: `component-${index}` }));
+    const secondPage = [{ id: 'component-last' }];
+    const promise = service.getOfferingPricesByUsageSpecId('usage-1');
+
+    const firstReq = httpMock.expectOne(request =>
+      request.method === 'GET'
+      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOfferingPrice?limit=100&offset=0&usageSpecId=usage-1`
+    );
+    firstReq.flush(firstPage);
+    await Promise.resolve();
+
+    const secondReq = httpMock.expectOne(request =>
+      request.method === 'GET'
+      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOfferingPrice?limit=100&offset=100&usageSpecId=usage-1`
+    );
+    secondReq.flush(secondPage);
+
+    await expectAsync(promise).toBeResolvedTo([...firstPage, ...secondPage]);
+  });
+
+  it('should request all product offering pages by price plan id', async () => {
+    const promise = service.getProductOfferingsByPricePlanId('plan-1');
+
+    const req = httpMock.expectOne(request =>
+      request.method === 'GET'
+      && request.urlWithParams === `${ApiServiceService.BASE_URL}${ApiServiceService.API_PRODUCT}/productOffering?limit=100&offset=0&productOfferingPrice.id=plan-1`
+    );
+    req.flush([{ id: 'offer-1' }]);
+
+    await expectAsync(promise).toBeResolvedTo([{ id: 'offer-1' }]);
+  });
 });

@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import { EventMessageService } from 'src/app/services/event-message.service';
 import { LocalStorageService } from 'src/app/services/local-storage.service';
 import { PaginationService } from 'src/app/services/pagination.service';
+import { ApiServiceService } from 'src/app/services/product-service.service';
 import { UsageServiceService } from 'src/app/services/usage-service.service';
 
 import { SellerUsageSpecComponent } from './seller-usage-spec.component';
@@ -15,10 +16,22 @@ describe('SellerUsageSpecComponent', () => {
   let eventMessage: EventMessageService;
   let usageService: jasmine.SpyObj<UsageServiceService>;
   let paginationService: jasmine.SpyObj<PaginationService>;
+  let api: jasmine.SpyObj<ApiServiceService>;
+
+  async function flushPromises(times = 6): Promise<void> {
+    for (let i = 0; i < times; i++) {
+      await Promise.resolve();
+    }
+  }
 
   beforeEach(async () => {
     usageService = jasmine.createSpyObj('UsageServiceService', ['getUsageSpecs', 'updateUsageSpec']);
     paginationService = jasmine.createSpyObj('PaginationService', ['getItemsPaginated']);
+    api = jasmine.createSpyObj('ApiServiceService', [
+      'getOfferingPricesByUsageSpecId',
+      'getOfferingPricesByBundledPopRelationshipId',
+      'getProductOfferingsByPricePlanId'
+    ]);
 
     await TestBed.configureTestingModule({
       declarations: [SellerUsageSpecComponent],
@@ -28,6 +41,7 @@ describe('SellerUsageSpecComponent', () => {
         EventMessageService,
         { provide: UsageServiceService, useValue: usageService },
         { provide: PaginationService, useValue: paginationService },
+        { provide: ApiServiceService, useValue: api },
         {
           provide: LocalStorageService,
           useValue: {
@@ -54,6 +68,9 @@ describe('SellerUsageSpecComponent', () => {
       page: 6
     });
     usageService.getUsageSpecs.and.resolveTo([]);
+    api.getOfferingPricesByUsageSpecId.and.resolveTo([]);
+    api.getOfferingPricesByBundledPopRelationshipId.and.resolveTo([]);
+    api.getProductOfferingsByPricePlanId.and.resolveTo([]);
   });
 
   it('should create', () => {
@@ -76,7 +93,7 @@ describe('SellerUsageSpecComponent', () => {
     expect(loadCountsSpy).not.toHaveBeenCalled();
   });
 
-  it('should move counters locally and refresh only the current tab after deleting a validated usage spec succeeds', () => {
+  it('should move counters locally and refresh only the current tab after deleting a validated usage spec succeeds', async () => {
     const usageSpec = { id: 'usage-2', lifecycleStatus: 'Launched' };
     usageService.updateUsageSpec.and.returnValue(of({}) as any);
     spyOn(eventMessage, 'emitSpecCreated');
@@ -85,6 +102,7 @@ describe('SellerUsageSpecComponent', () => {
     component.statusCounts = { Draft: 1, Validated: 3, Deleted: 1 };
 
     component.deleteUsageSpec(usageSpec);
+    await flushPromises();
     component.confirmDeleteUsageSpec();
 
     expect(usageService.updateUsageSpec).toHaveBeenCalledOnceWith({ lifecycleStatus: 'Retired' }, 'usage-2');
@@ -95,7 +113,7 @@ describe('SellerUsageSpecComponent', () => {
     expect(loadCountsSpy).not.toHaveBeenCalled();
   });
 
-  it('should not update counters or refresh the current tab when delete fails', () => {
+  it('should not update counters or refresh the current tab when delete fails', async () => {
     const usageSpec = { id: 'usage-3', lifecycleStatus: 'Launched' };
     usageService.updateUsageSpec.and.returnValue(throwError(() => ({ error: { error: 'In use' } })) as any);
     spyOn(eventMessage, 'emitSpecCreated');
@@ -103,12 +121,48 @@ describe('SellerUsageSpecComponent', () => {
     component.statusCounts = { Draft: 1, Validated: 3, Deleted: 1 };
 
     component.deleteUsageSpec(usageSpec);
+    await flushPromises();
     component.confirmDeleteUsageSpec();
 
     expect(component.statusCounts).toEqual({ Draft: 1, Validated: 3, Deleted: 1 });
     expect(component.deleteConfirmation).toBeNull();
     expect(component.deleteLoading).toBeFalse();
     expect(getUsageSpecsSpy).not.toHaveBeenCalled();
+  });
+
+  it('should disable delete when the usage spec is used by an active or launched offer', async () => {
+    const usageSpec = { id: 'usage-blocked', lifecycleStatus: 'Launched' };
+    api.getOfferingPricesByUsageSpecId.and.resolveTo([{ id: 'component-1' }]);
+    api.getOfferingPricesByBundledPopRelationshipId.and.resolveTo([{ id: 'plan-1' }]);
+    api.getProductOfferingsByPricePlanId.and.resolveTo([
+      { id: 'offer-1', name: 'Live Offer', lifecycleStatus: 'lAuNcHeD' }
+    ]);
+
+    component.deleteUsageSpec(usageSpec);
+    await flushPromises();
+    component.confirmDeleteUsageSpec();
+
+    expect(component.deleteBlockingOffers).toEqual([
+      jasmine.objectContaining({ id: 'offer-1', name: 'Live Offer' })
+    ]);
+    expect(component.canConfirmDeleteUsageSpec).toBeFalse();
+    expect(usageService.updateUsageSpec).not.toHaveBeenCalled();
+  });
+
+  it('should enable delete when all linked offers are retired or obsolete regardless of case', async () => {
+    const usageSpec = { id: 'usage-allowed', lifecycleStatus: 'Launched' };
+    api.getOfferingPricesByUsageSpecId.and.resolveTo([{ id: 'component-1' }]);
+    api.getOfferingPricesByBundledPopRelationshipId.and.resolveTo([{ id: 'plan-1' }]);
+    api.getProductOfferingsByPricePlanId.and.resolveTo([
+      { id: 'offer-1', name: 'Retired Offer', lifecycleStatus: 'rEtIrEd' },
+      { id: 'offer-2', name: 'Obsolete Offer', lifecycleStatus: 'OBSOLETE' }
+    ]);
+
+    component.deleteUsageSpec(usageSpec);
+    await flushPromises();
+
+    expect(component.deleteBlockingOffers).toEqual([]);
+    expect(component.canConfirmDeleteUsageSpec).toBeTrue();
   });
 
   it('should increment Draft after create even when another tab is selected without refreshing that tab', () => {
