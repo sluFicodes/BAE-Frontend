@@ -103,7 +103,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
   flagDropdownOpen = false;
   themeDropdownOpen = false;
   isWorkspace = false;
-  activeEditor: 'offer' | 'productSpec' | 'serviceSpec' | 'resourceSpec' | 'catalog' | null = null;
+  activeEditor: 'offer' | 'productSpec' | 'serviceSpec' | 'resourceSpec' | 'usageSpec' | 'catalog' | null = null;
   get isOfferEditorActive(): boolean { return this.activeEditor === 'offer'; }
 
   get backLabelKey(): string {
@@ -112,6 +112,7 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
       case 'productSpec':  return 'OFFERINGS._back_to_product_specs';
       case 'serviceSpec':  return 'OFFERINGS._back_to_service_specs';
       case 'resourceSpec': return 'OFFERINGS._back_to_resource_specs';
+      case 'usageSpec':    return 'OFFERINGS._back_to_usage_specs';
       case 'catalog':      return 'OFFERINGS._back_to_catalogues';
       default:             return 'OFFERINGS._back_to_marketplace';
     }
@@ -253,12 +254,16 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
         this.activeEditor = 'resourceSpec';
         this.cdr.detectChanges();
       }
+      if ((ev.type === 'CreateUsageSpec' && ev.value === true) || ev.type === 'UpdateUsageSpec') {
+        this.activeEditor = 'usageSpec';
+        this.cdr.detectChanges();
+      }
       if ((ev.type === 'SellerCatalogCreate' && ev.value === true) || ev.type === 'SellerCatalogUpdate') {
         this.activeEditor = 'catalog';
         this.cdr.detectChanges();
       }
       if ((ev.type === 'SellerOffer' || ev.type === 'SellerProductSpec' || ev.type === 'SellerServiceSpec'
-        || ev.type === 'SellerResourceSpec' || ev.type === 'SellerCatalog') && ev.value === true) {
+        || ev.type === 'SellerResourceSpec' || ev.type === 'UsageSpecList' || ev.type === 'SellerCatalog') && ev.value === true) {
         this.activeEditor = null;
         this.cdr.detectChanges();
       }
@@ -391,6 +396,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, DoCheck, OnDestro
         break;
       case 'resourceSpec':
         this.eventMessage.emitSellerResourceSpec(true);
+        break;
+      case 'usageSpec':
+        this.eventMessage.emitUsageSpecList(true);
         break;
       case 'catalog':
         this.eventMessage.emitSellerCatalog(true);

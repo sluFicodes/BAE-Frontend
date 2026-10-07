@@ -70,6 +70,19 @@ describe('SellerOfferingsComponent', () => {
     expect(loadCountsSpy).not.toHaveBeenCalled();
   });
 
+  it('should keep usage spec list mounted but hidden while creating a usage spec', () => {
+    renderUsageSpecsCount(3);
+    component.goToCreateUsage();
+    fixture.detectChanges();
+
+    const usageWrapper = fixture.nativeElement.querySelector('seller-usage-spec')?.parentElement as HTMLElement;
+
+    expect(component.activeSection).toBe('usagespec');
+    expect(component.show_create_usage).toBeTrue();
+    expect(fixture.nativeElement.querySelector('seller-usage-spec')).not.toBeNull();
+    expect(usageWrapper.style.display).toBe('none');
+  });
+
   for (const [previousStatus, nextStatus] of [['Active', 'Obsolete'], ['Launched', 'Retired']]) {
     it(`should decrement the sidebar count after deleting a ${previousStatus} usage spec`, fakeAsync(() => {
       const loadCountsSpy = renderUsageSpecsCount(3);

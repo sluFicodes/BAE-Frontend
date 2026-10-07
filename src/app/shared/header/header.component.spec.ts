@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { environment } from 'src/environments/environment';
+import { EventMessageService } from 'src/app/services/event-message.service';
 
 import { HeaderComponent } from './header.component';
 
@@ -12,6 +13,7 @@ describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let router: Router;
+  let eventMessage: EventMessageService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -22,6 +24,7 @@ describe('HeaderComponent', () => {
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
+    eventMessage = TestBed.inject(EventMessageService);
     fixture.detectChanges();
   });
 
@@ -80,5 +83,25 @@ describe('HeaderComponent', () => {
     component.goToResources();
 
     expect(openSpy).toHaveBeenCalledWith(fallbackUrl, '_blank', 'noopener');
+  });
+
+  it('should treat usage spec create/update as a workspace editor', () => {
+    eventMessage.emitCreateUsageSpec(true);
+
+    expect(component.activeEditor).toBe('usageSpec');
+    expect(component.backLabelKey).toBe('OFFERINGS._back_to_usage_specs');
+
+    eventMessage.emitUsageSpecList(true);
+
+    expect(component.activeEditor).toBeNull();
+  });
+
+  it('workspace back should return usage spec editors to the usage spec list', () => {
+    const usageListSpy = spyOn(eventMessage, 'emitUsageSpecList').and.callThrough();
+    component.activeEditor = 'usageSpec';
+
+    component.onWorkspaceBackClick();
+
+    expect(usageListSpy).toHaveBeenCalledOnceWith(true);
   });
 });
