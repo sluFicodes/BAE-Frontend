@@ -162,6 +162,33 @@ describe('CatalogsComponent', () => {
     expect((component as any).paginationToken).toBeNull();
   });
 
+  it('should render the search bar for catalog-backed directories', async () => {
+    fixture.detectChanges();
+    await flushPromises();
+    fixture.detectChanges();
+
+    expect(component.canSearchDirectory).toBeTrue();
+    expect(fixture.nativeElement.querySelector('input[type="search"]')).not.toBeNull();
+  });
+
+  it('should hide search and ignore keywords for organization-backed provider directories', async () => {
+    Object.defineProperty(directorySource, 'mode', { value: 'provider' });
+    fixture.detectChanges();
+    await flushPromises();
+    fixture.detectChanges();
+
+    expect(component.canSearchDirectory).toBeFalse();
+    expect(fixture.nativeElement.querySelector('input[type="search"]')).toBeNull();
+
+    component.searchField.setValue('cloud');
+    component.filterProviders();
+    await flushPromises();
+
+    expect(directorySource.loadPage.calls.mostRecent().args[0]).toEqual(jasmine.objectContaining({
+      keyword: undefined
+    }));
+  });
+
   it('should reset the token and reload catalogs when sort changes', async () => {
     (component as any).paginationToken = 'stale-token';
     directorySource.loadPage.and.returnValues(
