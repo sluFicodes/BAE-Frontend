@@ -47,6 +47,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
   catalogsHeaderComponent: Type<unknown> | null = null;
 
   get sortLabel() { return this.sortOptions.find(o => o.value === this.sortOption)?.label ?? ''; }
+  get canSearchDirectory(): boolean { return this.searchEnabled && this.directorySource.mode === 'catalog'; }
 
   constructor(
     private router: Router,
@@ -69,7 +70,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     this.searchField.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(v => {
-        if (!v && this.filter !== undefined) {
+        if (this.canSearchDirectory && !v && this.filter !== undefined) {
           this.filter = undefined;
           this.getProviders(false);
         }
@@ -195,7 +196,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
     return this.directorySource.loadPage({
       offset: page,
       limit: this.CATALOG_LIMIT,
-      keyword: this.searchEnabled ? this.filter : undefined,
+      keyword: this.canSearchDirectory ? this.filter : undefined,
       continuationToken,
       fallbackLogoUrl: this.defaultCatalogLogoUrl
     });
@@ -215,7 +216,7 @@ export class CatalogsComponent implements OnInit, OnDestroy {
 
   filterProviders() {
     const value = this.searchField.value?.trim();
-    this.filter = this.searchEnabled ? value || undefined : undefined;
+    this.filter = this.canSearchDirectory ? value || undefined : undefined;
     this.getProviders(false);
   }
 
